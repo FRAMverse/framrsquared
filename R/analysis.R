@@ -33,10 +33,16 @@ compare_inputs_chart <- function(.data){
       reg_change = dplyr::if_else(is.na(reg_change), '', reg_change)
     ) |>
     dplyr::filter(!is.na(percent_diff)) |>
-    ggplot2::ggplot(ggplot2::aes(factor(fishery_id), time_step, fill = dplyr::if_else(percent_diff > 0, 'pos', 'neg'), alpha=percent_diff)) +
+    ggplot2::ggplot(ggplot2::aes(factor(fishery_id), time_step, fill = dplyr::if_else(percent_diff > 0, 'pos', 'neg'), alpha=abs(percent_diff))) +
     ggplot2::geom_tile() +
     ggplot2::geom_text(ggplot2::aes(label = paste0(scales::percent(percent_diff), '\n', reg_change ))) +
-    ggplot2::theme(legend.position = 'none')
+    ggplot2::theme(legend.position = 'none') +
+    ggplot2::labs(
+      subtitle = 'FRAM input comparison heatmap',
+      y = 'Time-Step',
+      x = 'Fishery'
+    ) +
+    ggplot2::scale_alpha_identity()
 }
 
 input_summary_ <- function(.data, run_id){
