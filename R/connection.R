@@ -1,5 +1,11 @@
-# documentation here
-# verifies fram database and returns information about it
+#' This is a connection object to a FRAM database. Returns a list
+#' used throughout the rest of this package which carries meta data.
+#' @param db_path Path to a FRAM database.
+#' @param enforce_type Not used
+#' @export
+#' @examples
+#' \dontrun{fram_db <- connect_fram_db('<path>')}
+#'
 connect_fram_db <-
   function(db_path,
            enforce_type = c('full', 'transfer')) {
@@ -38,7 +44,12 @@ connect_fram_db <-
   }
 
 
-# documentation
+#' Safely disconnect from FRAM database
+#' @param fram_db FRAM database R object
+#' @export
+#' @examples
+#' \dontrun{disconnect_fram_db(fram_db)}
+#'
 disconnect_fram_db <- function(fram_db){
   db_var_name <- deparse(substitute(fram_db))
   DBI::dbDisconnect(fram_db$fram_db_connection)

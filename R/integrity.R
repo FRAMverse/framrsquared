@@ -1,5 +1,9 @@
-# documentation here
-# assumes connection already established
+#' Identifies the FRAM database type - Full or Transfer
+#' @param con Connection to FRAM database
+#' @export
+#' @examples
+#' \dontrun{fram_database_type(con)}
+#'
 fram_database_type <- function(con) {
   table_names <- DBI::dbListTables(con)
   if (all(
@@ -26,7 +30,6 @@ fram_database_type <- function(con) {
       'NonRetention',
       'PSCMaxER',
       'ReportDriver',
-      #'RunEncounterRateAdjustment',
       'RunID',
       'ShakerMortRate',
       'SizeLimits',
@@ -68,8 +71,11 @@ fram_database_type <- function(con) {
   }
 }
 
-# documentation here
-# returns species identified in the fram runs
+#' Identifies the FRAM database species focus - Chinook or Coho
+#' @param con Connection to FRAM database
+#' @export
+#' @examples
+#' \dontrun{fram_database_species(con)}
 fram_database_species <- function(con){
   run_id_table <- DBI::dbGetQuery(con, 'SELECT * FROM RunID;') |>
     fram_clean_tables()
@@ -78,7 +84,12 @@ fram_database_species <- function(con){
 }
 
 
-# make column names more manageable
+#' Cleans the names of FRAM tables and coverts to a tibble
+#' @param .data Dataframe
+#' @export
+#' @examples
+#' \dontrun{fram_dataframe |> fram_clean_tables()}
+#'
 fram_clean_tables <- function(.data) {
   .data |>
   tibble::as_tibble() |>

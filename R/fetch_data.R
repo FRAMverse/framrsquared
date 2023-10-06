@@ -1,3 +1,12 @@
+#' Fetches a complete table from a FRAM database. Returns a cleaned
+#' tibble.
+#' @param fram_db FRAM database object
+#' @param table_name Table to be fetched
+#' @export
+#' @examples
+#' \dontrun{fram_db |> fetch_table('Mortality')}
+#'
+
 fetch_table <- function(fram_db, table_name){
   if(fram_db$fram_db_type == 'full'){
     table_name <- rlang::arg_match(table_name,

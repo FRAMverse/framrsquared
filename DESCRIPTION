@@ -16,7 +16,8 @@ Imports:
     glue,
     janitor,
     odbc,
-    purrr,
     rlang,
+    scales,
+    tibble,
     tidyr
 RoxygenNote: 7.2.3
