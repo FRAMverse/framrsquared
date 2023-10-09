@@ -96,6 +96,34 @@ fram_clean_tables <- function(.data) {
   janitor::clean_names()
 }
 
+
+#' Finds tables that contain a specific column name
+#' @param fram_db FRAM database object
+#' @param column_name Name of a column
+#' @examples
+#' \dontrun{fram_db |> find_tables_by_column_('RunID')}
+#'
+find_tables_by_column_ <- function(fram_db, column_name) {
+  if (!DBI::dbIsValid(fram_db$fram_db_connection)) {
+    rlang::abort('Connect to a FRAM database first...')
+  }
+
+
+  tables <- DBI::dbListTables(fram_db$fram_db_connection) |>
+    tibble::as_tibble()
+
+  tables |>
+    dplyr::rowwise() |>
+    dplyr::mutate(columns = purrr::map(
+      .data$value,
+      \(table) DBI::dbListFields(fram_db$fram_db_connection, table)
+    )) |>
+    tidyr::unnest(.data$columns) |>
+    dplyr::filter(.data$columns == .env$column_name)
+}
+
+
+
 #' Changes a run's ID number in a FRAM database
 #' @param fram_db FRAM database object
 #' @param old_run_id FRAM run ID to be changed
@@ -106,22 +134,7 @@ fram_clean_tables <- function(.data) {
 #'
 change_run_id <- function(fram_db, old_run_id, new_run_id){
 
-  if (!DBI::dbIsValid(fram_db$fram_db_connection)) {
-    rlang::abort('Connect to a FRAM database first...')
-  }
-
-
-  tables <- DBI::dbListTables(fram_db$fram_db_connection) |>
-    tibble::as_tibble()
-
-  run_id_tables <- tables |>
-    dplyr::rowwise() |>
-    dplyr::mutate(columns = purrr::map(
-      .data$value,
-      \(table) DBI::dbListFields(fram_db$fram_db_connection, table)
-    )) |>
-    tidyr::unnest(.data$columns) |>
-    dplyr::filter(.data$columns == 'RunID')
+  run_id_tables <- find_tables_by_column_(fram_db, 'RunID')
 
   run_id_tables$value |>
     purrr::walk(.f = \(value) tryCatch(
@@ -131,6 +144,34 @@ change_run_id <- function(fram_db, old_run_id, new_run_id){
           'UPDATE {value}
            SET RunID = {new_run_id}
            WHERE RunID = {old_run_id};'
+        )
+      )),
+      error = function(e) {} # dead end
+    ))
+
+}
+
+
+
+
+#' Removes a run in a FRAM database
+#' @param fram_db FRAM database object
+#' @param run_id FRAM run ID to be deleted
+#' @export
+#' @examples
+#' \dontrun{fram_db |> delete_run(run_id = 132)}
+#'
+remove_run <- function(fram_db, run_id){
+
+  run_id_tables <- find_tables_by_column_(fram_db, 'RunID')
+
+  run_id_tables$value |>
+    purrr::walk(.f = \(value) tryCatch(
+      suppressWarnings(DBI::dbSendQuery(
+        fram_db$fram_db_connection,
+        glue::glue(
+          'DELETE FROM {value}
+           WHERE RunID = {run_id};'
         )
       )),
       error = function(e) {} # dead end
