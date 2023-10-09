@@ -96,3 +96,44 @@ fram_clean_tables <- function(.data) {
   janitor::clean_names()
 }
 
+#' Changes a run's ID number in a FRAM database
+#' @param fram_db FRAM database object
+#' @param old_run_id FRAM run ID to be changed
+#' @param new_run_id New FRAM run ID
+#' @export
+#' @examples
+#' \dontrun{fram_db |> change_run_id(old_run_id = 132, new_run_id = 300)}
+#'
+change_run_id <- function(fram_db, old_run_id, new_run_id){
+
+  if (!DBI::dbIsValid(fram_db$fram_db_connection)) {
+    rlang::abort('Connect to a FRAM database first...')
+  }
+
+
+  tables <- DBI::dbListTables(fram_db$fram_db_connection) |>
+    tibble::as_tibble()
+
+  run_id_tables <- tables |>
+    dplyr::rowwise() |>
+    dplyr::mutate(columns = purrr::map(
+      .data$value,
+      \(table) DBI::dbListFields(fram_db$fram_db_connection, table)
+    )) |>
+    tidyr::unnest(.data$columns) |>
+    dplyr::filter(.data$columns == 'RunID')
+
+  run_id_tables$value |>
+    purrr::walk(.f = \(value) tryCatch(
+      suppressWarnings(DBI::dbSendQuery(
+        fram_db$fram_db_connection,
+        glue::glue(
+          'UPDATE {value}
+           SET RunID = {new_run_id}
+           WHERE RunID = {old_run_id};'
+        )
+      )),
+      error = function(e) {} # dead end
+    ))
+
+}
