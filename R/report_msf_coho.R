@@ -18,7 +18,7 @@ msf_mortalities_coho_ <- function(fram_db, run_id){
       mark_status = dplyr::if_else(.data$stock_id %% 2 == 0, 'marked', 'unmarked')
     )
 
-  mortalities <- mortalities_ |>
+  mortalities_ |>
     tidyr::pivot_longer(c(.data$msf_landed_catch:.data$msf_drop_off)) |>
     dplyr::group_by(.data$fishery_id, .data$time_step, .data$mark_status) |>
     dplyr::summarize(value = sum(.data$value), .groups = 'drop') |>
