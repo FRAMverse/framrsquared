@@ -11,7 +11,7 @@ management_week <- function(date) {
   # this wont be slow now
   if(!inherits(date, 'Date')){rlang::abort('This only works on a date object')}
   # test if sunday is first day of year
-  if_else(
+  dplyr::if_else(
     lubridate::wday(lubridate::floor_date(date, 'year')) == 1
     ,
     as.integer(strftime(date, '%U'))
@@ -32,7 +32,7 @@ management_week <- function(date) {
 statistical_week <- function(date){
   if(!inherits(date, 'Date')){rlang::abort('This only works on a date object')}
   # test if monday is first day of year
-  if_else(
+  dplyr::if_else(
     lubridate::wday(lubridate::floor_date(date, 'year')) == 2
     ,
     as.integer(strftime(date, '%W'))
