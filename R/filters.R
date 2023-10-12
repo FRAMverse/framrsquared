@@ -216,7 +216,7 @@ filter_ca <- function(.data){
 #' @export
 #' @examples
 #' \dontrun{
-#' fram_dataframe |> filter_ca()
+#' fram_dataframe |> filter_or()
 #' }
 #'
 filter_or <- function(.data){
