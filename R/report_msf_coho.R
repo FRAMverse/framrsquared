@@ -22,7 +22,10 @@ msf_mortalities_coho_ <- function(fram_db, run_id){
     tidyr::pivot_longer(c(.data$msf_landed_catch:.data$msf_drop_off)) |>
     dplyr::group_by(.data$fishery_id, .data$time_step, .data$mark_status) |>
     dplyr::summarize(value = sum(.data$value), .groups = 'drop') |>
-    tidyr::pivot_wider(names_from = .data$mark_status, values_from = .data$value)
+    tidyr::pivot_wider(names_from = .data$mark_status, values_from = .data$value) |>
+    `attr<-`('species', fram_db$fram_db_species)
+
+
 }
 
 #' Returns a tibble matching the MSF screen report landed catch for Coho
@@ -52,7 +55,8 @@ msf_landed_catch_coho_ <- function(fram_db, run_id){
     dplyr::group_by(.data$run_id, .data$mark_status, .data$fishery_id,
                     .data$time_step) |>
     dplyr::summarize(msf_landed_catch = sum(.data$msf_landed_catch), .groups='drop') |>
-    tidyr::pivot_wider(names_from = .data$mark_status, values_from = .data$msf_landed_catch)
+    tidyr::pivot_wider(names_from = .data$mark_status, values_from = .data$msf_landed_catch) |>
+    `attr<-`('species', fram_db$fram_db_species)
 }
 
 
@@ -82,5 +86,6 @@ msf_encounters_coho_ <- function(fram_db, run_id){
                     .data$time_step) |>
     dplyr::summarize(msf_encounter = sum(.data$msf_encounter), .groups='drop') |>
     tidyr::pivot_wider(names_from = .data$mark_status,
-                       values_from = .data$msf_encounter)
+                       values_from = .data$msf_encounter) |>
+    `attr<-`('species', fram_db$fram_db_species)
 }

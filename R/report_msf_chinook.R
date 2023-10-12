@@ -36,7 +36,8 @@ msf_mortalities_chinook_ <- function(fram_db, run_id){
 
   # output
   mortalities |>
-    tidyr::pivot_wider(names_from = .data$legal_mark_status, values_from = .data$value)
+    tidyr::pivot_wider(names_from = .data$legal_mark_status, values_from = .data$value) |>
+    `attr<-`('species', fram_db$fram_db_species)
 
 }
 
@@ -85,7 +86,8 @@ msf_encounters_chinook_ <- function(fram_db, run_id){
     dplyr::select(-c(.data$msf_shaker:.data$shaker_mort_rate), legal = .data$msf_encounter, sublegal= .data$shaker_encounters) |>
     tidyr::pivot_longer(.data$legal:.data$sublegal) |>
     tidyr::unite('legal_mark_status', .data$name, .data$mark_status) |>
-    tidyr::pivot_wider(names_from = .data$legal_mark_status, values_from = .data$value)
+    tidyr::pivot_wider(names_from = .data$legal_mark_status, values_from = .data$value) |>
+    `attr<-`('species', fram_db$fram_db_species)
 }
 
 #' Returns a tibble matching the MSF screen report landed catch for Chinook.
@@ -118,5 +120,6 @@ msf_landed_catch_chinook_ <- function(fram_db, run_id){
     dplyr::select(dplyr::everything(), legal = .data$msf_landed_catch) |>
     tidyr::pivot_longer(.data$legal) |>
     tidyr::unite('legal_mark_status', .data$name, .data$mark_status) |>
-    tidyr::pivot_wider(names_from = .data$legal_mark_status, values_from = .data$value)
+    tidyr::pivot_wider(names_from = .data$legal_mark_status, values_from = .data$value) |>
+    `attr<-`('species', fram_db$fram_db_species)
 }
