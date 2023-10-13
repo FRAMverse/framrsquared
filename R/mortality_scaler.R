@@ -57,7 +57,7 @@ mortality_scalers_chinook_ <- function(fram_db, run_id, stock_id){
 
   scalers |>
     dplyr::inner_join(AEQ,  by = c('age', 'stock_id', 'time_step')) |>
-    dplyr::mutate(dplyr::across(c(.data$landed_catch:.data$drop_off, .data$msf_landed_catch), \(x) x * .data$aeq)) |>
+    dplyr::mutate(dplyr::across(c(.data$landed_catch:.data$drop_off, .data$msf_landed_catch:.data$msf_drop_off), \(x) x * .data$aeq)) |>
     dplyr::mutate(total_mortality = .data$landed_catch + .data$non_retention + .data$shaker + .data$drop_off +
                     .data$msf_landed_catch + .data$msf_non_retention +
                     .data$msf_shaker + .data$msf_drop_off) |>
