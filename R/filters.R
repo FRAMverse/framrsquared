@@ -239,3 +239,34 @@ filter_or <- function(.data){
   }
 }
 
+
+#' Filters a dataframe to Coastal fisheries. Will
+#' automatically detect whether it's working with a Chinook or Coho
+#' dataset if the tables were generated within this package. Requires
+#' a `fishery_id` column name.
+#' @param .data Dataframe generated within this package
+#' @export
+#' @examples
+#' \dontrun{
+#' fram_dataframe |> filter_or()
+#' }
+#'
+filter_coast <- function(.data, species = NULL){
+  if(!'fishery_id' %in% colnames(.data)){
+    rlang::abort('fishery_id column must be present in dataframe.')
+  }
+
+  if(attr(.data, 'species') == 'CHINOOK'){
+    .data |>
+      dplyr::filter(
+        .data$fishery_id %in% c(1:35)
+      )
+  } else if(attr(.data, 'species') == 'COHO') {
+    .data |>
+      dplyr::filter(
+        .data$fishery_id %in% c(1:22, 33:75)
+      )
+  } else {
+    rlang::abort('Table metadata missing... Table not generated from this package?')
+  }
+}

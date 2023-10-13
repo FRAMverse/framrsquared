@@ -60,7 +60,7 @@ compare_inputs_chart <- function(.data){
 
 
 
-#' Generates an inpurt summary based on a FisheryScalers dataframe.
+#' Generates an input summary based on a FisheryScalers dataframe.
 #' Probably end up streamlining / revising this.
 #' @param .data FisheryFishery scalers dataframe
 #' @param run_id Run ID number
@@ -84,4 +84,3 @@ input_summary_ <- function(.data, run_id){
     ) |>
     dplyr::select(.data$run_id,.data$fishery_id,.data$fishery_flag, .data$time_step, .data$total_quota, .data$regulation)
 }
-

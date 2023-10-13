@@ -2,7 +2,7 @@
 % Please edit documentation in R/analysis.R
 \name{input_summary_}
 \alias{input_summary_}
-\title{Generates an inpurt summary based on a FisheryScalers dataframe.
+\title{Generates an input summary based on a FisheryScalers dataframe.
 Probably end up streamlining / revising this.}
 \usage{
 input_summary_(.data, run_id)
@@ -13,7 +13,7 @@ input_summary_(.data, run_id)
 \item{run_id}{Run ID number}
 }
 \description{
-Generates an inpurt summary based on a FisheryScalers dataframe.
+Generates an input summary based on a FisheryScalers dataframe.
 Probably end up streamlining / revising this.
 }
 \examples{
