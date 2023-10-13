@@ -41,7 +41,8 @@ mortality_scalers_coho_ <- function(fram_db, run_id, stock_id){
     ) |>
     dplyr::mutate(
       stock_mortality_ratio = .data$stock_mortality / .data$fishery_mortality
-    )
+    ) |>
+    `attr<-`('species', fram_db$fram_db_species)
 }
 
 
@@ -68,6 +69,7 @@ mortality_scalers_chinook_ <- function(fram_db, run_id, stock_id){
     ) |>
     dplyr::mutate(
       stock_mortality_ratio = .data$stock_mortality / .data$fishery_mortality
-    )
+    ) |>
+    `attr<-`('species', fram_db$fram_db_species)
 
 }
