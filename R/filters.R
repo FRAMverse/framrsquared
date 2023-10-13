@@ -238,3 +238,4 @@ filter_or <- function(.data){
     rlang::abort('Table metadata missing... Table not generated from this package?')
   }
 }
+
