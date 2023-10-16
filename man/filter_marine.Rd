@@ -7,7 +7,7 @@ automatically detect whether it's working with a Chinook or Coho
 dataset if the tables were generated within this package. Requires
 a `fishery_id` column name.}
 \usage{
-filter_marine(.data, species = NULL)
+filter_marine(.data)
 }
 \arguments{
 \item{.data}{Dataframe generated within this package}
