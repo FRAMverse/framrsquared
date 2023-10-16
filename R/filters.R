@@ -46,6 +46,55 @@ filter_sport <- function(.data){
 
 }
 
+#' Filters a dataframe to net fisheries. Will
+#' automatically detect whether it's working with a Chinook or Coho
+#' dataset if the tables were generated within this package. Requires
+#' a `fishery_id` column name.
+#' @param .data Dataframe generated within this package
+#' @export
+#' @examples
+#' \dontrun{
+#' fram_dataframe |> filter_net()
+#' }
+#'
+filter_net <- function(.data){
+  if(!'fishery_id' %in% colnames(.data)){
+    rlang::abort('fishery_id column must be present in dataframe.')
+  }
+  # if it's not sport it must be net
+  if(attr(.data, 'species') == 'CHINOOK'){
+    .data |>
+      dplyr::filter(
+        !.data$fishery_id %in% c(
+          3, 8, 11, 13, 14, 15,
+          18, 22, 27, 29, 31, 33,
+          35, 48, 60, 62, 72, 36,
+          42, 45, 53, 54, 56, 57,
+          64, 67)
+      )
+  } else if(attr(.data, 'species') == 'COHO') {
+    .data |>
+      dplyr::filter(
+        !.data$fishery_id %in% c(
+          3, 5, 7, 15, 17, 19, 21, 23, 24,
+          28, 29, 31, 33, 37, 40, 41, 45, 46,
+          48, 49, 51, 54, 58, 59, 60, 61, 62,
+          65, 66, 67, 70, 73, 76, 89, 90, 91,
+          92, 93, 94, 95, 99, 100, 106, 107,
+          108, 115, 116, 117, 118, 127, 129,
+          135, 136, 149, 150, 151, 152, 163,
+          164, 165, 166, 169, 186, 187, 188,
+          189, 190, 191, 192, 193
+
+        )
+      )
+  } else {
+    rlang::abort('Table metadata missing... Table not generated from this package?')
+  }
+
+}
+
+
 
 
 #' Filters a dataframe to Puget Sound fisheries. Will
