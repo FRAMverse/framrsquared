@@ -251,7 +251,7 @@ filter_or <- function(.data){
 #' fram_dataframe |> filter_coast()
 #' }
 #'
-filter_coast <- function(.data, species = NULL){
+filter_coast <- function(.data){
   if(!'fishery_id' %in% colnames(.data)){
     rlang::abort('fishery_id column must be present in dataframe.')
   }
@@ -282,7 +282,7 @@ filter_coast <- function(.data, species = NULL){
 #' fram_dataframe |> filter_marine()
 #' }
 #'
-filter_marine <- function(.data, species = NULL){
+filter_marine <- function(.data){
   if(!'fishery_id' %in% colnames(.data)){
     rlang::abort('fishery_id column must be present in dataframe.')
   }
