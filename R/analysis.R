@@ -42,9 +42,10 @@ compare_inputs_chart <- function(.data){
   .data |>
     dplyr::mutate(
       percent_diff = dplyr::if_else(is.infinite(.data$percent_diff), 1, .data$percent_diff),
+      percent_diff = dplyr::if_else(is.na(.data$percent_diff), 0, .data$percent_diff),
       reg_change = dplyr::if_else(is.na(.data$reg_change), '', .data$reg_change)
     ) |>
-    dplyr::filter(!is.na(.data$percent_diff)) |>
+    #dplyr::filter(!is.na(.data$percent_diff)) |>
     ggplot2::ggplot(ggplot2::aes(factor(.data$fishery_id), .data$time_step, fill = dplyr::if_else(.data$percent_diff > 0, 'pos', 'neg'), alpha=abs(.data$percent_diff))) +
     ggplot2::geom_tile() +
     ggplot2::geom_text(ggplot2::aes(label = paste0(scales::percent(.data$percent_diff), '\n', .data$reg_change ))) +
