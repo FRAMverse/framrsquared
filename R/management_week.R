@@ -1,5 +1,5 @@
 #' Vectorized approach to calculating the management week, returns
-#' and integer
+#' an integer
 #' @param date A column with dates
 #' @export
 #' @examples
