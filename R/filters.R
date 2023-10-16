@@ -208,7 +208,7 @@ filter_ca <- function(.data){
   }
 }
 
-#' Filters a dataframe to California fisheries. Will
+#' Filters a dataframe to Oregon fisheries. Will
 #' automatically detect whether it's working with a Chinook or Coho
 #' dataset if the tables were generated within this package. Requires
 #' a `fishery_id` column name.
@@ -248,7 +248,7 @@ filter_or <- function(.data){
 #' @export
 #' @examples
 #' \dontrun{
-#' fram_dataframe |> filter_or()
+#' fram_dataframe |> filter_coast()
 #' }
 #'
 filter_coast <- function(.data, species = NULL){
@@ -265,6 +265,43 @@ filter_coast <- function(.data, species = NULL){
     .data |>
       dplyr::filter(
         .data$fishery_id %in% c(1:22, 33:75)
+      )
+  } else {
+    rlang::abort('Table metadata missing... Table not generated from this package?')
+  }
+}
+
+#' Filters a dataframe to marine fisheries. Will
+#' automatically detect whether it's working with a Chinook or Coho
+#' dataset if the tables were generated within this package. Requires
+#' a `fishery_id` column name.
+#' @param .data Dataframe generated within this package
+#' @export
+#' @examples
+#' \dontrun{
+#' fram_dataframe |> filter_marine()
+#' }
+#'
+filter_marine <- function(.data, species = NULL){
+  if(!'fishery_id' %in% colnames(.data)){
+    rlang::abort('fishery_id column must be present in dataframe.')
+  }
+
+  if(attr(.data, 'species') == 'CHINOOK'){
+    .data |>
+      dplyr::filter(
+        !.data$fishery_id %in% c(72:73)
+      )
+  } else if(attr(.data, 'species') == 'COHO') {
+    .data |>
+      dplyr::filter(
+        .data$fishery_id %in% c(
+          3:8, 15:22, 33:50,
+          79:83, 87:88, 91:93,
+          96:97, 101:102, 105:107,
+          109:112, 115, 118:124,
+          129:133, 136:146, 152:160,
+          170:198)
       )
   } else {
     rlang::abort('Table metadata missing... Table not generated from this package?')

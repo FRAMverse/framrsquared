@@ -20,7 +20,7 @@ a `fishery_id` column name.
 }
 \examples{
 \dontrun{
-fram_dataframe |> filter_or()
+fram_dataframe |> filter_coast()
 }
 
 }
