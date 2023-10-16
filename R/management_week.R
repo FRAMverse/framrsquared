@@ -12,10 +12,12 @@ management_week <- function(date) {
   UseMethod('management_week')
 }
 
+#' @export
 management_week.Date <- function(date) {
   management_week_(date)
 }
 
+#' @export
 management_week.POSIXct <- function(date) {
   # convert posixct to date
   date <- as.Date(date)
@@ -23,6 +25,7 @@ management_week.POSIXct <- function(date) {
   management_week_(date)
 }
 
+#' @export
 management_week.character <- function(date) {
   # try a few common formats
   if(!anyNA(as.Date(date, '%Y-%m-%d'))) {

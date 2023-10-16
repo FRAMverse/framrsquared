@@ -12,10 +12,12 @@ statistical_week <- function(date) {
   UseMethod('statistical_week')
 }
 
+#' @export
 statistical_week.Date <- function(date) {
   statistical_week_(date)
 }
 
+#' @export
 statistical_week.POSIXct <- function(date) {
   # convert posixct to date
   date <- as.Date(date)
@@ -23,6 +25,7 @@ statistical_week.POSIXct <- function(date) {
   statistical_week_(date)
 }
 
+#' @export
 statistical_week.character <- function(date) {
   # try a few common formats
   if(!anyNA(as.Date(date, '%Y-%m-%d'))) {
