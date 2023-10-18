@@ -21,7 +21,7 @@ population_statistics <- function(fram_db, run_id = NULL) {
 
   escapement <- fram_db |>
     fetch_table('Escapement') |>
-    dplyr::select(-primary_key)
+    dplyr::select(-.data$primary_key)
 
   pop_stat <- cohort |>
     dplyr::left_join(escapement,
@@ -32,7 +32,7 @@ population_statistics <- function(fram_db, run_id = NULL) {
     dplyr::mutate(
       dplyr::across(.data$escapement, \(x) tidyr::replace_na(x, 0))
       ) |>
-    dplyr::arrange(stock_id, time_step)
+    dplyr::arrange(.data$stock_id, .data$time_step)
 
   if (is.null(run_id)) {
     pop_stat |> # returns pop stat for all runs in db
