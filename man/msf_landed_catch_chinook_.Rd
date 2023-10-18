@@ -5,7 +5,7 @@
 \title{Returns a tibble matching the MSF screen report landed catch for Chinook.
  This is specific for Chinook and in most cases msf_landed_catch() is preferable.}
 \usage{
-msf_landed_catch_chinook_(fram_db, run_id)
+msf_landed_catch_chinook_(fram_db, run_id = NULL)
 }
 \arguments{
 \item{fram_db}{FRAM database object}

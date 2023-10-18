@@ -5,7 +5,7 @@
 \title{Returns a tibble matching the MSF screen report encounters for Chinook.
  This is specific for Chinook and in most cases msf_encounters() is preferable.}
 \usage{
-msf_encounters_chinook_(fram_db, run_id)
+msf_encounters_chinook_(fram_db, run_id = NULL)
 }
 \arguments{
 \item{fram_db}{FRAM database object}

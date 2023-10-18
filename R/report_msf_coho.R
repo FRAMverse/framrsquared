@@ -7,10 +7,10 @@
 #' \dontrun{fram_db |> msf_mortalities_coho_(run_id = 101)}
 #'
 
-msf_mortalities_coho_ <- function(fram_db, run_id){
+msf_mortalities_coho_ <- function(fram_db, run_id=NULL){
   mortalities_ <- fram_db |>
-    fetch_table('Mortality')|>
-    dplyr::filter(.data$run_id == .env$run_id)
+    fetch_table('Mortality')#|>
+    #dplyr::filter(.data$run_id == .env$run_id)
 
   mortalities_ <- mortalities_ |>
     dplyr::select(.data$run_id:.data$time_step, dplyr::starts_with('msf_'))  |>
@@ -20,7 +20,7 @@ msf_mortalities_coho_ <- function(fram_db, run_id){
 
   mortalities_ |>
     tidyr::pivot_longer(c(.data$msf_landed_catch:.data$msf_drop_off)) |>
-    dplyr::group_by(.data$fishery_id, .data$time_step, .data$mark_status) |>
+    dplyr::group_by(.data$run_id, .data$fishery_id, .data$time_step, .data$mark_status) |>
     dplyr::summarize(value = sum(.data$value), .groups = 'drop') |>
     tidyr::pivot_wider(names_from = .data$mark_status, values_from = .data$value) |>
     `attr<-`('species', fram_db$fram_db_species)
@@ -36,11 +36,11 @@ msf_mortalities_coho_ <- function(fram_db, run_id){
 #' @examples
 #' \dontrun{fram_db |> msf_landed_catch_coho_(run_id = 101)}
 #'
-msf_landed_catch_coho_ <- function(fram_db, run_id){
+msf_landed_catch_coho_ <- function(fram_db, run_id=NULL){
 
   landed_catch_ <- fram_db |>
-    fetch_table('Mortality') |>
-    dplyr::filter(.data$run_id == .env$run_id)
+    fetch_table('Mortality') #|>
+    #dplyr::filter(.data$run_id == .env$run_id)
 
 
   landed_catch <- landed_catch_ |>
@@ -68,10 +68,10 @@ msf_landed_catch_coho_ <- function(fram_db, run_id){
 #' @examples
 #' \dontrun{fram_db |> msf_encounters_coho_(run_id = 101)}
 #'
-msf_encounters_coho_ <- function(fram_db, run_id){
+msf_encounters_coho_ <- function(fram_db, run_id=NULL){
   encounters_ <- fram_db |>
-    fetch_table('Mortality') |>
-    dplyr::filter(.data$run_id == .env$run_id)
+    fetch_table('Mortality') #|>
+   # dplyr::filter(.data$run_id == .env$run_id)
 
   encounters <- encounters_ |>
     dplyr::select(.data$run_id, .data$stock_id, .data$fishery_id, .data$time_step,

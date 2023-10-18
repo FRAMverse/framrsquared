@@ -6,6 +6,14 @@
 #' \dontrun{fram_db |> population_statistics(run_id = 101)}
 #'
 population_statistics <- function(fram_db, run_id = NULL) {
+  if(!is.numeric(run_id) && !is.null(run_id)) {
+    rlang::abort('Run ID must be and integer')
+  }
+
+  if(!DBI::dbIsValid(fram_db$fram_db_connection)) {
+    rlang::abort('Must connect to a FRAM database first...')
+  }
+
   cohort <- fram_db |>
     fetch_table('Cohort') |>
     dplyr::select(
@@ -21,7 +29,7 @@ population_statistics <- function(fram_db, run_id = NULL) {
 
   escapement <- fram_db |>
     fetch_table('Escapement') |>
-    dplyr::select(-primary_key)
+    dplyr::select(-.data$primary_key)
 
   pop_stat <- cohort |>
     dplyr::left_join(escapement,
@@ -32,7 +40,7 @@ population_statistics <- function(fram_db, run_id = NULL) {
     dplyr::mutate(
       dplyr::across(.data$escapement, \(x) tidyr::replace_na(x, 0))
       ) |>
-    dplyr::arrange(stock_id, time_step)
+    dplyr::arrange(.data$stock_id, .data$time_step)
 
   if (is.null(run_id)) {
     pop_stat |> # returns pop stat for all runs in db

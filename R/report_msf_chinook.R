@@ -6,10 +6,10 @@
 #' @examples
 #' \dontrun{fram_db |> msf_mortalities_chinook_(run_id = 101)}
 #'
-msf_mortalities_chinook_ <- function(fram_db, run_id){
+msf_mortalities_chinook_ <- function(fram_db, run_id=NULL){
   mortalities_ <- fram_db |>
-                    fetch_table('Mortality') |>
-    dplyr::filter(.data$run_id == .env$run_id)
+                    fetch_table('Mortality') #|>
+    #dplyr::filter(.data$run_id == .env$run_id)
 
   mortalities_ <- mortalities_ |>
     dplyr::select(.data$run_id:.data$time_step, dplyr::starts_with('msf_'))  |>
@@ -20,7 +20,8 @@ msf_mortalities_chinook_ <- function(fram_db, run_id){
 
   mortalities <- mortalities_ |>
     tidyr::pivot_longer(c(.data$msf_landed_catch:.data$msf_drop_off)) |>
-    dplyr::group_by(.data$fishery_id, .data$time_step, .data$name, .data$mark_status) |> # over stock
+    dplyr::group_by(.data$run_id, .data$fishery_id,
+                    .data$time_step, .data$name, .data$mark_status) |> # over stock
     dplyr::summarize(value = sum(.data$value), .groups = 'drop') |>
     dplyr::mutate(
       legality  = dplyr::if_else(
@@ -31,7 +32,8 @@ msf_mortalities_chinook_ <- function(fram_db, run_id){
         'legal')
     ) |>
     tidyr::unite('legal_mark_status', .data$legality, .data$mark_status) |>
-    dplyr::group_by(.data$fishery_id, .data$time_step, .data$legal_mark_status) |>
+    dplyr::group_by(.data$run_id, .data$fishery_id,
+                    .data$time_step, .data$legal_mark_status) |>
     dplyr::summarize(value = sum(.data$value), .groups = 'drop')
 
   # output
@@ -51,11 +53,9 @@ msf_mortalities_chinook_ <- function(fram_db, run_id){
 #' \dontrun{fram_db |> msf_encounters_chinook_(run_id = 101)}
 #'
 
-msf_encounters_chinook_ <- function(fram_db, run_id){
-  encounters_ <- DBI::dbGetQuery(
-    fram_db$fram_db_connection,
-    glue::glue('SELECT * FROM Mortality WHERE RunID = {run_id}')) |>
-    fram_clean_tables()
+msf_encounters_chinook_ <- function(fram_db, run_id=NULL){
+  encounters_ <- fram_db |>
+    fetch_table('Mortality')
 
   # ensure the correct rates are always used
   sublegal_mortality_rates <- DBI::dbGetQuery(
@@ -65,8 +65,7 @@ msf_encounters_chinook_ <- function(fram_db, run_id){
                     ShakerMortRate.TimeStep,
                     ShakerMortRate.ShakerMortRate
                 FROM RunID INNER JOIN
-               ShakerMortRate ON RunID.BasePeriodID = ShakerMortRate.BasePeriodID
-              WHERE (((RunID.RunID)={run_id}));')
+               ShakerMortRate ON RunID.BasePeriodID = ShakerMortRate.BasePeriodID;')
   ) |> fram_clean_tables()
 
   encounters <- encounters_ |>
@@ -98,10 +97,9 @@ msf_encounters_chinook_ <- function(fram_db, run_id){
 #' @examples
 #' \dontrun{fram_db |> msf_landed_catch_chinook_(run_id = 101)}
 #'
-msf_landed_catch_chinook_ <- function(fram_db, run_id){
+msf_landed_catch_chinook_ <- function(fram_db, run_id=NULL){
   landed_catch_ <- fram_db |>
-    fetch_table('Mortality') |>
-    dplyr::filter(.data$run_id == .env$run_id)
+    fetch_table('Mortality')
 
 
   landed_catch <- landed_catch_ |>
