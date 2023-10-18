@@ -1,12 +1,11 @@
 #' Returns a tibble matching the MSF screen report mortalities for Chinook. This is
 #' specific for Chinook and in most cases msf_mortalities() is preferable.
 #' @param fram_db FRAM database object
-#' @param run_id Run ID
 #' @export
 #' @examples
 #' \dontrun{fram_db |> msf_mortalities_chinook_(run_id = 101)}
 #'
-msf_mortalities_chinook_ <- function(fram_db, run_id=NULL){
+msf_mortalities_chinook_ <- function(fram_db){
   mortalities_ <- fram_db |>
                     fetch_table('Mortality') #|>
     #dplyr::filter(.data$run_id == .env$run_id)
@@ -47,13 +46,12 @@ msf_mortalities_chinook_ <- function(fram_db, run_id=NULL){
 #' Returns a tibble matching the MSF screen report encounters for Chinook.
 #'  This is specific for Chinook and in most cases msf_encounters() is preferable.
 #' @param fram_db FRAM database object
-#' @param run_id Run ID
 #' @export
 #' @examples
 #' \dontrun{fram_db |> msf_encounters_chinook_(run_id = 101)}
 #'
 
-msf_encounters_chinook_ <- function(fram_db, run_id=NULL){
+msf_encounters_chinook_ <- function(fram_db){
   encounters_ <- fram_db |>
     fetch_table('Mortality')
 
@@ -92,12 +90,11 @@ msf_encounters_chinook_ <- function(fram_db, run_id=NULL){
 #' Returns a tibble matching the MSF screen report landed catch for Chinook.
 #'  This is specific for Chinook and in most cases msf_landed_catch() is preferable.
 #' @param fram_db FRAM database object
-#' @param run_id Run ID
 #' @export
 #' @examples
 #' \dontrun{fram_db |> msf_landed_catch_chinook_(run_id = 101)}
 #'
-msf_landed_catch_chinook_ <- function(fram_db, run_id=NULL){
+msf_landed_catch_chinook_ <- function(fram_db){
   landed_catch_ <- fram_db |>
     fetch_table('Mortality')
 

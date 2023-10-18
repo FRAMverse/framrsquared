@@ -5,18 +5,16 @@
 \title{Returns a tibble matching the MSF screen report mortalities for Coho This is
 specific for Coho and in most cases msf_mortalities() is preferable.}
 \usage{
-msf_mortalities_coho_(fram_db, run_id = NULL)
+msf_mortalities_coho_(fram_db)
 }
 \arguments{
 \item{fram_db}{FRAM database object}
-
-\item{run_id}{Run ID}
 }
 \description{
 Returns a tibble matching the MSF screen report mortalities for Coho This is
 specific for Coho and in most cases msf_mortalities() is preferable.
 }
 \examples{
-\dontrun{fram_db |> msf_mortalities_coho_(run_id = 101)}
+\dontrun{fram_db |> msf_mortalities_coho_()}
 
 }

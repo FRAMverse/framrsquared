@@ -1,13 +1,12 @@
 #' Returns a tibble matching the MSF screen report mortalities for Coho This is
 #' specific for Coho and in most cases msf_mortalities() is preferable.
 #' @param fram_db FRAM database object
-#' @param run_id Run ID
 #' @export
 #' @examples
-#' \dontrun{fram_db |> msf_mortalities_coho_(run_id = 101)}
+#' \dontrun{fram_db |> msf_mortalities_coho_()}
 #'
 
-msf_mortalities_coho_ <- function(fram_db, run_id=NULL){
+msf_mortalities_coho_ <- function(fram_db){
   mortalities_ <- fram_db |>
     fetch_table('Mortality')#|>
     #dplyr::filter(.data$run_id == .env$run_id)
@@ -31,12 +30,11 @@ msf_mortalities_coho_ <- function(fram_db, run_id=NULL){
 #' Returns a tibble matching the MSF screen report landed catch for Coho
 #'  This is specific for Coho and in most cases msf_landed_catch() is preferable.
 #' @param fram_db FRAM database object
-#' @param run_id Run ID
 #' @export
 #' @examples
-#' \dontrun{fram_db |> msf_landed_catch_coho_(run_id = 101)}
+#' \dontrun{fram_db |> msf_landed_catch_coho_()}
 #'
-msf_landed_catch_coho_ <- function(fram_db, run_id=NULL){
+msf_landed_catch_coho_ <- function(fram_db){
 
   landed_catch_ <- fram_db |>
     fetch_table('Mortality') #|>
@@ -63,12 +61,11 @@ msf_landed_catch_coho_ <- function(fram_db, run_id=NULL){
 #' Returns a tibble matching the MSF screen report encounters for Coho
 #'  This is specific for Coho and in most cases msf_encounters() is preferable.
 #' @param fram_db FRAM database object
-#' @param run_id Run ID
 #' @export
 #' @examples
-#' \dontrun{fram_db |> msf_encounters_coho_(run_id = 101)}
+#' \dontrun{fram_db |> msf_encounters_coho_()}
 #'
-msf_encounters_coho_ <- function(fram_db, run_id=NULL){
+msf_encounters_coho_ <- function(fram_db){
   encounters_ <- fram_db |>
     fetch_table('Mortality') #|>
    # dplyr::filter(.data$run_id == .env$run_id)

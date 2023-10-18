@@ -5,12 +5,10 @@
 \title{Returns a tibble matching the MSF screen report encounters for Chinook.
  This is specific for Chinook and in most cases msf_encounters() is preferable.}
 \usage{
-msf_encounters_chinook_(fram_db, run_id = NULL)
+msf_encounters_chinook_(fram_db)
 }
 \arguments{
 \item{fram_db}{FRAM database object}
-
-\item{run_id}{Run ID}
 }
 \description{
 Returns a tibble matching the MSF screen report encounters for Chinook.
