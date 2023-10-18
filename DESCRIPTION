@@ -20,6 +20,7 @@ Imports:
     purrr,
     rlang,
     scales,
+    stringr,
     tibble,
     tidyr
 RoxygenNote: 7.2.3
