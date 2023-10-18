@@ -3,7 +3,7 @@
 \name{management_week}
 \alias{management_week}
 \title{Vectorized approach to calculating the management week, returns
-and integer}
+an integer}
 \usage{
 management_week(date)
 }
@@ -12,7 +12,7 @@ management_week(date)
 }
 \description{
 Vectorized approach to calculating the management week, returns
-and integer
+an integer
 }
 \examples{
 \dontrun{

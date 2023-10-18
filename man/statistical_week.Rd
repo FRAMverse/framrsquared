@@ -3,7 +3,7 @@
 \name{statistical_week}
 \alias{statistical_week}
 \title{Vectorized approach to calculating the statistical week, returns
-and integer}
+an integer}
 \usage{
 statistical_week(date)
 }
@@ -12,7 +12,7 @@ statistical_week(date)
 }
 \description{
 Vectorized approach to calculating the statistical week, returns
-and integer
+an integer
 }
 \examples{
 \dontrun{
