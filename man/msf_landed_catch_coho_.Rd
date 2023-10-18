@@ -5,7 +5,7 @@
 \title{Returns a tibble matching the MSF screen report landed catch for Coho
  This is specific for Coho and in most cases msf_landed_catch() is preferable.}
 \usage{
-msf_landed_catch_coho_(fram_db, run_id)
+msf_landed_catch_coho_(fram_db, run_id = NULL)
 }
 \arguments{
 \item{fram_db}{FRAM database object}

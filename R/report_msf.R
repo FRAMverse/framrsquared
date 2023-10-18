@@ -6,10 +6,10 @@
 #' @export
 #' @examples
 #' \dontrun{fram_db |> msf_mortalities_coho_(run_id = 101)}
-msf_mortalities <- function(fram_db, run_id){
+msf_mortalities <- function(fram_db, run_id = NULL){
   # checks on the run id
-  if(is.null(run_id)){rlang::abort('Run ID must be provided.')}
-  if(!is.numeric(run_id)) {rlang::abort('Run ID must be and integer')}
+  #if(is.null(run_id)){rlang::abort('Run ID must be provided.')}
+  #if(!is.numeric(run_id)) {rlang::abort('Run ID must be and integer')}
 
   if(DBI::dbIsValid(fram_db$fram_db_connection)){
     switch(
@@ -29,10 +29,10 @@ msf_mortalities <- function(fram_db, run_id){
 #' @export
 #' @examples
 #' \dontrun{fram_db |> msf_encounters(run_id = 101)}
-msf_encounters <- function(fram_db, run_id){
+msf_encounters <- function(fram_db, run_id = NULL){
   # checks on the run id
-  if(is.null(run_id)){rlang::abort('Run ID must be provided.')}
-  if(!is.numeric(run_id)) {rlang::abort('Run ID must be and integer')}
+  #if(is.null(run_id)){rlang::abort('Run ID must be provided.')}
+  #if(!is.numeric(run_id)) {rlang::abort('Run ID must be and integer')}
   if(fram_db$species == 'CHINOOK' && fram_db$fram_db_type == 'transfer'){
     rlang::abort('
                  Cannot be connected to a transfer database to use this function
@@ -58,10 +58,10 @@ msf_encounters <- function(fram_db, run_id){
 #' @export
 #' @examples
 #' \dontrun{fram_db |> msf_landed_catch(run_id = 101)}
-msf_landed_catch <- function(fram_db, run_id){
+msf_landed_catch <- function(fram_db, run_id=NULL){
   # checks on the run id
-  if(is.null(run_id)){rlang::abort('Run ID must be provided.')}
-  if(!is.numeric(run_id)) {rlang::abort('Run ID must be and integer')}
+  #if(is.null(run_id)){rlang::abort('Run ID must be provided.')}
+  #if(!is.numeric(run_id)) {rlang::abort('Run ID must be and integer')}
 
   if(DBI::dbIsValid(fram_db$fram_db_connection)){
     switch(
