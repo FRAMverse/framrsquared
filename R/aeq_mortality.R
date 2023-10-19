@@ -12,6 +12,7 @@
 #' fram_db |> aeq_mortality(run_id = 132)
 #' }
 aeq_mortality <- function(fram_db, run_id = NULL) {
+
   if (!is.numeric(run_id) && !is.null(run_id)) {
     rlang::abort("Run ID must be and integer")
   }
@@ -60,7 +61,8 @@ aeq_mortality <- function(fram_db, run_id = NULL) {
     )) |>
     dplyr::arrange(.data$run_id, .data$fishery_id,
                    .data$time_step, .data$stock_id
-                   )
+                   ) |>
+    `attr<-`('species', fram_db$fram_db_species)
 
   if(!is.null(run_id)) {
     aeq_m |> dplyr::filter(.data$run_id %in% .env$run_id)
