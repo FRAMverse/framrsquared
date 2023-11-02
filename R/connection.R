@@ -16,14 +16,25 @@ connect_fram_db <-
     }
 
     # more db checks
-    if (tolower(strsplit(db_path, '.', fixed = T)[[1]][[2]]) != 'mdb') {
-      rlang::abort('Must provide a valid .mdb access file.')
+    if (!tools::file_ext(db_path) %in% c('mdb', 'db')) {
+      rlang::abort('Must provide a valid .mdb access file or SQLite .db file')
     }
 
     # connect to database
-    con <- DBI::dbConnect(
-      drv = odbc::odbc(),
-      .connection_string = paste0("Driver={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=", db_path, ";"))
+    if(tools::file_ext(db_path) == 'mdb'){
+      con <- DBI::dbConnect(
+        drv = odbc::odbc(),
+        .connection_string = paste0("Driver={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=", db_path, ";"))
+
+    } else if (tools::file_ext(db_path) == 'db') {
+      con <- DBI::dbConnect(
+        RSQLite::SQLite(),
+        db_path
+      )
+
+    } else {
+      rlang::abort('Something went wrong connecting to a database')
+    }
 
     # returns database type, checks if fram database is valid
     fram_db_type <- fram_database_type(con)
@@ -36,7 +47,8 @@ connect_fram_db <-
       list(
         fram_db_connection = con, # pass connection back
         fram_db_type = fram_db_type$type,
-        fram_db_species = fram_db_species
+        fram_db_species = fram_db_species,
+        fram_db_medium = tools::file_ext(db_path)
       )
     )
 
