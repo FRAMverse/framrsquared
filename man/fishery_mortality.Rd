@@ -4,12 +4,14 @@
 \alias{fishery_mortality}
 \title{Returns a tibble matching the Fishery Mortality screen.}
 \usage{
-fishery_mortality(fram_db, run_id = NULL)
+fishery_mortality(fram_db, run_id = NULL, msp = TRUE)
 }
 \arguments{
 \item{fram_db}{FRAM database object}
 
 \item{run_id}{Run ID}
+
+\item{msp}{Model Stock Proportion, default TRUEroxy}
 }
 \description{
 Returns a tibble matching the Fishery Mortality screen.
