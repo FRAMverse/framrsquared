@@ -1,7 +1,7 @@
 #' Returns a tibble matching the Fishery Mortality screen.
 #' @param fram_db FRAM database object
 #' @param run_id Run ID
-#' @param msp Model Stock Proportion, default TRUEroxy
+#' @param msp Model Stock Proportion, default TRUE
 #' @export
 #' @examples
 #' \dontrun{

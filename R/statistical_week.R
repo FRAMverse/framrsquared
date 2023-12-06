@@ -48,7 +48,7 @@ statistical_week.character <- function(date) {
 
 statistical_week_ <- function(date){
   dplyr::if_else(
-    lubridate::wday(lubridate::floor_date(date, 'year')) == 1
+    lubridate::wday(lubridate::floor_date(date, 'year')) == 2
     ,
     as.integer(strftime(date, '%W'))
     ,
