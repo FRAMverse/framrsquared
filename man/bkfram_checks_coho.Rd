@@ -3,7 +3,7 @@
 \name{bkfram_checks_coho}
 \alias{bkfram_checks_coho}
 \title{Performs error checks of a backwards FRAM run
-<list checks here>}
+Returns nested tibble with diagnostics}
 \usage{
 bkfram_checks_coho(fram_db, backward_run_id = NULL, forward_run_id = NULL)
 }
@@ -16,7 +16,7 @@ bkfram_checks_coho(fram_db, backward_run_id = NULL, forward_run_id = NULL)
 }
 \description{
 Performs error checks of a backwards FRAM run
-<list checks here>
+Returns nested tibble with diagnostics
 }
 \examples{
 \dontrun{
