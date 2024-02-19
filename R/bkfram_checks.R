@@ -206,6 +206,44 @@ bkfram_checks_coho <-
     }
 
 
+    # make sure quil and queets inputs are zeroed, should be coming fr --------
+    cli::cli_h2('Checking for inputs in Quilly and Queets (should be coming from TAMM)')
+    bk_qq <- bk_fishery_scalers |>
+      dplyr::filter(.data$fishery_id %in% 65:72, # buoy 10 sport
+                    (.data$quota > 0 | .data$msf_quota > 0)) |>
+      dplyr::select(.data$run_id,
+                    .data$time_step,
+                    .data$fishery_flag,
+                    .data$quota,
+                    .data$msf_quota,
+                    .data$fishery_id) |>
+      dplyr::inner_join(fisheries, by = 'fishery_id')
+
+    fwd_qq <- fwd_fishery_scalers |>
+      dplyr::filter(.data$fishery_id %in% 65:72, # buoy 10 sport
+                    (.data$quota > 0 | .data$msf_quota > 0)) |>
+      dplyr::select(.data$run_id,
+                    .data$time_step,
+                    .data$fishery_flag,
+                    .data$quota,
+                    .data$msf_quota,
+                    .data$fishery_id) |>
+      dplyr::inner_join(fisheries, by = 'fishery_id')
+
+    if (nrow(bk_qq) > 0) {
+      cli::cli_alert_danger('There are quotas in the backward run ({bk_run_name}). This likely needs to be fixed.')
+      print(bk_qq)
+    } else {
+      cli::cli_alert_success('Quilly and Queets inputs set to zero in backward run')
+    }
+
+    if (nrow(fwd_qq) > 0) {
+      cli::cli_alert_warning('There are quotas in the forward run ({bk_run_name}). Veryify that these should be here.')
+      print(fwd_qq)
+    } else {
+      cli::cli_alert_success('Quilly and Queets inputs set to zero in forward run')
+    }
+
     # differences in flagging between runs ------------------------------------
     cli::cli_h2('Checking for differences in flagging between backward and forward runs')
 
@@ -376,7 +414,9 @@ bkfram_checks_coho <-
         'qully and queets ETRS escapement target',
         'target vs bkfram escapement',
         'flagging differences',
-        'quota differences'
+        'quota differences',
+        'queets/quilly inputs forward',
+        'queets/quilly inputs backward'
       ),
       type = c(
         'flag',
@@ -386,6 +426,8 @@ bkfram_checks_coho <-
         'escapement',
         'escapement',
         'flag',
+        'quota',
+        'quota',
         'quota'
       ),
       data = c(
@@ -396,7 +438,9 @@ bkfram_checks_coho <-
         list(etrs),
         list(bk_esc_export),
         list(mismatch_flags),
-        list(mismatch_quotas)
+        list(mismatch_quotas),
+        list(bk_qq),
+        list(fwd_qq)
       )
     )
 
