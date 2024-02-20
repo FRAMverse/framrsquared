@@ -373,6 +373,26 @@ bkfram_checks_coho <-
     print(etrs)
 
 
+    # check coastal iterations ------------------------------------------------
+    # coastal iterations should be turned off
+
+    bk_run_coastal <- run |>
+      dplyr::filter(.data$run_id == .env$backward_run_id) |>
+      dplyr::pull(.data$coastal_iterations)
+
+    fwd_run_coastal <- run |>
+      dplyr::filter(.data$run_id == .env$forward_run_id) |>
+      dplyr::pull(.data$coastal_iterations)
+
+    if(bk_run_coastal == 'Yes'){
+      cli::cli_alert_danger('Coastal Iterations for the backward run ({bk_run_name}) is on')
+    } else if(fwd_run_coastal == 'Yes'){
+      cli::cli_alert_danger('Coastal Iterations for the forward run ({fwd_run_name}) is on')
+    } else {
+      cli::cli_alert_success('Coastal Iterations is turned off for both backward and forward runs')
+    }
+
+
     # differences between target and bkfram escapement ------------------------
     cli::cli_h2('Checking backwards FRAM escapements vs targets')
 
