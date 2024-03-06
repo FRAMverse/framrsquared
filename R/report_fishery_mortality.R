@@ -111,17 +111,17 @@ fishery_mortality <- function(fram_db, run_id = NULL, msp = TRUE) {
 coho_stock_mortality <- function(fram_db, run_id = NULL, stock_id = NULL, top_n = 10){
 
   # check for null ids
-  if (is.null(.env$run_id) | is.null(.env$stock_id)) {
+  if (is.null(run_id) | is.null(stock_id)) {
     rlang::abort("Both a run_id and stock_id must be supplied")
   }
 
   # make sure run ids are integers
-  if (!is.numeric(.env$run_id)) {
+  if (!is.numeric(run_id)) {
     rlang::abort("Run ID must be and integer")
   }
 
   # make sure run ids are integers
-  if (!is.numeric(.env$stock_id)) {
+  if (!is.numeric(stock_id)) {
     rlang::abort("Stock ID must be and integer")
   }
 

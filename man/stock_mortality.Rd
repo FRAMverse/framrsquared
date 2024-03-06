@@ -17,7 +17,7 @@ Returns a tibble matching the Fishery Mortality screen.
 \examples{
 \dontrun{
 fram_db |>
- stock_mortality(run=132) |>
+ stock_mortality(run_id=132) |>
  filter(stock_id == 17, fishery_id == 36)
 
 }
