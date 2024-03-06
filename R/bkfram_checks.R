@@ -238,10 +238,10 @@ bkfram_checks_coho <-
     }
 
     if (nrow(fwd_qq) > 0) {
-      cli::cli_alert_warning('There are quotas in the forward run ({bk_run_name}). Veryify that these should be here.')
-      print(fwd_qq)
+      cli::cli_alert_success('Quilly and Queets inputs set in forward run')
     } else {
-      cli::cli_alert_success('Quilly and Queets inputs set to zero in forward run')
+      cli::cli_alert_warning('Quilly and Queets quotas not set in the forward run ({fwd_run_name}).')
+      print(fwd_qq)
     }
 
     # differences in flagging between runs ------------------------------------
@@ -291,7 +291,11 @@ bkfram_checks_coho <-
         suffix = c('_bk', '_fwd')
       ) |>
       dplyr::filter(.data$total_quota_bk != .data$total_quota_fwd,
-                    .data$fishery_id != 23) |> # buoy 10 sport, expected
+                    !.data$fishery_id %in% c(
+                      23, # buoy 10 sport
+                      65:72 # queets and quilly
+                    )
+                    ) |>
       dplyr::mutate(difference = abs(.data$total_quota_bk - .data$total_quota_fwd)) |>
       dplyr::arrange(-.data$difference) |>
       dplyr::inner_join(fisheries, by = 'fishery_id')
