@@ -22,6 +22,7 @@ Imports:
     rlang,
     RSQLite,
     scales,
+    stats,
     stringr,
     tibble,
     tidyr,
