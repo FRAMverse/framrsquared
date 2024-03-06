@@ -168,7 +168,7 @@ coho_stock_mortality <- function(fram_db, run_id = NULL, stock_id = NULL, top_n 
     ggplot2::ggplot(ggplot2::aes(.data$total_mort, stats::reorder(.data$fishery_name, .data$total_mort))) +
     ggplot2::geom_col() +
     ggplot2::labs(
-      subtitle = glue::glue('Top motality for stock {stock_name} ({run_name})'),
+      subtitle = glue::glue('Top mortality for stock {stock_name} ({run_name})'),
       x = 'Mortalities',
       y = 'Fishery'
     )
