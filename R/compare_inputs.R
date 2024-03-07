@@ -48,7 +48,7 @@ compare_inputs_chart <- function(.data){
     #dplyr::filter(!is.na(.data$percent_diff)) |>
     ggplot2::ggplot(ggplot2::aes(factor(.data$fishery_id), .data$time_step, fill = dplyr::if_else(.data$percent_diff > 0, 'pos', 'neg'), alpha=abs(.data$percent_diff))) +
     ggplot2::geom_tile() +
-    ggplot2::geom_text(ggplot2::aes(label = paste0(scales::percent(.data$percent_diff), '\n', .data$reg_change ))) +
+    ggplot2::geom_text(ggplot2::aes(label = paste0(scales::percent(round(.data$percent_diff,3)), '\n', .data$reg_change ))) +
     ggplot2::theme(legend.position = 'none') +
     ggplot2::labs(
       subtitle = 'FRAM input comparison heatmap',
