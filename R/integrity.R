@@ -196,9 +196,11 @@ run_info <- function(fram_db, run_id = NULL) {
 
   cli::cli_h1('FRAM Run Information')
   cli::cli_text(cat(cli::col_blue('Species: '), cli::col_grey(run_info$species_name[[1]])))
+  cli::cli_text(cat(cli::col_blue('Database Type: '), cli::col_grey(fram_db$fram_db_type)))
   cli::cli_text(cat(cli::col_blue('Run Name: '), cli::col_grey(run_info$run_name[[1]])))
   cli::cli_text(cat(cli::col_blue('Run Title: '), cli::col_grey(run_info$run_title[[1]])))
   cli::cli_text(cat(cli::col_blue('Run Date: '), cli::col_grey(run_info$run_time_date[[1]])))
+  cli::cli_text(cat(cli::col_blue('Modify Date: '), cli::col_grey(run_info$modify_input_date[[1]])))
   cli::cli_text(cat(cli::col_blue('TAMM: '), cli::col_grey(run_info$tamm_name[[1]])))
   cli::cli_text(cat(cli::col_blue('Coast Iterations: '), cli::col_grey(run_info$coastal_iterations[[1]])))
   cli::cli_text(cat(cli::col_blue('Run Comments: '), '\n', cli::col_grey(run_info$run_comments[[1]])))
