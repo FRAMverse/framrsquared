@@ -207,3 +207,29 @@ run_info <- function(fram_db, run_id = NULL) {
 
 }
 
+#' Welcome message
+#' @param con FRAM database connection
+#' @examples
+#' \dontrun{welcome(con)}
+#'
+welcome <- function(con){
+  runs <- DBI::dbReadTable(con, 'RunID') |>
+    tibble::as_tibble() |>
+    janitor::clean_names()
+
+  species <- unique(runs$species_name)
+  run_count <- nrow(runs)
+  last_run <- format(max(runs$run_time_date), '%a, %B %d, %Y %I:%M %p')
+  last_modify_input <- format(max(runs$modify_input_date), '%a, %B %d, %Y %I:%M %p')
+  last_run_name <- runs |>
+    dplyr::filter(.data$run_time_date == max(runs$run_time_date)) |>
+    dplyr::pull(.data$run_name)
+
+  cli::cli_text(cat(cli::col_blue('Database Species: '), cli::col_grey(species)))
+  cli::cli_text(cat(cli::col_blue('Run Count: '), cli::col_grey(run_count)))
+  cli::cli_text(cat(cli::col_blue('Last Run Date: '), cli::col_grey(last_run)))
+  cli::cli_text(cat(cli::col_blue('Last Run Name: '), cli::col_grey(last_run_name)))
+  cli::cli_text(cat(cli::col_blue('Last Modify Date: '), cli::col_grey(last_modify_input)))
+
+}
+

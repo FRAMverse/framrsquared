@@ -41,7 +41,9 @@ connect_fram_db <-
 
     fram_db_species <- fram_database_species(con)
 
-    rlang::inform('Successfully connected to FRAM database')
+    cli::cli_alert_success('Successfully connected to FRAM database')
+
+    welcome(con)
 
     return(
       list(
@@ -65,6 +67,6 @@ connect_fram_db <-
 disconnect_fram_db <- function(fram_db){
   db_var_name <- deparse(substitute(fram_db))
   DBI::dbDisconnect(fram_db$fram_db_connection)
-  rlang::inform(glue::glue('Successfully disconnected from FRAM database ({db_var_name})'))
+  cli::cli_alert_success(glue::glue('Successfully disconnected from FRAM database ({db_var_name})'))
 }
 
