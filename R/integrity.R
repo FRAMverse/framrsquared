@@ -225,6 +225,16 @@ welcome <- function(con){
     dplyr::filter(.data$run_time_date == max(runs$run_time_date)) |>
     dplyr::pull(.data$run_name)
 
+  cli::cli_text(cat(cli::col_black("
+             .
+            \":\"
+          ___:____     |\"\\/\"|
+        ,'        `.    \\  /
+        |  O        \\___/  |
+      ~^~^~^~^~^~^~^~^~^~^~^~^~
+             S.R.K.W
+              ")))
+
   cli::cli_text(cat(cli::col_blue('Database Species: '), cli::col_grey(species)))
   cli::cli_text(cat(cli::col_blue('Run Count: '), cli::col_grey(run_count)))
   cli::cli_text(cat(cli::col_blue('Last Run Date: '), cli::col_grey(last_run)))

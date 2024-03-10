@@ -175,5 +175,112 @@ coho_stock_mortality <- function(fram_db, run_id = NULL, stock_id = NULL, top_n 
 
 }
 
+#' Creates an ordered bar chart with
+#' the top number of mortalities per
+#' fishery and time step.
+#'
+#' @export
+#'
+#' @param fram_db fram database object, supplied through connect_fram_db
+#' @param run_id numeric, RunID
+#' @param stock_id numeric, ID of focal stock
+#' @param top_n numeric, Number of fisheries to display
+#'
+#' @examples
+#' \dontrun{
+#' fram_db |> coho_stock_mortality_time_step(run_id = 132, stock_id = 17)
+#' }
+#'
+coho_stock_mortality_time_step <- function(fram_db, run_id = NULL, stock_id = NULL, top_n = 10){
+
+  # check for null ids
+  if (is.null(run_id) | is.null(stock_id)) {
+    rlang::abort("Both a run_id and stock_id must be supplied")
+  }
+
+  # make sure run ids are integers
+  if (!is.numeric(run_id)) {
+    rlang::abort("Run ID must be and integer")
+  }
+
+  # make sure run ids are integers
+  if (!is.numeric(stock_id)) {
+    rlang::abort("Stock ID must be and integer")
+  }
+
+  # lut for display of stock name
+  stocks <- fram_db |>
+    fetch_table('Stock') |>
+    dplyr::filter(.data$species == fram_db$fram_db_species) |>
+    dplyr::select(.data$stock_id, .data$stock_name)
+
+  # lut for display of fishery
+  fisheries <- fram_db |>
+    fetch_table('Fishery') |>
+    dplyr::filter(.data$species == fram_db$fram_db_species) |>
+    dplyr::select(.data$fishery_id, .data$fishery_name)
+
+
+  stocks <- fram_db |>
+    fetch_table('Stock') |>
+    dplyr::filter(.data$species == fram_db$fram_db_species) |>
+    dplyr::select(.data$stock_id, .data$stock_name)
+
+  # lut for display of fishery
+  fisheries <- fram_db |>
+    fetch_table('Fishery') |>
+    dplyr::filter(.data$species == fram_db$fram_db_species) |>
+    dplyr::select(.data$fishery_id, .data$fishery_name)
+
+
+  mortality <- fram_db |>
+    fetch_table('Mortality') |>
+    dplyr::filter(.data$run_id == .env$run_id,
+                  .data$stock_id == .env$stock_id) |>
+    dplyr::group_by(.data$run_id, .data$stock_id, .data$time_step, .data$fishery_id) |>
+    dplyr::summarize(
+      dplyr::across(c(.data$landed_catch:.data$drop_off,
+                      .data$msf_landed_catch:.data$msf_drop_off), \(x) sum(x)),
+      .groups='drop') |>
+    dplyr::mutate(
+      total_mort = .data$landed_catch + .data$non_retention + .data$shaker + .data$drop_off +
+        .data$msf_landed_catch + .data$msf_non_retention + .data$msf_shaker + .data$msf_drop_off
+    ) |>
+    dplyr::select(.data$run_id, .data$stock_id, .data$fishery_id, .data$total_mort, .data$time_step)
+
+  run_name <- fram_db |>
+    fetch_table('RunID') |>
+    dplyr::filter(.data$run_id == .env$run_id) |>
+    dplyr::pull(.data$run_name)
+
+  stock_name <- stocks |>
+    dplyr::filter(.data$stock_id == .env$stock_id) |>
+    dplyr::pull(.data$stock_name)
+
+  mort_table <- mortality |>
+    dplyr::group_by(.data$run_id, .data$stock_id, .data$fishery_id) |>
+    dplyr::summarize(
+      dplyr::across(.data$total_mort, \(x) sum(x)),
+      .groups='drop') |>
+    dplyr::slice_max(.data$total_mort, n = top_n) |>
+    dplyr::pull(.data$fishery_id)
+
+  top_fish <- mortality |>
+    dplyr::filter(.data$fishery_id %in% mort_table)
+
+
+  top_fish |>
+    dplyr::inner_join(fisheries, by = 'fishery_id') |>
+    ggplot2::ggplot(ggplot2::aes(.data$total_mort, stats::reorder(.data$fishery_name, .data$total_mort, function(x){ sum(x) }), fill = factor(.data$time_step))) +
+    ggplot2::geom_col(alpha = .6) +
+    ggplot2::scale_fill_brewer(palette = 'Set1') +
+    ggplot2::labs(
+      subtitle = glue::glue('Top mortality for stock {stock_name} ({run_name})'),
+      x = 'Mortalities',
+      y = 'Fishery'
+    ) +
+    ggplot2::theme(legend.title = ggplot2::element_blank())
+
+}
 
 
