@@ -8,7 +8,7 @@ by the TRuns report driver}
 truns_fisheries(fram_db)
 }
 \arguments{
-\item{db_path}{Path to a FRAM database.}
+\item{fram_db}{FRAM database object}
 }
 \description{
 Returns a dataframe with fisheries defined
