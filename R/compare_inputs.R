@@ -87,11 +87,10 @@ input_summary_ <- function(.data, run_id){
 }
 
 
-
-
 #' Outputs mismatches between runs to the console
 #' @param fram_db FRAM database object
 #' @param run_ids Vector of run_ids (two)
+#' @param tolerance Perecent of difference for detection
 #' @export
 #' @examples
 #' \dontrun{fram_db |> compart_runs(c(100,101))}
@@ -113,6 +112,8 @@ compare_runs <- function(fram_db, run_ids, tolerance = 0.1) {
   run_2_name <- run_names |>
     dplyr::filter(.data$run_id == .env$run_ids[2]) |>
     dplyr::pull(.data$run_name)
+
+  cli::cli_h1('Comparing run {run_1_name} with {run_2_name}')
 
   # stock names
   stocks <- fram_db |> fetch_table('Stock') |>
@@ -152,19 +153,19 @@ compare_runs <- function(fram_db, run_ids, tolerance = 0.1) {
 
   fishery <- fram_db |>
     fetch_table('FisheryScalers') |>
-    dplyr::filter(run_id %in% .env$run_ids) |>
+    dplyr::filter(.data$run_id %in% .env$run_ids) |>
     dplyr::select(dplyr::where(is.numeric)) |>
-    tidyr::pivot_longer(-c(run_id:time_step)) |>
+    tidyr::pivot_longer(-c(.data$run_id:.data$time_step)) |>
     dplyr::filter(.data$name != 'primary_key') |>
     dplyr::group_by(.data$fishery_id, .data$time_step, .data$name, .data$value) |>
-    dplyr::mutate(n = dplyr::n()) |>
+    dplyr::mutate(count = dplyr::n()) |>
     dplyr::ungroup() |>
-    dplyr::filter(.data$n != 2)
+    dplyr::filter(.data$count != 2)
 
   if (nrow(fishery) > 0) {
     cli::cli_alert_warning('Fishery Scaler mismatch between {run_1_name} and {run_2_name}')
     fishery |>
-      dplyr::select(-.data$n) |>
+      dplyr::select(-.data$count) |>
       tidyr::pivot_wider(names_from = .data$run_id,
                   values_from = .data$value,
                   names_glue = 'run_{run_id}') |>
@@ -172,7 +173,7 @@ compare_runs <- function(fram_db, run_ids, tolerance = 0.1) {
         !!rlang::sym(glue::glue('run_{run_ids[2]}'))-!!rlang::sym(glue::glue('run_{run_ids[1]}'))
       ) / !!rlang::sym(glue::glue('run_{run_ids[1]}')))) |>
       dplyr::arrange(-.data$perecent_diff, .data$name) |>
-      dplyr::filter(perecent_diff > .env$tolerance) |>
+      dplyr::filter(.data$perecent_diff > .env$tolerance) |>
       dplyr::inner_join(fisheries, by = 'fishery_id') |>
       dplyr::select(.data$fishery_id, .data$fishery_name, dplyr::everything()) |>
       print(n = Inf)
@@ -184,18 +185,18 @@ compare_runs <- function(fram_db, run_ids, tolerance = 0.1) {
     fetch_table('NonRetention') |>
     dplyr::filter(.data$run_id %in% .env$run_ids) |>
     dplyr::select(dplyr::where(is.numeric)) |>
-    tidyr::pivot_longer(-c(run_id:time_step)) |>
+    tidyr::pivot_longer(-c(.data$run_id:.data$time_step)) |>
     dplyr::filter(.data$name != 'primary_key') |>
     dplyr::group_by(.data$fishery_id, .data$time_step, .data$name, .data$value) |>
-    dplyr::mutate(n = n()) |>
+    dplyr::mutate(count = dplyr::n()) |>
     dplyr::ungroup() |>
-    dplyr::filter(.data$n != 2)
+    dplyr::filter(.data$count != 2)
 
 
   if (nrow(non_retention) > 0) {
     cli::cli_alert_warning('Non-retention mismatch between {run_1_name} and {run_2_name}')
     non_retention |>
-      dplyr::select(-.data$n) |>
+      dplyr::select(-.data$count) |>
       tidyr::pivot_wider(names_from = .data$run_id,
                   values_from = .data$value,
                   names_glue = 'run_{run_id}') |>
