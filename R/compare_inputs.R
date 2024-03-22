@@ -85,3 +85,131 @@ input_summary_ <- function(.data, run_id){
     ) |>
     dplyr::select(.data$run_id,.data$fishery_id,.data$fishery_flag, .data$time_step, .data$total_quota, .data$regulation)
 }
+
+
+
+
+#' Outputs mismatches between runs to the console
+#' @param fram_db FRAM database object
+#' @param run_ids Vector of run_ids (two)
+#' @export
+#' @examples
+#' \dontrun{fram_db |> compart_runs(c(100,101))}
+#'
+compare_runs <- function(fram_db, run_ids, tolerance = 0.1) {
+  # abort if don't have two run ids
+  if(length(run_ids) != 2){rlang::abort('Two valid run ids must be provided')}
+  # dplyr::pull things to make reading this easier
+  # run names
+  run <- fram_db |> fetch_table('RunID')
+  run_names <- run |>
+    dplyr::filter(.data$run_id %in% .env$run_ids) |>
+    dplyr::select(.data$run_id, .data$run_name)
+
+  run_1_name <- run_names |>
+    dplyr::filter(.data$run_id == .env$run_ids[1]) |>
+    dplyr::pull(.data$run_name)
+
+  run_2_name <- run_names |>
+    dplyr::filter(.data$run_id == .env$run_ids[2]) |>
+    dplyr::pull(.data$run_name)
+
+  # stock names
+  stocks <- fram_db |> fetch_table('Stock') |>
+    dplyr::filter(.data$species == fram_db$fram_db_species) |>
+    dplyr::select(.data$stock_id, .data$stock_name)
+
+  # fishery names
+  fisheries <- fram_db |> fetch_table('Fishery') |>
+    dplyr::filter(.data$species == fram_db$fram_db_species) |>
+    dplyr::select(.data$fishery_id, .data$fishery_name)
+
+  # recruit scalers
+  recruits <- fram_db |>
+    fetch_table('StockRecruit') |>
+    dplyr::filter(.data$run_id %in% .env$run_ids) |>
+    dplyr::select(.data$run_id, .data$stock_id, .data$recruit_scale_factor) |>
+    tidyr::pivot_wider(names_from = .data$run_id,
+                values_from = .data$recruit_scale_factor,
+                names_glue = 'run_{run_id}') |>
+    dplyr::filter(!!rlang::sym(glue::glue('run_{run_ids[1]}')) != !!rlang::sym(glue::glue('run_{run_ids[2]}'))) |>
+    dplyr::inner_join(stocks, by = 'stock_id') |>
+    dplyr::select(.data$stock_id, .data$stock_name, dplyr::everything())
+
+
+  # show reslult
+  if (nrow(recruits) > 0) {
+    cli::cli_alert_warning('Recruit scalers mismatch between {run_1_name} and {run_2_name}')
+    recruits |> print(n = Inf)
+  } else{
+    cli::cli_alert_success('Recruit scalers between {run_1_name} and {run_2_name} match')
+  }
+
+  # fishery scaler table differences
+  if (tolerance != .1) {
+    cli::cli_alert_info(glue::glue('Tolerance not set to {tolerance}'))
+  }
+
+  fishery <- fram_db |>
+    fetch_table('FisheryScalers') |>
+    dplyr::filter(run_id %in% .env$run_ids) |>
+    dplyr::select(dplyr::where(is.numeric)) |>
+    tidyr::pivot_longer(-c(run_id:time_step)) |>
+    dplyr::filter(.data$name != 'primary_key') |>
+    dplyr::group_by(.data$fishery_id, .data$time_step, .data$name, .data$value) |>
+    dplyr::mutate(n = dplyr::n()) |>
+    dplyr::ungroup() |>
+    dplyr::filter(.data$n != 2)
+
+  if (nrow(fishery) > 0) {
+    cli::cli_alert_warning('Fishery Scaler mismatch between {run_1_name} and {run_2_name}')
+    fishery |>
+      dplyr::select(-.data$n) |>
+      tidyr::pivot_wider(names_from = .data$run_id,
+                  values_from = .data$value,
+                  names_glue = 'run_{run_id}') |>
+      dplyr::mutate(perecent_diff = abs((
+        !!rlang::sym(glue::glue('run_{run_ids[2]}'))-!!rlang::sym(glue::glue('run_{run_ids[1]}'))
+      ) / !!rlang::sym(glue::glue('run_{run_ids[1]}')))) |>
+      dplyr::arrange(-.data$perecent_diff, .data$name) |>
+      dplyr::filter(perecent_diff > .env$tolerance) |>
+      dplyr::inner_join(fisheries, by = 'fishery_id') |>
+      dplyr::select(.data$fishery_id, .data$fishery_name, dplyr::everything()) |>
+      print(n = Inf)
+  } else{
+    cli::cli_alert_success('Fishery scalers between {run_1_name} and {run_2_name} match')
+  }
+
+  non_retention <- fram_db |>
+    fetch_table('NonRetention') |>
+    dplyr::filter(.data$run_id %in% .env$run_ids) |>
+    dplyr::select(dplyr::where(is.numeric)) |>
+    tidyr::pivot_longer(-c(run_id:time_step)) |>
+    dplyr::filter(.data$name != 'primary_key') |>
+    dplyr::group_by(.data$fishery_id, .data$time_step, .data$name, .data$value) |>
+    dplyr::mutate(n = n()) |>
+    dplyr::ungroup() |>
+    dplyr::filter(.data$n != 2)
+
+
+  if (nrow(non_retention) > 0) {
+    cli::cli_alert_warning('Non-retention mismatch between {run_1_name} and {run_2_name}')
+    non_retention |>
+      dplyr::select(-.data$n) |>
+      tidyr::pivot_wider(names_from = .data$run_id,
+                  values_from = .data$value,
+                  names_glue = 'run_{run_id}') |>
+      dplyr::mutate(perecent_diff = abs((
+        !!rlang::sym(glue::glue('run_{run_ids[2]}'))-!!rlang::sym(glue::glue('run_{run_ids[1]}'))
+      ) / !!rlang::sym(glue::glue('run_{run_ids[1]}')))) |>
+      dplyr::arrange(-.data$perecent_diff, .data$name) |>
+      dplyr::filter(.data$perecent_diff > .env$tolerance) |>
+      dplyr::inner_join(fisheries, by = 'fishery_id') |>
+      dplyr::select(.data$fishery_id, .data$fishery_name, dplyr::everything()) |>
+      print(n = Inf)
+  } else{
+    cli::cli_alert_success('Non-retention between {run_1_name} and {run_2_name} match')
+  }
+
+
+}
