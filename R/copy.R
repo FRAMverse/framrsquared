@@ -6,7 +6,7 @@
 #' @param fishery_id Specific fishery's scalers to be copied
 #' @export
 #' @examples
-#' \dontrun{truns <- truns_stocks(fram_db)}
+#' \dontrun{framdb |> copy_fishery_scalers(132, 133, 87)}
 #'
 
 
