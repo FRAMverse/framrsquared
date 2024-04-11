@@ -5,7 +5,7 @@
 \title{Fetches a complete table from a FRAM database. Returns a cleaned
 tibble.}
 \usage{
-fetch_table(fram_db, table_name)
+fetch_table(fram_db = NULL, table_name = NULL)
 }
 \arguments{
 \item{fram_db}{FRAM database object}

@@ -38,7 +38,7 @@ management_week.character <- function(date) {
 
   } else {
 
-    rlang::abort('Date is in an ambiguous format')
+    cli::cli_abort('Date is in an ambiguous format')
 
   }
 

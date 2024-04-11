@@ -22,13 +22,13 @@ bkfram_checks_coho <-
 
     # check for null ids
     if (is.null(backward_run_id) | is.null(forward_run_id)) {
-      rlang::abort("Both a backward and forward run ids must be supplied")
+      cli::cli_abort("Both a backward and forward run ids must be supplied")
     }
 
     # make sure run ids are integers
     if (!is.numeric(backward_run_id) |
         !is.numeric(forward_run_id)) {
-      rlang::abort("Run ID(s) must be and integers")
+      cli::cli_abort("Run ID(s) must be and integers")
     }
     # run ids are called so much in this package probably worth it
     # to add a validate validate_run_id() function to integrity.R

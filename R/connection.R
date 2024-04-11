@@ -12,12 +12,12 @@ connect_fram_db <-
 
     # verify file exists
     if (!file.exists(db_path)) {
-      rlang::abort('Database file doesn\'t exist. Check path.')
+      cli::cli_abort('Database file doesn\'t exist. Check path.')
     }
 
     # more db checks
     if (!tools::file_ext(db_path) %in% c('mdb', 'db')) {
-      rlang::abort('Must provide a valid .mdb access file or SQLite .db file')
+      cli::cli_abort('Must provide a valid .mdb access file or SQLite .db file')
     }
 
     # connect to database
@@ -33,7 +33,7 @@ connect_fram_db <-
       )
 
     } else {
-      rlang::abort('Something went wrong connecting to a database')
+      cli::cli_abort('Something went wrong connecting to a database')
     }
 
     # returns database type, checks if fram database is valid

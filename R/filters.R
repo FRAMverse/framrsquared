@@ -11,7 +11,7 @@
 #'
 filter_sport <- function(.data){
   if(!'fishery_id' %in% colnames(.data)){
-    rlang::abort('fishery_id column must be present in dataframe.')
+    cli::cli_abort('fishery_id column must be present in dataframe.')
   }
 
   if(attr(.data, 'species') == 'CHINOOK'){
@@ -41,7 +41,7 @@ filter_sport <- function(.data){
           )
       )
   } else {
-    rlang::abort('Table metadata missing... Table not generated from this package?')
+    cli::cli_abort('Table metadata missing... Table not generated from this package?')
   }
 
 }
@@ -59,7 +59,7 @@ filter_sport <- function(.data){
 #'
 filter_net <- function(.data){
   if(!'fishery_id' %in% colnames(.data)){
-    rlang::abort('fishery_id column must be present in dataframe.')
+    cli::cli_abort('fishery_id column must be present in dataframe.')
   }
   # if it's not sport it must be net
   if(attr(.data, 'species') == 'CHINOOK'){
@@ -89,7 +89,7 @@ filter_net <- function(.data){
         )
       )
   } else {
-    rlang::abort('Table metadata missing... Table not generated from this package?')
+    cli::cli_abort('Table metadata missing... Table not generated from this package?')
   }
 
 }
@@ -110,7 +110,7 @@ filter_net <- function(.data){
 #'
 filter_puget_sound <- function(.data){
   if(!'fishery_id' %in% colnames(.data)){
-    rlang::abort('fishery_id column must be present in dataframe.')
+    cli::cli_abort('fishery_id column must be present in dataframe.')
   }
 
   if(attr(.data, 'species') == 'CHINOOK'){
@@ -124,7 +124,7 @@ filter_puget_sound <- function(.data){
         .data$fishery_id %in% c(76:166)
       )
   } else {
-    rlang::abort('Table metadata missing... Table not generated from this package?')
+    cli::cli_abort('Table metadata missing... Table not generated from this package?')
   }
 
 }
@@ -143,7 +143,7 @@ filter_puget_sound <- function(.data){
 #'
 filter_wa <- function(.data){
   if(!'fishery_id' %in% colnames(.data)){
-    rlang::abort('fishery_id column must be present in dataframe.')
+    cli::cli_abort('fishery_id column must be present in dataframe.')
   }
 
   if(attr(.data, 'species') == 'CHINOOK'){
@@ -157,7 +157,7 @@ filter_wa <- function(.data){
         .data$fishery_id %in% c(23:166)
       )
   } else {
-    rlang::abort('Table metadata missing... Table not generated from this package?')
+    cli::cli_abort('Table metadata missing... Table not generated from this package?')
   }
 
 }
@@ -175,7 +175,7 @@ filter_wa <- function(.data){
 #'
 filter_bc <- function(.data){
   if(!'fishery_id' %in% colnames(.data)){
-    rlang::abort('fishery_id column must be present in dataframe.')
+    cli::cli_abort('fishery_id column must be present in dataframe.')
   }
 
   if(attr(.data, 'species') == 'CHINOOK'){
@@ -189,7 +189,7 @@ filter_bc <- function(.data){
         .data$fishery_id %in% c(167:193)
       )
   } else {
-    rlang::abort('Table metadata missing... Table not generated from this package?')
+    cli::cli_abort('Table metadata missing... Table not generated from this package?')
   }
 
 }
@@ -207,7 +207,7 @@ filter_bc <- function(.data){
 #'
 filter_ak <- function(.data){
   if(!'fishery_id' %in% colnames(.data)){
-    rlang::abort('fishery_id column must be present in dataframe.')
+    cli::cli_abort('fishery_id column must be present in dataframe.')
   }
 
   if(attr(.data, 'species') == 'CHINOOK'){
@@ -221,7 +221,7 @@ filter_ak <- function(.data){
         .data$fishery_id %in% c(194:198)
       )
   } else {
-    rlang::abort('Table metadata missing... Table not generated from this package?')
+    cli::cli_abort('Table metadata missing... Table not generated from this package?')
   }
 }
 
@@ -239,7 +239,7 @@ filter_ak <- function(.data){
 #'
 filter_ca <- function(.data){
   if(!'fishery_id' %in% colnames(.data)){
-    rlang::abort('fishery_id column must be present in dataframe.')
+    cli::cli_abort('fishery_id column must be present in dataframe.')
   }
 
   if(attr(.data, 'species') == 'CHINOOK'){
@@ -253,7 +253,7 @@ filter_ca <- function(.data){
         .data$fishery_id %in% c(1:8)
       )
   } else {
-    rlang::abort('Table metadata missing... Table not generated from this package?')
+    cli::cli_abort('Table metadata missing... Table not generated from this package?')
   }
 }
 
@@ -270,7 +270,7 @@ filter_ca <- function(.data){
 #'
 filter_or <- function(.data){
   if(!'fishery_id' %in% colnames(.data)){
-    rlang::abort('fishery_id column must be present in dataframe.')
+    cli::cli_abort('fishery_id column must be present in dataframe.')
   }
 
   if(attr(.data, 'species') == 'CHINOOK'){
@@ -284,7 +284,7 @@ filter_or <- function(.data){
         .data$fishery_id %in% c(5:32)
       )
   } else {
-    rlang::abort('Table metadata missing... Table not generated from this package?')
+    cli::cli_abort('Table metadata missing... Table not generated from this package?')
   }
 }
 
@@ -302,7 +302,7 @@ filter_or <- function(.data){
 #'
 filter_coast <- function(.data){
   if(!'fishery_id' %in% colnames(.data)){
-    rlang::abort('fishery_id column must be present in dataframe.')
+    cli::cli_abort('fishery_id column must be present in dataframe.')
   }
 
   if(attr(.data, 'species') == 'CHINOOK'){
@@ -316,7 +316,7 @@ filter_coast <- function(.data){
         .data$fishery_id %in% c(1:22, 33:75)
       )
   } else {
-    rlang::abort('Table metadata missing... Table not generated from this package?')
+    cli::cli_abort('Table metadata missing... Table not generated from this package?')
   }
 }
 
@@ -333,7 +333,7 @@ filter_coast <- function(.data){
 #'
 filter_marine <- function(.data){
   if(!'fishery_id' %in% colnames(.data)){
-    rlang::abort('fishery_id column must be present in dataframe.')
+    cli::cli_abort('fishery_id column must be present in dataframe.')
   }
 
   if(attr(.data, 'species') == 'CHINOOK'){
@@ -353,6 +353,6 @@ filter_marine <- function(.data){
           170:198)
       )
   } else {
-    rlang::abort('Table metadata missing... Table not generated from this package?')
+    cli::cli_abort('Table metadata missing... Table not generated from this package?')
   }
 }
