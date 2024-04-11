@@ -13,10 +13,5 @@ NR_flag_translate(vec)
 Provides English translation of numeric non-retention flags
 }
 \examples{
-<<<<<<< HEAD
-NR_flag_translate(sample(1:4, 10, replace = T))
-=======
 \dontrun{NR_flag_translate(sample(1:4, 10, replace = T))}
->>>>>>> add/collin
-
 }
