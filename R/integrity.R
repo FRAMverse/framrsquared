@@ -67,7 +67,7 @@ fram_database_type <- function(con) {
   }
   else {
     DBI::dbDisconnect(con)
-    rlang::abort('This is not a valid FRAM Database')
+    cli::cli_abort('This is not a valid FRAM Database')
   }
 }
 
@@ -105,7 +105,7 @@ fram_clean_tables <- function(.data) {
 #'
 find_tables_by_column_ <- function(fram_db, column_name) {
   if (!DBI::dbIsValid(fram_db$fram_db_connection)) {
-    rlang::abort('Connect to a FRAM database first...')
+    cli::cli_abort('Connect to a FRAM database first...')
   }
 
 
@@ -188,7 +188,7 @@ remove_run <- function(fram_db, run_id){
 #'
 
 run_info <- function(fram_db, run_id = NULL) {
-  if (is.null(run_id)) {rlang::abort('A run ID must be provided')}
+  if (is.null(run_id)) {cli::cli_abort('A run ID must be provided')}
 
   run_info <- fram_db |>
     fetch_table('RunID') |>

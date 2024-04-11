@@ -14,11 +14,11 @@
 aeq_mortality <- function(fram_db, run_id = NULL) {
 
   if (!is.numeric(run_id) && !is.null(run_id)) {
-    rlang::abort("Run ID must be and integer")
+    cli::cli_abort("Run ID must be and integer")
   }
 
   if (fram_db$fram_db_species != "CHINOOK") {
-    rlang::abort("AEQ mortality can only be used with Chinook")
+    cli::cli_abort("AEQ mortality can only be used with Chinook")
   }
 
   mortality <- fram_db |>

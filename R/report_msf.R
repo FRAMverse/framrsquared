@@ -9,7 +9,7 @@
 msf_mortalities <- function(fram_db, run_id = NULL){
 
   # checks on the run id
-  if(!is.numeric(run_id) && !is.null(run_id)) {rlang::abort('Run ID must be and integer')}
+  if(!is.numeric(run_id) && !is.null(run_id)) {cli::cli_abort('Run ID must be and integer')}
 
   if(DBI::dbIsValid(fram_db$fram_db_connection) && is.null(run_id)){
     switch(
@@ -26,7 +26,7 @@ msf_mortalities <- function(fram_db, run_id = NULL){
         dplyr::filter(.data$run_id %in% .env$run_id)
     )
   } else {
-    rlang::abort('Connect to a FRAM database first...')
+    cli::cli_abort('Connect to a FRAM database first...')
   }
 }
 
@@ -39,9 +39,9 @@ msf_mortalities <- function(fram_db, run_id = NULL){
 #' \dontrun{fram_db |> msf_encounters(run_id = 101)}
 msf_encounters <- function(fram_db, run_id = NULL){
   # checks on the run id
-  if(!is.numeric(run_id) && !is.null(run_id)) {rlang::abort('Run ID must be and integer')}
+  if(!is.numeric(run_id) && !is.null(run_id)) {cli::cli_abort('Run ID must be and integer')}
   if(fram_db$species == 'CHINOOK' && fram_db$fram_db_type == 'transfer'){
-    rlang::abort('
+    cli::cli_abort('
                  Cannot be connected to a transfer database to use this function
                   for Chinook.
                  ')
@@ -62,7 +62,7 @@ msf_encounters <- function(fram_db, run_id = NULL){
         dplyr::filter(.data$run_id %in% .env$run_id)
     )
   } else {
-    rlang::abort('Connect to a FRAM database first...')
+    cli::cli_abort('Connect to a FRAM database first...')
   }
 }
 
@@ -75,8 +75,8 @@ msf_encounters <- function(fram_db, run_id = NULL){
 #' \dontrun{fram_db |> msf_landed_catch(run_id = 101)}
 msf_landed_catch <- function(fram_db, run_id=NULL){
   # checks on the run id
-  #if(is.null(run_id)){rlang::abort('Run ID must be provided.')}
-  if(!is.numeric(run_id) && !is.null(run_id)) {rlang::abort('Run ID must be and integer')}
+  #if(is.null(run_id)){cli::cli_abort('Run ID must be provided.')}
+  if(!is.numeric(run_id) && !is.null(run_id)) {cli::cli_abort('Run ID must be and integer')}
 
   if(DBI::dbIsValid(fram_db$fram_db_connection) && is.null(run_id)){
     switch(
@@ -93,7 +93,7 @@ msf_landed_catch <- function(fram_db, run_id=NULL){
         dplyr::filter(.data$run_id %in% .env$run_id)
     )
   } else {
-    rlang::abort('Connect to a FRAM database first...')
+    cli::cli_abort('Connect to a FRAM database first...')
   }
 }
 
