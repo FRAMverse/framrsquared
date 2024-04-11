@@ -8,7 +8,7 @@
 compare_inputs <- function(fram_db, run_ids){
   # abort if do have two run ids
 
-  if(length(run_ids) != 2){rlang::abort('Two valid run ids must be provided')}
+  if(length(run_ids) != 2){cli::cli_abort('Two valid run ids must be provided')}
   scalers <- fram_db |>
     fetch_table('FisheryScalers') |>
     dplyr::filter(.data$run_id %in% .env$run_ids)
@@ -93,11 +93,11 @@ input_summary_ <- function(.data, run_id){
 #' @param tolerance Perecent of difference for detection
 #' @export
 #' @examples
-#' \dontrun{fram_db |> compart_runs(c(100,101))}
+#' \dontrun{fram_db |> compare_runs(c(100,101))}
 #'
 compare_runs <- function(fram_db, run_ids, tolerance = 0.1) {
   # abort if don't have two run ids
-  if(length(run_ids) != 2){rlang::abort('Two valid run ids must be provided')}
+  if(length(run_ids) != 2){cli::cli_abort('Two valid run ids must be provided')}
   # dplyr::pull things to make reading this easier
   # run names
   run <- fram_db |> fetch_table('RunID')
@@ -199,6 +199,7 @@ compare_runs <- function(fram_db, run_ids, tolerance = 0.1) {
       dplyr::select(-.data$count) |>
       tidyr::pivot_wider(names_from = .data$run_id,
                   values_from = .data$value,
+                  values_fill = 0,
                   names_glue = 'run_{run_id}') |>
       dplyr::mutate(perecent_diff = abs((
         !!rlang::sym(glue::glue('run_{run_ids[2]}'))-!!rlang::sym(glue::glue('run_{run_ids[1]}'))
@@ -208,7 +209,7 @@ compare_runs <- function(fram_db, run_ids, tolerance = 0.1) {
       dplyr::inner_join(fisheries, by = 'fishery_id') |>
       dplyr::select(.data$fishery_id, .data$fishery_name, dplyr::everything()) |>
       print(n = Inf)
-  } else{
+  } else {
     cli::cli_alert_success('Non-retention between {run_1_name} and {run_2_name} match')
   }
 

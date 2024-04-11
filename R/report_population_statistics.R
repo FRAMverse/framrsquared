@@ -7,11 +7,11 @@
 #'
 population_statistics <- function(fram_db, run_id = NULL) {
   if(!is.numeric(run_id) && !is.null(run_id)) {
-    rlang::abort('Run ID must be and integer')
+    cli::cli_abort('Run ID must be and integer')
   }
 
   if(!DBI::dbIsValid(fram_db$fram_db_connection)) {
-    rlang::abort('Must connect to a FRAM database first...')
+    cli::cli_abort('Must connect to a FRAM database first...')
   }
 
   cohort <- fram_db |>

@@ -17,6 +17,6 @@ compare_runs(fram_db, run_ids, tolerance = 0.1)
 Outputs mismatches between runs to the console
 }
 \examples{
-\dontrun{fram_db |> compart_runs(c(100,101))}
+\dontrun{fram_db |> compare_runs(c(100,101))}
 
 }

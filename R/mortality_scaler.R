@@ -8,8 +8,8 @@
 #' \dontrun{fram_db |> mortality_scalers(run_id = 101, stock_id = c(17:18))}
 mortality_scalers <- function(fram_db, run_id, stock_id){
   # checks on the run id
-  if(is.null(run_id)){rlang::abort('Run ID must be provided.')}
-  if(!is.numeric(run_id)) {rlang::abort('Run ID must be and integer')}
+  if(is.null(run_id)){cli::cli_abort('Run ID must be provided.')}
+  if(!is.numeric(run_id)) {cli::cli_abort('Run ID must be and integer')}
 
   if(DBI::dbIsValid(fram_db$fram_db_connection)){
     switch(
@@ -18,7 +18,7 @@ mortality_scalers <- function(fram_db, run_id, stock_id){
       'COHO' = mortality_scalers_coho_(fram_db, run_id, stock_id)
     )
   } else {
-    rlang::abort('Connect to a FRAM database first...')
+    cli::cli_abort('Connect to a FRAM database first...')
   }
 }
 
