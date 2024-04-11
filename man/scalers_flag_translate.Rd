@@ -13,6 +13,10 @@ scalers_flag_translate(vec)
 Provides English translation of numeric scalers flags
 }
 \examples{
+<<<<<<< HEAD
 scaler_flags_translate(sample(c(1, 2, 7, 8, 17, 18, 27, 28), 10, replace = T))
+=======
+\dontrun{scaler_flags_translate(sample(c(1, 2, 7, 8, 17, 18, 27, 28), 10, replace = T))}
+>>>>>>> add/collin
 
 }
