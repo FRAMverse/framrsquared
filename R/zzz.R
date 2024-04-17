@@ -13,7 +13,7 @@ startup_message <- function(){
         ,'        `.    \\  /
         |  O        \\___/ |
       ~^~^~^~^~^~^~^~^~^~^~^~^~
-          framrsquared {installed.packages()['framrsquared', 'Version']}
+          framrsquared 0.2.0
               "
     ))
   ))
