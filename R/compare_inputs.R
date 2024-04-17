@@ -263,7 +263,7 @@ compare_fishery_inputs <- function(fram_db, run_ids, tolerance = .01){
     tidyr::pivot_wider(
       names_from = .data$run_name,
       values_from = .data$value,
-      values_fill = NA_real_
+      values_fill = 0
     ) |>
     dplyr::filter(abs((!!new_run_name-!!base_run_name) / !!base_run_name) > .01) |>
     dplyr::select(.data$fishery_id,
