@@ -60,7 +60,6 @@ compare_inputs_chart <- function(.data){
 
 
 
-
 #' Generates an input summary based on a FisheryScalers dataframe.
 #' Probably end up streamlining / revising this.
 #' @param .data FisheryFishery scalers dataframe
@@ -87,131 +86,460 @@ input_summary_ <- function(.data, run_id){
 }
 
 
-#' Outputs mismatches between runs to the console
+
+#' Compares the recruit scalers of two runs
 #' @param fram_db FRAM database object
-#' @param run_ids Vector of run_ids (two)
-#' @param tolerance Perecent of difference for detection
+#' @param run_ids Two run ids
+#' @param tolerance Tolerance for detecting changes
 #' @export
 #' @examples
-#' \dontrun{fram_db |> compare_runs(c(100,101))}
-#'
-compare_runs <- function(fram_db, run_ids, tolerance = 0.1) {
-  # abort if don't have two run ids
-  if(length(run_ids) != 2){cli::cli_abort('Two valid run ids must be provided')}
-  # dplyr::pull things to make reading this easier
-  # run names
-  run <- fram_db |> fetch_table('RunID')
-  run_names <- run |>
-    dplyr::filter(.data$run_id %in% .env$run_ids) |>
+#' \dontrun{fram_db |> compare_recruits()}
+compare_recruits <- function(fram_db, run_ids, tolerance = .01){
+
+  runs <- fram_db |>
+    fetch_table('RunID') |>
     dplyr::select(.data$run_id, .data$run_name)
 
-  run_1_name <- run_names |>
-    dplyr::filter(.data$run_id == .env$run_ids[1]) |>
-    dplyr::pull(.data$run_name)
 
-  run_2_name <- run_names |>
-    dplyr::filter(.data$run_id == .env$run_ids[2]) |>
-    dplyr::pull(.data$run_name)
+  base_run_name <- runs |>
+    dplyr::filter(.data$run_id == run_ids[[1]]) |>
+    dplyr::pull(.data$run_name) |>
+    rlang::sym() #... don't ask, R voodoo magic
 
-  cli::cli_h1('Comparing run {run_1_name} with {run_2_name}')
+  new_run_name <- runs |>
+    dplyr::filter(.data$run_id == run_ids[[2]]) |>
+    dplyr::pull(.data$run_name) |>
+    rlang::sym() #... don't ask, R voodoo magic
 
-  # stock names
-  stocks <- fram_db |> fetch_table('Stock') |>
+
+
+  recruit_scalers <- fram_db |>
+    fetch_table('StockRecruit')
+
+  base_period_recruit <- fram_db |>
+    fetch_table('BaseCohort')
+
+  stocks <- fram_db |>
+    fetch_table('Stock') |>
     dplyr::filter(.data$species == fram_db$fram_db_species) |>
     dplyr::select(.data$stock_id, .data$stock_name)
 
-  # fishery names
-  fisheries <- fram_db |> fetch_table('Fishery') |>
+  run_base_period <- fram_db |>
+    fetch_table('RunID') |>
+    dplyr::select(.data$run_id, .data$base_period_id)
+
+  # recalc recruit cohort size
+  base_recruits <- recruit_scalers |>
+    dplyr::inner_join(run_base_period, by = 'run_id') |>
+    dplyr::inner_join(base_period_recruit, by = c('base_period_id', 'stock_id', 'age')) |>
+    dplyr::mutate(recruit_cohort_size = .data$recruit_scale_factor * .data$base_cohort_size) |>
+    dplyr::select(.data$run_id, .data$stock_id, .data$age, .data$recruit_cohort_size)
+
+  base_recruits |>
+    dplyr::filter(.data$run_id %in% c(run_ids[[1]], run_ids[[2]])) |>
+    dplyr::inner_join(stocks, by = 'stock_id') |>
+    dplyr::inner_join(runs, by = 'run_id') |>
+    dplyr::select(-.data$run_id) |>
+    tidyr::pivot_wider(names_from = 'run_name',
+                       values_from = 'recruit_cohort_size',
+                       values_fill = NA_real_) |>
+    dplyr::filter(abs((!!new_run_name-!!base_run_name) / !!base_run_name) > tolerance) |>
+    dplyr::select(.data$stock_id,
+                  .data$age,
+                  .data$stock_name,
+                  !!base_run_name,
+                  !!new_run_name)
+
+}
+
+#' Compares the recruit scalers of two runs
+#' @param fram_db FRAM database object
+#' @param run_ids Two run ids
+#' @param tolerance Tolerance for detecting changes
+#' @export
+#' @examples
+#' \dontrun{fram_db |> compare_recruits()}
+compare_recruits <- function(fram_db, run_ids, tolerance = .01){
+
+  runs <- fram_db |>
+    fetch_table('RunID') |>
+    dplyr::select(.data$run_id, .data$run_name)
+
+
+  base_run_name <- runs |>
+    dplyr::filter(.data$run_id == run_ids[[1]]) |>
+    dplyr::pull(.data$run_name) |>
+    rlang::sym() #... don't ask, R voodoo magic
+
+  new_run_name <- runs |>
+    dplyr::filter(.data$run_id == run_ids[[2]]) |>
+    dplyr::pull(.data$run_name) |>
+    rlang::sym() #... don't ask, R voodoo magic
+
+
+
+  recruit_scalers <- fram_db |>
+    fetch_table('StockRecruit')
+
+  base_period_recruit <- fram_db |>
+    fetch_table('BaseCohort')
+
+  stocks <- fram_db |>
+    fetch_table('Stock') |>
+    dplyr::filter(.data$species == fram_db$fram_db_species) |>
+    dplyr::select(.data$stock_id, .data$stock_name)
+
+  run_base_period <- fram_db |>
+    fetch_table('RunID') |>
+    dplyr::select(.data$run_id, .data$base_period_id)
+
+  # recalc recruit cohort size
+  base_recruits <- recruit_scalers |>
+    dplyr::inner_join(run_base_period, by = 'run_id') |>
+    dplyr::inner_join(base_period_recruit, by = c('base_period_id', 'stock_id', 'age')) |>
+    dplyr::mutate(recruit_cohort_size = .data$recruit_scale_factor * .data$base_cohort_size) |>
+    dplyr::select(.data$run_id, .data$stock_id, .data$age, .data$recruit_cohort_size)
+
+  base_recruits |>
+    dplyr::filter(.data$run_id %in% run_ids) |>
+    dplyr::inner_join(stocks, by = 'stock_id') |>
+    dplyr::inner_join(runs, by = 'run_id') |>
+    dplyr::select(-.data$run_id) |>
+    tidyr::pivot_wider(names_from = .data$run_name,
+                       values_from = .data$recruit_cohort_size,
+                       values_fill = NA_real_) |>
+    dplyr::filter(abs((!!new_run_name-!!base_run_name) / !!base_run_name) > tolerance) |>
+    dplyr::select(.data$stock_id,
+                  .data$age,
+                  .data$stock_name,
+                  !!base_run_name,
+                  !!new_run_name)
+
+}
+
+#' Compares the fishery inputs of two runs
+#' @param fram_db FRAM database object
+#' @param run_ids Two run ids
+#' @param tolerance Tolerance for detecting changes
+#' @export
+#' @examples
+#' \dontrun{fram_db |> compare_fishery_inputs(c(55, 56))}
+compare_fishery_inputs <- function(fram_db, run_ids, tolerance = .01){
+
+  fishery_scalers <- fram_db |>
+    fetch_table('FisheryScalers')
+
+  runs <- fram_db |>
+    fetch_table('RunID') |>
+    dplyr::select(.data$run_id, .data$run_name)
+
+  fisheries <- fram_db |>
+    fetch_table('Fishery') |>
     dplyr::filter(.data$species == fram_db$fram_db_species) |>
     dplyr::select(.data$fishery_id, .data$fishery_name)
 
-  # recruit scalers
-  recruits <- fram_db |>
-    fetch_table('StockRecruit') |>
-    dplyr::filter(.data$run_id %in% .env$run_ids) |>
-    dplyr::select(.data$run_id, .data$stock_id, .data$recruit_scale_factor) |>
-    tidyr::pivot_wider(names_from = .data$run_id,
-                values_from = .data$recruit_scale_factor,
-                names_glue = 'run_{run_id}') |>
-    dplyr::filter(!!rlang::sym(glue::glue('run_{run_ids[1]}')) != !!rlang::sym(glue::glue('run_{run_ids[2]}'))) |>
-    dplyr::inner_join(stocks, by = 'stock_id') |>
-    dplyr::select(.data$stock_id, .data$stock_name, dplyr::everything())
+  base_run_name <- runs |>
+    dplyr::filter(.data$run_id == run_ids[[1]]) |>
+    dplyr::pull(.data$run_name) |>
+    rlang::sym() #... don't ask, R voodoo magic
+
+  new_run_name <- runs |>
+    dplyr::filter(.data$run_id == run_ids[[2]]) |>
+    dplyr::pull(.data$run_name) |>
+    rlang::sym() #... don't ask, R voodoo magic
 
 
-  # show reslult
-  if (nrow(recruits) > 0) {
-    cli::cli_alert_warning('Recruit scalers mismatch between {run_1_name} and {run_2_name}')
-    recruits |> print(n = Inf)
-  } else{
-    cli::cli_alert_success('Recruit scalers between {run_1_name} and {run_2_name} match')
-  }
+  fishery_scaler_compare <- fishery_scalers |>
+    dplyr::filter(.data$run_id %in% run_ids) |>
+    filter_flag() |>
+    dplyr::select(.data$run_id:.data$time_step,
+                  .data$fishery_scale_factor:.data$msf_quota)
 
-  # fishery scaler table differences
-  if (tolerance != .1) {
-    cli::cli_alert_info(glue::glue('Tolerance not set to {tolerance}'))
-  }
+  fishery_scaler_compare |>
+    dplyr::inner_join(runs, by = 'run_id') |>
+    dplyr::inner_join(fisheries, by = 'fishery_id') |>
+    dplyr::select(-.data$run_id) |>
+    tidyr::pivot_longer(.data$fishery_scale_factor:.data$msf_quota) |>
+    tidyr::pivot_wider(
+      names_from = .data$run_name,
+      values_from = .data$value,
+      values_fill = NA_real_
+    ) |>
+    dplyr::filter(abs((!!new_run_name-!!base_run_name) / !!base_run_name) > .01) |>
+    dplyr::select(.data$fishery_id,
+                  .data$fishery_name,
+                  .data$time_step,
+                  .data$name,
+                  !!base_run_name,
+                  !!new_run_name) |>
+    `attr<-`('species', fram_db$fram_db_species) # making accessible to package filters
+}
 
-  fishery <- fram_db |>
+
+#' Compares the fishery flags of two runs
+#' @param fram_db FRAM database object
+#' @param run_ids Two run ids
+#' @export
+#' @examples
+#' \dontrun{fram_db |> compare_fishery_input_flags(c(55, 56))}
+compare_fishery_input_flags <- function(fram_db, run_ids){
+
+  fishery_scalers <- fram_db |>
     fetch_table('FisheryScalers') |>
-    dplyr::filter(.data$run_id %in% .env$run_ids) |>
-    dplyr::select(dplyr::where(is.numeric)) |>
-    tidyr::pivot_longer(-c(.data$run_id:.data$time_step)) |>
-    dplyr::filter(.data$name != 'primary_key') |>
-    dplyr::group_by(.data$fishery_id, .data$time_step, .data$name, .data$value) |>
-    dplyr::mutate(count = dplyr::n()) |>
-    dplyr::ungroup() |>
-    dplyr::filter(.data$count != 2)
+    dplyr::filter(.data$run_id %in% run_ids)
 
-  if (nrow(fishery) > 0) {
-    cli::cli_alert_warning('Fishery Scaler mismatch between {run_1_name} and {run_2_name}')
-    fishery |>
-      dplyr::select(-.data$count) |>
-      tidyr::pivot_wider(names_from = .data$run_id,
-                  values_from = .data$value,
-                  names_glue = 'run_{run_id}') |>
-      dplyr::mutate(perecent_diff = abs((
-        !!rlang::sym(glue::glue('run_{run_ids[2]}'))-!!rlang::sym(glue::glue('run_{run_ids[1]}'))
-      ) / !!rlang::sym(glue::glue('run_{run_ids[1]}')))) |>
-      dplyr::arrange(-.data$perecent_diff, .data$name) |>
-      dplyr::filter(.data$perecent_diff > .env$tolerance) |>
-      dplyr::inner_join(fisheries, by = 'fishery_id') |>
-      dplyr::select(.data$fishery_id, .data$fishery_name, dplyr::everything()) |>
-      print(n = Inf)
-  } else{
-    cli::cli_alert_success('Fishery scalers between {run_1_name} and {run_2_name} match')
-  }
+  runs <- fram_db |>
+    fetch_table('RunID') |>
+    dplyr::select(.data$run_id, .data$run_name)
 
+  fisheries <- fram_db |>
+    fetch_table('Fishery') |>
+    dplyr::filter(.data$species == fram_db$fram_db_species) |>
+    dplyr::select(.data$fishery_id, .data$fishery_name)
+
+
+  base_run_name <- runs |>
+    dplyr::filter(.data$run_id == run_ids[[1]]) |>
+    dplyr::pull(.data$run_name) |>
+    rlang::sym() #... don't ask, R voodoo magic
+
+  new_run_name <- runs |>
+    dplyr::filter(.data$run_id == run_ids[[2]]) |>
+    dplyr::pull(.data$run_name) |>
+    rlang::sym() #... don't ask, R voodoo magic
+
+
+  # flag comparison in fishery scalers
+  fishery_scalers |>
+    dplyr::inner_join(runs, by = 'run_id') |>
+    dplyr::inner_join(fisheries, by = 'fishery_id') |>
+    dplyr::select(
+      .data$fishery_id,
+      .data$time_step,
+      .data$fishery_flag,
+      .data$run_name,
+      .data$fishery_name
+    ) |>
+    tidyr::pivot_wider(names_from = .data$run_name, values_from = .data$fishery_flag) |>
+    dplyr::filter((!!base_run_name != !!new_run_name) |
+                    xor(is.na(!!base_run_name), is.na(!!new_run_name))) |>
+    dplyr::select(
+      .data$fishery_id,
+      .data$time_step,
+      .data$fishery_name,!!base_run_name,!!new_run_name
+    ) |>
+    `attr<-`('species', fram_db$fram_db_species) # making accessible to package filters
+}
+
+
+#' Compares the non retention inputs of two runs
+#' @param fram_db FRAM database object
+#' @param run_ids Two run ids
+#' @export
+#' @examples
+#' \dontrun{fram_db |> compare_non_retention_inputs(c(55, 56))}
+compare_non_retention_inputs <- function(fram_db, run_ids){
+
+
+  runs <- fram_db |>
+    fetch_table('RunID') |>
+    dplyr::select(.data$run_id, .data$run_name)
+
+  fisheries <- fram_db |>
+    fetch_table('Fishery') |>
+    dplyr::filter(.data$species == fram_db$fram_db_species) |>
+    dplyr::select(.data$fishery_id, .data$fishery_name)
+
+
+  # non retention
   non_retention <- fram_db |>
     fetch_table('NonRetention') |>
-    dplyr::filter(.data$run_id %in% .env$run_ids) |>
-    dplyr::select(dplyr::where(is.numeric)) |>
-    tidyr::pivot_longer(-c(.data$run_id:.data$time_step)) |>
-    dplyr::filter(.data$name != 'primary_key') |>
-    dplyr::group_by(.data$fishery_id, .data$time_step, .data$name, .data$value) |>
-    dplyr::mutate(count = dplyr::n()) |>
-    dplyr::ungroup() |>
-    dplyr::filter(.data$count != 2)
+    dplyr::select(.data$run_id,
+                  .data$fishery_id,
+                  .data$time_step,
+                  dplyr::starts_with('cnr_input'))
+
+  base_run_name <- runs |>
+    dplyr::filter(.data$run_id == run_ids[[1]]) |>
+    dplyr::pull(.data$run_name) |>
+    rlang::sym() #... don't ask, R voodoo magic
+
+  new_run_name <- runs |>
+    dplyr::filter(.data$run_id == run_ids[[2]]) |>
+    dplyr::pull(.data$run_name) |>
+    rlang::sym() #... don't ask, R voodoo magic
 
 
-  if (nrow(non_retention) > 0) {
-    cli::cli_alert_warning('Non-retention mismatch between {run_1_name} and {run_2_name}')
-    non_retention |>
-      dplyr::select(-.data$count) |>
-      tidyr::pivot_wider(names_from = .data$run_id,
-                  values_from = .data$value,
-                  values_fill = 0,
-                  names_glue = 'run_{run_id}') |>
-      dplyr::mutate(perecent_diff = abs((
-        !!rlang::sym(glue::glue('run_{run_ids[2]}'))-!!rlang::sym(glue::glue('run_{run_ids[1]}'))
-      ) / !!rlang::sym(glue::glue('run_{run_ids[1]}')))) |>
-      dplyr::arrange(-.data$perecent_diff, .data$name) |>
-      dplyr::filter(.data$perecent_diff > .env$tolerance) |>
-      dplyr::inner_join(fisheries, by = 'fishery_id') |>
-      dplyr::select(.data$fishery_id, .data$fishery_name, dplyr::everything()) |>
-      print(n = Inf)
+  non_retention |>
+    dplyr::filter(.data$run_id %in% run_ids) |>
+    dplyr::inner_join(runs, by = 'run_id') |>
+    dplyr::inner_join(fisheries, by = 'fishery_id') |>
+    dplyr::select(-.data$run_id) |>
+    tidyr::pivot_longer(dplyr::starts_with('cnr_input')) |> # re rectangle
+    tidyr::pivot_wider(names_from = .data$run_name, values_from = .data$value, values_fill = 0) |>
+    dplyr::filter(!!base_run_name != !!new_run_name) |>
+    dplyr::select(
+      .data$fishery_id,
+      .data$time_step,
+      .data$name,
+      .data$fishery_name,
+      !!base_run_name,
+      !!new_run_name
+    ) |>
+    `attr<-`('species', fram_db$fram_db_species) # making accessible to package filters
+
+}
+
+
+#' Compares the non retention flags of two runs
+#' @param fram_db FRAM database object
+#' @param run_ids Two run ids
+#' @export
+#' @examples
+#' \dontrun{fram_db |> compare_non_retention_inputs(c(55, 56))}
+compare_non_retention_input_flags <- function(fram_db, run_ids){
+  runs <- fram_db |>
+    fetch_table('RunID') |>
+    dplyr::select(.data$run_id, .data$run_name)
+
+  fisheries <- fram_db |>
+    fetch_table('Fishery') |>
+    dplyr::filter(.data$species == fram_db$fram_db_species) |>
+    dplyr::select(.data$fishery_id, .data$fishery_name)
+
+
+  # non retention
+  non_retention <- fram_db |>
+    fetch_table('NonRetention') |>
+    dplyr::select(.data$run_id,
+                  .data$fishery_id,
+                  .data$time_step,
+                  .data$non_retention_flag)
+
+  base_run_name <- runs |>
+    dplyr::filter(.data$run_id == run_ids[[1]]) |>
+    dplyr::pull(.data$run_name) |>
+    rlang::sym() #... don't ask, R voodoo magic
+
+  new_run_name <- runs |>
+    dplyr::filter(.data$run_id == run_ids[[2]]) |>
+    dplyr::pull(.data$run_name) |>
+    rlang::sym() #... don't ask, R voodoo magic
+
+  non_retention |>
+    dplyr::filter(.data$run_id %in% run_ids) |>
+    dplyr::inner_join(runs, by = 'run_id') |>
+    dplyr::inner_join(fisheries, by = 'fishery_id') |>
+    dplyr::select(.data$fishery_id, .data$time_step, .data$non_retention_flag , .data$run_name, .data$fishery_name) |>
+    tidyr::pivot_wider(names_from = .data$run_name, values_from = .data$non_retention_flag) |>
+    dplyr::filter((!!base_run_name != !!new_run_name) |
+                    xor(is.na(!!base_run_name), is.na(!!new_run_name))) |>
+    dplyr::select(
+      .data$fishery_id,
+      .data$time_step,
+      .data$fishery_name,
+      !!base_run_name,
+      !!new_run_name
+    ) |>
+    `attr<-`('species', fram_db$fram_db_species) # making accessible to package filters
+
+}
+
+
+#' Generates a report to the console of changes to inputs between to runs
+#' @param fram_db FRAM database object
+#' @param run_ids Two run ids
+#' @param tolerance Tolerance of detection, 1 percent default
+#' @export
+#' @examples
+#' \dontrun{fram_db |> compare_runs(c(55, 56))}
+compare_runs <- function(fram_db, run_ids, tolerance = .01){
+
+  runs <- fram_db |>
+    fetch_table('RunID')
+
+  base_run_name <- runs |>
+    dplyr::filter(.data$run_id == run_ids[[1]]) |>
+    dplyr::pull(.data$run_name)
+
+  new_run_name <- runs |>
+    dplyr::filter(.data$run_id == run_ids[[2]]) |>
+    dplyr::pull(.data$run_name)
+
+
+  base_run_time <- runs |>
+    dplyr::filter(.data$run_id == run_ids[[1]]) |>
+    dplyr::pull(.data$run_time_date) |>
+    strftime('%Y-%m-%d %r',tz = "UTC")
+
+  new_run_time <- runs |>
+    dplyr::filter(.data$run_id == run_ids[[2]]) |>
+    dplyr::pull(.data$run_time_date) |>
+    strftime('%Y-%m-%d %r',tz = "UTC")
+
+
+  cli::cli_h1('Comparing run {base_run_name} to {new_run_name}')
+  cli::cli_alert_info('{base_run_name} was run at {base_run_time}, {new_run_name} was run at {new_run_time}')
+
+  # non-retention
+  cli::cli_h2('Non-Retention Inputs')
+
+  cli::cli_h3('Checking for changes in non-retention flagging')
+  retention_flags <- fram_db |> compare_non_retention_input_flags(run_ids)
+  if(nrow(retention_flags) > 0){
+    cli::cli_alert_info('Changes detected in non-retention flagging, below is a table outlining them')
+    print(retention_flags, n=Inf)
   } else {
-    cli::cli_alert_success('Non-retention between {run_1_name} and {run_2_name} match')
+    cli::cli_alert_success('No changes detected in non-retention flagging')
+  }
+
+  cli::cli_h3('Checking for changes in non-retention inputs')
+  retention_inputs <- fram_db |> compare_non_retention_inputs(run_ids)
+  if(nrow(retention_flags) > 0){
+    cli::cli_alert_info('Changes detected in non-retention inputs, below is a table outlining them')
+    print(retention_inputs, n=Inf)
+  } else {
+    cli::cli_alert_success('No changes detected in non-retention inputs')
+  }
+
+  # recruit scalers
+  cli::cli_h2('Recruit Inputs')
+  cli::cli_h3('Checking for changes to recruits')
+
+  recruits <- fram_db |> compare_recruits(run_ids)
+  if(nrow(recruits) > 0){
+    cli::cli_alert_info('Changes detected in recruits inputs, below is a table outlining them')
+    print(recruits, n=Inf)
+  } else {
+    cli::cli_alert_success('No changes detected in recruit inputs')
   }
 
 
+  # fishery scalers
+  cli::cli_h2('Fishery Inputs')
+  cli::cli_h3('Checking for changes to fishery flags')
+
+  fishery_flags <- fram_db |> compare_fishery_input_flags(run_ids)
+  if(nrow(fishery_flags) > 0){
+    cli::cli_alert_info('Changes detected in fishery flag inputs, below is a table outlining them')
+    print(fishery_flags, n=Inf)
+  } else {
+    cli::cli_alert_success('No changes detected in fishery flag inputs')
+  }
+
+  cli::cli_h3('Checking for changes to fishery flags')
+  cli::cli_alert_info('Detention tolerance set to: {scales::percent(tolerance)}')
+  fishery_inputs <- fram_db |> compare_fishery_inputs(run_ids, tolerance = tolerance)
+  if(nrow(fishery_inputs) > 0){
+    cli::cli_alert_info('Changes detected in fishery flag inputs, below is a table outlining them')
+    print(fishery_inputs, n=Inf)
+  } else {
+    cli::cli_alert_success('No changes detected in fishery inputs')
+  }
+
 }
+
+
+
+
+

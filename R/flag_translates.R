@@ -74,3 +74,21 @@ add_flag_text = function(.data) {
                       .after = .data$non_retention_flag)
   }
 }
+
+#' NA's all the information in the FisheryScalers that's not being used
+#' e.g Flag 1 only NS Scalers will be returned
+#' @param .data Fishery Scalers table
+#' @export
+#' @examples
+#' \dontrun{ fishery_scalers_table |> filter_flag()}
+#'
+filter_flag <- function(.data){
+  .data |>
+    dplyr::mutate(
+      fishery_scale_factor = dplyr::if_else(.data$fishery_flag %in% c(1,17,18), .data$fishery_scale_factor, NA_real_),
+      msf_fishery_scale_factor = dplyr::if_else(.data$fishery_flag %in% c(7,17,27), .data$msf_fishery_scale_factor, NA_real_),
+      quota = dplyr::if_else(.data$fishery_flag %in% c(2,27,28), .data$quota, NA_real_),
+      msf_quota = dplyr::if_else(.data$fishery_flag %in% c(8,18,28), .data$msf_quota, NA_real_)
+    )
+}
+

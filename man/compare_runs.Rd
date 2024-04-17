@@ -2,21 +2,20 @@
 % Please edit documentation in R/compare_inputs.R
 \name{compare_runs}
 \alias{compare_runs}
-\title{Outputs mismatches between runs to the console}
+\title{Generates a report to the console of changes to inputs between to runs}
 \usage{
-compare_runs(fram_db, run_ids, tolerance = 0.1)
+compare_runs(fram_db, run_ids, tolerance = 0.01)
 }
 \arguments{
 \item{fram_db}{FRAM database object}
 
-\item{run_ids}{Vector of run_ids (two)}
+\item{run_ids}{Two run ids}
 
-\item{tolerance}{Perecent of difference for detection}
+\item{tolerance}{Tolerance of detection, 1 percent default}
 }
 \description{
-Outputs mismatches between runs to the console
+Generates a report to the console of changes to inputs between to runs
 }
 \examples{
-\dontrun{fram_db |> compare_runs(c(100,101))}
-
+\dontrun{fram_db |> compare_runs(c(55, 56))}
 }
