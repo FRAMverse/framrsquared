@@ -5,7 +5,7 @@
 
 startup_message <- function(){
   cli::cli_text(cat(
-    cli::col_black(
+    cli::col_black(glue::glue(
       "
              .
             \":\"
@@ -13,8 +13,8 @@ startup_message <- function(){
         ,'        `.    \\  /
         |  O        \\___/ |
       ~^~^~^~^~^~^~^~^~^~^~^~^~
-          framrsquared 0.2.0
+          framrsquared {installed.packages()['framrsquared', 'Version']}
               "
-    )
+    ))
   ))
 }
