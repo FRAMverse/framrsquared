@@ -320,7 +320,8 @@ compare_fishery_input_flags <- function(fram_db, run_ids){
       .data$run_name,
       .data$fishery_name
     ) |>
-    tidyr::pivot_wider(names_from = .data$run_name, values_from = .data$fishery_flag) |>
+    tidyr::pivot_wider(names_from = .data$run_name, values_from = .data$fishery_flag,
+                       values_fill = 0) |>
     dplyr::filter((!!base_run_name != !!new_run_name) |
                     xor(is.na(!!base_run_name), is.na(!!new_run_name))) |>
     dplyr::select(
