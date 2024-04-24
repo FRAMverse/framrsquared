@@ -1,7 +1,7 @@
 #' Fetches a complete table from a FRAM database. Returns a cleaned
 #' tibble.
 #' @param fram_db FRAM database object
-#' @param table_name Table to be fetched
+#' @param table_name Table to be fetched. If not given, a list of options will be printed
 #' @export
 #' @examples
 #' \dontrun{fram_db |> fetch_table('Mortality')}
@@ -9,14 +9,9 @@
 
 fetch_table <- function(fram_db, table_name = NULL){
   ## adding input checking
-  if(!rlang::is_list(fram_db) |  !"fram_db_connection" %in% names(fram_db)){
-    cli::cli_code('fram_db <- connect_fram_db(file_path)\nfram_db |> fetch_table(\'Mortality\')')
-    cli::cli_abort('Invalid database type, try code above')
-  }
-  if(!DBI::dbIsValid(fram_db$fram_db_connection)){
-    cli::cli_abort("Invalid database connection")
-  }
-  all.tables = c(
+  is_framdb_check(fram_db)
+
+  all_tables = c(
     'AEQ',
     'BackwardsFRAM',
     'BaseCohort',
@@ -51,7 +46,7 @@ fetch_table <- function(fram_db, table_name = NULL){
     'TerminalFisheryFlag',
     'TimeStep'
   )
-  limited.tables = c(
+  limited_tables = c(
     'BackwardsFRAM',
     'BaseID',
     'Cohort',
@@ -72,7 +67,7 @@ fetch_table <- function(fram_db, table_name = NULL){
     if (fram_db$fram_db_type == 'full') {
       cli::cli_alert_info('A table name must be provided, see available options:')
       fmt <- cli::ansi_columns(
-        all.tables,
+        all_tables,
         fill = "rows",
         max_cols = 4,
         align = "center",
@@ -87,7 +82,7 @@ fetch_table <- function(fram_db, table_name = NULL){
     } else{
 
       fmt <- cli::ansi_columns(
-        limited.tables,
+        limited_tables,
         fill = "rows",
         max_cols = 4,
         align = "center",
@@ -103,10 +98,10 @@ fetch_table <- function(fram_db, table_name = NULL){
   } else{
     if (fram_db$fram_db_type == 'full') {
       table_name <- rlang::arg_match(table_name,
-                                     all.tables)
+                                     all_tables)
     } else {
       table_name <- rlang::arg_match(table_name,
-                                     limited.tables)
+                                     limited_tables)
     }
     output_table <- DBI::dbGetQuery(fram_db$fram_db_connection,
                                     glue::glue('SELECT * FROM {table_name};')) |>

@@ -83,6 +83,10 @@ add_flag_text = function(.data) {
 #' \dontrun{ fishery_scalers_table |> filter_flag()}
 #'
 filter_flag <- function(.data){
+  if(!all(c("fishery_scale_factor", "msf_fishery_scale_factor",
+            "quota", "msf_quota") %in% names(.data))){
+    cli::cli_abort("Input is not a fishery scaler dataframe.")
+  }
   .data |>
     dplyr::mutate(
       fishery_scale_factor = dplyr::if_else(.data$fishery_flag %in% c(1,17,18), .data$fishery_scale_factor, NA_real_),
