@@ -7,42 +7,15 @@
 #' \dontrun{fram_db |> fetch_table('Mortality')}
 #'
 
-fetch_table <- function(fram_db = NULL, table_name = NULL){
+fetch_table <- function(fram_db, table_name = NULL){
   ## adding input checking
-  if(rlang::is_missing(fram_db)){ ## fram_db undefined: all possible table names
-    fmt <- cli::ansi_columns(
-      all.tables,
-      fill = "rows",
-      max_cols=4,
-      align = "center",
-      sep = ""
-    )
-    cli::boxx(fmt, padding = c(0,1,0,1), header = cli::col_cyan("FRAM tables (full database)"))
-    cli::cli_abort("fram_db argument is not provided. Possible table names of tables available above.")
-  }
-
-
   if(!rlang::is_list(fram_db) |  !"fram_db_connection" %in% names(fram_db)){
     cli::cli_code('fram_db <- connect_fram_db(file_path)\nfram_db |> fetch_table(\'Mortality\')')
     cli::cli_abort('Invalid database type, try code above')
-
   }
-
   if(!DBI::dbIsValid(fram_db$fram_db_connection)){
     cli::cli_abort("Invalid database connection")
   }
-
-  # stopifnot("fram_db must be NULL or a valid connection to a FRAM database. Try using connect_fram_db()" =
-  #             (is.null(fram_db) |
-  #                (is.list(fram_db))))
-  # stopifnot("fram_db must be NULL or a valid connection to a FRAM database. Try using connect_fram_db()" =
-  #             is.null(fram_db) | "fram_db_connection" %in% names(fram_db))
-  # stopifnot("fram_db must be NULL or a valid connection to a FRAM database. Try using connect_fram_db()" =
-  #             if(is.null(fram_db)){TRUE}else{DBI::dbIsValid(fram_db$fram_db_connection)})
-  # stopifnot("table_name must be NULL or a character atomic" =
-  #             (is.null(table_name) | (length(table_name) == 1 & is.character(table_name))))
-
-
   all.tables = c(
     'AEQ',
     'BackwardsFRAM',
