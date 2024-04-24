@@ -21,7 +21,7 @@ msf_mortalities <- function(fram_db, run_id = NULL){
       fram_db$fram_db_species,
       'CHINOOK' = msf_mortalities_chinook_(fram_db) |>
         dplyr::filter(.data$run_id %in% .env$run_id),
-      'COHO' = msf_mortalities_chinook_(fram_db) |>
+      'COHO' = msf_mortalities_coho_(fram_db) |>
         dplyr::filter(.data$run_id %in% .env$run_id)
     )
   }

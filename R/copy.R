@@ -12,6 +12,12 @@
 
 
 copy_fishery_scalers <- function(fram_db, from_run, to_run, fishery_id = NULL){
+  is_framdb_check(fram_db)
+  is_runid_present_check(fram_db, c(to_run, from_run))
+  if(fram_db$fram_read_only){
+    cli::cli_abort('This database connection is designated read-only!! If you are certain this database can be modified, create a new connection using `connect_fram_db()` with `read_only = TRUE`')
+  }
+
   if (is.null(fishery_id)) {
     cli::cli_alert_warning('A fishery ID is not set, this will copy all the fishery scalers!')
     input <- tolower(readline(prompt = ('Continue? (y/n): ')))
@@ -54,7 +60,7 @@ copy_fishery_scalers <- function(fram_db, from_run, to_run, fishery_id = NULL){
     fetch_table('RunID') |>
     dplyr::filter(.data$run_id == .env$to_run) |>
     dplyr::pull(run_comments)
-  update_notes = paste0(original_notes,
+  update_notes <- paste0(original_notes,
                         "\n\n FISHERY SCALERS COPIED PROGRAMMATICALLY FROM RUN ",
                         from_run, " for ",
                         ifelse(is.null(fishery_id),

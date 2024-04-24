@@ -2,13 +2,19 @@
 #' used throughout the rest of this package which carries meta data.
 #' @param db_path Path to a FRAM database.
 #' @param enforce_type Not used
+#' @param read_only Optional argument to flag this connection as read-only (if set to `TRUE`). If `TRUE`, framrsquared functions that modify
+#' the database will abort rather than run. Use as a safety feature when working with a database that *must not* be modified.
+#' @details
+#' Additional details...
+#'
 #' @export
 #' @examples
 #' \dontrun{fram_db <- connect_fram_db('<path>')}
 #'
 connect_fram_db <-
   function(db_path,
-           enforce_type = c('full', 'transfer')) {
+           enforce_type = c('full', 'transfer'),
+           read_only = FALSE) {
 
     # verify file exists
     if (!file.exists(db_path)) {
@@ -50,7 +56,8 @@ connect_fram_db <-
         fram_db_connection = con, # pass connection back
         fram_db_type = fram_db_type$type,
         fram_db_species = fram_db_species,
-        fram_db_medium = tools::file_ext(db_path)
+        fram_db_medium = tools::file_ext(db_path),
+        fram_read_only = read_only
       )
     )
 
