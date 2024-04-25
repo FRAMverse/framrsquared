@@ -17,6 +17,12 @@ msp_mortality = function(.data, fram_db){
   if(!fram_db$fram_db_species == "CHINOOK"){
     cli::cli_abort("MSP expansion only makes sense for Chinook. See https://framverse.github.io/fram_doc/calcs_data_chin.html#46_Model-Stock_Proportion")
   }
+  if(!all(c("run_id", "stock_id", "age", "fishery_id", "time_step",
+            "landed_catch", "non_retention", "shaker", "drop_off",
+            "encounter", "msf_landed_catch", "msf_non_retention",
+            "msf_shaker", "msf_drop_off", "msf_encounter" ) %in% names(.data))){
+    cli::cli_abort("Data does not contain all columns of a Mortality table. Did you use the wrong data object?")
+  }
 
   runid <- fram_db |>
     fetch_table('RunID')
