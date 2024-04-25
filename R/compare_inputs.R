@@ -417,7 +417,7 @@ compare_non_retention_input_flags <- function(fram_db, run_ids, verbose = TRUE){
 }
 
 
-<<<<<<< HEAD
+
 #' Compares the stock fishery rate scalers of two runs
 #' @param fram_db FRAM database object
 #' @param run_ids Two run ids
@@ -489,9 +489,6 @@ compare_stock_fishery_rate_scalers <- function(fram_db, run_ids){
 
 
 #' Generates a report to the console of changes to inputs between to runs
-=======
-#' Generates a report to the console of changes to inputs between two runs
->>>>>>> 5772315d1d8774c3a832edf01340af58a49cf87a
 #' @param fram_db FRAM database object
 #' @param run_ids Two run ids
 #' @param tolerance Tolerance of detection, 1 percent default
@@ -589,20 +586,14 @@ compare_runs <- function(fram_db, run_ids, tolerance = .01){
   }
 
   cli::cli_h3('Checking for changes to fishery inputs')
-<<<<<<< HEAD
-  cli::cli_alert_info('Detection tolerance set to: {scales::percent(tolerance)}')
-  fishery_inputs <- fram_db |> compare_fishery_inputs(run_ids, tolerance = tolerance)
-=======
   cli::cli_alert_info('Detention tolerance set to: {scales::percent(tolerance)}')
   fishery_inputs <- fram_db |> compare_fishery_inputs(run_ids, tolerance = tolerance, verbose = FALSE)
->>>>>>> 5772315d1d8774c3a832edf01340af58a49cf87a
   if(nrow(fishery_inputs) > 0){
     cli::cli_alert_info('Changes detected in fishery inputs, below is a table outlining them')
     print(fishery_inputs, n=Inf)
   } else {
     cli::cli_alert_success('No changes detected in fishery inputs')
   }
-<<<<<<< HEAD
 
   cli::cli_h3('Checking for changes to stock fishery rate scalers')
   sfrs <- fram_db |> compare_stock_fishery_rate_scalers(run_ids)
@@ -613,8 +604,6 @@ compare_runs <- function(fram_db, run_ids, tolerance = .01){
     cli::cli_alert_success('No changes detected in fishery inputs')
   }
 
-=======
->>>>>>> 5772315d1d8774c3a832edf01340af58a49cf87a
 }
 
 

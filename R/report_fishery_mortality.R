@@ -191,8 +191,6 @@ plot_stock_mortality <- function(fram_db, run_id, stock_id, top_n = 10, filters_
 #'
 #' @export
 #'
-#' @inheritParams coho_stock_mortality
-#'
 #' @examples
 #' \dontrun{
 #' fram_db |> coho_stock_mortality_time_step(run_id = 132, stock_id = 17)
