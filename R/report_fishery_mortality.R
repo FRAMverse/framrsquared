@@ -8,14 +8,8 @@
 #' fram_db |> fishery_mortality(run_id = 101)
 #' }
 fishery_mortality <- function(fram_db, run_id = NULL, msp = TRUE) {
-
-  if(!is.numeric(run_id) && !is.null(run_id)) {
-    cli::cli_abort('Run ID must be and integer')
-  }
-
-  if(!DBI::dbIsValid(fram_db$fram_db_connection)) {
-    cli::cli_abort('Must connect to a FRAM database first...')
-  }
+  is_framdb_check(fram_db)
+  if(!is.numeric(run_id)){is_runid_present_check(fram_db, run_id)}
 
   fishery_mort <- fram_db |>
     fetch_table("Mortality") |>
@@ -43,7 +37,7 @@ fishery_mortality <- function(fram_db, run_id = NULL, msp = TRUE) {
       .data$age,
       .data$time_step,
       .data$name
-      ) |>
+    ) |>
     dplyr::summarise(value = sum(.data$value), .groups = "drop") |>
     tidyr::pivot_wider() |>
     dplyr::select(
@@ -54,26 +48,9 @@ fishery_mortality <- function(fram_db, run_id = NULL, msp = TRUE) {
 
   # chinook needs to return model stock proportion estimates
   if (fram_db$fram_db_species == 'CHINOOK' & msp == TRUE){
-
-    runid <- fram_db |>
-      fetch_table('RunID')
-
-    msp <- fram_db |>
-      fetch_table('FisheryModelStockProportion')
-
-    msp_run_id <- runid |>
-      dplyr::inner_join(msp, by = 'base_period_id', relationship = 'many-to-many') |>
-      dplyr::select(.data$run_id, .data$fishery_id, .data$model_stock_proportion)
-
     fishery_mort <- fishery_mort |>
-      dplyr::left_join(msp_run_id, by = c('run_id', 'fishery_id')) |>
-      dplyr::mutate(
-        dplyr::across(
-          .data$landed_catch:.data$drop_off,
-          \(x) x / .data$model_stock_proportion
-        )
-      ) |>
-      dplyr::select(-.data$model_stock_proportion)
+      msp_mortality(db)
+
   }
 
 
@@ -101,29 +78,48 @@ fishery_mortality <- function(fram_db, run_id = NULL, msp = TRUE) {
 #' @param run_id numeric, RunID
 #' @param stock_id numeric, ID of focal stock
 #' @param top_n numeric, Number of fisheries to display
+#' @param filters_list list of framrsquared filter functions to apply before plotting.
+#' @param msp Use Model Stock Proportion expansion? Default is true
 #'
 #' @examples
 #' \dontrun{
 #' fram_db |> coho_stock_mortality(run_id = 132, stock_id = 17)
+#' fram_db |> coho_stock_mortality(run_id = 132, stock_id = 17, filters_list = list(filter_wa, filter_marine))
 #' }
 #'
 
-coho_stock_mortality <- function(fram_db, run_id = NULL, stock_id = NULL, top_n = 10){
+plot_stock_mortality <- function(fram_db, run_id, stock_id, top_n = 10, filters_list = NULL, msp = TRUE){
+  is_framdb_check(fram_db)
+  is_runid_present_check(fram_db, run_id)
 
-  # check for null ids
-  if (is.null(run_id) | is.null(stock_id)) {
-    cli::cli_abort("Both a run_id and stock_id must be supplied")
+  if (length(run_id)>1) {
+    cli::cli_abort("Plot is not meaningful when combining multiple runs. Provide a single run in run_id.")
   }
 
-  # make sure run ids are integers
-  if (!is.numeric(run_id)) {
-    cli::cli_abort("Run ID must be and integer")
+  if (!is.logical(msp)) {
+    cli::cli_abort("msp must be TRUE or FALSE.")
   }
 
   # make sure run ids are integers
   if (!is.numeric(stock_id)) {
     cli::cli_abort("Stock ID must be and integer")
   }
+
+  if (length(stock_id)>1) {
+    cli::cli_abort("Plot is not meaningful when combining stock. Provide a single value for stock_id.")
+  }
+
+  if(!is.null(filters_list) & !is.list(filters_list)){
+    cli::cli_abort("If provided, filters_list must be a list of fishery filter functions.")
+  }
+  if(!is.null(filters_list) & !all(purrr::map_vec(filters_list, \(x) is.function(x)))){
+    cli::cli_abort("If provided, filters_list must be a list of fishery filter functions. One or more list items is not a function.")
+  }
+
+  # identify species used
+  species_used = fetch_table(fram_db, "RunID") |>
+    dplyr::filter(.data$run_id == .env$run_id) |>
+    dplyr::pull(species_name)
 
   # lut for display of stock name
   stocks <- fram_db |>
@@ -137,21 +133,37 @@ coho_stock_mortality <- function(fram_db, run_id = NULL, stock_id = NULL, top_n 
     dplyr::filter(.data$species == fram_db$fram_db_species) |>
     dplyr::select(.data$fishery_id, .data$fishery_name)
 
-
-  mortality <- fram_db |>
-    fetch_table('Mortality') |>
+  if(species_used == "CHINOOK"){
+    mortality <- fram_db |> aeq_mortality()
+    if(msp){
+      mortality <- mortality |>
+        msp_mortality(db)
+    }
+  } else {
+    mortality <- fram_db |> fetch_table('Mortality')
+  }
+  mortality <- mortality |>
     dplyr::filter(.data$run_id == .env$run_id,
-           .data$stock_id == .env$stock_id) |>
+                  .data$stock_id %in% .env$stock_id) |>
     dplyr::group_by(.data$run_id, .data$stock_id, .data$fishery_id) |>
     dplyr::summarize(
       dplyr::across(c(.data$landed_catch:.data$drop_off,
-               .data$msf_landed_catch:.data$msf_drop_off), \(x) sum(x)),
+                      .data$msf_landed_catch:.data$msf_drop_off), \(x) sum(x)),
       .groups='drop') |>
     dplyr::mutate(
       total_mort = .data$landed_catch + .data$non_retention + .data$shaker + .data$drop_off +
         .data$msf_landed_catch + .data$msf_non_retention + .data$msf_shaker + .data$msf_drop_off
     ) |>
     dplyr::select(.data$run_id, .data$stock_id, .data$fishery_id, .data$total_mort)
+
+  if(!is.null(filters_list)){
+    ## give species for filtering
+    attr(mortality, "species") <- species_used
+    for(i in 1:length(filters_list)){
+      mortality <- mortality |>
+        filters_list[[i]]()
+    }
+  }
 
   run_name <- fram_db |>
     fetch_table('RunID') |>
@@ -161,7 +173,6 @@ coho_stock_mortality <- function(fram_db, run_id = NULL, stock_id = NULL, top_n 
   stock_name <- stocks |>
     dplyr::filter(.data$stock_id == .env$stock_id) |>
     dplyr::pull(.data$stock_name)
-
   mortality |>
     dplyr::slice_max(.data$total_mort, n = top_n) |>
     dplyr::inner_join(fisheries, by = 'fishery_id') |>
@@ -169,10 +180,9 @@ coho_stock_mortality <- function(fram_db, run_id = NULL, stock_id = NULL, top_n 
     ggplot2::geom_col() +
     ggplot2::labs(
       subtitle = glue::glue('Top mortality for stock {stock_name} ({run_name})'),
-      x = 'Mortalities',
+      x = ifelse(species_used == 'COHO','Mortalities', 'AEQs'),
       y = 'Fishery'
     )
-
 }
 
 #' Creates an ordered bar chart with
@@ -181,31 +191,35 @@ coho_stock_mortality <- function(fram_db, run_id = NULL, stock_id = NULL, top_n 
 #'
 #' @export
 #'
-#' @param fram_db fram database object, supplied through connect_fram_db
-#' @param run_id numeric, RunID
-#' @param stock_id numeric, ID of focal stock
-#' @param top_n numeric, Number of fisheries to display
+#' @inheritParams coho_stock_mortality
 #'
 #' @examples
 #' \dontrun{
 #' fram_db |> coho_stock_mortality_time_step(run_id = 132, stock_id = 17)
 #' }
 #'
-coho_stock_mortality_time_step <- function(fram_db, run_id = NULL, stock_id = NULL, top_n = 10){
+coho_stock_mortality_time_step <- function(fram_db, run_id, stock_id, top_n = 10){
+  is_framdb_check(fram_db)
+  is_runid_present_check(fram_db, run_id)
 
-  # check for null ids
-  if (is.null(run_id) | is.null(stock_id)) {
-    cli::cli_abort("Both a run_id and stock_id must be supplied")
-  }
-
-  # make sure run ids are integers
-  if (!is.numeric(run_id)) {
-    cli::cli_abort("Run ID must be and integer")
+  if (length(run_id)>1) {
+    cli::cli_abort("Plot is not meaningful when combining multiple runs. Provide a single run in run_id.")
   }
 
   # make sure run ids are integers
   if (!is.numeric(stock_id)) {
     cli::cli_abort("Stock ID must be and integer")
+  }
+
+  if (length(stock_id)>1) {
+    cli::cli_abort("Plot is not meaningful when combining stock. Provide a single value for stock_id.")
+  }
+
+  if(!is.null(filters_list) & !is.list(filters_list)){
+    cli::cli_abort("If provided, filters_list must be a list of fishery filter functions.")
+  }
+  if(!is.null(filters_list) & !all(purrr::map_vec(filters_list, \(x) is.function(x)))){
+    cli::cli_abort("If provided, filters_list must be a list of fishery filter functions. One or more list items is not a function.")
   }
 
   # lut for display of stock name
@@ -277,6 +291,5 @@ coho_stock_mortality_time_step <- function(fram_db, run_id = NULL, stock_id = NU
     ) +
     ggplot2::theme(legend.title = ggplot2::element_blank())
 }
-
 
 
