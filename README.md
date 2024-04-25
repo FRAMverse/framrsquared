@@ -186,9 +186,9 @@ fram_db |>
 ── Checking for changes to fishery flags 
 ✔ No changes detected in fishery flag inputs
 
-── Checking for changes to fishery flags 
+── Checking for changes to fishery inputs 
 ℹ Detection tolerance set to: 1%
-ℹ Changes detected in fishery flag inputs, below is a table outlining them
+ℹ Changes detected in fishery inputs, below is a table outlining them
 # A tibble: 12 × 6
    fishery_id fishery_name time_step name  `bc-Coho2423_STT_NOF` `bc-Coho2424_NOF`
         <int> <chr>            <int> <chr>                 <dbl>             <dbl>
