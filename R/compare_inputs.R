@@ -598,14 +598,14 @@ compare_runs <- function(fram_db, run_ids, tolerance = .01){
     cli::cli_alert_success('No changes detected in fishery flag inputs')
   }
 
-  cli::cli_h3('Checking for changes to fishery flags')
-  cli::cli_alert_info('detection tolerance set to: {scales::percent(tolerance)}')
+  cli::cli_h3('Checking for changes to fishery inputs')
+  cli::cli_alert_info('Detection tolerance set to: {scales::percent(tolerance)}')
   fishery_inputs <- fram_db |> compare_fishery_inputs(run_ids, tolerance = tolerance)
   if(nrow(fishery_inputs) > 0){
-    cli::cli_alert_info('Changes detected in fishery flag inputs, below is a table outlining them')
+    cli::cli_alert_info('Changes detected in fishery inputs, below is a table outlining them')
     print(fishery_inputs, n=Inf)
   } else {
-    cli::cli_alert_success('No changes detected in fishery flag inputs')
+    cli::cli_alert_success('No changes detected in fishery inputs')
   }
 
   cli::cli_h3('Checking for changes to stock fishery rate scalers')
