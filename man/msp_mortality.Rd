@@ -8,7 +8,8 @@ msp_mortality(.data, fram_db)
 }
 \arguments{
 \item{.data}{Mortality table}
-\item{fram_db}{FRAM database object}
+
+\item{fram_db}{FRAM database}
 }
 \value{
 Mortality table with mortality values expanded by msp

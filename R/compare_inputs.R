@@ -417,7 +417,6 @@ compare_non_retention_input_flags <- function(fram_db, run_ids, verbose = TRUE){
 }
 
 
-
 #' Compares the stock fishery rate scalers of two runs
 #' @param fram_db FRAM database object
 #' @param run_ids Two run ids
