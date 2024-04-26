@@ -7,11 +7,6 @@ format depending database.}
 \usage{
 msf_landed_catch(fram_db, run_id = NULL)
 }
-\arguments{
-\item{fram_db}{FRAM database object}
-
-\item{run_id}{Run ID}
-}
 \description{
 Produces the MSF screen report numbers for landed catch. Returns different
 format depending database.
