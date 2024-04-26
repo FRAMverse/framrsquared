@@ -10,6 +10,9 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#' fram_db |> msp_mortality(run_id = 132)
+#' }
 msp_mortality = function(.data, fram_db){
 
   is_framdb_check(fram_db)

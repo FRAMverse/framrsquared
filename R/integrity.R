@@ -97,14 +97,14 @@ fram_clean_tables <- function(.data) {
 }
 
 #' Gets all run_ids of FRAM database
-#' @param fram_db
+#' @param fram_db Fram database object
 #' @export
 #' @examples
-#' \dontrun{fram_dataframe |> ()}
+#' \dontrun{fram_dataframe |> get_runids()}
 get_runids <- function(fram_db){
   fram_db |>
     fetch_table('RunID') |>
-    dplyr::pull(run_id)
+    dplyr::pull(.data$run_id)
 }
 
 #' Finds tables that contain a specific column name
@@ -255,8 +255,6 @@ welcome <- function(con){
 
 #' Convenience function to check fram_db input
 #' @param fram_db FRAM database object
-#' @examples
-#' \dontrun{}
 is_framdb_check <- function(fram_db){
   if(!rlang::is_list(fram_db) |  !"fram_db_connection" %in% names(fram_db)){
     cli::cli_code('fram_db <- connect_fram_db(file_path)\nfram_db |> fetch_table(\'Mortality\')')
@@ -269,9 +267,7 @@ is_framdb_check <- function(fram_db){
 
 #' Convenience function to check run_id input
 #' @param fram_db FRAM database object
-#' @param run_id run_id(s)
-#' @examples
-#' \dontrun{}
+#' @param run_id one or more run_ids
 is_runid_present_check <- function(fram_db, run_id){
   if (! all(run_id %in% get_runids(fram_db))){
     cli::cli_abort(paste0('run_id(s) not present in database. Available run_ids: ',

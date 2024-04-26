@@ -36,7 +36,8 @@ fishery.
 \examples{
 \dontrun{
 fram_db |> coho_stock_mortality(run_id = 132, stock_id = 17)
-fram_db |> coho_stock_mortality(run_id = 132, stock_id = 17, filters_list = list(filter_wa, filter_marine))
+fram_db |> coho_stock_mortality(run_id = 132, stock_id = 17,
+        filters_list = list(filter_wa, filter_marine))
 }
 
 }

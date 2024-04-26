@@ -4,7 +4,6 @@
 #' @param from_run Run ID to be copied from
 #' @param to_run Run ID to be copied to
 #' @param fishery_id ID or IDs for specific fishery(s) to copy inputs to/from. If not provided, interactive option to copy inputs for all fisheries.
-#' @details
 #' @export
 #' @examples
 #' \dontrun{framdb |> copy_fishery_scalers(132, 133, 87)}
@@ -59,7 +58,7 @@ copy_fishery_scalers <- function(fram_db, from_run, to_run, fishery_id = NULL){
   original_notes <- fram_db |>
     fetch_table('RunID') |>
     dplyr::filter(.data$run_id == .env$to_run) |>
-    dplyr::pull(run_comments)
+    dplyr::pull(.data$run_comments)
   update_notes <- paste0(original_notes,
                         "\n\n FISHERY SCALERS COPIED PROGRAMMATICALLY FROM RUN ",
                         from_run, " for ",
