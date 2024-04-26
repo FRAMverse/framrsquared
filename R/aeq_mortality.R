@@ -13,8 +13,11 @@
 #' }
 aeq_mortality <- function(fram_db, run_id = NULL) {
 
+  is_framdb_check(fram_db)
+
+
   if (!is.numeric(run_id) && !is.null(run_id)) {
-    cli::cli_abort("Run ID must be and integer")
+    is_runid_present_check(fram_db, run_id)
   }
 
   if (fram_db$fram_db_species != "CHINOOK") {

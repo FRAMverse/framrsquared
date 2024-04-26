@@ -4,7 +4,7 @@
 \alias{compare_fishery_inputs}
 \title{Compares the fishery inputs of two runs}
 \usage{
-compare_fishery_inputs(fram_db, run_ids, tolerance = 0.01)
+compare_fishery_inputs(fram_db, run_ids, tolerance = 0.01, verbose = TRUE)
 }
 \arguments{
 \item{fram_db}{FRAM database object}
@@ -12,6 +12,8 @@ compare_fishery_inputs(fram_db, run_ids, tolerance = 0.01)
 \item{run_ids}{Two run ids}
 
 \item{tolerance}{Tolerance for detecting changes}
+
+\item{verbose}{If `TRUE`, print an update to screen when there are no differences in recruits.}
 }
 \description{
 Compares the fishery inputs of two runs

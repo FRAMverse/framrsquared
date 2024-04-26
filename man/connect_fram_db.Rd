@@ -5,16 +5,26 @@
 \title{This is a connection object to a FRAM database. Returns a list
 used throughout the rest of this package which carries meta data.}
 \usage{
-connect_fram_db(db_path, enforce_type = c("full", "transfer"))
+connect_fram_db(
+  db_path,
+  enforce_type = c("full", "transfer"),
+  read_only = FALSE
+)
 }
 \arguments{
 \item{db_path}{Path to a FRAM database.}
 
 \item{enforce_type}{Not used}
+
+\item{read_only}{Optional argument to flag this connection as read-only (if set to `TRUE`). If `TRUE`, framrsquared functions that modify
+the database will abort rather than run. Use as a safety feature when working with a database that *must not* be modified.}
 }
 \description{
 This is a connection object to a FRAM database. Returns a list
 used throughout the rest of this package which carries meta data.
+}
+\details{
+Additional details...
 }
 \examples{
 \dontrun{fram_db <- connect_fram_db('<path>')}

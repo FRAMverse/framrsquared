@@ -24,8 +24,8 @@ NULL
 #' @rdname styleguide
 #' @export
 #' @example
-#' \dontrun{
 #' frs_stylecheck_assignment("R/copy.R")
+
 frs_stylecheck_assignment = function(filepath, n = Inf){
   cli::cli_text(cli::col_blue(paste("Checking", gsub(".*[/]", "", filepath), "for accidental uses of `=` for assignment")))
   cli::cli_text(cli::col_grey("Note that this is not perfect -- multi-line function calls which (correctly) use `=` for arguments
@@ -34,26 +34,34 @@ frs_stylecheck_assignment = function(filepath, n = Inf){
     tibble::as_tibble() |>
     dplyr::rename(line.entry = value)
   df$linenum <- 1:nrow(df)
-  df |>
+  df <- df |>
     dplyr::mutate(before.parens = gsub("[(].*", "", line.entry)) |>
     dplyr::filter(stringr::str_detect(before.parens, "[^=]=[^=]")) |>
-    dplyr::select(-before.parens) |>
-    print(n = n)
+    dplyr::select(-before.parens)
+  if(nrow(df)==0){
+    cli::cli_alert_success("No possible cases of accidental assignment using `=`. Good work!")
+  }else{
+    df |> print(n = n)
+  }
 }
 
 #' @rdname styleguide
 #' @export
 frs_stylecheck_snakecase = function(filepath, n = Inf){
   cli::cli_text(cli::col_blue(paste("Checking", gsub(".*[/]", "", filepath), "for variables that are not named using snake_case.")))
-  cli::cli_text(cli::col_grey("Note that this will also list single-word variables, which should be fine."))
+  cli::cli_text(cli::col_grey("Note that this will also list single-word variables, which should be fine. Make sure assignment all uses `<- ` (`frs_stylecheck_assignment()` streamlines this)"))
   df <- readr::read_lines(filepath) |>
     tibble::as_tibble() |>
     dplyr::rename(line.entry = value)
   df$linenum <- 1:nrow(df)
-  df |>
+  df <- df |>
     dplyr::filter(stringr::str_detect(line.entry, "<-")) |>
     dplyr::mutate(variable.name = stringr::str_trim(gsub("<-.*", "", line.entry)),
            .before = line.entry) |>
-    dplyr::filter(!stringr::str_detect(line.entry, "_")) |>
-    print(n = n)
+    dplyr::filter(!stringr::str_detect(line.entry, "_"))
+  if(nrow(df)==0){
+    cli::cli_alert_success("No possible cases of variable names not in snakecase. Good work!")
+  }else{
+    df |> print(n = n)
+  }
 }
