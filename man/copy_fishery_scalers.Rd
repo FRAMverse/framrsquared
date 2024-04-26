@@ -14,7 +14,7 @@ copy_fishery_scalers(fram_db, from_run, to_run, fishery_id = NULL)
 
 \item{to_run}{Run ID to be copied to}
 
-\item{fishery_id}{Specific fishery's scalers to be copied}
+\item{fishery_id}{ID or IDs for specific fishery(s) to copy inputs to/from. If not provided, interactive option to copy inputs for all fisheries.}
 }
 \description{
 Experimental copying scaler inputs from

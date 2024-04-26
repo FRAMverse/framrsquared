@@ -8,11 +8,11 @@ an integer}
 statistical_week(date)
 }
 \arguments{
-\item{date}{A column with dates}
+\item{date}{A vector of dates}
 }
 \description{
-Vectorized approach to calculating the statistical week, returns
-an integer
+Statistical weeks start on mondays, so the first statistical week of the year starts
+on the first monday of the year. (Contrast with management weeks which start on Sundays).
 }
 \examples{
 \dontrun{

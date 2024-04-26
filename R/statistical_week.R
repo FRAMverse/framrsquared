@@ -1,6 +1,10 @@
 #' Vectorized approach to calculating the statistical week, returns
 #' an integer
-#' @param date A column with dates
+#'
+#' Statistical weeks start on mondays, so the first statistical week of the year starts
+#' on the first monday of the year. (Contrast with management weeks which start on Sundays).
+#'
+#' @param date A vector of dates
 #' @export
 #' @examples
 #' \dontrun{
@@ -48,7 +52,7 @@ statistical_week.character <- function(date) {
 
 statistical_week_ <- function(date){
   dplyr::if_else(
-    lubridate::wday(lubridate::floor_date(date, 'year')) == 2
+    lubridate::wday(lubridate::floor_date(date, 'year')) == 2 ## If the first day of the year is a monday
     ,
     as.integer(strftime(date, '%W'))
     ,

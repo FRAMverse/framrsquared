@@ -9,7 +9,7 @@ https://github.com/FRAMverse/framr/}
 aeq_mortality(fram_db, run_id = NULL)
 }
 \arguments{
-\item{fram_db}{string, file path to database}
+\item{fram_db}{Fram database object}
 
 \item{run_id}{numeric, RunID(s) as ID or ID:ID}
 }

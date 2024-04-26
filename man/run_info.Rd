@@ -4,7 +4,7 @@
 \alias{run_info}
 \title{Provides a print out of Run ID information}
 \usage{
-run_info(fram_db, run_id = NULL)
+run_info(fram_db, run_id)
 }
 \arguments{
 \item{fram_db}{FRAM database object}

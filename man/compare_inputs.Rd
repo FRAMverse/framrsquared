@@ -2,17 +2,28 @@
 % Please edit documentation in R/compare_inputs.R
 \name{compare_inputs}
 \alias{compare_inputs}
-\title{Generates a dataframe that compares two runs identified by run_id's}
+\title{Generates a dataframe that compares fishery scalers table for two runs identified by run_id's}
 \usage{
 compare_inputs(fram_db, run_ids)
 }
 \arguments{
 \item{fram_db}{FRAM database object}
 
-\item{run_ids}{Vector of run_ids (two)}
+\item{run_ids}{Vector of two run_ids}
+}
+\value{
+Data frame of differences. `$percentdiff` = change in quota (comparing the appropriate quotas based on fishery flags),
+ `$regulation_comparison`  = change in regulation (NS, MSF, NS + MSF). Columns present in the
+ FisheriesScalers database are included, with `_original` and `_comparison`
+ suffixes identifying entries associated with the first and second entries of
+ `run_ids`, respectively.
 }
 \description{
-Generates a dataframe that compares two runs identified by run_id's
+Generates a dataframe that compares fishery scalers table for two runs identified by run_id's
+}
+\details{
+Comparisons assume the first run provided is the baseline, and provide relative changes from that.
+This includes percent changes ($percent.diff)include percent changes (infinite when)
 }
 \examples{
 \dontrun{fram_db |> compare_inputs(c(100,101))}

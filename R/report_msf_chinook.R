@@ -7,8 +7,7 @@
 #'
 msf_mortalities_chinook_ <- function(fram_db){
   mortalities_ <- fram_db |>
-                    fetch_table('Mortality') #|>
-    #dplyr::filter(.data$run_id == .env$run_id)
+                    fetch_table('Mortality')
 
   mortalities_ <- mortalities_ |>
     dplyr::select(.data$run_id:.data$time_step, dplyr::starts_with('msf_'))  |>

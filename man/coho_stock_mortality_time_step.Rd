@@ -8,9 +8,10 @@ fishery and time step.}
 \usage{
 coho_stock_mortality_time_step(
   fram_db,
-  run_id = NULL,
-  stock_id = NULL,
-  top_n = 10
+  run_id,
+  stock_id,
+  top_n = 10,
+  filters_list = NULL
 )
 }
 \arguments{
@@ -21,6 +22,8 @@ coho_stock_mortality_time_step(
 \item{stock_id}{numeric, ID of focal stock}
 
 \item{top_n}{numeric, Number of fisheries to display}
+
+\item{filters_list}{list of framrsquared filter functions to apply before plotting.}
 }
 \description{
 Creates an ordered bar chart with

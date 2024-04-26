@@ -92,10 +92,20 @@ fram_database_species <- function(con){
 #'
 fram_clean_tables <- function(.data) {
   .data |>
-  tibble::as_tibble() |>
-  janitor::clean_names()
+    tibble::as_tibble() |>
+    janitor::clean_names()
 }
 
+#' Gets all run_ids of FRAM database
+#' @param fram_db Fram database object
+#' @export
+#' @examples
+#' \dontrun{fram_dataframe |> get_runids()}
+get_runids <- function(fram_db){
+  fram_db |>
+    fetch_table('RunID') |>
+    dplyr::pull(.data$run_id)
+}
 
 #' Finds tables that contain a specific column name
 #' @param fram_db FRAM database object
@@ -187,12 +197,20 @@ remove_run <- function(fram_db, run_id){
 #' \dontrun{fram_db |> run_info(run_id = 132)}
 #'
 
-run_info <- function(fram_db, run_id = NULL) {
-  if (is.null(run_id)) {cli::cli_abort('A run ID must be provided')}
+run_info <- function(fram_db, run_id) {
+  if (!is.numeric (run_id)){cli::cli_abort('run_id must be numeric')}
+  if (length(run_id) > 1) {cli::cli_abort('Provide only one run ID')}
+  validate_runid(fram_db, run_id)
 
-  run_info <- fram_db |>
-    fetch_table('RunID') |>
-    dplyr::filter(.data$run_id == .env$run_id)
+  if (! run_id %in% get_runids(fram_db)){
+    cli::cli_abort(paste0('run_id is not present in database. Available run ids: ',
+                          paste0(get_runids(fram_db), collapse = ", ")))
+  }else{
+    run_info <- fram_db |>
+      fetch_table('RunID') |>
+      dplyr::filter(.data$run_id == .env$run_id)
+  }
+
 
   cli::cli_h1('FRAM Run Information')
   cli::cli_text(cat(cli::col_blue('Species: '), cli::col_grey(run_info$species_name[[1]])))
@@ -207,7 +225,7 @@ run_info <- function(fram_db, run_id = NULL) {
 
 }
 
-#' Welcome message
+#' Welcome message, summarizing database information
 #' @param con FRAM database connection
 #' @examples
 #' \dontrun{welcome(con)}
@@ -219,6 +237,7 @@ welcome <- function(con){
 
   species <- unique(runs$species_name)
   run_count <- nrow(runs)
+  run_ids = paste0(sort(runs$run_id), collapse = ", ")
   last_run <- format(max(runs$run_time_date), '%a, %B %d, %Y %I:%M %p')
   last_modify_input <- format(max(runs$modify_input_date), '%a, %B %d, %Y %I:%M %p')
   last_run_name <- runs |>
@@ -227,9 +246,31 @@ welcome <- function(con){
 
   cli::cli_text(cat(cli::col_blue('Database Species: '), cli::col_grey(species)))
   cli::cli_text(cat(cli::col_blue('Run Count: '), cli::col_grey(run_count)))
+  cli::cli_text(cat(cli::col_blue('Run ids: '), cli::col_grey(run_ids)))
   cli::cli_text(cat(cli::col_blue('Last Run Date: '), cli::col_grey(last_run)))
   cli::cli_text(cat(cli::col_blue('Last Run Name: '), cli::col_grey(last_run_name)))
   cli::cli_text(cat(cli::col_blue('Last Modify Date: '), cli::col_grey(last_modify_input)))
 
 }
 
+#' Convenience function to check fram_db input
+#' @param fram_db FRAM database object
+validate_framdb <- function(fram_db){
+  if(!rlang::is_list(fram_db) |  !"fram_db_connection" %in% names(fram_db)){
+    cli::cli_code('fram_db <- connect_fram_db(file_path)\nfram_db |> fetch_table(\'Mortality\')')
+    cli::cli_abort('Invalid database type, try code above')
+  }
+  if(!DBI::dbIsValid(fram_db$fram_db_connection)){
+    cli::cli_abort("Invalid database connection")
+  }
+}
+
+#' Convenience function to check run_id input
+#' @param fram_db FRAM database object
+#' @param run_id one or more run_ids
+validate_runid <- function(fram_db, run_id){
+  if (! all(run_id %in% get_runids(fram_db))){
+    cli::cli_abort(paste0('run_id(s) not present in database. Available run_ids: ',
+                          paste0(get_runids(fram_db), collapse = ", ")))
+  }
+}

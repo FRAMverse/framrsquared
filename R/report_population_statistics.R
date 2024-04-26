@@ -6,13 +6,8 @@
 #' \dontrun{fram_db |> population_statistics(run_id = 101)}
 #'
 population_statistics <- function(fram_db, run_id = NULL) {
-  if(!is.numeric(run_id) && !is.null(run_id)) {
-    cli::cli_abort('Run ID must be and integer')
-  }
-
-  if(!DBI::dbIsValid(fram_db$fram_db_connection)) {
-    cli::cli_abort('Must connect to a FRAM database first...')
-  }
+  validate_framdb(fram_db)
+  if(!is.null(run_id)){validate_runid(fram_db, run_id)}
 
   cohort <- fram_db |>
     fetch_table('Cohort') |>

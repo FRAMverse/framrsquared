@@ -5,12 +5,12 @@
 \title{Fetches a complete table from a FRAM database. Returns a cleaned
 tibble.}
 \usage{
-fetch_table(fram_db = NULL, table_name = NULL)
+fetch_table(fram_db, table_name = NULL)
 }
 \arguments{
 \item{fram_db}{FRAM database object}
 
-\item{table_name}{Table to be fetched}
+\item{table_name}{Table to be fetched. If not given, a list of options will be printed}
 }
 \description{
 Fetches a complete table from a FRAM database. Returns a cleaned

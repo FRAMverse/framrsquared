@@ -4,7 +4,7 @@
 #'
 #' @export
 #'
-#' @param fram_db string, file path to database
+#' @param fram_db Fram database object
 #' @param run_id numeric, RunID(s) as ID or ID:ID
 #'
 #' @examples
@@ -13,8 +13,10 @@
 #' }
 aeq_mortality <- function(fram_db, run_id = NULL) {
 
+  validate_framdb(fram_db)
+
   if (!is.numeric(run_id) && !is.null(run_id)) {
-    cli::cli_abort("Run ID must be and integer")
+    validate_runid(fram_db, run_id)
   }
 
   if (fram_db$fram_db_species != "CHINOOK") {
@@ -65,9 +67,8 @@ aeq_mortality <- function(fram_db, run_id = NULL) {
     `attr<-`('species', fram_db$fram_db_species)
 
   if(!is.null(run_id)) {
-    aeq_m |> dplyr::filter(.data$run_id %in% .env$run_id)
+    return(aeq_m |> dplyr::filter(.data$run_id %in% .env$run_id))
   } else {
-    aeq_m
+    return(aeq_m)
   }
-
 }

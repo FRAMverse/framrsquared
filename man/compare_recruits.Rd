@@ -4,9 +4,7 @@
 \alias{compare_recruits}
 \title{Compares the recruit scalers of two runs}
 \usage{
-compare_recruits(fram_db, run_ids, tolerance = 0.01)
-
-compare_recruits(fram_db, run_ids, tolerance = 0.01)
+compare_recruits(fram_db, run_ids, tolerance = 0.01, verbose = TRUE)
 }
 \arguments{
 \item{fram_db}{FRAM database object}
@@ -14,13 +12,12 @@ compare_recruits(fram_db, run_ids, tolerance = 0.01)
 \item{run_ids}{Two run ids}
 
 \item{tolerance}{Tolerance for detecting changes}
+
+\item{verbose}{If `TRUE`, print an update to screen when there are no differences in recruits.}
 }
 \description{
 Compares the recruit scalers of two runs
-
-Compares the recruit scalers of two runs
 }
 \examples{
-\dontrun{fram_db |> compare_recruits()}
 \dontrun{fram_db |> compare_recruits()}
 }

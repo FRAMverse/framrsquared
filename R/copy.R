@@ -3,7 +3,7 @@
 #' @param fram_db FRAM database object
 #' @param from_run Run ID to be copied from
 #' @param to_run Run ID to be copied to
-#' @param fishery_id Specific fishery's scalers to be copied
+#' @param fishery_id ID or IDs for specific fishery(s) to copy inputs to/from. If not provided, interactive option to copy inputs for all fisheries.
 #' @export
 #' @examples
 #' \dontrun{framdb |> copy_fishery_scalers(132, 133, 87)}
@@ -11,6 +11,12 @@
 
 
 copy_fishery_scalers <- function(fram_db, from_run, to_run, fishery_id = NULL){
+  validate_framdb(fram_db)
+  validate_runid(fram_db, c(to_run, from_run))
+  if(fram_db$fram_read_only){
+    cli::cli_abort('This database connection is designated read-only!! If you are certain this database can be modified, create a new connection using `connect_fram_db()` with `read_only = TRUE`')
+  }
+
   if (is.null(fishery_id)) {
     cli::cli_alert_warning('A fishery ID is not set, this will copy all the fishery scalers!')
     input <- tolower(readline(prompt = ('Continue? (y/n): ')))
@@ -25,7 +31,7 @@ copy_fishery_scalers <- function(fram_db, from_run, to_run, fishery_id = NULL){
 
   if (!is.null(fishery_id)) {
     copy_scalers <-
-      copy_scalers |> dplyr::filter(.data$fishery_id == .env$fishery_id)
+      copy_scalers |> dplyr::filter(.data$fishery_id %in% .env$fishery_id)
   }
 
   updated_inputs <- copy_scalers |>
@@ -49,6 +55,26 @@ copy_fishery_scalers <- function(fram_db, from_run, to_run, fishery_id = NULL){
       )
     ))
 
+  original_notes <- fram_db |>
+    fetch_table('RunID') |>
+    dplyr::filter(.data$run_id == .env$to_run) |>
+    dplyr::pull(.data$run_comments)
+  update_notes <- paste0(original_notes,
+                        "\n\n FISHERY SCALERS COPIED PROGRAMMATICALLY FROM RUN ",
+                        from_run, " for ",
+                        ifelse(is.null(fishery_id),
+                               "ALL FISHERIES",
+                               paste0("FISHERIES ", paste0(fishery_id, collapse =", "))),
+                        " ON ", round(Sys.time()), "\n"
+  )
+  DBI::dbExecute(fram_db$fram_db_connection,
+                 glue::glue_sql(
+                   'UPDATE RunID
+                                SET RunComments = {update_notes}
+                                WHERE RunID = {to_run};',
+                   .con = fram_db$fram_db_connection
+                   )
+                 )
   if (nrow(updated_inputs |> dplyr::filter(.data$rows_affected == 0)) > 0) {
     cli::cli_alert_warning('Some rows were not changed.')
     updated_inputs |> dplyr::filter(.data$rows_affected  == 0)
