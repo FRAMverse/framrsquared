@@ -601,7 +601,7 @@ compare_runs <- function(fram_db, run_ids, tolerance = .01){
     cli::cli_alert_info('Changes detected in stock fishery rate scalers, below is a table outlining them')
     print(sfrs, n=Inf)
   } else {
-    cli::cli_alert_success('No changes detected in fishery inputs')
+    cli::cli_alert_success('No changes detected in fishery rate scalers')
   }
 
 }
