@@ -58,7 +58,7 @@ copy_fishery_scalers <- function(fram_db, from_run, to_run, fishery_id = NULL){
   original_notes <- fram_db |>
     fetch_table('RunID') |>
     dplyr::filter(.data$run_id == .env$to_run) |>
-    dplyr::pull(run_comments)
+    dplyr::pull(.data$run_comments)
   update_notes <- paste0(original_notes,
                         "\n\n FISHERY SCALERS COPIED PROGRAMMATICALLY FROM RUN ",
                         from_run, " for ",

@@ -29,8 +29,7 @@ msf_mortalities <- function(fram_db, run_id = NULL){
 
 #' Produces the MSF screen report numbers for encounters. Returns different
 #' format depending database.
-#' @param fram_db FRAM database object
-#' @param run_id Run ID
+#' @inheritParams msf_mortalities
 #' @export
 #' @examples
 #' \dontrun{fram_db |> msf_encounters(run_id = 101)}
@@ -64,8 +63,12 @@ msf_encounters <- function(fram_db, run_id = NULL){
 
 #' Produces the MSF screen report numbers for landed catch. Returns different
 #' format depending database.
+<<<<<<< HEAD
 #' @param fram_db FRAM database object
 #' @param run_id Run ID
+=======
+#' @inheritParams msf_mortalities
+>>>>>>> 9b78463 (Cleaned up everything to pass document() and check())
 #' @export
 #' @examples
 #' \dontrun{fram_db |> msf_landed_catch(run_id = 101)}

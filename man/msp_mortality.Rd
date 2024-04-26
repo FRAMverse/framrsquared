@@ -16,3 +16,8 @@ Mortality table with mortality values expanded by msp
 \description{
 See https://framverse.github.io/fram_doc/calcs_data_chin.html#46_Model-Stock_Proportion.
 }
+\examples{
+\dontrun{
+fram_db |> msp_mortality(run_id = 132)
+}
+}

@@ -32,3 +32,9 @@ and prints (and returns) the names of any variables assigned using `<-` that do 
 This will identify variables that do not use snakecase, but will also give false positive
 matches for variables that are single words and thus do not need snakecase.
 }
+\examples{
+\dontrun{
+frs_stylecheck_assignment("R/copy.R")
+frs_stylecheck_snakecase("R/copy.R")
+}
+}

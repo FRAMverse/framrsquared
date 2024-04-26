@@ -7,11 +7,11 @@
 get_runids(fram_db)
 }
 \arguments{
-\item{fram_db}{FRAM database}
+\item{fram_db}{Fram database object}
 }
 \description{
 Gets all run_ids of FRAM database
 }
 \examples{
-\dontrun{fram_dataframe |> ()}
+\dontrun{fram_dataframe |> get_runids()}
 }

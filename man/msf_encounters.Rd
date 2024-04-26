@@ -7,6 +7,11 @@ format depending database.}
 \usage{
 msf_encounters(fram_db, run_id = NULL)
 }
+\arguments{
+\item{fram_db}{FRAM database object}
+
+\item{run_id}{Run ID}
+}
 \description{
 Produces the MSF screen report numbers for encounters. Returns different
 format depending database.
