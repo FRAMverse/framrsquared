@@ -17,5 +17,5 @@ stats::filter(), which is usually not what I intend. As possible, add additional
 checks for issues that cause problems but do not give an informative error message (or any error message).
 }
 \examples{
-error_check-code("R/copy")
+error_check_code("R/copy")
 }

@@ -417,6 +417,87 @@ compare_non_retention_input_flags <- function(fram_db, run_ids, verbose = TRUE){
 }
 
 
+#' Compares the stock fishery rate scalers of two runs
+#' @param fram_db FRAM database object
+#' @param run_ids Two run ids
+#' @export
+#' @examples
+#' \dontrun{fram_db |> compare_stock_fishery_rate_scalers(c(55, 56))}
+compare_stock_fishery_rate_scalers <- function(fram_db, run_ids){
+  is_framdb_check(fram_db)
+  is_runid_present_check(fram_db, run_ids)
+
+  if(fram_db$fram_db_species == "CHINOOK"){
+    cli::cli_abort("Fishery rate scalers are only relevant for Coho, and this is a Chinook database.")
+  }
+
+  runs <- fram_db |>
+    fetch_table('RunID') |>
+    dplyr::select(.data$run_id, .data$run_name)
+
+  stocks <- fram_db |>
+    fetch_table('Stock') |>
+    dplyr::filter(.data$species == fram_db$fram_db_species) |>
+    dplyr::select(.data$stock_id, .data$stock_name)
+
+  fisheries <- fram_db |>
+    fetch_table('Fishery') |>
+    dplyr::filter(.data$species == fram_db$fram_db_species) |>
+    dplyr::select(.data$fishery_id, .data$fishery_name)
+
+
+  # stock fishery rate scalers
+  sfrs <- fram_db |>
+    fetch_table('StockFisheryRateScaler') |>
+    dplyr::select(.data$run_id,
+                  .data$stock_id,
+                  .data$fishery_id,
+                  .data$time_step,
+                  .data$stock_fishery_rate_scaler)
+
+  if(!all(run_ids %in% sfrs$run_id)){
+    cli::cli_abort(paste0("One or more runs in `run_ids` is not defined in the StockFisheryRateScaler table. Available runs:\n",
+                          paste(sort(unique(sfrs$run_id)), collapse = ", ")))
+  }
+
+  base_run_name <- runs |>
+    dplyr::filter(.data$run_id == run_ids[[1]]) |>
+    dplyr::pull(.data$run_name) |>
+    rlang::sym() #... don't ask, R voodoo magic
+
+  new_run_name <- runs |>
+    dplyr::filter(.data$run_id == run_ids[[2]]) |>
+    dplyr::pull(.data$run_name) |>
+    rlang::sym() #... don't ask, R voodoo magic
+
+  sfrs |>
+    dplyr::filter(.data$run_id %in% run_ids) |>
+    dplyr::inner_join(runs, by = 'run_id') |>
+    dplyr::inner_join(stocks, by = 'stock_id') |>
+    dplyr::inner_join(fisheries, by = 'fishery_id') |>
+    dplyr::select(
+      .data$stock_id,
+      .data$stock_name,
+      .data$fishery_id,
+      .data$fishery_name,
+      .data$time_step,
+      .data$stock_fishery_rate_scaler,
+      .data$run_name
+    ) |> #View()
+    tidyr::pivot_wider(
+      names_from = .data$run_name,
+      values_from = .data$stock_fishery_rate_scaler
+    ) |> #print(n=Inf)
+    dplyr::filter((!!base_run_name != !!new_run_name) |
+                    xor(is.na(!!base_run_name), is.na(!!new_run_name))) |>
+    dplyr::select(.data$stock_id,
+                  .data$stock_name,
+                  .data$time_step,!!base_run_name,!!new_run_name) |>
+    `attr<-`('species', fram_db$fram_db_species) # making accessible to package filters
+
+}
+
+
 #' Generates a report to the console of changes to inputs between two runs
 #' @param fram_db FRAM database object
 #' @param run_ids Two run ids
@@ -518,10 +599,20 @@ compare_runs <- function(fram_db, run_ids, tolerance = .01){
   cli::cli_alert_info('Detention tolerance set to: {scales::percent(tolerance)}')
   fishery_inputs <- fram_db |> compare_fishery_inputs(run_ids, tolerance = tolerance, verbose = FALSE)
   if(nrow(fishery_inputs) > 0){
-    cli::cli_alert_info('Changes detected in fishery flag inputs, below is a table outlining them')
+    cli::cli_alert_info('Changes detected in fishery inputs, below is a table outlining them')
     print(fishery_inputs, n=Inf)
   } else {
     cli::cli_alert_success('No changes detected in fishery inputs')
+  }
+  if(fram_db$fram_db_species == "COHO"){
+    cli::cli_h3('Checking for changes to stock fishery rate scalers')
+    sfrs <- fram_db |> compare_stock_fishery_rate_scalers(run_ids)
+    if(nrow(sfrs) > 0){
+      cli::cli_alert_info('Changes detected in stock fishery rate scalers, below is a table outlining them')
+      print(sfrs, n=Inf)
+    } else {
+      cli::cli_alert_success('No changes detected in fishery inputs')
+    }
   }
 }
 
