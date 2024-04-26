@@ -25,15 +25,6 @@ coho_stock_mortality_time_step(
 
 \item{filters_list}{list of framrsquared filter functions to apply before plotting.}
 }
-\arguments{
-\item{fram_db}{fram database object, supplied through connect_fram_db}
-
-\item{run_id}{numeric, RunID}
-
-\item{stock_id}{numeric, ID of focal stock}
-
-\item{top_n}{numeric, Number of fisheries to display}
-}
 \description{
 Creates an ordered bar chart with
 the top number of mortalities per

@@ -63,9 +63,6 @@ msf_encounters <- function(fram_db, run_id = NULL){
 
 #' Produces the MSF screen report numbers for landed catch. Returns different
 #' format depending database.
-#' @param fram_db FRAM database object
-#' @param run_id Run ID
-
 #' @inheritParams msf_mortalities
 #' @export
 #' @examples
