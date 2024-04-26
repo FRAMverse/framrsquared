@@ -566,7 +566,7 @@ compare_runs <- function(fram_db, run_ids, tolerance = .01){
 
   cli::cli_h3('Checking for changes in non-retention inputs')
   retention_inputs <- fram_db |> compare_non_retention_inputs(run_ids)
-  if(nrow(retention_flags) > 0){
+  if(nrow(retention_inputs) > 0){
     cli::cli_alert_info('Changes detected in non-retention inputs, below is a table outlining them')
     print(retention_inputs, n=Inf)
   } else {
@@ -614,7 +614,7 @@ compare_runs <- function(fram_db, run_ids, tolerance = .01){
     cli::cli_alert_info('Changes detected in stock fishery rate scalers, below is a table outlining them')
     print(sfrs, n=Inf)
   } else {
-    cli::cli_alert_success('No changes detected in fishery inputs')
+    cli::cli_alert_success('No changes detected in fishery rate scalers')
   }
 
 }
