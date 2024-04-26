@@ -424,6 +424,12 @@ compare_non_retention_input_flags <- function(fram_db, run_ids, verbose = TRUE){
 #' @examples
 #' \dontrun{fram_db |> compare_stock_fishery_rate_scalers(c(55, 56))}
 compare_stock_fishery_rate_scalers <- function(fram_db, run_ids){
+  is_framdb_check(fram_db)
+  is_runid_present_check(fram_db, run_ids)
+
+  if(fram_db$fram_db_species == "CHINOOK"){
+    cli::cli_abort("Fishery rate scalers are only relevant for Coho, and this is a Chinook database.")
+  }
 
   runs <- fram_db |>
     fetch_table('RunID') |>
@@ -448,6 +454,11 @@ compare_stock_fishery_rate_scalers <- function(fram_db, run_ids){
                   .data$fishery_id,
                   .data$time_step,
                   .data$stock_fishery_rate_scaler)
+
+  if(!all(run_ids %in% sfrs$run_id)){
+    cli::cli_abort(paste0("One or more runs in `run_ids` is not defined in the StockFisheryRateScaler table. Available runs:\n",
+                          paste(sort(unique(sfrs$run_id)), collapse = ", ")))
+  }
 
   base_run_name <- runs |>
     dplyr::filter(.data$run_id == run_ids[[1]]) |>
@@ -487,7 +498,7 @@ compare_stock_fishery_rate_scalers <- function(fram_db, run_ids){
 }
 
 
-#' Generates a report to the console of changes to inputs between to runs
+#' Generates a report to the console of changes to inputs between two runs
 #' @param fram_db FRAM database object
 #' @param run_ids Two run ids
 #' @param tolerance Tolerance of detection, 1 percent default

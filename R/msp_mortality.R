@@ -4,7 +4,7 @@
 #' See https://framverse.github.io/fram_doc/calcs_data_chin.html#46_Model-Stock_Proportion.
 #'
 #' @param .data Mortality table
-#' @param fram_db FRAM database
+#' @param fram_db FRAM database object
 #' @return Mortality table with mortality values expanded by msp
 #' @export
 #' @examples

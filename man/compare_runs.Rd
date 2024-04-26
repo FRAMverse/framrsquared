@@ -2,7 +2,7 @@
 % Please edit documentation in R/compare_inputs.R
 \name{compare_runs}
 \alias{compare_runs}
-\title{Generates a report to the console of changes to inputs between to runs}
+\title{Generates a report to the console of changes to inputs between two runs}
 \usage{
 compare_runs(fram_db, run_ids, tolerance = 0.01)
 }
@@ -14,7 +14,7 @@ compare_runs(fram_db, run_ids, tolerance = 0.01)
 \item{tolerance}{Tolerance of detection, 1 percent default}
 }
 \description{
-Generates a report to the console of changes to inputs between to runs
+Generates a report to the console of changes to inputs between two runs
 }
 \examples{
 \dontrun{fram_db |> compare_runs(c(55, 56))}
