@@ -19,6 +19,7 @@ Imports:
     lubridate,
     odbc,
     purrr,
+    readr,
     rlang,
     RSQLite,
     scales,

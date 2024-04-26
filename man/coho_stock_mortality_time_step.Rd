@@ -6,12 +6,7 @@
 the top number of mortalities per
 fishery and time step.}
 \usage{
-coho_stock_mortality_time_step(
-  fram_db,
-  run_id = NULL,
-  stock_id = NULL,
-  top_n = 10
-)
+coho_stock_mortality_time_step(fram_db, run_id, stock_id, top_n = 10)
 }
 \arguments{
 \item{fram_db}{fram database object, supplied through connect_fram_db}

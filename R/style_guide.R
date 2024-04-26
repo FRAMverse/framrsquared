@@ -23,9 +23,6 @@ NULL
 
 #' @rdname styleguide
 #' @export
-#' @example
-#' \dontrun{
-#' frs_stylecheck_assignment("R/copy.R")
 frs_stylecheck_assignment = function(filepath, n = Inf){
   cli::cli_text(cli::col_blue(paste("Checking", gsub(".*[/]", "", filepath), "for accidental uses of `=` for assignment")))
   cli::cli_text(cli::col_grey("Note that this is not perfect -- multi-line function calls which (correctly) use `=` for arguments

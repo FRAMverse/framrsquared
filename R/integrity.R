@@ -97,7 +97,7 @@ fram_clean_tables <- function(.data) {
 }
 
 #' Gets all run_ids of FRAM database
-#' @param fram_db
+#' @param fram_db FRAM database
 #' @export
 #' @examples
 #' \dontrun{fram_dataframe |> ()}

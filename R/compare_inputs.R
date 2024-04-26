@@ -534,7 +534,7 @@ compare_runs <- function(fram_db, run_ids, tolerance = .01){
     cli::cli_alert_info('Changes detected in non-retention flagging, below is a table outlining them')
     print(retention_flags, n=Inf)
     flags.used <- retention_flags |>
-      dplyr::select(-fishery_id, -time_step, -fishery_name) |>
+      dplyr::select(-.data$fishery_id, -.data$time_step, -.data$fishery_name) |>
       tibble::deframe() |>
       unique() |>
       sort() |>
@@ -575,7 +575,7 @@ compare_runs <- function(fram_db, run_ids, tolerance = .01){
     cli::cli_alert_info('Changes detected in fishery flag inputs, below is a table outlining them')
     print(fishery_flags, n=Inf)
     flags.used <- fishery_flags |>
-      dplyr::select(-fishery_id, -time_step, -fishery_name) |>
+      dplyr::select(-.data$fishery_id, -.data$time_step, -.data$fishery_name) |>
       tibble::deframe() |>
       unique() |>
       sort() |>

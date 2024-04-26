@@ -4,7 +4,6 @@
 #' @param from_run Run ID to be copied from
 #' @param to_run Run ID to be copied to
 #' @param fishery_id ID or IDs for specific fishery(s) to copy inputs to/from. If not provided, interactive option to copy inputs for all fisheries.
-#' @details
 #' @export
 #' @examples
 #' \dontrun{framdb |> copy_fishery_scalers(132, 133, 87)}

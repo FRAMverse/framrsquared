@@ -190,7 +190,10 @@ plot_stock_mortality <- function(fram_db, run_id, stock_id, top_n = 10, filters_
 #' fishery and time step.
 #'
 #' @export
-#'
+#' @param fram_db fram database object, supplied through connect_fram_db
+#' @param run_id numeric, RunID
+#' @param stock_id numeric, ID of focal stock
+#' @param top_n numeric, Number of fisheries to display
 #' @examples
 #' \dontrun{
 #' fram_db |> coho_stock_mortality_time_step(run_id = 132, stock_id = 17)
