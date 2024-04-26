@@ -5,10 +5,8 @@
 #'
 #' @param .data Mortality table
 #' @param fram_db FRAM database object
-#'
 #' @return Mortality table with mortality values expanded by msp
 #' @export
-#'
 #' @examples
 #' \dontrun{
 #' fram_db |> msp_mortality(run_id = 132)
@@ -17,7 +15,7 @@ msp_mortality = function(.data, fram_db){
 
   validate_framdb(fram_db)
 
-  if(!fram_db$fram_db_species == "CHINOOK"){
+  if(!attr(.data, 'species') == "CHINOOK"){
     cli::cli_abort("MSP expansion only makes sense for Chinook. See https://framverse.github.io/fram_doc/calcs_data_chin.html#46_Model-Stock_Proportion")
   }
   if(!all(c("run_id", "stock_id", "age", "fishery_id", "time_step",

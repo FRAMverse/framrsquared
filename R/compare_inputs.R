@@ -604,16 +604,16 @@ compare_runs <- function(fram_db, run_ids, tolerance = .01){
   } else {
     cli::cli_alert_success('No changes detected in fishery inputs')
   }
-  if(fram_db$fram_db_species == "COHO"){
-    cli::cli_h3('Checking for changes to stock fishery rate scalers')
-    sfrs <- fram_db |> compare_stock_fishery_rate_scalers(run_ids)
-    if(nrow(sfrs) > 0){
-      cli::cli_alert_info('Changes detected in stock fishery rate scalers, below is a table outlining them')
-      print(sfrs, n=Inf)
-    } else {
-      cli::cli_alert_success('No changes detected in fishery inputs')
-    }
+
+  cli::cli_h3('Checking for changes to stock fishery rate scalers')
+  sfrs <- fram_db |> compare_stock_fishery_rate_scalers(run_ids)
+  if(nrow(sfrs) > 0){
+    cli::cli_alert_info('Changes detected in stock fishery rate scalers, below is a table outlining them')
+    print(sfrs, n=Inf)
+  } else {
+    cli::cli_alert_success('No changes detected in fishery rate scalers')
   }
+
 }
 
 
