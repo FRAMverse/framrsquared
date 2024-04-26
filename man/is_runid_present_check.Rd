@@ -9,11 +9,8 @@ is_runid_present_check(fram_db, run_id)
 \arguments{
 \item{fram_db}{FRAM database object}
 
-\item{run_id}{run_id(s)}
+\item{run_id}{one or more run_ids}
 }
 \description{
 Convenience function to check run_id input
-}
-\examples{
-\dontrun{}
 }

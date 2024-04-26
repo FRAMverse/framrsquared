@@ -8,8 +8,8 @@
 #' fram_db |> fishery_mortality(run_id = 101)
 #' }
 fishery_mortality <- function(fram_db, run_id = NULL, msp = TRUE) {
-  is_framdb_check(fram_db)
-  if(!is.numeric(run_id)){is_runid_present_check(fram_db, run_id)}
+  validate_framdb(fram_db)
+  if(!is.numeric(run_id)){validate_runid(fram_db, run_id)}
 
   fishery_mort <- fram_db |>
     fetch_table("Mortality") |>
@@ -49,7 +49,7 @@ fishery_mortality <- function(fram_db, run_id = NULL, msp = TRUE) {
   # chinook needs to return model stock proportion estimates
   if (fram_db$fram_db_species == 'CHINOOK' & msp == TRUE){
     fishery_mort <- fishery_mort |>
-      msp_mortality(db)
+      msp_mortality(fram_db)
 
   }
 
@@ -84,13 +84,14 @@ fishery_mortality <- function(fram_db, run_id = NULL, msp = TRUE) {
 #' @examples
 #' \dontrun{
 #' fram_db |> coho_stock_mortality(run_id = 132, stock_id = 17)
-#' fram_db |> coho_stock_mortality(run_id = 132, stock_id = 17, filters_list = list(filter_wa, filter_marine))
+#' fram_db |> coho_stock_mortality(run_id = 132, stock_id = 17,
+#'         filters_list = list(filter_wa, filter_marine))
 #' }
 #'
 
 plot_stock_mortality <- function(fram_db, run_id, stock_id, top_n = 10, filters_list = NULL, msp = TRUE){
-  is_framdb_check(fram_db)
-  is_runid_present_check(fram_db, run_id)
+  validate_framdb(fram_db)
+  validate_runid(fram_db, run_id)
 
   if (length(run_id)>1) {
     cli::cli_abort("Plot is not meaningful when combining multiple runs. Provide a single run in run_id.")
@@ -119,7 +120,7 @@ plot_stock_mortality <- function(fram_db, run_id, stock_id, top_n = 10, filters_
   # identify species used
   species_used = fetch_table(fram_db, "RunID") |>
     dplyr::filter(.data$run_id == .env$run_id) |>
-    dplyr::pull(species_name)
+    dplyr::pull(.data$species_name)
 
   # lut for display of stock name
   stocks <- fram_db |>
@@ -137,7 +138,7 @@ plot_stock_mortality <- function(fram_db, run_id, stock_id, top_n = 10, filters_
     mortality <- fram_db |> aeq_mortality()
     if(msp){
       mortality <- mortality |>
-        msp_mortality(db)
+        msp_mortality(fram_db)
     }
   } else {
     mortality <- fram_db |> fetch_table('Mortality')
@@ -191,16 +192,16 @@ plot_stock_mortality <- function(fram_db, run_id, stock_id, top_n = 10, filters_
 #'
 #' @export
 #'
-#' @inheritParams coho_stock_mortality
+#' @inheritParams plot_stock_mortality
 #'
 #' @examples
 #' \dontrun{
 #' fram_db |> coho_stock_mortality_time_step(run_id = 132, stock_id = 17)
 #' }
 #'
-coho_stock_mortality_time_step <- function(fram_db, run_id, stock_id, top_n = 10){
-  is_framdb_check(fram_db)
-  is_runid_present_check(fram_db, run_id)
+coho_stock_mortality_time_step <- function(fram_db, run_id, stock_id, top_n = 10, filters_list = NULL){
+  validate_framdb(fram_db)
+  validate_runid(fram_db, run_id)
 
   if (length(run_id)>1) {
     cli::cli_abort("Plot is not meaningful when combining multiple runs. Provide a single run in run_id.")

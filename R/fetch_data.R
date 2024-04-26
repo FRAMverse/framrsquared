@@ -9,7 +9,7 @@
 
 fetch_table <- function(fram_db, table_name = NULL){
   ## adding input checking
-  is_framdb_check(fram_db)
+  validate_framdb(fram_db)
 
   all_tables = c(
     'AEQ',

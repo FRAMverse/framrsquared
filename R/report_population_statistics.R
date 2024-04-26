@@ -6,8 +6,8 @@
 #' \dontrun{fram_db |> population_statistics(run_id = 101)}
 #'
 population_statistics <- function(fram_db, run_id = NULL) {
-  is_framdb_check(fram_db)
-  if(!is.null(run_id)){is_runid_present_check(fram_db, run_id)}
+  validate_framdb(fram_db)
+  if(!is.null(run_id)){validate_runid(fram_db, run_id)}
 
   cohort <- fram_db |>
     fetch_table('Cohort') |>

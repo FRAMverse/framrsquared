@@ -10,9 +10,12 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#' fram_db |> msp_mortality(run_id = 132)
+#' }
 msp_mortality = function(.data, fram_db){
 
-  is_framdb_check(fram_db)
+  validate_framdb(fram_db)
 
   if(!fram_db$fram_db_species == "CHINOOK"){
     cli::cli_abort("MSP expansion only makes sense for Chinook. See https://framverse.github.io/fram_doc/calcs_data_chin.html#46_Model-Stock_Proportion")
