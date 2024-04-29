@@ -4,12 +4,12 @@
 \alias{msp_mortality}
 \title{Expand Chinook mortality table using Model-Stock Proportion}
 \usage{
-msp_mortality(.data, fram_db)
+msp_mortality(fram_db, run_id = NULL)
 }
 \arguments{
-\item{.data}{Mortality table}
-
 \item{fram_db}{FRAM database object}
+
+\item{run_id}{Run ID (optional)}
 }
 \value{
 Mortality table with mortality values expanded by msp
