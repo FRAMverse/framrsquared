@@ -29,3 +29,5 @@ Imports:
     tidyr,
     tools
 RoxygenNote: 7.3.1
+Depends: 
+    R (>= 4.1)
