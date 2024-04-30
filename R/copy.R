@@ -11,8 +11,8 @@
 
 
 copy_fishery_scalers <- function(fram_db, from_run, to_run, fishery_id = NULL){
-  validate_framdb(fram_db)
-  validate_runid(fram_db, c(to_run, from_run))
+  validate_fram_db(fram_db)
+  validate_run_id(fram_db, c(to_run, from_run))
   if(fram_db$fram_read_only){
     cli::cli_abort('This database connection is designated read-only!! If you are certain this database can be modified, create a new connection using `connect_fram_db()` with `read_only = TRUE`')
   }

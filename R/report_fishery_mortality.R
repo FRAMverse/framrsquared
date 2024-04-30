@@ -8,8 +8,8 @@
 #' fram_db |> fishery_mortality(run_id = 101)
 #' }
 fishery_mortality <- function(fram_db, run_id = NULL, msp = TRUE) {
-  validate_framdb(fram_db)
-  if(!is.numeric(run_id)){validate_runid(fram_db, run_id)}
+  validate_fram_db(fram_db)
+  if(!is.numeric(run_id)){validate_run_id(fram_db, run_id)}
 
   fishery_mort <- fram_db |>
     fetch_table("Mortality") |>
@@ -45,13 +45,6 @@ fishery_mortality <- function(fram_db, run_id = NULL, msp = TRUE) {
       .data$non_retention, .data$shaker, .data$drop_off
     ) |>
     dplyr::arrange(.data$run_id, .data$fishery_id, .data$age, .data$time_step)
-
-  # chinook needs to return model stock proportion estimates
-  if (fram_db$fram_db_species == 'CHINOOK' & msp == TRUE){
-    fishery_mort <- fishery_mort |>
-      msp_mortality(fram_db)
-
-  }
 
 
   if (is.null(run_id)) {
@@ -90,8 +83,8 @@ fishery_mortality <- function(fram_db, run_id = NULL, msp = TRUE) {
 #'
 
 plot_stock_mortality <- function(fram_db, run_id, stock_id, top_n = 10, filters_list = NULL, msp = TRUE){
-  validate_framdb(fram_db)
-  validate_runid(fram_db, run_id)
+  validate_fram_db(fram_db)
+  validate_run_id(fram_db, run_id)
 
   if (length(run_id)>1) {
     cli::cli_abort("Plot is not meaningful when combining multiple runs. Provide a single run in run_id.")
@@ -200,8 +193,10 @@ plot_stock_mortality <- function(fram_db, run_id, stock_id, top_n = 10, filters_
 #' }
 #'
 coho_stock_mortality_time_step <- function(fram_db, run_id, stock_id, top_n = 10, filters_list = NULL){
-  validate_framdb(fram_db)
-  validate_runid(fram_db, run_id)
+  # will eventually move this into an abstracted chinook/coho version
+  #lifecycle::deprecate_warn('0.3.0','coho_stock_mortality_time_step()', with = 'stock_mortality()')
+  validate_fram_db(fram_db, db_type = 'full', db_species = 'COHO')
+  validate_run_id(fram_db, run_id)
 
   if (length(run_id)>1) {
     cli::cli_abort("Plot is not meaningful when combining multiple runs. Provide a single run in run_id.")
@@ -210,17 +205,6 @@ coho_stock_mortality_time_step <- function(fram_db, run_id, stock_id, top_n = 10
   # make sure run ids are integers
   if (!is.numeric(stock_id)) {
     cli::cli_abort("Stock ID must be and integer")
-  }
-
-  if (length(stock_id)>1) {
-    cli::cli_abort("Plot is not meaningful when combining stock. Provide a single value for stock_id.")
-  }
-
-  if(!is.null(filters_list) & !is.list(filters_list)){
-    cli::cli_abort("If provided, filters_list must be a list of fishery filter functions.")
-  }
-  if(!is.null(filters_list) & !all(purrr::map_vec(filters_list, \(x) is.function(x)))){
-    cli::cli_abort("If provided, filters_list must be a list of fishery filter functions. One or more list items is not a function.")
   }
 
   # lut for display of stock name

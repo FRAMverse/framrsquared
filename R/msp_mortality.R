@@ -13,13 +13,7 @@
 #' }
 msp_mortality = function(fram_db, run_id = NULL){
 
-  validate_framdb(fram_db)
-
-  if(!fram_db$fram_db_species == "CHINOOK"){
-    cli::cli_abort(
-      "MSP expansion only makes sense for Chinook. See {.url https://framverse.github.io/fram_doc/calcs_data_chin.html#46_Model-Stock_Proportion}"
-      )
-  }
+  validate_fram_db(fram_db, db_type = 'full', db_species = 'CHINOOK')
 
   runid <- fram_db |>
     fetch_table('RunID')

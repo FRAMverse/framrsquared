@@ -17,7 +17,7 @@ bkfram_checks_coho <-
            backward_run_id = NULL,
            forward_run_id = NULL) {
 
-    validate_framdb(fram_db)
+    validate_fram_db(fram_db, db_type = 'full', db_species = 'COHO')
     # let user know what's going on
     cli::cli_alert_info('These are a suite of checks to find errors a post-season (bkFRAM) run.')
 
@@ -27,8 +27,8 @@ bkfram_checks_coho <-
       cli::cli_abort("Both a backward and forward run ids must be supplied")
     }
 
-    validate_runid(fram_db, backward_run_id)
-    validate_runid(fram_db, forward_run_id)
+    validate_run_id(fram_db, backward_run_id)
+    validate_run_id(fram_db, forward_run_id)
 
     # run ids are called so much in this package probably worth it
     # to add a validate validate_run_id() function to integrity.R
