@@ -274,3 +274,13 @@ validate_runid <- function(fram_db, run_id){
                           paste0(get_runids(fram_db), collapse = ", ")))
   }
 }
+
+#' Enforces a database type, will throw
+#' @param fram_db FRAM database object
+#' @param db_type Database type - character
+enforce_db_type <- function(fram_db, db_type = c('full', 'transfer')){
+  db <- rlang::arg_match(db_type)
+  if(fram_db$fram_db_type != db){
+    cli::cli_abort("This function requires as {db} database, you're using a {fram_db$fram_db_type}.")
+  }
+}
