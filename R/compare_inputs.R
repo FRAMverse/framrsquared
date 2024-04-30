@@ -16,8 +16,8 @@
 #' \dontrun{fram_db |> compare_inputs(c(100,101))}
 #'
 compare_inputs <- function(fram_db, run_ids){
-  validate_framdb(fram_db)
-  validate_runid(fram_db, run_ids)
+  validate_fram_db(fram_db)
+  validate_run_id(fram_db, run_ids)
   # abort if do have two run ids
   if(length(run_ids) != 2 | !is.numeric(run_ids)){cli::cli_abort('Two valid run ids must be provided')}
   scalers <- fram_db |>
@@ -116,8 +116,8 @@ input_summary_ <- function(.data, run_id){
 #' @examples
 #' \dontrun{fram_db |> compare_recruits()}
 compare_recruits <- function(fram_db, run_ids, tolerance = .01, verbose = TRUE){
-  validate_framdb(fram_db)
-  validate_runid(fram_db, run_ids)
+  validate_fram_db(fram_db)
+  validate_run_id(fram_db, run_ids)
 
   runs <- fram_db |>
     fetch_table('RunID') |>
@@ -182,8 +182,8 @@ compare_recruits <- function(fram_db, run_ids, tolerance = .01, verbose = TRUE){
 #' @examples
 #' \dontrun{fram_db |> compare_fishery_inputs(c(55, 56))}
 compare_fishery_inputs <- function(fram_db, run_ids, tolerance = .01, verbose = TRUE){
-  validate_framdb(fram_db)
-  validate_runid(fram_db, run_ids)
+  validate_fram_db(fram_db)
+  validate_run_id(fram_db, run_ids)
 
   fishery_scalers <- fram_db |>
     fetch_table('FisheryScalers')
@@ -244,8 +244,8 @@ compare_fishery_inputs <- function(fram_db, run_ids, tolerance = .01, verbose = 
 #' @examples
 #' \dontrun{fram_db |> compare_fishery_input_flags(c(55, 56))}
 compare_fishery_input_flags <- function(fram_db, run_ids, verbose = TRUE){
-  validate_framdb(fram_db)
-  validate_runid(fram_db, run_ids)
+  validate_fram_db(fram_db)
+  validate_run_id(fram_db, run_ids)
 
   fishery_scalers <- fram_db |>
     fetch_table('FisheryScalers') |>
@@ -304,8 +304,8 @@ compare_fishery_input_flags <- function(fram_db, run_ids, verbose = TRUE){
 #' @examples
 #' \dontrun{fram_db |> compare_non_retention_inputs(c(55, 56))}
 compare_non_retention_inputs <- function(fram_db, run_ids, verbose = TRUE){
-  validate_framdb(fram_db)
-  validate_runid(fram_db, run_ids)
+  validate_fram_db(fram_db)
+  validate_run_id(fram_db, run_ids)
 
   runs <- fram_db |>
     fetch_table('RunID') |>
@@ -365,8 +365,8 @@ compare_non_retention_inputs <- function(fram_db, run_ids, verbose = TRUE){
 #' @examples
 #' \dontrun{fram_db |> compare_non_retention_inputs(c(55, 56))}
 compare_non_retention_input_flags <- function(fram_db, run_ids, verbose = TRUE){
-  validate_framdb(fram_db)
-  validate_runid(fram_db, run_ids)
+  validate_fram_db(fram_db)
+  validate_run_id(fram_db, run_ids)
 
   runs <- fram_db |>
     fetch_table('RunID') |>
@@ -424,8 +424,8 @@ compare_non_retention_input_flags <- function(fram_db, run_ids, verbose = TRUE){
 #' @examples
 #' \dontrun{fram_db |> compare_stock_fishery_rate_scalers(c(55, 56))}
 compare_stock_fishery_rate_scalers <- function(fram_db, run_ids){
-  validate_framdb(fram_db)
-  validate_runid(fram_db, run_ids)
+  validate_fram_db(fram_db)
+  validate_run_id(fram_db, run_ids)
 
   if(fram_db$fram_db_species == "CHINOOK"){
     cli::cli_abort("Fishery rate scalers are only relevant for Coho, and this is a Chinook database.")
@@ -506,8 +506,8 @@ compare_stock_fishery_rate_scalers <- function(fram_db, run_ids){
 #' @examples
 #' \dontrun{fram_db |> compare_runs(c(55, 56))}
 compare_runs <- function(fram_db, run_ids, tolerance = .01){
-  validate_framdb(fram_db)
-  validate_runid(fram_db, run_ids)
+  validate_fram_db(fram_db)
+  validate_run_id(fram_db, run_ids)
 
   runs <- fram_db |>
     fetch_table('RunID')

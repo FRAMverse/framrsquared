@@ -6,6 +6,7 @@
 #' \dontrun{truns <- truns_stocks(fram_db)}
 #'
 truns_stocks <- function(fram_db){
+  validate_fram_db(fram_db, 'full', 'COHO')
   fram_db |>
     fetch_table('ReportDriver') |>
     dplyr::filter(.data$driver_name == 'PSCTRuns.DRV') |>
@@ -22,6 +23,7 @@ truns_stocks <- function(fram_db){
 #' \dontrun{truns <- truns_fisheries(fram_db)}
 #'
 truns_fisheries <- function(fram_db){
+  validate_fram_db(fram_db, 'full', 'COHO')
   fram_db |>
     fetch_table('ReportDriver') |>
     dplyr::filter(.data$driver_name == 'PSCTRuns.DRV') |>

@@ -13,10 +13,10 @@
 #' }
 aeq_mortality <- function(fram_db, run_id = NULL) {
 
-  validate_framdb(fram_db)
+  validate_fram_db(fram_db, db_type = 'full', db_species = 'CHINOOK')
 
   if (!is.numeric(run_id) && !is.null(run_id)) {
-    validate_runid(fram_db, run_id)
+    validate_run_id(fram_db, run_id)
   }
 
   if (fram_db$fram_db_species != "CHINOOK") {
@@ -67,8 +67,8 @@ aeq_mortality <- function(fram_db, run_id = NULL) {
     `attr<-`('species', fram_db$fram_db_species)
 
   if(!is.null(run_id)) {
-    return(aeq_m |> dplyr::filter(.data$run_id %in% .env$run_id))
+    aeq_m |> dplyr::filter(.data$run_id %in% .env$run_id)
   } else {
-    return(aeq_m)
+    aeq_m
   }
 }

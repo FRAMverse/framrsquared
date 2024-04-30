@@ -7,8 +7,8 @@
 #' @examples
 #' \dontrun{fram_db |> msf_mortalities_coho_(run_id = 101)}
 msf_mortalities <- function(fram_db, run_id = NULL){
-  validate_framdb(fram_db)
-  if(!is.null(run_id)) {validate_runid(fram_db, run_id)}
+  validate_fram_db(fram_db)
+  if(!is.null(run_id)) {validate_run_id(fram_db, run_id)}
 
   if(is.null(run_id)){
     switch(
@@ -34,15 +34,8 @@ msf_mortalities <- function(fram_db, run_id = NULL){
 #' @examples
 #' \dontrun{fram_db |> msf_encounters(run_id = 101)}
 msf_encounters <- function(fram_db, run_id = NULL){
-  validate_framdb(fram_db)
-  if(!is.null(run_id)) {validate_runid(fram_db, run_id)}
-
-  if(fram_db$species == 'CHINOOK' && fram_db$fram_db_type == 'transfer'){
-    cli::cli_abort('
-                 Cannot be connected to a transfer database to use this function
-                  for Chinook.
-                 ')
-  }
+  validate_fram_db(fram_db)
+  if(!is.null(run_id)) {validate_run_id(fram_db, run_id)}
 
   if(is.null(run_id)){
     switch(
@@ -68,8 +61,8 @@ msf_encounters <- function(fram_db, run_id = NULL){
 #' @examples
 #' \dontrun{fram_db |> msf_landed_catch(run_id = 101)}
 msf_landed_catch <- function(fram_db, run_id=NULL){
-  validate_framdb(fram_db)
-  if(!is.null(run_id)) {validate_runid(fram_db, run_id)}
+  validate_fram_db(fram_db)
+  if(!is.null(run_id)) {validate_run_id(fram_db, run_id)}
 
   if(is.null(run_id)){
     switch(
