@@ -259,23 +259,25 @@ welcome <- function(con){
 #' @param db_species Enforcement of a species 'COHO' or 'CHINOOK'
 validate_fram_db <- function(fram_db,
                              db_type = NULL,
-                             db_species = NULL) {
+                             db_species = NULL,
+                             call = rlang::call_env()) {
   # check if fram_db object is a list
   if (!rlang::is_list(fram_db) |
       !"fram_db_connection" %in% names(fram_db)) {
     cli::cli_code('fram_db <- connect_fram_db(file_path)\nfram_db |> fetch_table(\'Mortality\')')
-    cli::cli_abort('Invalid database type, try code above')
+    cli::cli_abort('Invalid database type, try code above', call = call)
   }
   # check if it's a valid connection
   if (!DBI::dbIsValid(fram_db$fram_db_connection)) {
-    cli::cli_abort("Invalid database connection")
+    cli::cli_abort("Invalid database connection", call = call)
   }
 
   # enforcement of a certain database type
   if (!is.null(db_type)) {
     db <- rlang::arg_match(db_type, c('full', 'transfer'))
     if (fram_db$fram_db_type != db) {
-      cli::cli_abort("This function requires as {db} database, you're using a {fram_db$fram_db_type} database.")
+      cli::cli_abort("This function requires as {db} database, you're using a {fram_db$fram_db_type} database.",
+                     call = call)
     }
   }
 
@@ -284,7 +286,7 @@ validate_fram_db <- function(fram_db,
     species <- rlang::arg_match(db_species, c('COHO', 'CHINOOK'))
     if (fram_db$fram_db_species != species) {
       cli::cli_abort(
-        "This function is specifically for {species}, you're using a {fram_db$fram_db_species} database."
+        "This function is specifically for {species}, you're using a {fram_db$fram_db_species} database.", call = call
       )
     }
   }
@@ -293,10 +295,11 @@ validate_fram_db <- function(fram_db,
 #' Convenience function to check run_id input
 #' @param fram_db FRAM database object
 #' @param run_id one or more run_ids
-validate_run_id <- function(fram_db, run_id){
+validate_run_id <- function(fram_db, run_id, call = caller_env()){
   available_run_ids <- get_run_ids(fram_db)
   if (! all(run_id %in% available_run_ids)){
     cli::cli_abort(paste0('run_id(s) not present in database. Available run_ids: ',
-                          paste0(available_run_ids, collapse = ", ")))
+                          paste0(available_run_ids, collapse = ", ")),
+                   call = call)
   }
 }
