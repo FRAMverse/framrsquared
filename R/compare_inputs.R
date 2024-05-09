@@ -50,6 +50,7 @@ compare_inputs <- function(fram_db, run_ids){
 #' @examples
 #' \dontrun{fram_db |> compare_inputs(c(100, 101)) |> compare_inputs_chart()}
 compare_inputs_chart <- function(.data){
+  validate_data_frame(.data)
   .data |>
     dplyr::mutate(
       percent_diff = dplyr::if_else(is.infinite(.data$percent_diff), 1, .data$percent_diff),
@@ -87,6 +88,7 @@ compare_inputs_chart <- function(.data){
 #' @examples
 #' \dontrun{fishery_scalers_dataframe |> input_summary()}
 input_summary_ <- function(.data, run_id){
+  validate_data_frame(.data)
   .data |>
     dplyr::filter(
       .data$run_id == .env$run_id

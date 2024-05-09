@@ -91,6 +91,7 @@ fram_database_species <- function(con){
 #' \dontrun{fram_dataframe |> fram_clean_tables()}
 #'
 fram_clean_tables <- function(.data) {
+  validate_data_frame(.data)
   .data |>
     tibble::as_tibble() |>
     janitor::clean_names()
