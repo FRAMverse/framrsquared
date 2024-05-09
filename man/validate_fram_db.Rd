@@ -4,7 +4,12 @@
 \alias{validate_fram_db}
 \title{Convenience function to check fram_db input}
 \usage{
-validate_fram_db(fram_db, db_type = NULL, db_species = NULL)
+validate_fram_db(
+  fram_db,
+  db_type = NULL,
+  db_species = NULL,
+  call = rlang::caller_env()
+)
 }
 \arguments{
 \item{fram_db}{FRAM database object}
@@ -12,6 +17,8 @@ validate_fram_db(fram_db, db_type = NULL, db_species = NULL)
 \item{db_type}{Enforcement of a database type 'full' or 'transfer'}
 
 \item{db_species}{Enforcement of a species 'COHO' or 'CHINOOK'}
+
+\item{call}{internal use: identify name of function that called this function (for informative error message)}
 }
 \description{
 Convenience function to check fram_db input

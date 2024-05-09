@@ -2,7 +2,7 @@
 #' by the `stock_mortality_ratio` produced by these functions.
 #' @param fram_db FRAM database object
 #' @param run_id Run ID
-#' @param stock_id A focal stock
+#' @param stock_id A focal stock or stocks
 #' @export
 #' @examples
 #' \dontrun{fram_db |> mortality_scalers(run_id = 101, stock_id = c(17:18))}

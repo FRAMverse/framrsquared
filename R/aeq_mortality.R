@@ -6,26 +6,36 @@
 #'
 #' @param fram_db Fram database object
 #' @param run_id numeric, RunID(s) as ID or ID:ID
+#' @param msp Do we use MSP expansion? Logical, default true.
 #'
 #' @examples
 #' \dontrun{
 #' fram_db |> aeq_mortality(run_id = 132)
 #' }
-aeq_mortality <- function(fram_db, run_id = NULL) {
+aeq_mortality <- function(fram_db, run_id = NULL, msp = TRUE) {
 
   validate_fram_db(fram_db, db_type = 'full', db_species = 'CHINOOK')
 
   if (!is.numeric(run_id) && !is.null(run_id)) {
     validate_run_id(fram_db, run_id)
   }
+  if (!is.logical(msp)) {
+    cli::cli_abort("`msp` must be logical.")
+  }
 
   if (fram_db$fram_db_species != "CHINOOK") {
     cli::cli_abort("AEQ mortality can only be used with Chinook")
   }
 
-  mortality <- fram_db |>
-    fetch_table("Mortality") |>
-    dplyr::select(-.data$primary_key)
+  if(msp){
+    mortality <- fram_db |>
+      msp_mortality() |>
+      dplyr::select(-.data$primary_key)
+  }else{
+    mortality <- fram_db |>
+      fetch_table("Mortality") |>
+      dplyr::select(-.data$primary_key)
+  }
 
   runid <- fram_db |>
     fetch_table("RunID") |>
@@ -63,7 +73,7 @@ aeq_mortality <- function(fram_db, run_id = NULL) {
     )) |>
     dplyr::arrange(.data$run_id, .data$fishery_id,
                    .data$time_step, .data$stock_id
-                   ) |>
+    ) |>
     `attr<-`('species', fram_db$fram_db_species)
 
   if(!is.null(run_id)) {
