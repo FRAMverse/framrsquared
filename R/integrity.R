@@ -257,10 +257,11 @@ welcome <- function(con){
 #' @param fram_db FRAM database object
 #' @param db_type Enforcement of a database type 'full' or 'transfer'
 #' @param db_species Enforcement of a species 'COHO' or 'CHINOOK'
+#' @param call internal use: identify name of function that called this function (for informative error message)
 validate_fram_db <- function(fram_db,
                              db_type = NULL,
                              db_species = NULL,
-                             call = rlang::call_env()) {
+                             call = rlang::caller_env()) {
   # check if fram_db object is a list
   if (!rlang::is_list(fram_db) |
       !"fram_db_connection" %in% names(fram_db)) {
@@ -295,7 +296,8 @@ validate_fram_db <- function(fram_db,
 #' Convenience function to check run_id input
 #' @param fram_db FRAM database object
 #' @param run_id one or more run_ids
-validate_run_id <- function(fram_db, run_id, call = caller_env()){
+#' @param call internal use: identify name of function that called this function (for informative error message)
+validate_run_id <- function(fram_db, run_id, call = rlang::caller_env()){
   available_run_ids <- get_run_ids(fram_db)
   if (! all(run_id %in% available_run_ids)){
     cli::cli_abort(paste0('run_id(s) not present in database. Available run_ids: ',

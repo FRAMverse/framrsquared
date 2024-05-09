@@ -4,12 +4,14 @@
 \alias{validate_run_id}
 \title{Convenience function to check run_id input}
 \usage{
-validate_run_id(fram_db, run_id)
+validate_run_id(fram_db, run_id, call = rlang::caller_env())
 }
 \arguments{
 \item{fram_db}{FRAM database object}
 
 \item{run_id}{one or more run_ids}
+
+\item{call}{internal use: identify name of function that called this function (for informative error message)}
 }
 \description{
 Convenience function to check run_id input
