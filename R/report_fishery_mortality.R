@@ -76,8 +76,8 @@ fishery_mortality <- function(fram_db, run_id = NULL, msp = TRUE) {
 #'
 #' @examples
 #' \dontrun{
-#' fram_db |> coho_stock_mortality(run_id = 132, stock_id = 17)
-#' fram_db |> coho_stock_mortality(run_id = 132, stock_id = 17,
+#' fram_db |> plot_stock_mortality(run_id = 132, stock_id = 17)
+#' fram_db |> plot_stock_mortality(run_id = 132, stock_id = 17,
 #'         filters_list = list(filter_wa, filter_marine))
 #' }
 #'
@@ -128,11 +128,7 @@ plot_stock_mortality <- function(fram_db, run_id, stock_id, top_n = 10, filters_
     dplyr::select(.data$fishery_id, .data$fishery_name)
 
   if(species_used == "CHINOOK"){
-    mortality <- fram_db |> aeq_mortality()
-    if(msp){
-      mortality <- mortality |>
-        msp_mortality(fram_db)
-    }
+    mortality <- fram_db |> aeq_mortality(msp = msp)
   } else {
     mortality <- fram_db |> fetch_table('Mortality')
   }
@@ -189,13 +185,13 @@ plot_stock_mortality <- function(fram_db, run_id, stock_id, top_n = 10, filters_
 #'
 #' @examples
 #' \dontrun{
-#' fram_db |> coho_stock_mortality_time_step(run_id = 132, stock_id = 17)
+#' fram_db |> stock_mortality_time_step(run_id = 132, stock_id = 17)
 #' }
 #'
-coho_stock_mortality_time_step <- function(fram_db, run_id, stock_id, top_n = 10, filters_list = NULL){
-  # will eventually move this into an abstracted chinook/coho version
+
+plot_stock_mortality_time_step <- function(fram_db, run_id, stock_id, top_n = 10, filters_list = NULL, msp = TRUE){
   #lifecycle::deprecate_warn('0.3.0','coho_stock_mortality_time_step()', with = 'stock_mortality()')
-  validate_fram_db(fram_db, db_type = 'full', db_species = 'COHO')
+  validate_fram_db(fram_db, db_type = 'full')
   validate_run_id(fram_db, run_id)
 
   if (length(run_id)>1) {
@@ -219,9 +215,12 @@ coho_stock_mortality_time_step <- function(fram_db, run_id, stock_id, top_n = 10
     dplyr::filter(.data$species == fram_db$fram_db_species) |>
     dplyr::select(.data$fishery_id, .data$fishery_name)
 
-
-  mortality <- fram_db |>
-    fetch_table('Mortality') |>
+  if(fram_db$fram_db_species == "CHINOOK"){
+    mortality <- fram_db |> aeq_mortality(msp = msp)
+  } else {
+    mortality <- fram_db |> fetch_table('Mortality')
+  }
+  mortality <- mortality |>
     dplyr::filter(.data$run_id == .env$run_id,
                   .data$stock_id %in% .env$stock_id) |>
     dplyr::group_by(.data$run_id, .data$time_step, .data$fishery_id) |>
@@ -276,5 +275,3 @@ coho_stock_mortality_time_step <- function(fram_db, run_id, stock_id, top_n = 10
     ) +
     ggplot2::theme(legend.title = ggplot2::element_blank())
 }
-
-

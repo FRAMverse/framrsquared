@@ -12,7 +12,7 @@ mortality_scalers(fram_db, run_id, stock_id)
 
 \item{run_id}{Run ID}
 
-\item{stock_id}{A focal stock}
+\item{stock_id}{A focal stock or stocks}
 }
 \description{
 Guestimate the impact on a particular stock by multiplying its mortalities

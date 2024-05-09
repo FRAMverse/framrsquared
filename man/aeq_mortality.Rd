@@ -6,12 +6,14 @@
 stripped down from the framr package written by Dan Auerbach.
 https://github.com/FRAMverse/framr/}
 \usage{
-aeq_mortality(fram_db, run_id = NULL)
+aeq_mortality(fram_db, run_id = NULL, msp = TRUE)
 }
 \arguments{
 \item{fram_db}{Fram database object}
 
 \item{run_id}{numeric, RunID(s) as ID or ID:ID}
+
+\item{msp}{Do we use MSP expansion? Logical, default true.}
 }
 \description{
 Extract AEQ mortality from Chinook FRAM database. Refactored and
