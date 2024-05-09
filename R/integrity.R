@@ -300,3 +300,11 @@ validate_run_id <- function(fram_db, run_id){
                           paste0(available_run_ids, collapse = ", ")))
   }
 }
+
+
+validate_data_frame <- function(x, ..., arg = rlang::caller_arg(x), call = rlang::caller_env()) {
+  # checks for data frame, stolen from the tidyr package
+  if (!is.data.frame(x)) {
+    cli::cli_abort("{.arg {arg}} must be a data frame, not {.obj_type_friendly {x}}.", ..., call = call)
+  }
+}

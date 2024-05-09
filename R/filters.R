@@ -10,6 +10,7 @@
 #' }
 #'
 filter_sport <- function(.data){
+  validate_data_frame(.data)
   if(!'fishery_id' %in% colnames(.data)){
     cli::cli_abort('fishery_id column must be present in dataframe.')
   }
@@ -58,6 +59,7 @@ filter_sport <- function(.data){
 #' }
 #'
 filter_net <- function(.data){
+  validate_data_frame(.data)
   if(!'fishery_id' %in% colnames(.data)){
     cli::cli_abort('fishery_id column must be present in dataframe.')
   }
@@ -109,6 +111,7 @@ filter_net <- function(.data){
 #' }
 #'
 filter_puget_sound <- function(.data){
+  validate_data_frame(.data)
   if(!'fishery_id' %in% colnames(.data)){
     cli::cli_abort('fishery_id column must be present in dataframe.')
   }
@@ -142,6 +145,7 @@ filter_puget_sound <- function(.data){
 #' }
 #'
 filter_wa <- function(.data){
+  validate_data_frame(.data)
   if(!'fishery_id' %in% colnames(.data)){
     cli::cli_abort('fishery_id column must be present in dataframe.')
   }
@@ -174,6 +178,7 @@ filter_wa <- function(.data){
 #' }
 #'
 filter_bc <- function(.data){
+  validate_data_frame(.data)
   if(!'fishery_id' %in% colnames(.data)){
     cli::cli_abort('fishery_id column must be present in dataframe.')
   }
@@ -206,6 +211,7 @@ filter_bc <- function(.data){
 #' }
 #'
 filter_ak <- function(.data){
+  validate_data_frame(.data)
   if(!'fishery_id' %in% colnames(.data)){
     cli::cli_abort('fishery_id column must be present in dataframe.')
   }
@@ -238,6 +244,7 @@ filter_ak <- function(.data){
 #' }
 #'
 filter_ca <- function(.data){
+  validate_data_frame(.data)
   if(!'fishery_id' %in% colnames(.data)){
     cli::cli_abort('fishery_id column must be present in dataframe.')
   }
@@ -269,6 +276,7 @@ filter_ca <- function(.data){
 #' }
 #'
 filter_or <- function(.data){
+  validate_data_frame(.data)
   if(!'fishery_id' %in% colnames(.data)){
     cli::cli_abort('fishery_id column must be present in dataframe.')
   }
@@ -301,6 +309,7 @@ filter_or <- function(.data){
 #' }
 #'
 filter_coast <- function(.data){
+  validate_data_frame(.data)
   if(!'fishery_id' %in% colnames(.data)){
     cli::cli_abort('fishery_id column must be present in dataframe.')
   }
@@ -332,6 +341,7 @@ filter_coast <- function(.data){
 #' }
 #'
 filter_marine <- function(.data){
+  validate_data_frame(.data)
   if(!'fishery_id' %in% colnames(.data)){
     cli::cli_abort('fishery_id column must be present in dataframe.')
   }
