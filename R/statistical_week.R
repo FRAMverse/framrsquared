@@ -18,11 +18,13 @@ statistical_week <- function(date) {
 
 #' @export
 statistical_week.Date <- function(date) {
+  validate_data_frame(.data)
   statistical_week_(date)
 }
 
 #' @export
 statistical_week.POSIXct <- function(date) {
+  validate_data_frame(.data)
   # convert posixct to date
   date <- as.Date(date)
 
@@ -31,6 +33,7 @@ statistical_week.POSIXct <- function(date) {
 
 #' @export
 statistical_week.character <- function(date) {
+  validate_data_frame(.data)
   # try a few common formats
   if(!anyNA(as.Date(date, '%Y-%m-%d'))) {
 
@@ -51,6 +54,7 @@ statistical_week.character <- function(date) {
 
 
 statistical_week_ <- function(date){
+  validate_data_frame(.data)
   dplyr::if_else(
     lubridate::wday(lubridate::floor_date(date, 'year')) == 2 ## If the first day of the year is a monday
     ,

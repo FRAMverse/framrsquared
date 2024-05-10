@@ -15,7 +15,6 @@ connect_fram_db <-
   function(db_path,
            enforce_type = c('full', 'transfer'),
            read_only = FALSE) {
-
     # verify file exists
     if (!file.exists(db_path)) {
       cli::cli_abort('Database file doesn\'t exist. Check path.')

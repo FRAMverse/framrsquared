@@ -19,6 +19,7 @@ management_week.Date <- function(date) {
 
 #' @export
 management_week.POSIXct <- function(date) {
+  validate_data_frame(.data)
   # convert posixct to date
   date <- as.Date(date)
 
@@ -27,6 +28,7 @@ management_week.POSIXct <- function(date) {
 
 #' @export
 management_week.character <- function(date) {
+  validate_data_frame(.data)
   # try a few common formats
   if(!anyNA(as.Date(date, '%Y-%m-%d'))) {
 
@@ -47,6 +49,7 @@ management_week.character <- function(date) {
 
 
 management_week_ <- function(date){
+  validate_data_frame(.data)
   dplyr::if_else(
     lubridate::wday(lubridate::floor_date(date, 'year')) == 1
     ,

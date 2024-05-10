@@ -91,6 +91,7 @@ fram_database_species <- function(con){
 #' \dontrun{fram_dataframe |> fram_clean_tables()}
 #'
 fram_clean_tables <- function(.data) {
+  validate_data_frame(.data)
   .data |>
     tibble::as_tibble() |>
     janitor::clean_names()
@@ -303,5 +304,13 @@ validate_run_id <- function(fram_db, run_id, call = rlang::caller_env()){
     cli::cli_abort(paste0('run_id(s) not present in database. Available run_ids: ',
                           paste0(available_run_ids, collapse = ", ")),
                    call = call)
+  }
+}
+
+
+validate_data_frame <- function(x, ..., arg = rlang::caller_arg(x), call = rlang::caller_env()) {
+  # checks for data frame, stolen from the tidyr package
+  if (!is.data.frame(x)) {
+    cli::cli_abort("{.arg {arg}} must be a data frame, not {.obj_type_friendly {x}}.", ..., call = call)
   }
 }

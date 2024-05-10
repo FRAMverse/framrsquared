@@ -58,6 +58,7 @@ scalers_flag_translate = function(vec) {
 #' @examples
 #' \dontrun{ mortality_table |> add_flag_text()}
 add_flag_text = function(.data) {
+  validate_data_frame(.data)
   if(!any(c("fishery_flag", "non_retention_flag") %in% names(.data))){
     cli::cli_abort("Missing 'fishery_flag' or 'non_retention_flag' column in data")
   }
@@ -83,6 +84,7 @@ add_flag_text = function(.data) {
 #' \dontrun{ fishery_scalers_table |> filter_flag()}
 #'
 filter_flag <- function(.data){
+  validate_data_frame(.data)
   if(!all(c("fishery_scale_factor", "msf_fishery_scale_factor",
             "quota", "msf_quota") %in% names(.data))){
     cli::cli_abort("Input is not a fishery scaler dataframe.")
