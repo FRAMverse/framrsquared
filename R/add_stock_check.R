@@ -27,7 +27,8 @@ addstock_check <-
            old_stockcount = 78,
            override_db_checks = FALSE) {
 
-    print("Add check for FRAM db, not transfer, is chinook. Unclear what would need to be different for Coho. Add override_db_checks toggle.")
+
+    # print("Add check for FRAM db, not transfer, is chinook. Unclear what would need to be different for Coho. Add override_db_checks toggle.")
 
     if (is.null(file_name) | is.null(run_id)) {
       #Print instructions
@@ -63,11 +64,36 @@ addstock_check <-
       cli::cli_end(ulid)
 
     } else{
+
+
       error_count = 0
 
       cli::cli_alert("Checking for additional stock (beyond stockID = 78)...")
 
       con = connect_fram_db(file_name)
+
+      ## checking database qualities
+      if(con$fram_db_species != "CHINOOK"){
+        if(override_db_checks){
+          cli::cli_alert_warning("`addstock_check()` is currently designed for Chinook, but this is a {con$fram_db_species} database. `override_db_checks` set to `TRUE`, so overriding this concern...")
+          cli::cli_text()
+
+        }else{
+          cli::cli_abort("`addstock_check()` is currently designed for Chinook, but this is a {con$fram_db_species} database. To override this error, set `override_db_checks` to `TRUE`.")
+        }
+      }
+
+      if(con$fram_db_type != "full"){
+        if(override_db_checks){
+          cli::cli_alert_warning("`addstock_check()` is designed for full FRAM databases, but this is a {con$fram_db_type} database. `override_db_checks` set to `TRUE`, so overriding this concern, but interpret results with caution...")
+          cli::cli_text()
+
+        }else{
+          cli::cli_abort("`addstock_check()` is designed for full FRAM databases, but this is a {con$fram_db_type} database. To override this error, set `override_db_checks` to `TRUE`.")
+        }
+      }
+
+
       run_info = fetch_table(con, "RunID")
       if (!run_id %in% run_info$run_id) {
         cli::cli_abort(
