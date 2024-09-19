@@ -26,7 +26,7 @@ coho_mark_rates <- function(fram_db, run_id=NULL) {
     fetch_table('FisheryScalers') |>
     dplyr::select(.data$run_id, .data$fishery_id, .data$time_step, .data$fishery_flag)
 
-  mortality |>
+  mark_rates <- mortality |>
     dplyr::inner_join(fishery_type, by = c('run_id', 'fishery_id', 'time_step')) |>
     dplyr::mutate(
       mark = dplyr::if_else(.data$stock_id %% 2 == 0, 'AD', 'UM'), # identify mark
@@ -45,10 +45,20 @@ coho_mark_rates <- function(fram_db, run_id=NULL) {
       fishery_type = stringr::str_remove(.data$name, '_encounters'),
       mark_rate = .data$AD / (.data$AD + .data$UM)
     ) |>
-    #dplyr::select(run_id, fishery_id, time_step, fishery_type, mark_rate) |>
+    dplyr::select(.data$run_id, .data$fishery_id,
+                  .data$time_step, .data$fishery_type, .data$mark_rate) |>
     dplyr::inner_join(runs, by='run_id') |>
     dplyr::inner_join(fisheries, by = 'fishery_id')
 
+  if(!is.null(run_id)) {
+    mark_rates |> dplyr::filter(.data$run_id == .env$run_id)
+  } else {
+    mark_rates
+  }
+
 }
 
+
+fram_db |>
+  coho_mark_rates()
 
