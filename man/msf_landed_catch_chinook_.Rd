@@ -3,7 +3,7 @@
 \name{msf_landed_catch_chinook_}
 \alias{msf_landed_catch_chinook_}
 \title{Returns a tibble matching the MSF screen report landed catch for Chinook.
- This is specific for Chinook and in most cases msf_landed_catch() is preferable.}
+This is specific for Chinook and in most cases msf_landed_catch() is preferable.}
 \usage{
 msf_landed_catch_chinook_(fram_db)
 }
@@ -12,7 +12,7 @@ msf_landed_catch_chinook_(fram_db)
 }
 \description{
 Returns a tibble matching the MSF screen report landed catch for Chinook.
- This is specific for Chinook and in most cases msf_landed_catch() is preferable.
+This is specific for Chinook and in most cases msf_landed_catch() is preferable.
 }
 \examples{
 \dontrun{fram_db |> msf_landed_catch_chinook_(run_id = 101)}

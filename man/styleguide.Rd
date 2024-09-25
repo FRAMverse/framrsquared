@@ -17,18 +17,18 @@ frs_stylecheck_snakecase(filepath, n = Inf)
 }
 \description{
 For easy readability, we want to use consistent coding style when developing code for framrsquared.
-Presently this includes (a) using `<-` for assignment, and (b) using snakecase for
+Presently this includes (a) using \verb{<-} for assignment, and (b) using snakecase for
 variable and function names. The functions here streamlining checking R code for
 consistency with this style.
 }
 \details{
-`frs_stylecheck_assignment()` takes the path to an R file, and prints (and returns)
-any rows that may be mis-using the `=` for assignment. Note that it will give false positives
+\code{frs_stylecheck_assignment()} takes the path to an R file, and prints (and returns)
+any rows that may be mis-using the \code{=} for assignment. Note that it will give false positives
 for arguments defined in function calls if the call spans multiple lines, as well as
-`=` signs included in character strings.
+\code{=} signs included in character strings.
 
-`frs_stylecheck_snakecase` takes the path to an R file
-and prints (and returns) the names of any variables assigned using `<-` that do not include underscores.
+\code{frs_stylecheck_snakecase} takes the path to an R file
+and prints (and returns) the names of any variables assigned using \verb{<-} that do not include underscores.
 This will identify variables that do not use snakecase, but will also give false positive
 matches for variables that are single words and thus do not need snakecase.
 }

@@ -3,7 +3,7 @@
 \name{msf_encounters_coho_}
 \alias{msf_encounters_coho_}
 \title{Returns a tibble matching the MSF screen report encounters for Coho
- This is specific for Coho and in most cases msf_encounters() is preferable.}
+This is specific for Coho and in most cases msf_encounters() is preferable.}
 \usage{
 msf_encounters_coho_(fram_db)
 }
@@ -12,7 +12,7 @@ msf_encounters_coho_(fram_db)
 }
 \description{
 Returns a tibble matching the MSF screen report encounters for Coho
- This is specific for Coho and in most cases msf_encounters() is preferable.
+This is specific for Coho and in most cases msf_encounters() is preferable.
 }
 \examples{
 \dontrun{fram_db |> msf_encounters_coho_()}

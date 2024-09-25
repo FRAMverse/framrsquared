@@ -11,7 +11,7 @@ compare_fishery_input_flags(fram_db, run_ids, verbose = TRUE)
 
 \item{run_ids}{Two run ids}
 
-\item{verbose}{If `TRUE`, print an update to screen when there are no differences in recruits.}
+\item{verbose}{If \code{TRUE}, print an update to screen when there are no differences in recruits.}
 }
 \description{
 Compares the fishery flags of two runs

@@ -5,7 +5,7 @@
 \title{Filters a dataframe to Alaska fisheries. Will
 automatically detect whether it's working with a Chinook or Coho
 dataset if the tables were generated within this package. Requires
-a `fishery_id` column name.}
+a \code{fishery_id} column name.}
 \usage{
 filter_ak(.data)
 }
@@ -16,7 +16,7 @@ filter_ak(.data)
 Filters a dataframe to Alaska fisheries. Will
 automatically detect whether it's working with a Chinook or Coho
 dataset if the tables were generated within this package. Requires
-a `fishery_id` column name.
+a \code{fishery_id} column name.
 }
 \examples{
 \dontrun{

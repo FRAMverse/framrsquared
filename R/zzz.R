@@ -13,7 +13,7 @@ startup_message <- function(){
         ,'        `.    \\  /
         |  O        \\___/ |
       ~^~^~^~^~^~^~^~^~^~^~^~^~
-          framrsquared 0.3.1
+          framrsquared 0.4.0
               "
     ))
   ))

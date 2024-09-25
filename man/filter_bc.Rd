@@ -5,7 +5,7 @@
 \title{Filters a dataframe to Canadian (BC) fisheries. Will
 automatically detect whether it's working with a Chinook or Coho
 dataset if the tables were generated within this package. Requires
-a `fishery_id` column name.}
+a \code{fishery_id} column name.}
 \usage{
 filter_bc(.data)
 }
@@ -16,7 +16,7 @@ filter_bc(.data)
 Filters a dataframe to Canadian (BC) fisheries. Will
 automatically detect whether it's working with a Chinook or Coho
 dataset if the tables were generated within this package. Requires
-a `fishery_id` column name.
+a \code{fishery_id} column name.
 }
 \examples{
 \dontrun{

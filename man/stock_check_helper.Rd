@@ -13,13 +13,13 @@ stock_check_helper(table_name, NumStk, stock_vec, uniques_only = FALSE)
 
 \item{stock_vec}{vector of stock ids to check. Presumably column of fetched table.}
 
-\item{uniques_only}{Do we want warnings if there are duplicats of StockIDs? Useful for tables like Stock and Growth that should have only one entry per stock. Logical, default = `FALSE`.}
+\item{uniques_only}{Do we want warnings if there are duplicats of StockIDs? Useful for tables like Stock and Growth that should have only one entry per stock. Logical, default = \code{FALSE}.}
 }
 \value{
 Numeric, returning number of warnings detected.
 }
 \description{
-More thorough checking than stock_id_comp. Checks that the number of stock IDs makes sense given `NumStk`,
+More thorough checking than stock_id_comp. Checks that the number of stock IDs makes sense given \code{NumStk},
 that Stock IDs are sequential (in the sense that if NumStk = n, every integer up to n is represented).
 Optionally, can check that each stock ID is unique.
 }
