@@ -1,4 +1,6 @@
-#' Returns a tibble displaying mark rates by
+#'  `r lifecycle::badge("experimental")`
+#' Returns a tibble displaying predicted FRAMencounter mark rates by fishery,
+#' fishery type, and time-step.
 #' @param fram_db FRAM database object
 #' @param run_id Run ID (optional)
 #' @export
@@ -7,6 +9,10 @@
 #' fram_db |> coho_mark_rates(run_id)
 #' }
 coho_mark_rates <- function(fram_db, run_id=NULL) {
+
+  if(fram_db$fram_db_species != 'COHO') {
+    cli::cli_abort('This function currently only works with coho.')
+  }
 
   cli::cli_alert_warning('Coho mark rates calculated via encounters')
 
@@ -45,7 +51,7 @@ coho_mark_rates <- function(fram_db, run_id=NULL) {
       fishery_type = stringr::str_remove(.data$name, '_encounters'),
       mark_rate = .data$AD / (.data$AD + .data$UM)
     ) |>
-    dplyr::select(.data$run_id, .data$fishery_id,
+    dplyr::select(.data$run_id, .data$fishery_id, .data$AD, .data$UM,
                   .data$time_step, .data$fishery_type, .data$mark_rate) |>
     dplyr::inner_join(runs, by='run_id') |>
     dplyr::inner_join(fisheries, by = 'fishery_id')
@@ -57,8 +63,4 @@ coho_mark_rates <- function(fram_db, run_id=NULL) {
   }
 
 }
-
-
-fram_db |>
-  coho_mark_rates()
 

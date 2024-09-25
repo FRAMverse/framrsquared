@@ -12,13 +12,13 @@ addstock_check(
 )
 }
 \arguments{
-\item{file_name}{filepath to database. If `NULL`, provide summary of process instead. Default = `NULL`.}
+\item{file_name}{filepath to database. If \code{NULL}, provide summary of process instead. Default = \code{NULL}.}
 
-\item{run_id}{RunID associated with the new stock in the FRAM database. IF left `NULL`, provide summary of process instead. Default = `NULL`.}
+\item{run_id}{RunID associated with the new stock in the FRAM database. IF left \code{NULL}, provide summary of process instead. Default = \code{NULL}.}
 
 \item{old_stockcount}{The number of stocks previously present to treat as the "baseline" -- several checking steps will focus solely on newly added stocks. Defaults to 78.}
 
-\item{override_db_checks}{Ignore species, database type. When `FALSE`, function will stop if the database is not Chinook or if it's a transfer file. Defaults to FALSE.}
+\item{override_db_checks}{Ignore species, database type. When \code{FALSE}, function will stop if the database is not Chinook or if it's a transfer file. Defaults to FALSE.}
 }
 \description{
 Either provides the step by step process of adding new stock to a FRAM database, or walks through fram database run

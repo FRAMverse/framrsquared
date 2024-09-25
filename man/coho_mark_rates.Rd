@@ -2,7 +2,9 @@
 % Please edit documentation in R/report_mark_rates.R
 \name{coho_mark_rates}
 \alias{coho_mark_rates}
-\title{Returns a tibble displaying mark rates by}
+\title{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+Returns a tibble displaying predicted FRAMencounter mark rates by fishery,
+fishery type, and time-step.}
 \usage{
 coho_mark_rates(fram_db, run_id = NULL)
 }
@@ -12,7 +14,9 @@ coho_mark_rates(fram_db, run_id = NULL)
 \item{run_id}{Run ID (optional)}
 }
 \description{
-Returns a tibble displaying mark rates by
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+Returns a tibble displaying predicted FRAMencounter mark rates by fishery,
+fishery type, and time-step.
 }
 \examples{
 \dontrun{

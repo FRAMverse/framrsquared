@@ -13,7 +13,7 @@ compare_recruits(fram_db, run_ids, tolerance = 0.01, verbose = TRUE)
 
 \item{tolerance}{Tolerance for detecting changes}
 
-\item{verbose}{If `TRUE`, print an update to screen when there are no differences in recruits.}
+\item{verbose}{If \code{TRUE}, print an update to screen when there are no differences in recruits.}
 }
 \description{
 Compares the recruit scalers of two runs

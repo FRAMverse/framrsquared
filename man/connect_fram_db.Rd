@@ -16,8 +16,8 @@ connect_fram_db(
 
 \item{enforce_type}{Not used}
 
-\item{read_only}{Optional argument to flag this connection as read-only (if set to `TRUE`). If `TRUE`, framrsquared functions that modify
-the database will abort rather than run. Use as a safety feature when working with a database that *must not* be modified.}
+\item{read_only}{Optional argument to flag this connection as read-only (if set to \code{TRUE}). If \code{TRUE}, framrsquared functions that modify
+the database will abort rather than run. Use as a safety feature when working with a database that \emph{must not} be modified.}
 }
 \description{
 This is a connection object to a FRAM database. Returns a list
