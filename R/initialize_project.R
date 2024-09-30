@@ -8,9 +8,9 @@
 #' \dontrun{
 #' framrsquared::initialize_project()
 #' }
-initialize_project <- function(folders = c('3_scripts', '1_original_data',
-                                           '2_cleaned_data', '5_figures',
-                                           '4_results'),
+initialize_project <- function(folders = c('scripts', 'original_data',
+                                           'cleaned_data', 'figures',
+                                           'results'),
                                templates = FALSE,
                                renv = FALSE){
 
