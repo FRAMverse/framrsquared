@@ -10,7 +10,7 @@ compare_databases(
   runid_use = NULL,
   tables_use = NULL,
   slim = FALSE,
-  verbose = TRUE
+  quiet = TRUE
 )
 }
 \arguments{
@@ -24,7 +24,7 @@ compare_databases(
 
 \item{slim}{Logical. Optional, defaults to FALSE. If TRUE, do not include \verb{$tabs_file1} and \verb{$tabs_file2} in output list.}
 
-\item{verbose}{Logical, defaults to TRUE. When TRUE, print updates to console as function is run.}
+\item{quiet}{Logical, defaults to TRUE. When TRUE, suppress messages showing individual steps.}
 }
 \value{
 List of lists and tibbles containing comparison information:
