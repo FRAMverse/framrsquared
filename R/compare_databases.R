@@ -38,7 +38,7 @@
 #'  **Quantifying error**
 #'
 #'  Because FRAM involves numerical solvers, we expect some small differences in table entries
-#'  even when comparing two effectively equivalent databases. `compare_tables` provides three metrics for these changes.
+#'  even when comparing two effectively equivalent databases. `compare_databases()` provides three metrics for these changes.
 #'  In each case, it is assumed that `file1` is the reference file; the "error" measures all show how much the  value
 #'  in `file2` changed relative to the corresponding value in `file1`.
 
@@ -75,7 +75,7 @@
 #'  `scale.err` is thus a measure of error that is comparable across variables and tables, essentially answer the question
 #'  "Has this entry changed a lot for this kind of variable and table?".
 #'
-#'  While `scale.err` is frequently the most useful error metric, `compare_tables` provides all three.
+#'  While `scale.err` is frequently the most useful error metric, `compare_databases()` provides all three.
 #'  There may be contexts in which it's important to focus on the proportional error. For example,
 #'  large proportional errors landed catch for the catch rare stocks can be important, but
 #'  the much larger catch from other stock could water down the `scale_err` metric.
@@ -119,7 +119,7 @@
 #' file2 = "Valid2022_Round_7.1.1_11142023 - green river split.mdb"
 #' out = tables_compare(file1, file2)
 #' }
-tables_compare <-  function(file1,
+compare_databases <-  function(file1,
                           file2,
                           runid_use = NULL,
                           tables_use = NULL,
