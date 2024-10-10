@@ -1,12 +1,10 @@
 .onAttach <- function(libname, pkgname) {
-  startup_message()
+  packageStartupMessage(startup_message())
 }
 
 
 startup_message <- function(){
-  cli::cli_text(cat(
-    cli::col_black(glue::glue(
-      "
+  "
              .
             \":\"
           ___:____     |\"\\/\"|
@@ -15,6 +13,4 @@ startup_message <- function(){
       ~^~^~^~^~^~^~^~^~^~^~^~^~
           framrsquared 0.4.0
               "
-    ))
-  ))
 }

@@ -13,6 +13,7 @@ Imports:
     cli,
     DBI,
     dplyr,
+    framrosetta (>= 0.1.0),
     ggplot2,
     glue,
     here,
@@ -39,3 +40,5 @@ Suggests:
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
 Roxygen: list(markdown = TRUE)
+Remotes:  
+    FRAMverse/framrosetta
