@@ -4,10 +4,12 @@
 \alias{disconnect_fram_db}
 \title{Safely disconnect from FRAM database}
 \usage{
-disconnect_fram_db(fram_db)
+disconnect_fram_db(fram_db, quiet = TRUE)
 }
 \arguments{
 \item{fram_db}{FRAM database R object}
+
+\item{quiet}{Logical. Optional; when true, silences success message.}
 }
 \description{
 Safely disconnect from FRAM database

@@ -140,6 +140,7 @@ Input specific:
 - `compare_recruits()` Compares recruits between two runs
 - `compare_non_retention_inputs()` Compares non-retention inputs `compare_non_retention_input_flags()` is a variant to compare flags
 - `compare_stock_fishery_rate_scalers()` Compares the stock fishery rate scalers
+- `compare_databases()` Compares all relevant tables of two FRAM databases and generates diagnostics list of differences and their magnitude. Useful for QAQC.
 
 Reporting to console:
 - `compare_runs()` Generates a report to the console with all of the outputs from the functions above

@@ -8,7 +8,8 @@ used throughout the rest of this package which carries meta data.}
 connect_fram_db(
   db_path,
   enforce_type = c("full", "transfer"),
-  read_only = FALSE
+  read_only = FALSE,
+  quiet = FALSE
 )
 }
 \arguments{
@@ -18,6 +19,8 @@ connect_fram_db(
 
 \item{read_only}{Optional argument to flag this connection as read-only (if set to \code{TRUE}). If \code{TRUE}, framrsquared functions that modify
 the database will abort rather than run. Use as a safety feature when working with a database that \emph{must not} be modified.}
+
+\item{quiet}{Logical. Optitional argument; when TRUE, silences success message and database summary.}
 }
 \description{
 This is a connection object to a FRAM database. Returns a list
