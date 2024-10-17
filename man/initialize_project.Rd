@@ -6,21 +6,33 @@
 Initializes a FRAM project}
 \usage{
 initialize_project(
-  folders = c("scripts", "original_data", "cleaned_data", "figures", "results"),
-  templates = FALSE,
+  folders = c("scripts", "original_data", "cleaned_data", "figures", "results",
+    "results/quarto_outputs"),
+  quarto = TRUE,
+  organization = "WDFW",
   renv = FALSE
 )
 }
 \arguments{
 \item{folders}{Vector of folders to create}
 
-\item{templates}{Boolean. If TRUE, copy template quarto file and style.css from snippets repo}
+\item{quarto}{Boolean. If TRUE, add quarto yaml file and style.css}
 
-\item{renv}{Boolean to initialize renv}
+\item{organization}{Character, defaults to "WDFW". Specifies the set of quarto templates to use. Currently only supports "WDFW".}
+
+\item{renv}{Boolean to initialize renv. Defaults to FALSE.}
 }
 \description{
-\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
-Initializes a FRAM project
+By default, creates suggested folder structure from \href{https://framverse.github.io/coding-practices/}{best coding practices}, and
+adds WDFW-style yaml and style.css files to give quarto files consistent appearance. If you
+belong to another organization and want this function to support your own organization-specific quarto styling,
+reach out to the developers with a \verb{_quarto.yml} and (optionally) \code{style.css} file.
+}
+\details{
+Dev note: new template files for additional organizations should be added to \verb{inst/}
+in a subfolder matching an R-friendly organization name,
+and the same name should be added to the \code{organization} parameter description here and the \code{supported_organizations}
+in \code{fetch_quarto_templates()}.
 }
 \examples{
 \dontrun{
