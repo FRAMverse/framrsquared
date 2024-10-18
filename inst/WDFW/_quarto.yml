@@ -1,0 +1,14 @@
+date: today
+execute:
+  warning: false
+message: false
+format:
+  html:
+    code-fold: true
+embed-resources: true
+toc: true
+title-block-banner: "#1D886E"
+css: style.css
+project:
+  title: ""
+  output-dir: results/quarto_output/

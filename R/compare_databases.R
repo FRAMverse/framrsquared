@@ -11,7 +11,7 @@
 #' @param runid_use Numeric vector of the run_ids to compare. Optional. If not provided, compare all run ids in the databases.
 #' @param tables_use Vector of character strings. Optional. If provided, only compare the listed tables.
 #' @param slim Logical. Optional, defaults to FALSE. If TRUE, do not include `$tabs_file1` and `$tabs_file2` in output list.
-#' @param verbose Logical, defaults to TRUE. When TRUE, print updates to console as function is run.
+#' @param quiet Logical, defaults to TRUE. When TRUE, suppress messages showing individual steps.
 #'
 #' @return List of lists and tibbles containing comparison information:
 #' * `$ratios` tibble comparing every entry of every relevant column of every table. See "Details" for column descriptions.
@@ -38,7 +38,7 @@
 #'  **Quantifying error**
 #'
 #'  Because FRAM involves numerical solvers, we expect some small differences in table entries
-#'  even when comparing two effectively equivalent databases. `compare_tables` provides three metrics for these changes.
+#'  even when comparing two effectively equivalent databases. `compare_databases()` provides three metrics for these changes.
 #'  In each case, it is assumed that `file1` is the reference file; the "error" measures all show how much the  value
 #'  in `file2` changed relative to the corresponding value in `file1`.
 
@@ -75,7 +75,7 @@
 #'  `scale.err` is thus a measure of error that is comparable across variables and tables, essentially answer the question
 #'  "Has this entry changed a lot for this kind of variable and table?".
 #'
-#'  While `scale.err` is frequently the most useful error metric, `compare_tables` provides all three.
+#'  While `scale.err` is frequently the most useful error metric, `compare_databases()` provides all three.
 #'  There may be contexts in which it's important to focus on the proportional error. For example,
 #'  large proportional errors landed catch for the catch rare stocks can be important, but
 #'  the much larger catch from other stock could water down the `scale_err` metric.
@@ -119,12 +119,12 @@
 #' file2 = "Valid2022_Round_7.1.1_11142023 - green river split.mdb"
 #' out = tables_compare(file1, file2)
 #' }
-tables_compare <-  function(file1,
+compare_databases <-  function(file1,
                           file2,
                           runid_use = NULL,
                           tables_use = NULL,
                           slim = FALSE,
-                          verbose = TRUE) {
+                          quiet = TRUE) {
   ## columns to NOT compare, and instead use as keys for for merging.
   labs.template  <-  c(
     "base_period_id",
@@ -155,8 +155,8 @@ tables_compare <-  function(file1,
     age = NA_real_
   )
 
-  con.prod <- connect_fram_db(file1)
-  con.fork <- connect_fram_db(file2)
+  con.prod <- connect_fram_db(file1, quiet = quiet)
+  con.fork <- connect_fram_db(file2, quiet = quiet)
 
   ## identify meaningful tables (dbListTables also returns Queries and internal Access tables)
   tables.use.prod <- intersect(DBI::dbListTables(con.prod$fram_db_connection),
@@ -194,7 +194,7 @@ tables_compare <-  function(file1,
   ## for the chinook case, figure out what the maximum number of stock is for backwards_fram id mapping
   stock.max <- max(c(fetch_table(con.prod, "BaseID")$num_stocks, fetch_table(con.fork, "BaseID")$num_stocks))
 
-  if(verbose){cli::cli_alert_info("Fetching tables")}
+  if(!quiet){cli::cli_alert_info("Fetching tables")}
   for (cur.table in tables.names) {
     tabs.prod[[cur.table]] <- fetch_table(con.prod, cur.table) |>
       dplyr::distinct()
@@ -226,7 +226,7 @@ tables_compare <-  function(file1,
   }
   disconnect_fram_db(con.prod)
   disconnect_fram_db(con.fork)
-  if(verbose){cli::cli_alert_success("Tables fetched")}
+  if(!quiet){cli::cli_alert_success("Tables fetched")}
 
 
   tabs.comp <- list()
@@ -234,7 +234,7 @@ tables_compare <-  function(file1,
   ratio.comp <- NULL ## for storing ratios of new to old
   ratio.list <- list()
 
-  if(verbose){cli::cli_alert_info("Handling off-by-fish bkFRAM calculations")}
+  if(!quiet){cli::cli_alert_info("Handling off-by-fish bkFRAM calculations")}
 
   ## If backwardsFRAM is among the tables, identify differences before looking at other tables,
   ## so that those differences can be linked to other tables.
@@ -280,8 +280,9 @@ tables_compare <-  function(file1,
     bkfram.context <- NULL
   }
 
+  cli::cli_progress_bar("Comparing tables", total = length(tabs.prod))
   for (cur.table in names(tabs.prod)) {
-    if(verbose){cli::cli_alert_info("Diffing {cur.table}.")}
+    if(!quiet){cli::cli_alert_info("Diffing {cur.table}.")}
     labs.used <- intersect(names(tabs.prod[[cur.table]]),
                           labs.template)
 
@@ -319,7 +320,8 @@ tables_compare <-  function(file1,
             )
           if (all(c("stock_id", "run_id", "age") %in% names(temp)) & !is.null(bkfram.context)) {
             temp <- temp |>
-              dplyr::left_join(bkfram.context |> dplyr::select(-dplyr::starts_with("target.esc")))
+              dplyr::left_join(bkfram.context |> dplyr::select(-dplyr::starts_with("target.esc")),
+                               by = c("stock_id", "run_id", "age"))
           } else{
             temp <- temp |>
               dplyr::mutate(bkfram.off.by.fish = NA,
@@ -362,10 +364,10 @@ tables_compare <-  function(file1,
         nrow.comp = nrow(df.comp)
       )
     )
-
-
-
+    cli::cli_progress_update()
   }
+  cli::cli_progress_done()
+
   res <- list(
     ratios = ratio.comp,
     ratios_detailed = ratio.list,
