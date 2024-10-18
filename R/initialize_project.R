@@ -30,7 +30,8 @@ initialize_project <- function(folders = c('scripts', 'original_data',
                                quarto = TRUE,
                                organization = "WDFW",
                                renv = FALSE,
-                               overwrite = TRUE){
+                               overwrite = TRUE,
+                               quiet = TRUE){
 
   purrr::walk(
     folders,

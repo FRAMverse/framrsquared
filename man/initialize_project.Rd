@@ -11,7 +11,8 @@ initialize_project(
   quarto = TRUE,
   organization = "WDFW",
   renv = FALSE,
-  overwrite = TRUE
+  overwrite = TRUE,
+  quiet = TRUE
 )
 }
 \arguments{
