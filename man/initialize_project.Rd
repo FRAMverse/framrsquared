@@ -7,7 +7,7 @@ Initializes a FRAM project}
 \usage{
 initialize_project(
   folders = c("scripts", "original_data", "cleaned_data", "figures", "results",
-    "results/quarto_outputs"),
+    "results/quarto_output"),
   quarto = TRUE,
   organization = "WDFW",
   renv = FALSE
