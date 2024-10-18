@@ -17,6 +17,8 @@
 #' @param quarto Boolean. If TRUE, add quarto yaml file and style.css
 #' @param organization Character, defaults to "WDFW". Specifies the set of quarto templates to use. Currently only supports "WDFW".
 #' @param renv Boolean to initialize renv. Defaults to FALSE.
+#' @param overwrite Boolean. Overwrite _quarto.yml and style.css files if they already exist? Defaults to TRUE
+#' @param quiet Boolean, defaults to FALSE. If TRUE, suppresses informational messages.
 #' @export
 #' @examples
 #' \dontrun{
@@ -27,7 +29,8 @@ initialize_project <- function(folders = c('scripts', 'original_data',
                                            'results', 'results/quarto_output'),
                                quarto = TRUE,
                                organization = "WDFW",
-                               renv = FALSE){
+                               renv = FALSE,
+                               overwrite = TRUE){
 
   purrr::walk(
     folders,
@@ -36,22 +39,35 @@ initialize_project <- function(folders = c('scripts', 'original_data',
   cli::cli_alert_success('Successfully initialized FRAM project')
 
   if (renv){
-    cli::cli_alert_info(
-      "Initializing {.pkg renv}, don't forget to run {.fn renv::snapshot} before saving project"
-    )
+    if(!quiet){
+      cli::cli_alert_info(
+        "Initializing {.pkg renv}, don't forget to run {.fn renv::snapshot} before saving project"
+      )
+    }
     invisible(readline('Press [Enter] to conitue...'))
     renv::init()
   }
 
 
   if (quarto){
-    cli::cli_alert_info(
-      "Copying quarto templates"
-    )
+    if(!quiet){
+      cli::cli_alert_info(
+        "Copying quarto templates"
+      )
+    }
     fetch_quarto_templates(to.path = ".",
-                           organization = organization)
+                           organization = organization,
+                           overwrite = overwrite)
 
   }
+  if(!quiet){
+    cli::cli_bullets( c("v" = "Quarto template files added.",
+                        "i" = "Quarto documents saved in root project directory will now use {organization} template formatting, as specified in `_quarto.yml` and `style.css` files.",
+                        "i" = "You must still include a YAML header in said quarto documents, which can contain any desired YAML arguments (and likely should include title and author).",
+                        "i" = "By default, quarto documents using the template will be rendered in `results/quarto_output/`")
+    )
+  }
+
 
 }
 
@@ -63,28 +79,27 @@ initialize_project <- function(folders = c('scripts', 'original_data',
 #' can be helpful when working with existing projects. See `initialize_project()`
 #' for details on adding template files for new organizations.
 #'
-#' @param to.path Destination file path for template files. Typically, root of Rproject directory.
+#' @param to.path Character string. Destination file path for template files. Typically, root of Rproject directory.
+#' @param overwrite Boolean. Overwrite _quarto.yml and style.css files if they already exist? Defaults to FALSE.
 #' @inheritParams initialize_project
 #'
 #' @return Nothing.
 #' @export
 #'
-fetch_quarto_templates = function(to.path, organization = "WDFW"){
+fetch_quarto_templates = function(to.path, organization = "WDFW", overwrite = FALSE){
   supported_organizations = c("WDFW") ## add more as appropriate.
   ## The associated yaml and style files should be added to the `inst` folder with a subfolder
   ## that matches the organization name
 
-  if(!organization %in% supported_organizations){
-    cli::cli_abort("Argument `organization` must be one of the supported organizations: {supported_organizations}.")
-  }
+  rlang::arg_match(organization, supported_organizations)
   yaml.path = system.file(paste0(organization, "/_quarto.yml"), package = "framrsquared")
   style.path = system.file(paste0(organization, "/style.css"), package = "framrsquared")
-  file.copy (
+  invisible(file.copy (
     c(
       yaml.path,
       style.path
     ),
     to = to.path,
-    overwrite = FALSE
-  )
+    overwrite = overwrite
+  ))
 }

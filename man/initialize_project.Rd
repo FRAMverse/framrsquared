@@ -10,7 +10,8 @@ initialize_project(
     "results/quarto_output"),
   quarto = TRUE,
   organization = "WDFW",
-  renv = FALSE
+  renv = FALSE,
+  overwrite = TRUE
 )
 }
 \arguments{
@@ -21,6 +22,10 @@ initialize_project(
 \item{organization}{Character, defaults to "WDFW". Specifies the set of quarto templates to use. Currently only supports "WDFW".}
 
 \item{renv}{Boolean to initialize renv. Defaults to FALSE.}
+
+\item{overwrite}{Boolean. Overwrite _quarto.yml and style.css files if they already exist? Defaults to TRUE}
+
+\item{quiet}{Boolean, defaults to FALSE. If TRUE, suppresses informational messages.}
 }
 \description{
 By default, creates suggested folder structure from \href{https://framverse.github.io/coding-practices/}{best coding practices}, and
