@@ -4,12 +4,14 @@
 \alias{fetch_quarto_templates}
 \title{Creates quarto template files}
 \usage{
-fetch_quarto_templates(to.path, organization = "WDFW")
+fetch_quarto_templates(to.path, organization = "WDFW", overwrite = FALSE)
 }
 \arguments{
-\item{to.path}{Destination file path for template files. Typically, root of Rproject directory.}
+\item{to.path}{Character string. Destination file path for template files. Typically, root of Rproject directory.}
 
 \item{organization}{Character, defaults to "WDFW". Specifies the set of quarto templates to use. Currently only supports "WDFW".}
+
+\item{overwrite}{Boolean. Overwrite _quarto.yml and style.css files if they already exist? Defaults to FALSE.}
 }
 \value{
 Nothing.
