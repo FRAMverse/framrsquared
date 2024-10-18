@@ -11,7 +11,7 @@ initialize_project(
   quarto = TRUE,
   organization = "WDFW",
   renv = FALSE,
-  overwrite = TRUE,
+  template.overwrite = TRUE,
   quiet = TRUE
 )
 }
@@ -24,7 +24,7 @@ initialize_project(
 
 \item{renv}{Boolean to initialize renv. Defaults to FALSE.}
 
-\item{overwrite}{Boolean. Overwrite _quarto.yml and style.css files if they already exist? Defaults to TRUE}
+\item{template.overwrite}{Boolean. Overwrite _quarto.yml and style.css files if they already exist? Defaults to TRUE}
 
 \item{quiet}{Boolean, defaults to FALSE. If TRUE, suppresses informational messages.}
 }

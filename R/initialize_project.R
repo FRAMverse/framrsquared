@@ -17,60 +17,66 @@
 #' @param quarto Boolean. If TRUE, add quarto yaml file and style.css
 #' @param organization Character, defaults to "WDFW". Specifies the set of quarto templates to use. Currently only supports "WDFW".
 #' @param renv Boolean to initialize renv. Defaults to FALSE.
-#' @param overwrite Boolean. Overwrite _quarto.yml and style.css files if they already exist? Defaults to TRUE
+#' @param template.overwrite Boolean. Overwrite _quarto.yml and style.css files if they already exist? Defaults to TRUE
 #' @param quiet Boolean, defaults to FALSE. If TRUE, suppresses informational messages.
 #' @export
 #' @examples
 #' \dontrun{
 #' framrsquared::initialize_project()
 #' }
-initialize_project <- function(folders = c('scripts', 'original_data',
-                                           'cleaned_data', 'figures',
-                                           'results', 'results/quarto_output'),
-                               quarto = TRUE,
-                               organization = "WDFW",
-                               renv = FALSE,
-                               overwrite = TRUE,
-                               quiet = TRUE){
+initialize_project <-
+  function(folders = c(
+    'scripts',
+    'original_data',
+    'cleaned_data',
+    'figures',
+    'results',
+    'results/quarto_output'
+  ),
+  quarto = TRUE,
+  organization = "WDFW",
+  renv = FALSE,
+  template.overwrite = TRUE,
+  quiet = TRUE) {
+    organization  <- rlang::arg_match(organization, c("WDFW"))
 
-  purrr::walk(
-    folders,
-    \(folder) dir.create(here::here(glue::glue("{folder}")))
-  )
-  cli::cli_alert_success('Successfully initialized FRAM project')
+    purrr::walk(folders,
+                \(folder) dir.create(here::here(glue::glue("{folder}"))))
+    cli::cli_alert_success('Successfully initialized FRAM project')
 
-  if (renv){
-    if(!quiet){
-      cli::cli_alert_info(
-        "Initializing {.pkg renv}, don't forget to run {.fn renv::snapshot} before saving project"
+    if (renv) {
+      if (!quiet) {
+        cli::cli_alert_info(
+          "Initializing {.pkg renv}, don't forget to run {.fn renv::snapshot} before saving project"
+        )
+      }
+      invisible(readline('Press [Enter] to conitue...'))
+      renv::init()
+    }
+
+
+    if (quarto) {
+      if (!quiet) {
+        cli::cli_alert_info("Copying quarto templates")
+      }
+      fetch_quarto_templates(to.path = ".",
+                             organization = organization,
+                             overwrite = template.overwrite)
+
+    }
+    if (!quiet) {
+      cli::cli_bullets(
+        c(
+          "v" = "Quarto template files added.",
+          "i" = "Quarto documents saved in root project directory will now use {organization} template formatting, as specified in `_quarto.yml` and `style.css` files.",
+          "i" = "You must still include a YAML header in said quarto documents, which can contain any desired YAML arguments (and likely should include title and author).",
+          "i" = "By default, quarto documents using the template will be rendered in `results/quarto_output/`"
+        )
       )
     }
-    invisible(readline('Press [Enter] to conitue...'))
-    renv::init()
-  }
 
-
-  if (quarto){
-    if(!quiet){
-      cli::cli_alert_info(
-        "Copying quarto templates"
-      )
-    }
-    fetch_quarto_templates(to.path = ".",
-                           organization = organization,
-                           overwrite = overwrite)
 
   }
-  if(!quiet){
-    cli::cli_bullets( c("v" = "Quarto template files added.",
-                        "i" = "Quarto documents saved in root project directory will now use {organization} template formatting, as specified in `_quarto.yml` and `style.css` files.",
-                        "i" = "You must still include a YAML header in said quarto documents, which can contain any desired YAML arguments (and likely should include title and author).",
-                        "i" = "By default, quarto documents using the template will be rendered in `results/quarto_output/`")
-    )
-  }
-
-
-}
 
 
 #' Creates quarto template files
@@ -87,19 +93,19 @@ initialize_project <- function(folders = c('scripts', 'original_data',
 #' @return Nothing.
 #' @export
 #'
-fetch_quarto_templates = function(to.path, organization = "WDFW", overwrite = FALSE){
-  supported_organizations = c("WDFW") ## add more as appropriate.
+fetch_quarto_templates = function(to.path,
+                                  organization = "WDFW",
+                                  overwrite = FALSE) {
+  rlang::arg_match(organization, c("WDFW")) ## add more as appropriate.
   ## The associated yaml and style files should be added to the `inst` folder with a subfolder
   ## that matches the organization name
 
-  rlang::arg_match(organization, supported_organizations)
-  yaml.path = system.file(paste0(organization, "/_quarto.yml"), package = "framrsquared")
-  style.path = system.file(paste0(organization, "/style.css"), package = "framrsquared")
+  organization  <-  rlang::arg_match(organization, c("WDFW"))
+  yaml.path <-  system.file(glue::glue("{organization}/_quarto.yml"), package = "framrsquared")
+  style.path <-  system.file(glue::glue("{organization}/style.css"), package = "framrsquared")
   invisible(file.copy (
-    c(
-      yaml.path,
-      style.path
-    ),
+    c(yaml.path,
+      style.path),
     to = to.path,
     overwrite = overwrite
   ))
