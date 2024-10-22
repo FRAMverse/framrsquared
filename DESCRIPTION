@@ -2,10 +2,17 @@ Package: framrsquared
 Type: Package
 Title: FRAM Database Interface
 Version: 0.5.0
-Author: Ty Garber
-Maintainer: Ty Garber <tyler.garber@dfw.wa.gov>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Authors@R: c(
+    person("Ty", "Garber",
+           email = "tyler.garber@dfw.wa.gov", 
+           role = c("cre","aut")),
+    person("Collin", "Edwards",
+           email = "collin.edwards@dfw.wa.gov",
+           role = c("aut"),
+           comment = c(ORCID = "0000-0002-4937-5159")
+           ))
+Description: A convenient tool for interfacing with FRAM access databases
+    in R environments.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
