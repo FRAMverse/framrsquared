@@ -6,6 +6,15 @@
 \alias{framrsquared-package}
 \title{framrsquared: FRAM Database Interface}
 \description{
-More about what it does (maybe more than one line) Use four spaces when indenting paragraphs within the Description.
+A convenient tool for interfacing with FRAM access databases in R environments.
+}
+\author{
+\strong{Maintainer}: Ty Garber \email{tyler.garber@dfw.wa.gov}
+
+Authors:
+\itemize{
+  \item Collin Edwards \email{collin.edwards@dfw.wa.gov} (\href{https://orcid.org/0000-0002-4937-5159}{ORCID})
+}
+
 }
 \keyword{internal}
