@@ -18,6 +18,7 @@
 #' @param organization Character, defaults to "WDFW". Specifies the set of quarto templates to use. Currently only supports "WDFW".
 #' @param renv Boolean to initialize renv. Defaults to FALSE.
 #' @param template.overwrite Boolean. Overwrite _quarto.yml and style.css files if they already exist? Defaults to TRUE
+#' @param color Character string, defaults to "coffee". Specifies quarto template to use; organizations may have several.
 #' @param quiet Boolean, defaults to FALSE. If TRUE, suppresses informational messages.
 #' @export
 #' @examples
@@ -37,6 +38,7 @@ initialize_project <-
   organization = "WDFW",
   renv = FALSE,
   template.overwrite = TRUE,
+  color = "coffee",
   quiet = TRUE) {
     organization  <- rlang::arg_match(organization, c("WDFW"))
 
@@ -61,6 +63,7 @@ initialize_project <-
       }
       fetch_quarto_templates(to.path = ".",
                              organization = organization,
+                             color = color,
                              overwrite = template.overwrite)
 
     }
@@ -95,18 +98,21 @@ initialize_project <-
 #'
 fetch_quarto_templates = function(to.path,
                                   organization = "WDFW",
+                                  color = "coffee",
                                   overwrite = FALSE) {
   rlang::arg_match(organization, c("WDFW")) ## add more as appropriate.
+  rlang::arg_match(color, c("green", "coffee"))
   ## The associated yaml and style files should be added to the `inst` folder with a subfolder
   ## that matches the organization name
 
   organization  <-  rlang::arg_match(organization, c("WDFW"))
-  yaml.path <-  system.file(glue::glue("{organization}/_quarto.yml"), package = "framrsquared")
+  yaml.path <-  system.file(glue::glue("{organization}/{color}_quarto.yml"), package = "framrsquared")
   style.path <-  system.file(glue::glue("{organization}/style.css"), package = "framrsquared")
   invisible(file.copy (
     c(yaml.path,
       style.path),
-    to = to.path,
+    to = c(glue::glue("{to.path}/_quarto.yml"),
+           glue::glue("{to.path}/style.css")),
     overwrite = overwrite
   ))
 }
