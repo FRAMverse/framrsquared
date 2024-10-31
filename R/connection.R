@@ -50,7 +50,7 @@ connect_fram_db <-
 
     if(!quiet){cli::cli_alert_success('Successfully connected to FRAM database')}
 
-    if(!quiet){welcome(con)}
+    if(!quiet && !tools::file_ext(db_path) == 'db'){welcome(con)}
 
     return(
       list(
