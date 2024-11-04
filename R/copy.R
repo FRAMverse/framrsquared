@@ -93,7 +93,7 @@ copy_fishery_scalers <- function(fram_db, from_run, to_run, fishery_id = NULL){
 #' @param times Number of copies
 #' @export
 #' @examples
-#' \dontrun{framdb |> copy_run(target_run = 141, times = 1)
+#' \dontrun{framdb |> copy_run(target_run = 141, times = 1)}
 #'
 copy_run <- function(fram_db, target_run, times = 1){
 
