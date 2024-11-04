@@ -8,8 +8,6 @@
 #' @examples
 #' \dontrun{framdb |> copy_fishery_scalers(132, 133, 87)}
 #'
-
-
 copy_fishery_scalers <- function(fram_db, from_run, to_run, fishery_id = NULL){
   validate_fram_db(fram_db)
   validate_run_id(fram_db, c(to_run, from_run))
@@ -88,3 +86,136 @@ copy_fishery_scalers <- function(fram_db, from_run, to_run, fishery_id = NULL){
 
 
 }
+
+#' Copies a run a number of times
+#' @param fram_db FRAM database object
+#' @param target_run Run ID to be copied from
+#' @param times Number of copies
+#' @export
+#' @examples
+#' \dontrun{framdb |> copy_run(target_run = 141, times = 1)
+#'
+copy_run <- function(fram_db, target_run, times = 1){
+
+
+  # target_run = 139
+  # times = 15
+  run_table <- DBI::dbReadTable(fram_db$fram_db_connection, 'RunID')
+
+  max_run_id <- run_table |>
+    dplyr::pull(.data$RunID) |>
+    max()
+
+  # collect tables
+  stock_recruit <- DBI::dbGetQuery(fram_db$fram_db_connection,
+                                    glue::glue(
+                                    "SELECT * FROM StockRecruit
+                                    WHERE RunID = {target_run}
+                                    "))
+
+  fishery_scalers <- DBI::dbGetQuery(fram_db$fram_db_connection,
+                                     glue::glue(
+                                       "SELECT * FROM FisheryScalers
+                                    WHERE RunID = {target_run}
+                                    "))
+
+  sfrs <- DBI::dbGetQuery(fram_db$fram_db_connection,
+                                     glue::glue(
+                                       "SELECT * FROM StockFisheryRateScaler
+                                    WHERE RunID = {target_run}
+                                    "))
+
+  non_retention <- DBI::dbGetQuery(fram_db$fram_db_connection,
+                                   glue::glue(
+                                     "SELECT * FROM NonRetention
+                                    WHERE RunID = {target_run}
+                                    "))
+
+  run_target <- run_table |>
+    dplyr::filter(.data$RunID == .env$target_run)
+
+
+  cli::cli_progress_bar(total = times,
+                        format = 'Copying run {i}/{times} | {cli::pb_bar} {cli::pb_percent} {cli::pb_eta}'
+                        )
+
+  for(i in seq_along(1:times)) {
+    # RunID Table
+    run_insert <- run_target |>
+      dplyr::mutate(
+        RunID = .env$max_run_id + .env$i
+      ) |>
+      dplyr::select(-.data$PrimaryKey)
+
+
+    # send to db
+    DBI::dbAppendTable(fram_db$fram_db_connection,
+                       name = 'RunID',
+                       value = run_insert,
+                       batch_rows = 1)
+
+
+    # stock recruit table
+    stock_recruit_insert <- stock_recruit |>
+      dplyr::mutate(
+         RunID = .env$max_run_id + .env$i
+      ) |>
+      dplyr::select(-.data$PrimaryKey)
+
+    # send to db
+    DBI::dbAppendTable(fram_db$fram_db_connection,
+                       name = 'StockRecruit',
+                       value = stock_recruit_insert,
+                       batch_rows = 1)
+
+    # fishery scalers
+    fishery_scalers_insert <- fishery_scalers |>
+      dplyr::mutate(
+        RunID = .env$max_run_id + .env$i
+      )
+
+    # send to db
+    DBI::dbAppendTable(fram_db$fram_db_connection,
+                       name = 'FisheryScalers',
+                       value = fishery_scalers_insert,
+                       batch_rows = 1)
+
+    # stock fishery rate scalers
+    if(nrow(sfrs) > 0){
+      sfrs_insert <- sfrs |>
+        dplyr::mutate(
+          RunID = .env$max_run_id + .env$i
+        )
+
+      # send to db
+      DBI::dbAppendTable(fram_db$fram_db_connection,
+                         name = 'StockFisheryRate Scaler',
+                         value = sfrs_insert,
+                         batch_rows = 1)
+    }
+
+
+    # non retention
+    non_retention_insert <- non_retention |>
+      dplyr::mutate(
+        RunID = .env$max_run_id + .env$i
+      )
+
+    # send to db
+    DBI::dbAppendTable(fram_db$fram_db_connection,
+                       name = 'NonRetention',
+                       value = non_retention_insert,
+                       batch_rows = 1)
+
+
+
+    cli::cli_progress_update()
+  }
+
+  cli::cli_process_done()
+}
+
+
+
+
+
