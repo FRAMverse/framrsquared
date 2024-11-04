@@ -110,7 +110,8 @@ sensitivity_non_retention <- function(fram_db,
           SET CNRInput1 = {cnr_1[i]},
               CNRInput2 = {cnr_2[i]},
               CNRInput3 = {cnr_3[i]},
-              CNRInput4 = {cnr_4[i]}
+              CNRInput4 = {cnr_4[i]},
+              NonRetentionFlag = {flag}
          WHERE RunID = {run_ids[i]} AND
                TimeStep = {time_step} AND
                FisheryID = {fishery_id};
