@@ -95,11 +95,11 @@ copy_fishery_scalers <- function(fram_db, from_run, to_run, fishery_id = NULL){
 #' @examples
 #' \dontrun{framdb |> copy_run(target_run = 141, times = 1)}
 #'
-copy_run <- function(fram_db, target_run, times = 1){
-
+copy_run <- function(fram_db, target_run, times = 1, identifier = 'copy'){
 
   # target_run = 139
-  # times = 15
+  # times = 1
+
   run_table <- DBI::dbReadTable(fram_db$fram_db_connection, 'RunID')
 
   max_run_id <- run_table |>
@@ -131,6 +131,14 @@ copy_run <- function(fram_db, target_run, times = 1){
                                     WHERE RunID = {target_run}
                                     "))
 
+  if(fram_db$fram_db_species == 'CHINOOK') {
+    size_limits <- DBI::dbGetQuery(fram_db$fram_db_connection,
+                                     glue::glue(
+                                       "SELECT * FROM SizeLimits
+                                    WHERE RunID = {target_run}
+                                    "))
+  }
+
   run_target <- run_table |>
     dplyr::filter(.data$RunID == .env$target_run)
 
@@ -143,7 +151,8 @@ copy_run <- function(fram_db, target_run, times = 1){
     # RunID Table
     run_insert <- run_target |>
       dplyr::mutate(
-        RunID = .env$max_run_id + .env$i
+        RunID = .env$max_run_id + .env$i,
+        RunName = glue::glue(RunName, ' {identifier} {i}')
       ) |>
       dplyr::select(-.data$PrimaryKey)
 
@@ -189,7 +198,7 @@ copy_run <- function(fram_db, target_run, times = 1){
 
       # send to db
       DBI::dbAppendTable(fram_db$fram_db_connection,
-                         name = 'StockFisheryRate Scaler',
+                         name = 'StockFisheryRateScaler',
                          value = sfrs_insert,
                          batch_rows = 1)
     }
@@ -207,6 +216,21 @@ copy_run <- function(fram_db, target_run, times = 1){
                        value = non_retention_insert,
                        batch_rows = 1)
 
+    if (fram_db$fram_db_species == 'CHINOOK') {
+      size_limits_insert <- size_limits |>
+        dplyr::mutate(RunID = .env$max_run_id + .env$i) |>
+        dplyr::select(-.data$PrimaryKey)
+
+
+      # send to db
+      DBI::dbAppendTable(
+        fram_db$fram_db_connection,
+        name = 'SizeLimits',
+        value = size_limits_insert,
+        batch_rows = 1
+      )
+
+    }
 
 
     cli::cli_progress_update()
