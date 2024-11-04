@@ -91,11 +91,12 @@ copy_fishery_scalers <- function(fram_db, from_run, to_run, fishery_id = NULL){
 #' @param fram_db FRAM database object
 #' @param target_run Run ID to be copied from
 #' @param times Number of copies
+#' @param label Label of each copy e.g. copy 1, copy 2
 #' @export
 #' @examples
 #' \dontrun{framdb |> copy_run(target_run = 141, times = 1)}
 #'
-copy_run <- function(fram_db, target_run, times = 1, identifier = 'copy'){
+copy_run <- function(fram_db, target_run, times = 1, label = 'copy'){
 
   # target_run = 139
   # times = 1
@@ -152,7 +153,7 @@ copy_run <- function(fram_db, target_run, times = 1, identifier = 'copy'){
     run_insert <- run_target |>
       dplyr::mutate(
         RunID = .env$max_run_id + .env$i,
-        RunName = glue::glue(RunName, ' {identifier} {i}')
+        RunName = glue::glue(.data$RunName, ' {label} {i}')
       ) |>
       dplyr::select(-.data$PrimaryKey)
 

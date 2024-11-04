@@ -4,7 +4,7 @@
 \alias{copy_run}
 \title{Copies a run a number of times}
 \usage{
-copy_run(fram_db, target_run, times = 1)
+copy_run(fram_db, target_run, times = 1, label = "copy")
 }
 \arguments{
 \item{fram_db}{FRAM database object}
@@ -12,6 +12,8 @@ copy_run(fram_db, target_run, times = 1)
 \item{target_run}{Run ID to be copied from}
 
 \item{times}{Number of copies}
+
+\item{label}{Label of each copy e.g. copy 1, copy 2}
 }
 \description{
 Copies a run a number of times
