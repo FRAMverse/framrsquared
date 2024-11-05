@@ -7,7 +7,7 @@
 #'
 msf_mortalities_chinook_ <- function(fram_db){
   mortalities_ <- fram_db |>
-                    fetch_table('Mortality')
+                    msp_mortality()
 
   mortalities_ <- mortalities_ |>
     dplyr::select(.data$run_id:.data$time_step, dplyr::starts_with('msf_'))  |>
@@ -52,7 +52,7 @@ msf_mortalities_chinook_ <- function(fram_db){
 
 msf_encounters_chinook_ <- function(fram_db){
   encounters_ <- fram_db |>
-    fetch_table('Mortality')
+    msp_mortality()
 
   # ensure the correct rates are always used
   sublegal_mortality_rates <- DBI::dbGetQuery(
@@ -95,7 +95,7 @@ msf_encounters_chinook_ <- function(fram_db){
 #'
 msf_landed_catch_chinook_ <- function(fram_db){
   landed_catch_ <- fram_db |>
-    fetch_table('Mortality')
+    msp_mortality()
   landed_catch <- landed_catch_ |>
     dplyr::select(.data$run_id, .data$stock_id, .data$fishery_id, .data$time_step,
                   .data$msf_landed_catch, .data$msf_shaker)  |>
