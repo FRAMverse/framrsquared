@@ -1,0 +1,15 @@
+date: last-modified
+execute:
+  warning: false
+message: false
+format:
+  html:
+    code-fold: true
+embed-resources: true
+toc: true
+title-block-banner: "#ede9da"
+title-block-banner-color: "#967259"
+css: style.css
+project:
+  title: ""
+  output-dir: results/quarto_output/
