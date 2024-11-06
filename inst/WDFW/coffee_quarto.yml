@@ -5,9 +5,12 @@ message: false
 format:
   html:
     code-fold: true
+    link-external-icon: true
+    link-external-newwindow: true
 embed-resources: true
 toc: true
-title-block-banner: "#1D886E"
+title-block-banner: "#ede9da"
+title-block-banner-color: "#967259"
 css: style.css
 project:
   title: ""
