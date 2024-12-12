@@ -299,6 +299,7 @@ validate_fram_db <- function(fram_db,
 #' @param run_id one or more run_ids
 #' @param call internal use: identify name of function that called this function (for informative error message)
 validate_run_id <- function(fram_db, run_id, call = rlang::caller_env()){
+  validate_numeric(run_id)
   available_run_ids <- get_run_ids(fram_db)
   if (! all(run_id %in% available_run_ids)){
     cli::cli_abort(paste0('run_id(s) not present in database. Available run_ids: ',
@@ -312,5 +313,11 @@ validate_data_frame <- function(x, ..., arg = rlang::caller_arg(x), call = rlang
   # checks for data frame, stolen from the tidyr package
   if (!is.data.frame(x)) {
     cli::cli_abort("{.arg {arg}} must be a data frame, not {.obj_type_friendly {x}}.", ..., call = call)
+  }
+}
+
+validate_numeric <- function(x, ..., arg = rlang::caller_arg(x), call = rlang::caller_env()) {
+  if (!is.numeric(x)) {
+    cli::cli_abort("{.arg {arg}} must be a numeric, not {class(x)}.", ..., call = call)
   }
 }
