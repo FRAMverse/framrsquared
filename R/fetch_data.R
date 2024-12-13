@@ -2,12 +2,13 @@
 #' tibble.
 #' @param fram_db FRAM database object
 #' @param table_name Table to be fetched. If not given, a list of options will be printed
+#' @param warn Print a warning when fetching BackwardsFRAM table from a Chinook database? Defaults to `TRUE`.
 #' @export
 #' @examples
 #' \dontrun{fram_db |> fetch_table('Mortality')}
 #'
 
-fetch_table <- function(fram_db, table_name = NULL){
+fetch_table <- function(fram_db, table_name = NULL, warn = TRUE){
   ## adding input checking
   validate_fram_db(fram_db)
   all_tables = provide_table_names(is_full = TRUE)
@@ -56,7 +57,7 @@ fetch_table <- function(fram_db, table_name = NULL){
       fram_clean_tables()
     attr(output_table, 'species') <- fram_db$fram_db_species
 
-    if(fram_db$fram_db_species == "CHINOOK" & table_name == "BackwardsFRAM"){
+    if(warn & fram_db$fram_db_species == "CHINOOK" & table_name == "BackwardsFRAM"){
       cli::cli_alert_danger("Chinook BackwardsFRAM tables use different numbering for stock_id!\n This can cause problems when merging with other tables!\n Recommend fetch_table_bkchin() instead.")
     }
 
@@ -96,7 +97,8 @@ fetch_table_bkchin <- function(fram_db){
     cli::cli_abort("`fetch_table_bkchin()` only appropriate for CHINOOK databases, not {fram_db$fram_db_species} database.")
   }
 
-  output_table <- fetch_table(fram_db, table_name = "BackwardsFRAM") |>
+  output_table <- fetch_table(fram_db, table_name = "BackwardsFRAM",
+                              warn = FALSE) |>
     dplyr::rename(bk_stock_id = .data$stock_id) |>
     dplyr::left_join(framrosetta::bk_lookup_chin, by = "bk_stock_id")
 
