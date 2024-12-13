@@ -2,20 +2,35 @@
 #' automatically detect whether it's working with a Chinook or Coho
 #' dataset if the tables were generated within this package. Requires
 #' a `fishery_id` column name.
-#' @param .data Dataframe generated within this package
+#' @param .data Dataframe containing `fishery_id` column. Commonly, output from `framrsquared::fetch_table()`.
+#' @param species Optional argument to identify species if `.data` doesn't already. If provided, must be "COHO" or "CHINOOK". Defaults to `NULL`
 #' @export
 #' @examples
 #' \dontrun{
 #' fram_dataframe |> filter_sport()
 #' }
+#' framrosetta::fishery_chinook_fram |> filter_sport(species = "CHINOOK")
+#' framrosetta::fishery_coho_fram |> filter_sport(species = "COHO")
 #'
-filter_sport <- function(.data){
+filter_sport <- function(.data, species = NULL){
   validate_data_frame(.data)
   if(!'fishery_id' %in% colnames(.data)){
     cli::cli_abort('fishery_id column must be present in dataframe.')
   }
 
-  if(attr(.data, 'species') == 'CHINOOK'){
+  if(is.null(species)){
+    if(!is.null(attr(.data, 'species'))){
+      species <- attr(.data, 'species')
+    } else {
+      cli::cli_abort('Table metadata missing and `species` argument missing.')
+    }
+  }
+
+  if(!is.null(attr(.data, 'species')) & species != attr(.data, 'species')){
+    cli::cli_abort('`species` argument ("{species}") should not differ from species attribute of data ("{attr(.data, "species")}"). Consider dropping `species` argument.')
+  }
+
+  if(species == 'CHINOOK'){
     .data |>
       dplyr::filter(
         .data$fishery_id %in% c(
@@ -25,7 +40,7 @@ filter_sport <- function(.data){
           42, 45, 53, 54, 56, 57,
           64, 67)
       )
-  } else if(attr(.data, 'species') == 'COHO') {
+  } else if(species == 'COHO') {
     .data |>
       dplyr::filter(
         .data$fishery_id %in% c(
@@ -39,10 +54,10 @@ filter_sport <- function(.data){
           164, 165, 166, 169, 186, 187, 188,
           189, 190, 191, 192, 193
 
-          )
+        )
       )
   } else {
-    cli::cli_abort('Table metadata missing... Table not generated from this package?')
+    cli::cli_abort('`species` must be "COHO" or "CHINOOK", not "{species}".')
   }
 
 }
@@ -51,20 +66,37 @@ filter_sport <- function(.data){
 #' automatically detect whether it's working with a Chinook or Coho
 #' dataset if the tables were generated within this package. Requires
 #' a `fishery_id` column name.
-#' @param .data Dataframe generated within this package
+#'
+#' @inheritParams filter_sport
+#'
 #' @export
 #' @examples
 #' \dontrun{
 #' fram_dataframe |> filter_net()
 #' }
-#'
-filter_net <- function(.data){
+#' framrosetta::fishery_chinook_fram |> filter_net(species = "CHINOOK")
+#' framrosetta::fishery_coho_fram |> filter_net(species = "COHO")
+
+filter_net <- function(.data, species = NULL){
   validate_data_frame(.data)
   if(!'fishery_id' %in% colnames(.data)){
     cli::cli_abort('fishery_id column must be present in dataframe.')
   }
+
+  if(is.null(species)){
+    if(!is.null(attr(.data, 'species'))){
+      species <- attr(.data, 'species')
+    } else {
+      cli::cli_abort('Table metadata missing and `species` argument missing.')
+    }
+  }
+
+  if(!is.null(attr(.data, 'species')) & species != attr(.data, 'species')){
+    cli::cli_abort('`species` argument ("{species}") should not differ from species attribute of data ("{attr(.data, "species")}"). Consider dropping `species` argument.')
+  }
+
   # if it's not sport it must be net
-  if(attr(.data, 'species') == 'CHINOOK'){
+  if(species == 'CHINOOK'){
     .data |>
       dplyr::filter(
         !.data$fishery_id %in% c(
@@ -74,7 +106,7 @@ filter_net <- function(.data){
           42, 45, 53, 54, 56, 57,
           64, 67)
       )
-  } else if(attr(.data, 'species') == 'COHO') {
+  } else if(species == 'COHO') {
     .data |>
       dplyr::filter(
         !.data$fishery_id %in% c(
@@ -91,7 +123,7 @@ filter_net <- function(.data){
         )
       )
   } else {
-    cli::cli_abort('Table metadata missing... Table not generated from this package?')
+    cli::cli_abort('`species` must be "COHO" or "CHINOOK", not "{species}".')
   }
 
 }
@@ -103,31 +135,44 @@ filter_net <- function(.data){
 #' automatically detect whether it's working with a Chinook or Coho
 #' dataset if the tables were generated within this package. Requires
 #' a `fishery_id` column name.
-#' @param .data Dataframe generated within this package
+#' @inheritParams filter_sport
 #' @export
 #' @examples
 #' \dontrun{
 #' fram_dataframe |> filter_puget_sound()
 #' }
-#'
-filter_puget_sound <- function(.data){
+#' framrosetta::fishery_chinook_fram |> filter_puget_sound(species = "CHINOOK")
+#' framrosetta::fishery_coho_fram |> filter_puget_sound(species = "COHO")
+filter_puget_sound <- function(.data, species = NULL){
   validate_data_frame(.data)
   if(!'fishery_id' %in% colnames(.data)){
     cli::cli_abort('fishery_id column must be present in dataframe.')
   }
 
-  if(attr(.data, 'species') == 'CHINOOK'){
+  if(is.null(species)){
+    if(!is.null(attr(.data, 'species'))){
+      species <- attr(.data, 'species')
+    } else {
+      cli::cli_abort('Table metadata missing and `species` argument missing.')
+    }
+  }
+
+  if(!is.null(attr(.data, 'species')) & species != attr(.data, 'species')){
+    cli::cli_abort('`species` argument ("{species}") should not differ from species attribute of data ("{attr(.data, "species")}"). Consider dropping `species` argument.')
+  }
+
+  if(species == 'CHINOOK'){
     .data |>
       dplyr::filter(
         .data$fishery_id %in% c(36:71)
       )
-  } else if(attr(.data, 'species') == 'COHO') {
+  } else if(species == 'COHO') {
     .data |>
       dplyr::filter(
         .data$fishery_id %in% c(76:166)
       )
   } else {
-    cli::cli_abort('Table metadata missing... Table not generated from this package?')
+    cli::cli_abort('`species` must be "COHO" or "CHINOOK", not "{species}".')
   }
 
 }
@@ -137,31 +182,44 @@ filter_puget_sound <- function(.data){
 #' automatically detect whether it's working with a Chinook or Coho
 #' dataset if the tables were generated within this package. Requires
 #' a `fishery_id` column name.
-#' @param .data Dataframe generated within this package
+#' @inheritParams filter_sport
 #' @export
 #' @examples
 #' \dontrun{
 #' fram_dataframe |> filter_wa()
 #' }
-#'
-filter_wa <- function(.data){
+#' framrosetta::fishery_chinook_fram |> filter_wa(species = "CHINOOK")
+#' framrosetta::fishery_coho_fram |> filter_wa(species = "COHO")
+filter_wa <- function(.data, species = NULL){
   validate_data_frame(.data)
   if(!'fishery_id' %in% colnames(.data)){
     cli::cli_abort('fishery_id column must be present in dataframe.')
   }
 
-  if(attr(.data, 'species') == 'CHINOOK'){
+  if(is.null(species)){
+    if(!is.null(attr(.data, 'species'))){
+      species <- attr(.data, 'species')
+    } else {
+      cli::cli_abort('Table metadata missing and `species` argument missing.')
+    }
+  }
+
+  if(!is.null(attr(.data, 'species')) & species != attr(.data, 'species')){
+    cli::cli_abort('`species` argument ("{species}") should not differ from species attribute of data ("{attr(.data, "species")}"). Consider dropping `species` argument.')
+  }
+
+  if(species == 'CHINOOK'){
     .data |>
       dplyr::filter(
         .data$fishery_id %in% c(16:71)
       )
-  } else if(attr(.data, 'species') == 'COHO') {
+  } else if(species == 'COHO') {
     .data |>
       dplyr::filter(
         .data$fishery_id %in% c(23:166)
       )
   } else {
-    cli::cli_abort('Table metadata missing... Table not generated from this package?')
+    cli::cli_abort('`species` must be "COHO" or "CHINOOK", not "{species}".')
   }
 
 }
@@ -170,31 +228,44 @@ filter_wa <- function(.data){
 #' automatically detect whether it's working with a Chinook or Coho
 #' dataset if the tables were generated within this package. Requires
 #' a `fishery_id` column name.
-#' @param .data Dataframe generated within this package
+#' @inheritParams filter_sport
 #' @export
 #' @examples
 #' \dontrun{
 #' fram_dataframe |> filter_bc()
 #' }
-#'
-filter_bc <- function(.data){
+#' framrosetta::fishery_chinook_fram |> filter_bc(species = "CHINOOK")
+#' framrosetta::fishery_coho_fram |> filter_bc(species = "COHO")
+filter_bc <- function(.data, species = NULL){
   validate_data_frame(.data)
   if(!'fishery_id' %in% colnames(.data)){
     cli::cli_abort('fishery_id column must be present in dataframe.')
   }
 
-  if(attr(.data, 'species') == 'CHINOOK'){
+  if(is.null(species)){
+    if(!is.null(attr(.data, 'species'))){
+      species <- attr(.data, 'species')
+    } else {
+      cli::cli_abort('Table metadata missing and `species` argument missing.')
+    }
+  }
+
+  if(!is.null(attr(.data, 'species')) & species != attr(.data, 'species')){
+    cli::cli_abort('`species` argument ("{species}") should not differ from species attribute of data ("{attr(.data, "species")}"). Consider dropping `species` argument.')
+  }
+
+  if(species == 'CHINOOK'){
     .data |>
       dplyr::filter(
         .data$fishery_id %in% c(4:15)
       )
-  } else if(attr(.data, 'species') == 'COHO') {
+  } else if(species == 'COHO') {
     .data |>
       dplyr::filter(
         .data$fishery_id %in% c(167:193)
       )
   } else {
-    cli::cli_abort('Table metadata missing... Table not generated from this package?')
+    cli::cli_abort('`species` must be "COHO" or "CHINOOK", not "{species}".')
   }
 
 }
@@ -203,31 +274,44 @@ filter_bc <- function(.data){
 #' automatically detect whether it's working with a Chinook or Coho
 #' dataset if the tables were generated within this package. Requires
 #' a `fishery_id` column name.
-#' @param .data Dataframe generated within this package
+#' @inheritParams filter_sport
 #' @export
 #' @examples
 #' \dontrun{
 #' fram_dataframe |> filter_ak()
 #' }
-#'
-filter_ak <- function(.data){
+#' framrosetta::fishery_chinook_fram |> filter_ak(species = "CHINOOK")
+#' framrosetta::fishery_coho_fram |> filter_ak(species = "COHO")
+filter_ak <- function(.data, species = NULL){
   validate_data_frame(.data)
   if(!'fishery_id' %in% colnames(.data)){
     cli::cli_abort('fishery_id column must be present in dataframe.')
   }
 
-  if(attr(.data, 'species') == 'CHINOOK'){
+  if(is.null(species)){
+    if(!is.null(attr(.data, 'species'))){
+      species <- attr(.data, 'species')
+    } else {
+      cli::cli_abort('Table metadata missing and `species` argument missing.')
+    }
+  }
+
+  if(!is.null(attr(.data, 'species')) & species != attr(.data, 'species')){
+    cli::cli_abort('`species` argument ("{species}") should not differ from species attribute of data ("{attr(.data, "species")}"). Consider dropping `species` argument.')
+  }
+
+  if(species == 'CHINOOK'){
     .data |>
       dplyr::filter(
         .data$fishery_id %in% c(1:3)
       )
-  } else if(attr(.data, 'species') == 'COHO') {
+  } else if(species == 'COHO') {
     .data |>
       dplyr::filter(
         .data$fishery_id %in% c(194:198)
       )
   } else {
-    cli::cli_abort('Table metadata missing... Table not generated from this package?')
+    cli::cli_abort('`species` must be "COHO" or "CHINOOK", not "{species}".')
   }
 }
 
@@ -236,31 +320,44 @@ filter_ak <- function(.data){
 #' automatically detect whether it's working with a Chinook or Coho
 #' dataset if the tables were generated within this package. Requires
 #' a `fishery_id` column name.
-#' @param .data Dataframe generated within this package
+#' @inheritParams filter_sport
 #' @export
 #' @examples
 #' \dontrun{
 #' fram_dataframe |> filter_ca()
 #' }
-#'
-filter_ca <- function(.data){
+#' framrosetta::fishery_chinook_fram |> filter_ca(species = "CHINOOK")
+#' framrosetta::fishery_coho_fram |> filter_ca(species = "COHO")
+filter_ca <- function(.data, species = NULL){
   validate_data_frame(.data)
   if(!'fishery_id' %in% colnames(.data)){
     cli::cli_abort('fishery_id column must be present in dataframe.')
   }
 
-  if(attr(.data, 'species') == 'CHINOOK'){
+  if(is.null(species)){
+    if(!is.null(attr(.data, 'species'))){
+      species <- attr(.data, 'species')
+    } else {
+      cli::cli_abort('Table metadata missing and `species` argument missing.')
+    }
+  }
+
+  if(!is.null(attr(.data, 'species')) & species != attr(.data, 'species')){
+    cli::cli_abort('`species` argument ("{species}") should not differ from species attribute of data ("{attr(.data, "species")}"). Consider dropping `species` argument.')
+  }
+
+  if(species == 'CHINOOK'){
     .data |>
       dplyr::filter(
         .data$fishery_id %in% c(32:34)
       )
-  } else if(attr(.data, 'species') == 'COHO') {
+  } else if(species == 'COHO') {
     .data |>
       dplyr::filter(
         .data$fishery_id %in% c(1:8)
       )
   } else {
-    cli::cli_abort('Table metadata missing... Table not generated from this package?')
+    cli::cli_abort('`species` must be "COHO" or "CHINOOK", not "{species}".')
   }
 }
 
@@ -268,31 +365,44 @@ filter_ca <- function(.data){
 #' automatically detect whether it's working with a Chinook or Coho
 #' dataset if the tables were generated within this package. Requires
 #' a `fishery_id` column name.
-#' @param .data Dataframe generated within this package
+#' @inheritParams filter_sport
 #' @export
 #' @examples
 #' \dontrun{
 #' fram_dataframe |> filter_or()
 #' }
-#'
-filter_or <- function(.data){
+#' framrosetta::fishery_chinook_fram |> filter_or(species = "CHINOOK")
+#' framrosetta::fishery_coho_fram |> filter_or(species = "COHO")
+filter_or <- function(.data, species = NULL){
   validate_data_frame(.data)
   if(!'fishery_id' %in% colnames(.data)){
     cli::cli_abort('fishery_id column must be present in dataframe.')
   }
 
-  if(attr(.data, 'species') == 'CHINOOK'){
+  if(is.null(species)){
+    if(!is.null(attr(.data, 'species'))){
+      species <- attr(.data, 'species')
+    } else {
+      cli::cli_abort('Table metadata missing and `species` argument missing.')
+    }
+  }
+
+  if(!is.null(attr(.data, 'species')) & species != attr(.data, 'species')){
+    cli::cli_abort('`species` argument ("{species}") should not differ from species attribute of data ("{attr(.data, "species")}"). Consider dropping `species` argument.')
+  }
+
+  if(species == 'CHINOOK'){
     .data |>
       dplyr::filter(
         .data$fishery_id %in% c(28:33)
       )
-  } else if(attr(.data, 'species') == 'COHO') {
+  } else if(species == 'COHO') {
     .data |>
       dplyr::filter(
         .data$fishery_id %in% c(5:32)
       )
   } else {
-    cli::cli_abort('Table metadata missing... Table not generated from this package?')
+    cli::cli_abort('`species` must be "COHO" or "CHINOOK", not "{species}".')
   }
 }
 
@@ -301,31 +411,44 @@ filter_or <- function(.data){
 #' automatically detect whether it's working with a Chinook or Coho
 #' dataset if the tables were generated within this package. Requires
 #' a `fishery_id` column name.
-#' @param .data Dataframe generated within this package
+#' @inheritParams filter_sport
 #' @export
 #' @examples
 #' \dontrun{
 #' fram_dataframe |> filter_coast()
 #' }
-#'
-filter_coast <- function(.data){
+#' framrosetta::fishery_chinook_fram |> filter_coast(species = "CHINOOK")
+#' framrosetta::fishery_coho_fram |> filter_coast(species = "COHO")
+filter_coast <- function(.data, species = NULL){
   validate_data_frame(.data)
   if(!'fishery_id' %in% colnames(.data)){
     cli::cli_abort('fishery_id column must be present in dataframe.')
   }
 
-  if(attr(.data, 'species') == 'CHINOOK'){
+  if(is.null(species)){
+    if(!is.null(attr(.data, 'species'))){
+      species <- attr(.data, 'species')
+    } else {
+      cli::cli_abort('Table metadata missing and `species` argument missing.')
+    }
+  }
+
+  if(!is.null(attr(.data, 'species')) & species != attr(.data, 'species')){
+    cli::cli_abort('`species` argument ("{species}") should not differ from species attribute of data ("{attr(.data, "species")}"). Consider dropping `species` argument.')
+  }
+
+  if(species == 'CHINOOK'){
     .data |>
       dplyr::filter(
         .data$fishery_id %in% c(1:35)
       )
-  } else if(attr(.data, 'species') == 'COHO') {
+  } else if(species == 'COHO') {
     .data |>
       dplyr::filter(
         .data$fishery_id %in% c(1:22, 33:75)
       )
   } else {
-    cli::cli_abort('Table metadata missing... Table not generated from this package?')
+    cli::cli_abort('`species` must be "COHO" or "CHINOOK", not "{species}".')
   }
 }
 
@@ -333,25 +456,38 @@ filter_coast <- function(.data){
 #' automatically detect whether it's working with a Chinook or Coho
 #' dataset if the tables were generated within this package. Requires
 #' a `fishery_id` column name.
-#' @param .data Dataframe generated within this package
+#' @inheritParams filter_sport
 #' @export
 #' @examples
 #' \dontrun{
 #' fram_dataframe |> filter_marine()
 #' }
-#'
-filter_marine <- function(.data){
+#' framrosetta::fishery_chinook_fram |> filter_marine(species = "CHINOOK")
+#' framrosetta::fishery_coho_fram |> filter_marine(species = "COHO")
+filter_marine <- function(.data, species = NULL){
   validate_data_frame(.data)
   if(!'fishery_id' %in% colnames(.data)){
     cli::cli_abort('fishery_id column must be present in dataframe.')
   }
 
-  if(attr(.data, 'species') == 'CHINOOK'){
+  if(is.null(species)){
+    if(!is.null(attr(.data, 'species'))){
+      species <- attr(.data, 'species')
+    } else {
+      cli::cli_abort('Table metadata missing and `species` argument missing.')
+    }
+  }
+
+  if(!is.null(attr(.data, 'species')) & species != attr(.data, 'species')){
+    cli::cli_abort('`species` argument ("{species}") should not differ from species attribute of data ("{attr(.data, "species")}"). Consider dropping `species` argument.')
+  }
+
+  if(species == 'CHINOOK'){
     .data |>
       dplyr::filter(
         !.data$fishery_id %in% c(72:73)
       )
-  } else if(attr(.data, 'species') == 'COHO') {
+  } else if(species == 'COHO') {
     .data |>
       dplyr::filter(
         .data$fishery_id %in% c(
@@ -363,6 +499,6 @@ filter_marine <- function(.data){
           170:198)
       )
   } else {
-    cli::cli_abort('Table metadata missing... Table not generated from this package?')
+    cli::cli_abort('`species` must be "COHO" or "CHINOOK", not "{species}".')
   }
 }

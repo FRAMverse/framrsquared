@@ -7,10 +7,12 @@ automatically detect whether it's working with a Chinook or Coho
 dataset if the tables were generated within this package. Requires
 a \code{fishery_id} column name.}
 \usage{
-filter_ca(.data)
+filter_ca(.data, species = NULL)
 }
 \arguments{
-\item{.data}{Dataframe generated within this package}
+\item{.data}{Dataframe containing \code{fishery_id} column. Commonly, output from \code{framrsquared::fetch_table()}.}
+
+\item{species}{Optional argument to identify species if \code{.data} doesn't already. If provided, must be "COHO" or "CHINOOK". Defaults to \code{NULL}}
 }
 \description{
 Filters a dataframe to California fisheries. Will
@@ -22,5 +24,6 @@ a \code{fishery_id} column name.
 \dontrun{
 fram_dataframe |> filter_ca()
 }
-
+framrosetta::fishery_chinook_fram |> filter_ca(species = "CHINOOK")
+framrosetta::fishery_coho_fram |> filter_ca(species = "COHO")
 }
