@@ -5,12 +5,14 @@
 \title{Fetches a complete table from a FRAM database. Returns a cleaned
 tibble.}
 \usage{
-fetch_table(fram_db, table_name = NULL)
+fetch_table(fram_db, table_name = NULL, warn = TRUE)
 }
 \arguments{
 \item{fram_db}{FRAM database object}
 
 \item{table_name}{Table to be fetched. If not given, a list of options will be printed}
+
+\item{warn}{Print a warning when fetching BackwardsFRAM table from a Chinook database? Defaults to \code{TRUE}.}
 }
 \description{
 Fetches a complete table from a FRAM database. Returns a cleaned
