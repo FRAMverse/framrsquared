@@ -1,5 +1,3 @@
-
-
 #' Check code for common errors
 #'
 #' Tool to streamline development. Currently this checks for use of filter() without dplyr::. This would call
