@@ -33,13 +33,26 @@ post_season_abundance <- function(fram_db){
                       relationship = 'many-to-many') |>
     dplyr::mutate(
       recruit_cohort_size = .data$recruit_scale_factor * .data$base_cohort_size,
-    )
+      origin = dplyr::case_when(
+        stringr::str_detect(stock_long_name, 'Wild') |
+          stringr::str_detect(stock_long_name, 'Nat') |
+          stringr::str_detect(stock_long_name, '/Wild')  ~ 'Wild',
+        stringr::str_detect(stock_long_name, 'Hatchery') |
+          stringr::str_detect(stock_long_name, 'Net Pen')  ~ 'Hatchery',
+        .default = 'Misc'
+
+      )
+    ) |> #count(origin)
+    dplyr::select(.data$run_year, .data$run_id, .data$stock_id,  .data$stock_name,
+           .data$recruit_scale_factor, .data$base_cohort_size,
+           .data$recruit_cohort_size, .data$origin)
 
 
   cli::cli_alert_info('Abundances given in terms of January age 3')
   # summary sheet
   cohort_table |>
-    dplyr::select(.data$stock_id, .data$stock_name, .data$run_year, .data$recruit_cohort_size) |>
+    dplyr::select(.data$stock_id, .data$stock_name, .data$run_year,
+                  .data$recruit_cohort_size, .data$origin) |>
     tidyr::pivot_wider(names_from = .data$run_year, values_from = .data$recruit_cohort_size)
 
 }
