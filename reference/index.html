@@ -30,9 +30,9 @@
     </div>
 
     <div class="section level2">
-      <h2 id="all-functions">All functions<a class="anchor" aria-label="anchor" href="#all-functions"></a></h2>
+      <h2 id="connecting-to-fram-database">Connecting to FRAM database<a class="anchor" aria-label="anchor" href="#connecting-to-fram-database"></a></h2>
 
-
+      <div class="section-desc"><p>Functions to connect a disconnect to a FRAM database</p></div>
 
 
     </div><div class="section level2">
@@ -42,137 +42,28 @@
 
       <dl><dt>
 
-          <code><a href="NR_flag_translate.html">NR_flag_translate()</a></code>
-
-        </dt>
-        <dd>Provides English translation of numeric non-retention flags</dd>
-      </dl><dl><dt>
-
-          <code><a href="add_flag_text.html">add_flag_text()</a></code>
-
-        </dt>
-        <dd>Adds a column with a text version of flags for either non-retention or fishery scalers</dd>
-      </dl><dl><dt>
-
-          <code><a href="addstock_check.html">addstock_check()</a></code>
-
-        </dt>
-        <dd>Check FRAM database after adding new stock</dd>
-      </dl><dl><dt>
-
-          <code><a href="aeq_mortality.html">aeq_mortality()</a></code>
-
-        </dt>
-        <dd>Extract AEQ mortality from Chinook FRAM database. Refactored and stripped down from the framr package written by Dan Auerbach. https://github.com/FRAMverse/framr/</dd>
-      </dl><dl><dt>
-
-          <code><a href="bkfram_checks_coho.html">bkfram_checks_coho()</a></code>
-
-        </dt>
-        <dd>Performs error checks of a backwards FRAM run Returns nested tibble with diagnostics</dd>
-      </dl><dl><dt>
-
-          <code><a href="change_run_id.html">change_run_id()</a></code>
-
-        </dt>
-        <dd>Changes a run's ID number in a FRAM database</dd>
-      </dl><dl><dt>
-
-          <code><a href="coho_mark_rates.html">coho_mark_rates()</a></code>
-          <span class="badge lifecycle lifecycle-experimental">experimental</span>
-        </dt>
-        <dd><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental" class="external-link"><img src="figures/lifecycle-experimental.svg" alt="[Experimental]"></a> Returns a tibble displaying predicted FRAMencounter mark rates by fishery, fishery type, and time-step.</dd>
-      </dl><dl><dt>
-
-          <code><a href="compare_databases.html">compare_databases()</a></code>
-
-        </dt>
-        <dd>Compare tables in two equivalent FRAM databases</dd>
-      </dl><dl><dt>
-
-          <code><a href="compare_fishery_input_flags.html">compare_fishery_input_flags()</a></code>
-
-        </dt>
-        <dd>Compares the fishery flags of two runs</dd>
-      </dl><dl><dt>
-
-          <code><a href="compare_fishery_inputs.html">compare_fishery_inputs()</a></code>
-
-        </dt>
-        <dd>Compares the fishery inputs of two runs</dd>
-      </dl><dl><dt>
-
-          <code><a href="compare_inputs.html">compare_inputs()</a></code>
-
-        </dt>
-        <dd>Generates a dataframe that compares fishery scalers table for two runs identified by run_id's</dd>
-      </dl><dl><dt>
-
-          <code><a href="compare_inputs_chart.html">compare_inputs_chart()</a></code>
-
-        </dt>
-        <dd>Generates a heat map of changed between two run inputs. Can be a very busy chart if not filtered down. Consider using a filter.</dd>
-      </dl><dl><dt>
-
-          <code><a href="compare_non_retention_input_flags.html">compare_non_retention_input_flags()</a></code>
-
-        </dt>
-        <dd>Compares the non retention flags of two runs</dd>
-      </dl><dl><dt>
-
-          <code><a href="compare_non_retention_inputs.html">compare_non_retention_inputs()</a></code>
-
-        </dt>
-        <dd>Compares the non retention inputs of two runs</dd>
-      </dl><dl><dt>
-
-          <code><a href="compare_recruits.html">compare_recruits()</a></code>
-
-        </dt>
-        <dd>Compares the recruit scalers of two runs</dd>
-      </dl><dl><dt>
-
-          <code><a href="compare_runs.html">compare_runs()</a></code>
-
-        </dt>
-        <dd>Generates a report to the console of changes to inputs between two runs</dd>
-      </dl><dl><dt>
-
-          <code><a href="compare_stock_fishery_rate_scalers.html">compare_stock_fishery_rate_scalers()</a></code>
-
-        </dt>
-        <dd>Compares the stock fishery rate scalers of two runs</dd>
-      </dl><dl><dt>
-
           <code><a href="connect_fram_db.html">connect_fram_db()</a></code>
 
         </dt>
         <dd>This is a connection object to a FRAM database. Returns a list used throughout the rest of this package which carries meta data.</dd>
       </dl><dl><dt>
 
-          <code><a href="copy_fishery_scalers.html">copy_fishery_scalers()</a></code>
-
-        </dt>
-        <dd>Experimental copying scaler inputs from one run to another DANGEROUS</dd>
-      </dl><dl><dt>
-
           <code><a href="disconnect_fram_db.html">disconnect_fram_db()</a></code>
 
         </dt>
         <dd>Safely disconnect from FRAM database</dd>
-      </dl><dl><dt>
+      </dl></div><div class="section level2">
+      <h2 id="importing-fram-tables">Importing FRAM tables<a class="anchor" aria-label="anchor" href="#importing-fram-tables"></a></h2>
 
-          <code><a href="error_check_code.html">error_check_code()</a></code>
+      <div class="section-desc"><p>Functions to import a FRAM database table into R</p></div>
 
-        </dt>
-        <dd>Check code for common errors</dd>
-      </dl><dl><dt>
 
-          <code><a href="fetch_quarto_templates.html">fetch_quarto_templates()</a></code>
+    </div><div class="section level2">
 
-        </dt>
-        <dd>Creates quarto template files</dd>
-      </dl><dl><dt>
+
+
+
+      <dl><dt>
 
           <code><a href="fetch_table.html">fetch_table()</a></code>
 
@@ -184,7 +75,18 @@
 
         </dt>
         <dd>Safely fetch Chinook BackwardsFRAM table</dd>
-      </dl><dl><dt>
+      </dl></div><div class="section level2">
+      <h2 id="fram-filtering">FRAM filtering<a class="anchor" aria-label="anchor" href="#fram-filtering"></a></h2>
+
+      <div class="section-desc"><p>Functions to filter FRAM tables by fishery</p></div>
+
+
+    </div><div class="section level2">
+
+
+
+
+      <dl><dt>
 
           <code><a href="filter_ak.html">filter_ak()</a></code>
 
@@ -250,73 +152,89 @@
 
         </dt>
         <dd>Filters a dataframe to Washington State fisheries. Will automatically detect whether it's working with a Chinook or Coho dataset if the tables were generated within this package. Requires a <code>fishery_id</code> column name.</dd>
-      </dl><dl><dt>
+      </dl></div><div class="section level2">
+      <h2 id="comparing-fram-runs">Comparing FRAM runs<a class="anchor" aria-label="anchor" href="#comparing-fram-runs"></a></h2>
 
-          <code><a href="find_tables_by_column_.html">find_tables_by_column_()</a></code>
+      <div class="section-desc"><p>Functions that compare two FRAM runs within the same database</p></div>
 
-        </dt>
-        <dd>Finds tables that contain a specific column name</dd>
-      </dl><dl><dt>
 
-          <code><a href="fishery_mortality.html">fishery_mortality()</a></code>
+    </div><div class="section level2">
 
-        </dt>
-        <dd>Returns a tibble matching the Fishery Mortality screen.</dd>
-      </dl><dl><dt>
 
-          <code><a href="fram_clean_tables.html">fram_clean_tables()</a></code>
 
-        </dt>
-        <dd>Cleans the names of FRAM tables and coverts to a tibble</dd>
-      </dl><dl><dt>
 
-          <code><a href="fram_database_species.html">fram_database_species()</a></code>
+      <dl><dt>
+
+          <code><a href="compare_databases.html">compare_databases()</a></code>
 
         </dt>
-        <dd>Identifies the FRAM database species focus - Chinook or Coho</dd>
+        <dd>Compare tables in two equivalent FRAM databases</dd>
       </dl><dl><dt>
 
-          <code><a href="fram_database_type.html">fram_database_type()</a></code>
+          <code><a href="compare_fishery_input_flags.html">compare_fishery_input_flags()</a></code>
 
         </dt>
-        <dd>Identifies the FRAM database type - Full or Transfer</dd>
+        <dd>Compares the fishery flags of two runs</dd>
       </dl><dl><dt>
 
-          <code><a href="get_run_ids.html">get_run_ids()</a></code>
+          <code><a href="compare_fishery_inputs.html">compare_fishery_inputs()</a></code>
 
         </dt>
-        <dd>Gets all run_ids of FRAM database</dd>
+        <dd>Compares the fishery inputs of two runs</dd>
       </dl><dl><dt>
 
-          <code><a href="initialize_project.html">initialize_project()</a></code>
+          <code><a href="compare_inputs.html">compare_inputs()</a></code>
 
         </dt>
-        <dd><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental" class="external-link"><img src="figures/lifecycle-experimental.svg" alt="[Experimental]"></a> Initializes a FRAM project</dd>
+        <dd>Generates a dataframe that compares fishery scalers table for two runs identified by run_id's</dd>
       </dl><dl><dt>
 
-          <code><a href="input_summary_.html">input_summary_()</a></code>
+          <code><a href="compare_inputs_chart.html">compare_inputs_chart()</a></code>
 
         </dt>
-        <dd>Generates an input summary based on a FisheryScalers dataframe. Probably end up streamlining / revising this.</dd>
+        <dd>Generates a heat map of changed between two run inputs. Can be a very busy chart if not filtered down. Consider using a filter.</dd>
       </dl><dl><dt>
 
-          <code><a href="make_impacts_per_catch_heatmap.html">make_impacts_per_catch_heatmap()</a></code>
+          <code><a href="compare_non_retention_input_flags.html">compare_non_retention_input_flags()</a></code>
 
         </dt>
-        <dd>Make plots to show the amount of landed catch_per_impact</dd>
+        <dd>Compares the non retention flags of two runs</dd>
       </dl><dl><dt>
 
-          <code><a href="management_week.html">management_week()</a></code>
+          <code><a href="compare_non_retention_inputs.html">compare_non_retention_inputs()</a></code>
 
         </dt>
-        <dd>Vectorized approach to calculating the management week, returns an integer</dd>
+        <dd>Compares the non retention inputs of two runs</dd>
       </dl><dl><dt>
 
-          <code><a href="mortality_scalers.html">mortality_scalers()</a></code>
+          <code><a href="compare_recruits.html">compare_recruits()</a></code>
 
         </dt>
-        <dd>Guestimate the impact on a particular stock by multiplying its mortalities by the <code>stock_mortality_ratio</code> produced by these functions.</dd>
+        <dd>Compares the recruit scalers of two runs</dd>
       </dl><dl><dt>
+
+          <code><a href="compare_runs.html">compare_runs()</a></code>
+
+        </dt>
+        <dd>Generates a report to the console of changes to inputs between two runs</dd>
+      </dl><dl><dt>
+
+          <code><a href="compare_stock_fishery_rate_scalers.html">compare_stock_fishery_rate_scalers()</a></code>
+
+        </dt>
+        <dd>Compares the stock fishery rate scalers of two runs</dd>
+      </dl></div><div class="section level2">
+      <h2 id="fram-screen-reports">FRAM Screen Reports<a class="anchor" aria-label="anchor" href="#fram-screen-reports"></a></h2>
+
+      <div class="section-desc"><p>Functions that replicate FRAM UI screen reports</p></div>
+
+
+    </div><div class="section level2">
+
+
+
+
+      <dl><dt>
 
           <code><a href="msf_encounters.html">msf_encounters()</a></code>
 
@@ -372,11 +290,34 @@
         <dd>Returns a tibble matching the MSF screen report mortalities for Coho This is specific for Coho and in most cases msf_mortalities() is preferable.</dd>
       </dl><dl><dt>
 
-          <code><a href="msp_mortality.html">msp_mortality()</a></code>
+          <code><a href="population_statistics.html">population_statistics()</a></code>
 
         </dt>
-        <dd>Expand Chinook mortality table using Model-Stock Proportion</dd>
+        <dd>Returns a tibble matching the Population Statistics screen.</dd>
       </dl><dl><dt>
+
+          <code><a href="fishery_mortality.html">fishery_mortality()</a></code>
+
+        </dt>
+        <dd>Returns a tibble matching the Fishery Mortality screen.</dd>
+      </dl><dl><dt>
+
+          <code><a href="stock_mortality.html">stock_mortality()</a></code>
+
+        </dt>
+        <dd>Returns a tibble matching the Fishery Mortality screen.</dd>
+      </dl></div><div class="section level2">
+      <h2 id="stock-impact-visualizations">Stock impact visualizations<a class="anchor" aria-label="anchor" href="#stock-impact-visualizations"></a></h2>
+
+      <div class="section-desc"><p>Functions that visualize impacts of stocks in fisheries</p></div>
+
+
+    </div><div class="section level2">
+
+
+
+
+      <dl><dt>
 
           <code><a href="plot_stock_mortality.html">plot_stock_mortality()</a></code>
 
@@ -390,16 +331,195 @@
         <dd>Creates an ordered bar chart with the top number of mortalities per fishery and time step.</dd>
       </dl><dl><dt>
 
-          <code><a href="population_statistics.html">population_statistics()</a></code>
+          <code><a href="make_impacts_per_catch_heatmap.html">make_impacts_per_catch_heatmap()</a></code>
 
         </dt>
-        <dd>Returns a tibble matching the Population Statistics screen.</dd>
+        <dd>Make plots to show the amount of landed catch_per_impact</dd>
+      </dl></div><div class="section level2">
+      <h2 id="initializing-r-fram-projects">Initializing R FRAM Projects<a class="anchor" aria-label="anchor" href="#initializing-r-fram-projects"></a></h2>
+
+      <div class="section-desc"><p>Creates a standardized workspace for fram related R projects</p></div>
+
+
+    </div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="initialize_project.html">initialize_project()</a></code>
+
+        </dt>
+        <dd><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental" class="external-link"><img src="figures/lifecycle-experimental.svg" alt="[Experimental]"></a> Initializes a FRAM project</dd>
+      </dl><dl><dt>
+
+          <code><a href="fetch_quarto_templates.html">fetch_quarto_templates()</a></code>
+
+        </dt>
+        <dd>Creates quarto template files</dd>
+      </dl></div><div class="section level2">
+      <h2 id="database-altering-functions">Database altering functions<a class="anchor" aria-label="anchor" href="#database-altering-functions"></a></h2>
+
+      <div class="section-desc"><p>Functions that alter FRAM database tables, use with caution</p></div>
+
+
+    </div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="copy_fishery_scalers.html">copy_fishery_scalers()</a></code>
+
+        </dt>
+        <dd>Experimental copying scaler inputs from one run to another DANGEROUS</dd>
+      </dl><dl><dt>
+
+          <code><a href="change_run_id.html">change_run_id()</a></code>
+
+        </dt>
+        <dd>Changes a run's ID number in a FRAM database</dd>
+      </dl><dl><dt>
+
+          <code><a href="remove_run.html">remove_run()</a></code>
+
+        </dt>
+        <dd>Removes a run in a FRAM database</dd>
+      </dl></div><div class="section level2">
+      <h2 id="week-calculations">Week calculations<a class="anchor" aria-label="anchor" href="#week-calculations"></a></h2>
+
+      <div class="section-desc"><p>Functions calculate a week number</p></div>
+
+
+    </div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="management_week.html">management_week()</a></code>
+
+        </dt>
+        <dd>Vectorized approach to calculating the management week, returns an integer</dd>
+      </dl><dl><dt>
+
+          <code><a href="statistical_week.html">statistical_week()</a></code>
+
+        </dt>
+        <dd>Vectorized approach to calculating the statistical week, returns an integer</dd>
+      </dl></div><div class="section level2">
+      <h2 id="validations">Validations<a class="anchor" aria-label="anchor" href="#validations"></a></h2>
+
+      <div class="section-desc"><p>Functions that validate FRAM data</p></div>
+
+
+    </div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="validate_fram_db.html">validate_fram_db()</a></code>
+
+        </dt>
+        <dd>Convenience function to check fram_db input</dd>
+      </dl><dl><dt>
+
+          <code><a href="validate_run_id.html">validate_run_id()</a></code>
+
+        </dt>
+        <dd>Convenience function to check run_id input</dd>
+      </dl></div><div class="section level2">
+      <h2 id="terminal-runs">Terminal Runs<a class="anchor" aria-label="anchor" href="#terminal-runs"></a></h2>
+
+      <div class="section-desc"><p>Functions that unpack the TRuns table in the FRAM database</p></div>
+
+
+    </div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="truns_fisheries.html">truns_fisheries()</a></code>
+
+        </dt>
+        <dd>Returns a dataframe with fisheries defined by the TRuns report driver</dd>
+      </dl><dl><dt>
+
+          <code><a href="truns_stocks.html">truns_stocks()</a></code>
+
+        </dt>
+        <dd>Returns a dataframe with stocks defined by the TRuns report driver</dd>
+      </dl></div><div class="section level2">
+      <h2 id="post-season-fram">Post-season FRAM<a class="anchor" aria-label="anchor" href="#post-season-fram"></a></h2>
+
+      <div class="section-desc"><p>Functions that focus on post-season runs and backwards FRAM</p></div>
+
+
+    </div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="bkfram_checks_coho.html">bkfram_checks_coho()</a></code>
+
+        </dt>
+        <dd>Performs error checks of a backwards FRAM run Returns nested tibble with diagnostics</dd>
       </dl><dl><dt>
 
           <code><a href="post_season_abundance.html">post_season_abundance()</a></code>
 
         </dt>
         <dd>Generates post-season January age 3 abundances by stock from post-season databases. Used for forecasting.</dd>
+      </dl></div><div class="section level2">
+      <h2 id="describing-the-fram-database">Describing the FRAM Database<a class="anchor" aria-label="anchor" href="#describing-the-fram-database"></a></h2>
+
+      <div class="section-desc"><p>Functions that describe the current FRAM database</p></div>
+
+
+    </div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="fram_clean_tables.html">fram_clean_tables()</a></code>
+
+        </dt>
+        <dd>Cleans the names of FRAM tables and coverts to a tibble</dd>
+      </dl><dl><dt>
+
+          <code><a href="fram_database_species.html">fram_database_species()</a></code>
+
+        </dt>
+        <dd>Identifies the FRAM database species focus - Chinook or Coho</dd>
+      </dl><dl><dt>
+
+          <code><a href="fram_database_type.html">fram_database_type()</a></code>
+
+        </dt>
+        <dd>Identifies the FRAM database type - Full or Transfer</dd>
+      </dl><dl><dt>
+
+          <code><a href="get_run_ids.html">get_run_ids()</a></code>
+
+        </dt>
+        <dd>Gets all run_ids of FRAM database</dd>
+      </dl><dl><dt>
+
+          <code><a href="find_tables_by_column_.html">find_tables_by_column_()</a></code>
+
+        </dt>
+        <dd>Finds tables that contain a specific column name</dd>
       </dl><dl><dt>
 
           <code><a href="provide_table_names.html">provide_table_names()</a></code>
@@ -408,28 +528,39 @@
         <dd>List names of FRAM table</dd>
       </dl><dl><dt>
 
-          <code><a href="remove_run.html">remove_run()</a></code>
-
-        </dt>
-        <dd>Removes a run in a FRAM database</dd>
-      </dl><dl><dt>
-
           <code><a href="run_info.html">run_info()</a></code>
 
         </dt>
         <dd>Provides a print out of Run ID information</dd>
-      </dl><dl><dt>
+      </dl></div><div class="section level2">
+      <h2 id="data-checking">Data checking<a class="anchor" aria-label="anchor" href="#data-checking"></a></h2>
 
-          <code><a href="scalers_flag_translate.html">scalers_flag_translate()</a></code>
+      <div class="section-desc"><p>Functions that provide checks for the current data</p></div>
+
+
+    </div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="addstock_check.html">addstock_check()</a></code>
 
         </dt>
-        <dd>Provides English translation of numeric scalers flags</dd>
+        <dd>Check FRAM database after adding new stock</dd>
       </dl><dl><dt>
 
-          <code><a href="statistical_week.html">statistical_week()</a></code>
+          <code><a href="bkfram_checks_coho.html">bkfram_checks_coho()</a></code>
 
         </dt>
-        <dd>Vectorized approach to calculating the statistical week, returns an integer</dd>
+        <dd>Performs error checks of a backwards FRAM run Returns nested tibble with diagnostics</dd>
+      </dl><dl><dt>
+
+          <code><a href="error_check_code.html">error_check_code()</a></code>
+
+        </dt>
+        <dd>Check code for common errors</dd>
       </dl><dl><dt>
 
           <code><a href="stock_age_checker.html">stock_age_checker()</a></code>
@@ -444,46 +575,75 @@
         <dd>Helper function to check that stock id make sense</dd>
       </dl><dl><dt>
 
-          <code><a href="stock_id_comp.html">stock_id_comp()</a></code>
-
-        </dt>
-        <dd>Helper function to check that stock id exist in the Stock database</dd>
-      </dl><dl><dt>
-
-          <code><a href="stock_mortality.html">stock_mortality()</a></code>
-
-        </dt>
-        <dd>Returns a tibble matching the Fishery Mortality screen.</dd>
-      </dl><dl><dt>
-
           <code><a href="styleguide.html">frs_stylecheck_assignment()</a></code> <code><a href="styleguide.html">frs_stylecheck_snakecase()</a></code>
 
         </dt>
         <dd>Framrsquared style guide</dd>
-      </dl><dl><dt>
+      </dl></div><div class="section level2">
+      <h2 id="misc-">Misc.<a class="anchor" aria-label="anchor" href="#misc-"></a></h2>
 
-          <code><a href="truns_fisheries.html">truns_fisheries()</a></code>
+      <div class="section-desc"><p>Miscellaneous functions</p></div>
 
-        </dt>
-        <dd>Returns a dataframe with fisheries defined by the TRuns report driver</dd>
-      </dl><dl><dt>
 
-          <code><a href="truns_stocks.html">truns_stocks()</a></code>
+    </div><div class="section level2">
 
-        </dt>
-        <dd>Returns a dataframe with stocks defined by the TRuns report driver</dd>
-      </dl><dl><dt>
 
-          <code><a href="validate_fram_db.html">validate_fram_db()</a></code>
 
-        </dt>
-        <dd>Convenience function to check fram_db input</dd>
-      </dl><dl><dt>
 
-          <code><a href="validate_run_id.html">validate_run_id()</a></code>
+      <dl><dt>
+
+          <code><a href="add_flag_text.html">add_flag_text()</a></code>
 
         </dt>
-        <dd>Convenience function to check run_id input</dd>
+        <dd>Adds a column with a text version of flags for either non-retention or fishery scalers</dd>
+      </dl><dl><dt>
+
+          <code><a href="aeq_mortality.html">aeq_mortality()</a></code>
+
+        </dt>
+        <dd>Extract AEQ mortality from Chinook FRAM database. Refactored and stripped down from the framr package written by Dan Auerbach. https://github.com/FRAMverse/framr/</dd>
+      </dl><dl><dt>
+
+          <code><a href="coho_mark_rates.html">coho_mark_rates()</a></code>
+          <span class="badge lifecycle lifecycle-experimental">experimental</span>
+        </dt>
+        <dd><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental" class="external-link"><img src="figures/lifecycle-experimental.svg" alt="[Experimental]"></a> Returns a tibble displaying predicted FRAMencounter mark rates by fishery, fishery type, and time-step.</dd>
+      </dl><dl><dt>
+
+          <code><a href="input_summary_.html">input_summary_()</a></code>
+
+        </dt>
+        <dd>Generates an input summary based on a FisheryScalers dataframe. Probably end up streamlining / revising this.</dd>
+      </dl><dl><dt>
+
+          <code><a href="mortality_scalers.html">mortality_scalers()</a></code>
+
+        </dt>
+        <dd>Guestimate the impact on a particular stock by multiplying its mortalities by the <code>stock_mortality_ratio</code> produced by these functions.</dd>
+      </dl><dl><dt>
+
+          <code><a href="msp_mortality.html">msp_mortality()</a></code>
+
+        </dt>
+        <dd>Expand Chinook mortality table using Model-Stock Proportion</dd>
+      </dl><dl><dt>
+
+          <code><a href="NR_flag_translate.html">NR_flag_translate()</a></code>
+
+        </dt>
+        <dd>Provides English translation of numeric non-retention flags</dd>
+      </dl><dl><dt>
+
+          <code><a href="scalers_flag_translate.html">scalers_flag_translate()</a></code>
+
+        </dt>
+        <dd>Provides English translation of numeric scalers flags</dd>
+      </dl><dl><dt>
+
+          <code><a href="stock_id_comp.html">stock_id_comp()</a></code>
+
+        </dt>
+        <dd>Helper function to check that stock id exist in the Stock database</dd>
       </dl><dl><dt>
 
           <code><a href="welcome.html">welcome()</a></code>
@@ -491,7 +651,8 @@
         </dt>
         <dd>Welcome message, summarizing database information</dd>
       </dl></div>
-  </main></div>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+    </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">
