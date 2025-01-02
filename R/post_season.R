@@ -11,7 +11,7 @@ post_season_abundance <- function(fram_db, units = c('ja3', 'oa3')){
 
   validate_fram_db(fram_db)
 
-  unit <- rlang::arg_match(unit)
+  unit <- rlang::arg_match(units)
 
   if(fram_db$fram_db_species != "COHO"){
     cli::cli_abort('This function currently only works with coho')
@@ -77,15 +77,11 @@ post_season_abundance <- function(fram_db, units = c('ja3', 'oa3')){
       # take out natural mortality if oa3
       tidyr::pivot_wider(names_from = .data$run_year,
                          values_from = .data$recruit_cohort_size) |>
-      dplyr::mutate(dplyr::across(-dplyr::any_of(
-        c(
-          .data$stock_id,
-          .data$stock_name,
-          .data$run_year,
-          .data$recruit_cohort_size,
-          .data$origin
-        )
-      ), \(x) x / 1.2317))
+      dplyr::mutate(
+        dplyr::across(
+          -c(.data$stock_id, .data$stock_name, .data$origin)
+      , \(x) x / 1.2317)
+      )
   }
 
 }
