@@ -144,10 +144,13 @@ compare_recruits <- function(fram_db, run_ids, tolerance = .01, verbose = TRUE){
   base_period_recruit <- fram_db |>
     fetch_table('BaseCohort')
 
-  stocks <- fram_db |>
-    fetch_table('Stock') |>
-    dplyr::filter(.data$species == fram_db$fram_db_species) |>
-    dplyr::select(.data$stock_id, .data$stock_name)
+  if(fram_db$fram_db_species == "COHO"){
+    stocks = framrosetta::stock_coho_fram |>
+      dplyr::select("stock_id", "stock_name")
+  } else if(fram_db$fram_db_species == "CHINOOK") {
+    stocks = framrosetta::stock_chinook_fram |>
+      dplyr::select("stock_id", "stock_name")
+  }
 
   run_base_period <- fram_db |>
     fetch_table('RunID') |>
@@ -194,10 +197,13 @@ compare_fishery_inputs <- function(fram_db, run_ids, tolerance = .01, verbose = 
     fetch_table('RunID') |>
     dplyr::select(.data$run_id, .data$run_name)
 
-  fisheries <- fram_db |>
-    fetch_table('Fishery') |>
-    dplyr::filter(.data$species == fram_db$fram_db_species) |>
-    dplyr::select(.data$fishery_id, .data$fishery_name)
+  if(fram_db$fram_db_species == "COHO"){
+    fisheries = framrosetta::fishery_coho_fram |>
+      dplyr::select("fishery_id", "fishery_name")
+  } else if(fram_db$fram_db_species == "CHINOOK") {
+    fisheries = framrosetta::fishery_chinook_fram |>
+      dplyr::select("fishery_id", "fishery_name")
+  }
 
   base_run_name <- runs |>
     dplyr::filter(.data$run_id == run_ids[[1]]) |>
@@ -257,10 +263,13 @@ compare_fishery_input_flags <- function(fram_db, run_ids, verbose = TRUE){
     fetch_table('RunID') |>
     dplyr::select(.data$run_id, .data$run_name)
 
-  fisheries <- fram_db |>
-    fetch_table('Fishery') |>
-    dplyr::filter(.data$species == fram_db$fram_db_species) |>
-    dplyr::select(.data$fishery_id, .data$fishery_name)
+  if(fram_db$fram_db_species == "COHO"){
+    fisheries = framrosetta::fishery_coho_fram |>
+      dplyr::select("fishery_id", "fishery_name")
+  } else if(fram_db$fram_db_species == "CHINOOK") {
+    fisheries = framrosetta::fishery_chinook_fram |>
+      dplyr::select("fishery_id", "fishery_name")
+  }
 
 
   base_run_name <- runs |>
@@ -313,10 +322,13 @@ compare_non_retention_inputs <- function(fram_db, run_ids, verbose = TRUE){
     fetch_table('RunID') |>
     dplyr::select(.data$run_id, .data$run_name)
 
-  fisheries <- fram_db |>
-    fetch_table('Fishery') |>
-    dplyr::filter(.data$species == fram_db$fram_db_species) |>
-    dplyr::select(.data$fishery_id, .data$fishery_name)
+  if(fram_db$fram_db_species == "COHO"){
+    fisheries = framrosetta::fishery_coho_fram |>
+      dplyr::select("fishery_id", "fishery_name")
+  } else if(fram_db$fram_db_species == "CHINOOK") {
+    fisheries = framrosetta::fishery_chinook_fram |>
+      dplyr::select("fishery_id", "fishery_name")
+  }
 
 
   # non retention
@@ -374,10 +386,13 @@ compare_non_retention_input_flags <- function(fram_db, run_ids, verbose = TRUE){
     fetch_table('RunID') |>
     dplyr::select(.data$run_id, .data$run_name)
 
-  fisheries <- fram_db |>
-    fetch_table('Fishery') |>
-    dplyr::filter(.data$species == fram_db$fram_db_species) |>
-    dplyr::select(.data$fishery_id, .data$fishery_name)
+  if(fram_db$fram_db_species == "COHO"){
+    fisheries = framrosetta::fishery_coho_fram |>
+      dplyr::select("fishery_id", "fishery_name")
+  } else if(fram_db$fram_db_species == "CHINOOK") {
+    fisheries = framrosetta::fishery_chinook_fram |>
+      dplyr::select("fishery_id", "fishery_name")
+  }
 
 
   # non retention
@@ -437,16 +452,21 @@ compare_stock_fishery_rate_scalers <- function(fram_db, run_ids){
     fetch_table('RunID') |>
     dplyr::select(.data$run_id, .data$run_name)
 
-  stocks <- fram_db |>
-    fetch_table('Stock') |>
-    dplyr::filter(.data$species == fram_db$fram_db_species) |>
-    dplyr::select(.data$stock_id, .data$stock_name)
+  if(fram_db$fram_db_species == "COHO"){
+    stocks = framrosetta::stock_coho_fram |>
+      dplyr::select("stock_id", "stock_name")
+  } else if(fram_db$fram_db_species == "CHINOOK") {
+    stocks = framrosetta::stock_chinook_fram |>
+      dplyr::select("stock_id", "stock_name")
+  }
 
-  fisheries <- fram_db |>
-    fetch_table('Fishery') |>
-    dplyr::filter(.data$species == fram_db$fram_db_species) |>
-    dplyr::select(.data$fishery_id, .data$fishery_name)
-
+  if(fram_db$fram_db_species == "COHO"){
+    fisheries = framrosetta::fishery_coho_fram |>
+      dplyr::select("fishery_id", "fishery_name")
+  } else if(fram_db$fram_db_species == "CHINOOK") {
+    fisheries = framrosetta::fishery_chinook_fram |>
+      dplyr::select("fishery_id", "fishery_name")
+  }
 
   # stock fishery rate scalers
   sfrs <- fram_db |>
@@ -569,12 +589,16 @@ compare_runs <- function(fram_db, run_ids, tolerance = .01){
   cli::cli_h2('Recruit Inputs')
   cli::cli_h3('Checking for changes to recruits')
 
-  recruits <- fram_db |> compare_recruits(run_ids, verbose = FALSE)
-  if(nrow(recruits) > 0){
-    cli::cli_alert_info('Changes detected in recruits inputs, below is a table outlining them')
-    print(recruits, n=Inf)
+  if(fram_db$fram_db_type == "transfer"){
+    cli::cli_alert_warning("This is a transfer database. Can only compare recruits for a full database.")
   } else {
-    cli::cli_alert_success('No changes detected in recruit inputs')
+    recruits <- fram_db |> compare_recruits(run_ids, verbose = FALSE)
+    if(nrow(recruits) > 0){
+      cli::cli_alert_info('Changes detected in recruits inputs, below is a table outlining them')
+      print(recruits, n=Inf)
+    } else {
+      cli::cli_alert_success('No changes detected in recruit inputs')
+    }
   }
 
 
