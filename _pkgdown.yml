@@ -99,3 +99,9 @@ reference:
       - scalers_flag_translate
       - stock_id_comp
       - welcome
+  - title: "PSC Support"
+    desc: >
+      Funtions to support PSC-related work
+    contents:
+      - create_mort_comparison
+      - present_mort_comparison
