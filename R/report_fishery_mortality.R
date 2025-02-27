@@ -203,6 +203,11 @@ plot_stock_mortality_time_step <- function(fram_db, run_id, stock_id, top_n = 10
     cli::cli_abort("Stock ID must be and integer")
   }
 
+
+  species_used = fetch_table(fram_db, "RunID") |>
+    dplyr::filter(.data$run_id == .env$run_id) |>
+    dplyr::pull(.data$species_name)
+
   # lut for display of stock name
   stocks <- fram_db |>
     fetch_table('Stock') |>
@@ -233,6 +238,15 @@ plot_stock_mortality_time_step <- function(fram_db, run_id, stock_id, top_n = 10
         .data$msf_landed_catch + .data$msf_non_retention + .data$msf_shaker + .data$msf_drop_off
     ) |>
     dplyr::select(.data$run_id, .data$fishery_id, .data$total_mort, .data$time_step)
+
+  if(!is.null(filters_list)){
+    ## give species for filtering
+    attr(mortality, "species") <- species_used
+    for(i in 1:length(filters_list)){
+      mortality <- mortality |>
+        filters_list[[i]]()
+    }
+  }
 
   run_name <- fram_db |>
     fetch_table('RunID') |>
