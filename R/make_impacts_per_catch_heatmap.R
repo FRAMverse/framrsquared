@@ -27,7 +27,7 @@ make_impacts_per_catch_heatmap <- function(fram_db, run_id, stock_id) {
 
   run_info <- framrsquared::fetch_table(fram_db, "RunID") |>
     dplyr::filter(run_id == .env$run_id)
-  print(dim(run_info))
+  # print(dim(run_info))
   cli::cli_alert(
     glue::glue(
       "Generating plot for run '{run_info$run_title}', a {fram_db$fram_db_species} FRAM run from {as.Date(run_info$run_time_date)}"
@@ -36,8 +36,10 @@ make_impacts_per_catch_heatmap <- function(fram_db, run_id, stock_id) {
 
   stock_table <- framrsquared::fetch_table(fram_db, "Stock")
   stock_name <- stock_table |>
-    dplyr::filter(stock_id == .env$stock_id) |>
-    dplyr::pull(.data$stock_name)
+    dplyr::filter(stock_id %in% .env$stock_id) |>
+    dplyr::pull(.data$stock_name) |>
+    unique()
+
 
   if (length(stock_name) == 0) {
     cli::cli_abort(
@@ -58,7 +60,7 @@ make_impacts_per_catch_heatmap <- function(fram_db, run_id, stock_id) {
 
   if (fram_db$fram_db_species == "CHINOOK") {
     stock_mort = framrsquared::aeq_mortality(fram_db, run_id = run_id) |>
-      dplyr::filter(stock_id == .env$stock_id) |>
+      dplyr::filter(stock_id %in% .env$stock_id) |>
       dplyr::mutate(
         mort = .data$landed_catch + .data$non_retention + .data$shaker + .data$drop_off +
           .data$msf_landed_catch + .data$msf_non_retention + .data$msf_shaker + .data$msf_drop_off
@@ -69,7 +71,7 @@ make_impacts_per_catch_heatmap <- function(fram_db, run_id, stock_id) {
   } else{
     stock_mort = framrsquared::stock_mortality(fram_db, run_id = run_id) |>
       dplyr::mutate(mort = .data$landed_catch + .data$non_retention + .data$shaker + .data$drop_off) |>
-      dplyr::filter(stock_id == .env$stock_id) |>
+      dplyr::filter(stock_id %in% .env$stock_id) |>
       dplyr::group_by(.data$fishery_id, .data$time_step) |>
       dplyr::summarize(mort = sum(.data$mort)) |>
       dplyr::ungroup()
@@ -126,7 +128,7 @@ make_impacts_per_catch_heatmap <- function(fram_db, run_id, stock_id) {
     ggplot2::coord_flip() +
     ggplot2::labs(
       y = "Timestep",
-      title = glue::glue("{stock_name}"),
+      title = paste0(stock_name, collapse = ", "),
       subtitle = glue::glue("Landed catch per impact"),
       fill = "catch per\nimpact",
       x = ""
