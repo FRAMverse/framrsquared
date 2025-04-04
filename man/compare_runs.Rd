@@ -9,7 +9,7 @@ compare_runs(fram_db, run_ids, tolerance = 0.01)
 \arguments{
 \item{fram_db}{FRAM database object}
 
-\item{run_ids}{Two run ids}
+\item{run_ids}{Two run ids. Run names must differ; change in FRAM if necessary.}
 
 \item{tolerance}{Tolerance of detection, 1 percent default}
 }

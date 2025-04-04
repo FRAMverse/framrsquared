@@ -502,7 +502,7 @@ compare_stock_fishery_rate_scalers <- function(fram_db, run_ids){
 
 #' Generates a report to the console of changes to inputs between two runs
 #' @param fram_db FRAM database object
-#' @param run_ids Two run ids
+#' @param run_ids Two run ids. Run names must differ; change in FRAM if necessary.
 #' @param tolerance Tolerance of detection, 1 percent default
 #' @export
 #' @examples
@@ -522,6 +522,9 @@ compare_runs <- function(fram_db, run_ids, tolerance = .01){
     dplyr::filter(.data$run_id == run_ids[[2]]) |>
     dplyr::pull(.data$run_name)
 
+  if(base_run_name == new_run_name){
+    cli::cli_abort("Both runs named {new_run_name}; function will not work unless runs have different names. Recommend renaming one using {.kbd FRAM} > {.kbd FRAM Utilities} > {.kbd Edit Model Run Details}.")
+  }
 
   base_run_time <- runs |>
     dplyr::filter(.data$run_id == run_ids[[1]]) |>
