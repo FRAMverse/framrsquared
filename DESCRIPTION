@@ -23,6 +23,7 @@ Imports:
     framrosetta (>= 0.1.0),
     ggplot2,
     glue,
+    gt,
     here,
     janitor,
     lifecycle,
