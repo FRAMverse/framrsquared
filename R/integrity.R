@@ -321,3 +321,52 @@ validate_numeric <- function(x, ..., arg = rlang::caller_arg(x), call = rlang::c
     cli::cli_abort("{.arg {arg}} must be a numeric, not {class(x)}.", ..., call = call)
   }
 }
+
+#' Handle species identification for filters
+#'
+#' Convenience function to condense code. `filter_*` either uses the "species" attr, or the optional `species` argument, and must provide informative errors when both are missing or both are present and mismatch.
+#'
+#' @param .data Dataframe
+#' @param species Optional, either "COHO" or "CHINOOK".
+#'
+#' @return Character vector "species"
+validate_species <- function(.data,
+                                  species = NULL){
+  if(!is.null(species)){
+    species = standardize_species(species)
+  }
+  if(is.null(species)){
+    if(!is.null(attr(.data, 'species'))){
+      species <- attr(.data, 'species')
+    } else {
+      cli::cli_abort('Table metadata missing and `species` argument missing.')
+    }
+  }
+
+  if(!is.null(attr(.data, 'species')) & !is.null(species)){
+    if(species != attr(.data, 'species')){
+      cli::cli_abort('`species` argument ("{species}") should not differ from species attribute of data ("{attr(.data, "species")}"). Consider dropping `species` argument.')
+    }
+  }
+  return(species)
+}
+
+#' Allow multiple species identifiers
+#'
+#' framrsquared functions are written around fram database species labels, "COHO" and "CHINOOK". This function translates alternate designations (lowercase, "chin" for "chinook") into those two forms.
+#'
+#' @param species Character atomic, either "COHO", "CHIN", or "CHINOOK", with any capitalization
+#'
+#' @return Character atomic, either "COHO" or "CHINOOK"
+standardize_species <- function(species){
+  species = toupper(species)
+  coho_names = c("COHO")
+  chinook_names = c("CHINOOK", "CHIN")
+  species <- rlang::arg_match(species, c(coho_names, chinook_names))
+  if(species %in% coho_names){
+    species = "COHO"
+  } else if(species %in% chinook_names){
+    species = "CHINOOK"
+  }
+  return(species)
+}

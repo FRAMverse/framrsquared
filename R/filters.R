@@ -1,3 +1,5 @@
+
+
 #' Filters a dataframe to sport fisheries. Will
 #' automatically detect whether it's working with a Chinook or Coho
 #' dataset if the tables were generated within this package. Requires
@@ -14,21 +16,12 @@
 #'
 filter_sport <- function(.data, species = NULL){
   validate_data_frame(.data)
+
   if(!'fishery_id' %in% colnames(.data)){
     cli::cli_abort('fishery_id column must be present in dataframe.')
   }
 
-  if(is.null(species)){
-    if(!is.null(attr(.data, 'species'))){
-      species <- attr(.data, 'species')
-    } else {
-      cli::cli_abort('Table metadata missing and `species` argument missing.')
-    }
-  }
-
-  if(!is.null(attr(.data, 'species')) & species != attr(.data, 'species')){
-    cli::cli_abort('`species` argument ("{species}") should not differ from species attribute of data ("{attr(.data, "species")}"). Consider dropping `species` argument.')
-  }
+  species = validate_species(.data, species)
 
   if(species == 'CHINOOK'){
     .data |>
@@ -79,21 +72,12 @@ filter_sport <- function(.data, species = NULL){
 
 filter_net <- function(.data, species = NULL){
   validate_data_frame(.data)
+
   if(!'fishery_id' %in% colnames(.data)){
     cli::cli_abort('fishery_id column must be present in dataframe.')
   }
 
-  if(is.null(species)){
-    if(!is.null(attr(.data, 'species'))){
-      species <- attr(.data, 'species')
-    } else {
-      cli::cli_abort('Table metadata missing and `species` argument missing.')
-    }
-  }
-
-  if(!is.null(attr(.data, 'species')) & species != attr(.data, 'species')){
-    cli::cli_abort('`species` argument ("{species}") should not differ from species attribute of data ("{attr(.data, "species")}"). Consider dropping `species` argument.')
-  }
+  species = validate_species(.data, species)
 
   # if it's not sport it must be net
   if(species == 'CHINOOK'){
@@ -145,21 +129,12 @@ filter_net <- function(.data, species = NULL){
 #' framrosetta::fishery_coho_fram |> filter_puget_sound(species = "COHO")
 filter_puget_sound <- function(.data, species = NULL){
   validate_data_frame(.data)
+
   if(!'fishery_id' %in% colnames(.data)){
     cli::cli_abort('fishery_id column must be present in dataframe.')
   }
 
-  if(is.null(species)){
-    if(!is.null(attr(.data, 'species'))){
-      species <- attr(.data, 'species')
-    } else {
-      cli::cli_abort('Table metadata missing and `species` argument missing.')
-    }
-  }
-
-  if(!is.null(attr(.data, 'species')) & species != attr(.data, 'species')){
-    cli::cli_abort('`species` argument ("{species}") should not differ from species attribute of data ("{attr(.data, "species")}"). Consider dropping `species` argument.')
-  }
+  species = validate_species(.data, species)
 
   if(species == 'CHINOOK'){
     .data |>
@@ -192,21 +167,12 @@ filter_puget_sound <- function(.data, species = NULL){
 #' framrosetta::fishery_coho_fram |> filter_wa(species = "COHO")
 filter_wa <- function(.data, species = NULL){
   validate_data_frame(.data)
+
   if(!'fishery_id' %in% colnames(.data)){
     cli::cli_abort('fishery_id column must be present in dataframe.')
   }
 
-  if(is.null(species)){
-    if(!is.null(attr(.data, 'species'))){
-      species <- attr(.data, 'species')
-    } else {
-      cli::cli_abort('Table metadata missing and `species` argument missing.')
-    }
-  }
-
-  if(!is.null(attr(.data, 'species')) & species != attr(.data, 'species')){
-    cli::cli_abort('`species` argument ("{species}") should not differ from species attribute of data ("{attr(.data, "species")}"). Consider dropping `species` argument.')
-  }
+  species = validate_species(.data, species)
 
   if(species == 'CHINOOK'){
     .data |>
@@ -238,21 +204,12 @@ filter_wa <- function(.data, species = NULL){
 #' framrosetta::fishery_coho_fram |> filter_bc(species = "COHO")
 filter_bc <- function(.data, species = NULL){
   validate_data_frame(.data)
+
   if(!'fishery_id' %in% colnames(.data)){
     cli::cli_abort('fishery_id column must be present in dataframe.')
   }
 
-  if(is.null(species)){
-    if(!is.null(attr(.data, 'species'))){
-      species <- attr(.data, 'species')
-    } else {
-      cli::cli_abort('Table metadata missing and `species` argument missing.')
-    }
-  }
-
-  if(!is.null(attr(.data, 'species')) & species != attr(.data, 'species')){
-    cli::cli_abort('`species` argument ("{species}") should not differ from species attribute of data ("{attr(.data, "species")}"). Consider dropping `species` argument.')
-  }
+  species = validate_species(.data, species)
 
   if(species == 'CHINOOK'){
     .data |>
@@ -284,21 +241,12 @@ filter_bc <- function(.data, species = NULL){
 #' framrosetta::fishery_coho_fram |> filter_ak(species = "COHO")
 filter_ak <- function(.data, species = NULL){
   validate_data_frame(.data)
+
   if(!'fishery_id' %in% colnames(.data)){
     cli::cli_abort('fishery_id column must be present in dataframe.')
   }
 
-  if(is.null(species)){
-    if(!is.null(attr(.data, 'species'))){
-      species <- attr(.data, 'species')
-    } else {
-      cli::cli_abort('Table metadata missing and `species` argument missing.')
-    }
-  }
-
-  if(!is.null(attr(.data, 'species')) & species != attr(.data, 'species')){
-    cli::cli_abort('`species` argument ("{species}") should not differ from species attribute of data ("{attr(.data, "species")}"). Consider dropping `species` argument.')
-  }
+  species = validate_species(.data, species)
 
   if(species == 'CHINOOK'){
     .data |>
@@ -330,21 +278,12 @@ filter_ak <- function(.data, species = NULL){
 #' framrosetta::fishery_coho_fram |> filter_ca(species = "COHO")
 filter_ca <- function(.data, species = NULL){
   validate_data_frame(.data)
+
   if(!'fishery_id' %in% colnames(.data)){
     cli::cli_abort('fishery_id column must be present in dataframe.')
   }
 
-  if(is.null(species)){
-    if(!is.null(attr(.data, 'species'))){
-      species <- attr(.data, 'species')
-    } else {
-      cli::cli_abort('Table metadata missing and `species` argument missing.')
-    }
-  }
-
-  if(!is.null(attr(.data, 'species')) & species != attr(.data, 'species')){
-    cli::cli_abort('`species` argument ("{species}") should not differ from species attribute of data ("{attr(.data, "species")}"). Consider dropping `species` argument.')
-  }
+  species = validate_species(.data, species)
 
   if(species == 'CHINOOK'){
     .data |>
@@ -375,21 +314,12 @@ filter_ca <- function(.data, species = NULL){
 #' framrosetta::fishery_coho_fram |> filter_or(species = "COHO")
 filter_or <- function(.data, species = NULL){
   validate_data_frame(.data)
+
   if(!'fishery_id' %in% colnames(.data)){
     cli::cli_abort('fishery_id column must be present in dataframe.')
   }
 
-  if(is.null(species)){
-    if(!is.null(attr(.data, 'species'))){
-      species <- attr(.data, 'species')
-    } else {
-      cli::cli_abort('Table metadata missing and `species` argument missing.')
-    }
-  }
-
-  if(!is.null(attr(.data, 'species')) & species != attr(.data, 'species')){
-    cli::cli_abort('`species` argument ("{species}") should not differ from species attribute of data ("{attr(.data, "species")}"). Consider dropping `species` argument.')
-  }
+  species = validate_species(.data, species)
 
   if(species == 'CHINOOK'){
     .data |>
@@ -421,21 +351,12 @@ filter_or <- function(.data, species = NULL){
 #' framrosetta::fishery_coho_fram |> filter_coast(species = "COHO")
 filter_coast <- function(.data, species = NULL){
   validate_data_frame(.data)
+
   if(!'fishery_id' %in% colnames(.data)){
     cli::cli_abort('fishery_id column must be present in dataframe.')
   }
 
-  if(is.null(species)){
-    if(!is.null(attr(.data, 'species'))){
-      species <- attr(.data, 'species')
-    } else {
-      cli::cli_abort('Table metadata missing and `species` argument missing.')
-    }
-  }
-
-  if(!is.null(attr(.data, 'species')) & species != attr(.data, 'species')){
-    cli::cli_abort('`species` argument ("{species}") should not differ from species attribute of data ("{attr(.data, "species")}"). Consider dropping `species` argument.')
-  }
+  species = validate_species(.data, species)
 
   if(species == 'CHINOOK'){
     .data |>
@@ -466,21 +387,12 @@ filter_coast <- function(.data, species = NULL){
 #' framrosetta::fishery_coho_fram |> filter_marine(species = "COHO")
 filter_marine <- function(.data, species = NULL){
   validate_data_frame(.data)
+
   if(!'fishery_id' %in% colnames(.data)){
     cli::cli_abort('fishery_id column must be present in dataframe.')
   }
 
-  if(is.null(species)){
-    if(!is.null(attr(.data, 'species'))){
-      species <- attr(.data, 'species')
-    } else {
-      cli::cli_abort('Table metadata missing and `species` argument missing.')
-    }
-  }
-
-  if(!is.null(attr(.data, 'species')) & species != attr(.data, 'species')){
-    cli::cli_abort('`species` argument ("{species}") should not differ from species attribute of data ("{attr(.data, "species")}"). Consider dropping `species` argument.')
-  }
+  species = validate_species(.data, species)
 
   if(species == 'CHINOOK'){
     .data |>
