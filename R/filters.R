@@ -1,5 +1,3 @@
-
-
 #' Filters a dataframe to sport fisheries. Will
 #' automatically detect whether it's working with a Chinook or Coho
 #' dataset if the tables were generated within this package. Requires
@@ -14,16 +12,16 @@
 #' framrosetta::fishery_chinook_fram |> filter_sport(species = "CHINOOK")
 #' framrosetta::fishery_coho_fram |> filter_sport(species = "COHO")
 #'
-filter_sport <- function(.data, species = NULL){
+filter_sport <- function(.data, species = NULL) {
   validate_data_frame(.data)
 
-  if(!'fishery_id' %in% colnames(.data)){
-    cli::cli_abort('fishery_id column must be present in dataframe.')
+  if (!"fishery_id" %in% colnames(.data)) {
+    cli::cli_abort("fishery_id column must be present in dataframe.")
   }
 
-  species = validate_species(.data, species)
+  species <- validate_species(.data, species)
 
-  if(species == 'CHINOOK'){
+  if (species == "CHINOOK") {
     .data |>
       dplyr::filter(
         .data$fishery_id %in% c(
@@ -31,9 +29,10 @@ filter_sport <- function(.data, species = NULL){
           18, 22, 27, 29, 31, 33,
           35, 48, 60, 62, 72, 36,
           42, 45, 53, 54, 56, 57,
-          64, 67)
+          64, 67
+        )
       )
-  } else if(species == 'COHO') {
+  } else if (species == "COHO") {
     .data |>
       dplyr::filter(
         .data$fishery_id %in% c(
@@ -46,13 +45,11 @@ filter_sport <- function(.data, species = NULL){
           135, 136, 149, 150, 151, 152, 163,
           164, 165, 166, 169, 186, 187, 188,
           189, 190, 191, 192, 193
-
         )
       )
   } else {
     cli::cli_abort('`species` must be "COHO" or "CHINOOK", not "{species}".')
   }
-
 }
 
 #' Filters a dataframe to net fisheries. Will
@@ -69,18 +66,17 @@ filter_sport <- function(.data, species = NULL){
 #' }
 #' framrosetta::fishery_chinook_fram |> filter_net(species = "CHINOOK")
 #' framrosetta::fishery_coho_fram |> filter_net(species = "COHO")
-
-filter_net <- function(.data, species = NULL){
+filter_net <- function(.data, species = NULL) {
   validate_data_frame(.data)
 
-  if(!'fishery_id' %in% colnames(.data)){
-    cli::cli_abort('fishery_id column must be present in dataframe.')
+  if (!"fishery_id" %in% colnames(.data)) {
+    cli::cli_abort("fishery_id column must be present in dataframe.")
   }
 
-  species = validate_species(.data, species)
+  species <- validate_species(.data, species)
 
   # if it's not sport it must be net
-  if(species == 'CHINOOK'){
+  if (species == "CHINOOK") {
     .data |>
       dplyr::filter(
         !.data$fishery_id %in% c(
@@ -88,9 +84,10 @@ filter_net <- function(.data, species = NULL){
           18, 22, 27, 29, 31, 33,
           35, 48, 60, 62, 72, 36,
           42, 45, 53, 54, 56, 57,
-          64, 67)
+          64, 67
+        )
       )
-  } else if(species == 'COHO') {
+  } else if (species == "COHO") {
     .data |>
       dplyr::filter(
         !.data$fishery_id %in% c(
@@ -103,13 +100,11 @@ filter_net <- function(.data, species = NULL){
           135, 136, 149, 150, 151, 152, 163,
           164, 165, 166, 169, 186, 187, 188,
           189, 190, 191, 192, 193
-
         )
       )
   } else {
     cli::cli_abort('`species` must be "COHO" or "CHINOOK", not "{species}".')
   }
-
 }
 
 
@@ -127,21 +122,21 @@ filter_net <- function(.data, species = NULL){
 #' }
 #' framrosetta::fishery_chinook_fram |> filter_puget_sound(species = "CHINOOK")
 #' framrosetta::fishery_coho_fram |> filter_puget_sound(species = "COHO")
-filter_puget_sound <- function(.data, species = NULL){
+filter_puget_sound <- function(.data, species = NULL) {
   validate_data_frame(.data)
 
-  if(!'fishery_id' %in% colnames(.data)){
-    cli::cli_abort('fishery_id column must be present in dataframe.')
+  if (!"fishery_id" %in% colnames(.data)) {
+    cli::cli_abort("fishery_id column must be present in dataframe.")
   }
 
-  species = validate_species(.data, species)
+  species <- validate_species(.data, species)
 
-  if(species == 'CHINOOK'){
+  if (species == "CHINOOK") {
     .data |>
       dplyr::filter(
         .data$fishery_id %in% c(36:71)
       )
-  } else if(species == 'COHO') {
+  } else if (species == "COHO") {
     .data |>
       dplyr::filter(
         .data$fishery_id %in% c(76:166)
@@ -149,7 +144,6 @@ filter_puget_sound <- function(.data, species = NULL){
   } else {
     cli::cli_abort('`species` must be "COHO" or "CHINOOK", not "{species}".')
   }
-
 }
 
 
@@ -165,21 +159,21 @@ filter_puget_sound <- function(.data, species = NULL){
 #' }
 #' framrosetta::fishery_chinook_fram |> filter_wa(species = "CHINOOK")
 #' framrosetta::fishery_coho_fram |> filter_wa(species = "COHO")
-filter_wa <- function(.data, species = NULL){
+filter_wa <- function(.data, species = NULL) {
   validate_data_frame(.data)
 
-  if(!'fishery_id' %in% colnames(.data)){
-    cli::cli_abort('fishery_id column must be present in dataframe.')
+  if (!"fishery_id" %in% colnames(.data)) {
+    cli::cli_abort("fishery_id column must be present in dataframe.")
   }
 
-  species = validate_species(.data, species)
+  species <- validate_species(.data, species)
 
-  if(species == 'CHINOOK'){
+  if (species == "CHINOOK") {
     .data |>
       dplyr::filter(
         .data$fishery_id %in% c(16:71)
       )
-  } else if(species == 'COHO') {
+  } else if (species == "COHO") {
     .data |>
       dplyr::filter(
         .data$fishery_id %in% c(23:166)
@@ -187,7 +181,6 @@ filter_wa <- function(.data, species = NULL){
   } else {
     cli::cli_abort('`species` must be "COHO" or "CHINOOK", not "{species}".')
   }
-
 }
 
 #' Filters a dataframe to Canadian (BC) fisheries. Will
@@ -202,21 +195,21 @@ filter_wa <- function(.data, species = NULL){
 #' }
 #' framrosetta::fishery_chinook_fram |> filter_bc(species = "CHINOOK")
 #' framrosetta::fishery_coho_fram |> filter_bc(species = "COHO")
-filter_bc <- function(.data, species = NULL){
+filter_bc <- function(.data, species = NULL) {
   validate_data_frame(.data)
 
-  if(!'fishery_id' %in% colnames(.data)){
-    cli::cli_abort('fishery_id column must be present in dataframe.')
+  if (!"fishery_id" %in% colnames(.data)) {
+    cli::cli_abort("fishery_id column must be present in dataframe.")
   }
 
-  species = validate_species(.data, species)
+  species <- validate_species(.data, species)
 
-  if(species == 'CHINOOK'){
+  if (species == "CHINOOK") {
     .data |>
       dplyr::filter(
         .data$fishery_id %in% c(4:15)
       )
-  } else if(species == 'COHO') {
+  } else if (species == "COHO") {
     .data |>
       dplyr::filter(
         .data$fishery_id %in% c(167:193)
@@ -224,7 +217,6 @@ filter_bc <- function(.data, species = NULL){
   } else {
     cli::cli_abort('`species` must be "COHO" or "CHINOOK", not "{species}".')
   }
-
 }
 
 #' Filters a dataframe to Alaska fisheries. Will
@@ -239,21 +231,21 @@ filter_bc <- function(.data, species = NULL){
 #' }
 #' framrosetta::fishery_chinook_fram |> filter_ak(species = "CHINOOK")
 #' framrosetta::fishery_coho_fram |> filter_ak(species = "COHO")
-filter_ak <- function(.data, species = NULL){
+filter_ak <- function(.data, species = NULL) {
   validate_data_frame(.data)
 
-  if(!'fishery_id' %in% colnames(.data)){
-    cli::cli_abort('fishery_id column must be present in dataframe.')
+  if (!"fishery_id" %in% colnames(.data)) {
+    cli::cli_abort("fishery_id column must be present in dataframe.")
   }
 
-  species = validate_species(.data, species)
+  species <- validate_species(.data, species)
 
-  if(species == 'CHINOOK'){
+  if (species == "CHINOOK") {
     .data |>
       dplyr::filter(
         .data$fishery_id %in% c(1:3)
       )
-  } else if(species == 'COHO') {
+  } else if (species == "COHO") {
     .data |>
       dplyr::filter(
         .data$fishery_id %in% c(194:198)
@@ -276,21 +268,21 @@ filter_ak <- function(.data, species = NULL){
 #' }
 #' framrosetta::fishery_chinook_fram |> filter_ca(species = "CHINOOK")
 #' framrosetta::fishery_coho_fram |> filter_ca(species = "COHO")
-filter_ca <- function(.data, species = NULL){
+filter_ca <- function(.data, species = NULL) {
   validate_data_frame(.data)
 
-  if(!'fishery_id' %in% colnames(.data)){
-    cli::cli_abort('fishery_id column must be present in dataframe.')
+  if (!"fishery_id" %in% colnames(.data)) {
+    cli::cli_abort("fishery_id column must be present in dataframe.")
   }
 
-  species = validate_species(.data, species)
+  species <- validate_species(.data, species)
 
-  if(species == 'CHINOOK'){
+  if (species == "CHINOOK") {
     .data |>
       dplyr::filter(
         .data$fishery_id %in% c(32:34)
       )
-  } else if(species == 'COHO') {
+  } else if (species == "COHO") {
     .data |>
       dplyr::filter(
         .data$fishery_id %in% c(1:8)
@@ -312,21 +304,21 @@ filter_ca <- function(.data, species = NULL){
 #' }
 #' framrosetta::fishery_chinook_fram |> filter_or(species = "CHINOOK")
 #' framrosetta::fishery_coho_fram |> filter_or(species = "COHO")
-filter_or <- function(.data, species = NULL){
+filter_or <- function(.data, species = NULL) {
   validate_data_frame(.data)
 
-  if(!'fishery_id' %in% colnames(.data)){
-    cli::cli_abort('fishery_id column must be present in dataframe.')
+  if (!"fishery_id" %in% colnames(.data)) {
+    cli::cli_abort("fishery_id column must be present in dataframe.")
   }
 
-  species = validate_species(.data, species)
+  species <- validate_species(.data, species)
 
-  if(species == 'CHINOOK'){
+  if (species == "CHINOOK") {
     .data |>
       dplyr::filter(
         .data$fishery_id %in% c(28:33)
       )
-  } else if(species == 'COHO') {
+  } else if (species == "COHO") {
     .data |>
       dplyr::filter(
         .data$fishery_id %in% c(5:32)
@@ -349,21 +341,21 @@ filter_or <- function(.data, species = NULL){
 #' }
 #' framrosetta::fishery_chinook_fram |> filter_coast(species = "CHINOOK")
 #' framrosetta::fishery_coho_fram |> filter_coast(species = "COHO")
-filter_coast <- function(.data, species = NULL){
+filter_coast <- function(.data, species = NULL) {
   validate_data_frame(.data)
 
-  if(!'fishery_id' %in% colnames(.data)){
-    cli::cli_abort('fishery_id column must be present in dataframe.')
+  if (!"fishery_id" %in% colnames(.data)) {
+    cli::cli_abort("fishery_id column must be present in dataframe.")
   }
 
-  species = validate_species(.data, species)
+  species <- validate_species(.data, species)
 
-  if(species == 'CHINOOK'){
+  if (species == "CHINOOK") {
     .data |>
       dplyr::filter(
         .data$fishery_id %in% c(1:35)
       )
-  } else if(species == 'COHO') {
+  } else if (species == "COHO") {
     .data |>
       dplyr::filter(
         .data$fishery_id %in% c(1:22, 33:75)
@@ -385,21 +377,21 @@ filter_coast <- function(.data, species = NULL){
 #' }
 #' framrosetta::fishery_chinook_fram |> filter_marine(species = "CHINOOK")
 #' framrosetta::fishery_coho_fram |> filter_marine(species = "COHO")
-filter_marine <- function(.data, species = NULL){
+filter_marine <- function(.data, species = NULL) {
   validate_data_frame(.data)
 
-  if(!'fishery_id' %in% colnames(.data)){
-    cli::cli_abort('fishery_id column must be present in dataframe.')
+  if (!"fishery_id" %in% colnames(.data)) {
+    cli::cli_abort("fishery_id column must be present in dataframe.")
   }
 
-  species = validate_species(.data, species)
+  species <- validate_species(.data, species)
 
-  if(species == 'CHINOOK'){
+  if (species == "CHINOOK") {
     .data |>
       dplyr::filter(
         !.data$fishery_id %in% c(72:73)
       )
-  } else if(species == 'COHO') {
+  } else if (species == "COHO") {
     .data |>
       dplyr::filter(
         .data$fishery_id %in% c(
@@ -408,7 +400,8 @@ filter_marine <- function(.data, species = NULL){
           96:97, 101:102, 105:107,
           109:112, 115, 118:124,
           129:133, 136:146, 152:160,
-          170:198)
+          170:198
+        )
       )
   } else {
     cli::cli_abort('`species` must be "COHO" or "CHINOOK", not "{species}".')
