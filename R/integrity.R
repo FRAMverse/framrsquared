@@ -330,6 +330,7 @@ validate_numeric <- function(x, ..., arg = rlang::caller_arg(x), call = rlang::c
 #' @param species Optional, either "COHO" or "CHINOOK".
 #'
 #' @return Character vector "species"
+#' @keywords internal
 validate_species <- function(.data,
                                   species = NULL){
   if(!is.null(species)){
@@ -358,6 +359,7 @@ validate_species <- function(.data,
 #' @param species Character atomic, either "COHO", "CHIN", or "CHINOOK", with any capitalization
 #'
 #' @return Character atomic, either "COHO" or "CHINOOK"
+#' @keywords internal
 standardize_species <- function(species){
   species = toupper(species)
   coho_names = c("COHO")

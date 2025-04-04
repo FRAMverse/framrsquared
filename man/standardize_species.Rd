@@ -15,3 +15,4 @@ Character atomic, either "COHO" or "CHINOOK"
 \description{
 framrsquared functions are written around fram database species labels, "COHO" and "CHINOOK". This function translates alternate designations (lowercase, "chin" for "chinook") into those two forms.
 }
+\keyword{internal}

@@ -17,3 +17,4 @@ Character vector "species"
 \description{
 Convenience function to condense code. \verb{filter_*} either uses the "species" attr, or the optional \code{species} argument, and must provide informative errors when both are missing or both are present and mismatch.
 }
+\keyword{internal}
