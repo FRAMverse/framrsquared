@@ -207,6 +207,11 @@ plot_stock_mortality_time_step <- function(fram_db, run_id, stock_id, top_n = 10
     cli::cli_abort("Stock ID must be and integer")
   }
 
+
+  species_used = fetch_table(fram_db, "RunID") |>
+    dplyr::filter(.data$run_id == .env$run_id) |>
+    dplyr::pull(.data$species_name)
+
   # lut for display of stock name
   stocks <- fram_db |>
     fetch_table('Stock') |>
