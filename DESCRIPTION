@@ -1,7 +1,7 @@
 Package: framrsquared
 Type: Package
 Title: FRAM Database Interface
-Version: 0.5.0
+Version: 0.6.0
 Authors@R: c(
     person("Ty", "Garber",
            email = "tyler.garber@dfw.wa.gov", 
@@ -39,12 +39,17 @@ Imports:
     tibble,
     tidyr,
     tools
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2
 Depends: 
     R (>= 4.1)
 Suggests: 
-    testthat (>= 3.0.0)
+    knitr,
+    testthat (>= 3.0.0),
+    rmarkdown
+VignetteBuilder:
+  knitr
 Config/testthat/edition: 3
 Roxygen: list(markdown = TRUE)
 Remotes: 
     FRAMverse/framrosetta
+URL: https://framverse.github.io/framrsquared/

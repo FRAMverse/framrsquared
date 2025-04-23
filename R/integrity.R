@@ -216,13 +216,14 @@ run_info <- function(fram_db, run_id) {
   cli::cli_h1('FRAM Run Information')
   cli::cli_text(cat(cli::col_blue('Species: '), cli::col_grey(run_info$species_name[[1]])))
   cli::cli_text(cat(cli::col_blue('Database Type: '), cli::col_grey(fram_db$fram_db_type)))
+  cli::cli_text(cat(cli::col_blue('Run ID: '), cli::col_grey(run_info$run_id[[1]])))
   cli::cli_text(cat(cli::col_blue('Run Name: '), cli::col_grey(run_info$run_name[[1]])))
   cli::cli_text(cat(cli::col_blue('Run Title: '), cli::col_grey(run_info$run_title[[1]])))
   cli::cli_text(cat(cli::col_blue('Run Date: '), cli::col_grey(run_info$run_time_date[[1]])))
   cli::cli_text(cat(cli::col_blue('Modify Date: '), cli::col_grey(run_info$modify_input_date[[1]])))
   cli::cli_text(cat(cli::col_blue('TAMM: '), cli::col_grey(run_info$tamm_name[[1]])))
   cli::cli_text(cat(cli::col_blue('Coast Iterations: '), cli::col_grey(run_info$coastal_iterations[[1]])))
-  cli::cli_text(cat(cli::col_blue('Run Comments: '), '\n', cli::col_grey(run_info$run_comments[[1]])))
+  cli::cli_text(cat(cli::col_blue('Run Comments: '), '\n', cli::col_grey(stringr::str_remove_all(run_info$run_comments[[1]], "[[:punct:]]"))))
 
 }
 
@@ -299,6 +300,7 @@ validate_fram_db <- function(fram_db,
 #' @param run_id one or more run_ids
 #' @param call internal use: identify name of function that called this function (for informative error message)
 validate_run_id <- function(fram_db, run_id, call = rlang::caller_env()){
+  validate_numeric(run_id)
   available_run_ids <- get_run_ids(fram_db)
   if (! all(run_id %in% available_run_ids)){
     cli::cli_abort(paste0('run_id(s) not present in database. Available run_ids: ',
@@ -313,4 +315,61 @@ validate_data_frame <- function(x, ..., arg = rlang::caller_arg(x), call = rlang
   if (!is.data.frame(x)) {
     cli::cli_abort("{.arg {arg}} must be a data frame, not {.obj_type_friendly {x}}.", ..., call = call)
   }
+}
+
+validate_numeric <- function(x, ..., arg = rlang::caller_arg(x), call = rlang::caller_env()) {
+  if (!is.numeric(x)) {
+    cli::cli_abort("{.arg {arg}} must be a numeric, not {class(x)}.", ..., call = call)
+  }
+}
+
+#' Handle species identification for filters
+#'
+#' Convenience function to condense code. `filter_*` either uses the "species" attr, or the optional `species` argument, and must provide informative errors when both are missing or both are present and mismatch.
+#'
+#' @param .data Dataframe
+#' @param species Optional, either "COHO" or "CHINOOK".
+#'
+#' @return Character vector "species"
+#' @keywords internal
+validate_species <- function(.data,
+                                  species = NULL){
+  if(!is.null(species)){
+    species = standardize_species(species)
+  }
+  if(is.null(species)){
+    if(!is.null(attr(.data, 'species'))){
+      species <- attr(.data, 'species')
+    } else {
+      cli::cli_abort('Table metadata missing and `species` argument missing.')
+    }
+  }
+
+  if(!is.null(attr(.data, 'species')) & !is.null(species)){
+    if(species != attr(.data, 'species')){
+      cli::cli_abort('`species` argument ("{species}") should not differ from species attribute of data ("{attr(.data, "species")}"). Consider dropping `species` argument.')
+    }
+  }
+  return(species)
+}
+
+#' Allow multiple species identifiers
+#'
+#' framrsquared functions are written around fram database species labels, "COHO" and "CHINOOK". This function translates alternate designations (lowercase, "chin" for "chinook") into those two forms.
+#'
+#' @param species Character atomic, either "COHO", "CHIN", or "CHINOOK", with any capitalization
+#'
+#' @return Character atomic, either "COHO" or "CHINOOK"
+#' @keywords internal
+standardize_species <- function(species){
+  species = toupper(species)
+  coho_names = c("COHO")
+  chinook_names = c("CHINOOK", "CHIN")
+  species <- rlang::arg_match(species, c(coho_names, chinook_names))
+  if(species %in% coho_names){
+    species = "COHO"
+  } else if(species %in% chinook_names){
+    species = "CHINOOK"
+  }
+  return(species)
 }

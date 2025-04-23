@@ -8,6 +8,13 @@
 \description{
 A convenient tool for interfacing with FRAM access databases in R environments.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://framverse.github.io/framrsquared/}
+}
+
+}
 \author{
 \strong{Maintainer}: Ty Garber \email{tyler.garber@dfw.wa.gov}
 
