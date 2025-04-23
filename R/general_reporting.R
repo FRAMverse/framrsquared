@@ -111,12 +111,14 @@ cohort_abundance <- function(fram_db, run_id = NULL){
 }
 
 
+
 #'  `r lifecycle::badge("experimental")`
-#' Summarizes the three true outcomes of a stocks abdunce, where it
+#' Summarizes the three true outcomes of a stocks abundance, where it
 #' dies to fishery related mortality, natural mortality, or reaches
 #' some sort of escapement. When run against the coho database
 #' spawning escapement will be displayed, when run against the
-#' Chinook database
+#' Chinook database escapement to the river will be dislpayed
+#' along with recruits to the next year 'age_up'
 #' @param fram_db FRAM database object
 #' @param run_id Run ID (optional)
 #' @param units 'fish' or 'percentage'. Percentage is proportion of starting adbundace
@@ -125,7 +127,27 @@ cohort_abundance <- function(fram_db, run_id = NULL){
 #' \dontrun{
 #' fram_db |> stock_fate(run_id = 145)
 #' }
-stock_fate_chinook <- function(fram_db, run_id, units = c('fish', 'percentage')){
+stock_fate <- function(fram_db, run_id = NULL, units = c('fish', 'percentage')) {
+  validate_fram_db(fram_db)
+  switch(
+    fram_db$fram_db_species,
+    'CHINOOK' = stock_fate_chinook(fram_db, run_id, units),
+    'COHO' = stock_fate_coho(fram_db, run_id, units)
+  )
+}
+
+
+#'  `r lifecycle::badge("experimental")`
+#' Chinook flavor of the stock fate function
+#' @param fram_db FRAM database object
+#' @param run_id Run ID (optional)
+#' @param units 'fish' or 'percentage'. Percentage is proportion of starting adbundace
+#' @export
+#' @examples
+#' \dontrun{
+#' fram_db |> stock_fate_chinook(run_id = 145)
+#' }
+stock_fate_chinook <- function(fram_db, run_id = NULL, units = c('fish', 'percentage')){
 
   units <- rlang::arg_match(units)
 
@@ -174,6 +196,75 @@ stock_fate_chinook <- function(fram_db, run_id, units = c('fish', 'percentage'))
                                 + .data$fishery_mortality
                                 + .data$age_up)
                       )
+      )
+  }
+
+  if(!is.null(run_id)) {
+    pop_stats |> dplyr::filter(.data$run_id == run_id)  |>
+      `attr<-`('species', fram_db$fram_db_species)
+  } else {
+    pop_stats  |>
+      `attr<-`('species', fram_db$fram_db_species)
+  }
+
+}
+
+#'  `r lifecycle::badge("experimental")`
+#' Coho flavor of the stock fate function
+#' @param fram_db FRAM database object
+#' @param run_id Run ID (optional)
+#' @param units 'fish' or 'percentage'. Percentage is proportion of starting adbundace
+#' @export
+#' @examples
+#' \dontrun{
+#' fram_db |> stock_fate_coho(run_id = 145)
+#' }
+stock_fate_coho <- function(fram_db, run_id = NULL, units = c('fish', 'percentage')){
+
+  units <- rlang::arg_match(units)
+
+  # pull fishery mortality
+  mortality <- fram_db |> fetch_table('Mortality') |>
+    dplyr::select(-.data$primary_key) |>
+    dplyr::mutate(
+      fishery_mortality = .data$landed_catch + .data$non_retention
+      + .data$drop_off + .data$shaker
+      + .data$msf_landed_catch + .data$msf_non_retention
+      + .data$msf_drop_off + .data$msf_shaker
+    ) |>
+    dplyr::group_by(.data$run_id, .data$stock_id, .data$age) |>
+    dplyr::summarize(
+      fishery_mortality = sum(.data$fishery_mortality),
+      .groups = 'drop'
+    )
+
+  pop_stats <- fram_db |> population_statistics(run_id) |>
+    dplyr::mutate(
+      natural_mortality = .data$starting_cohort - .data$post_nat_mort,
+    ) |>
+    dplyr::arrange(.data$stock_id, .data$age) |>
+    dplyr::group_by(.data$run_id, .data$stock_id, .data$age) |>
+    dplyr::summarize(
+      natural_mortality = sum(.data$natural_mortality),
+      escapement_spawning = sum(.data$escapement),
+      .groups = 'drop'
+    ) |>
+    dplyr::inner_join(mortality, by = c('run_id', 'stock_id', 'age')) |>
+    dplyr::select(
+      .data$run_id:.data$natural_mortality,
+      .data$fishery_mortality, .data$escapement_spawning,
+
+    )
+
+  if(units == 'percentage') {
+    pop_stats <- pop_stats |>
+      dplyr::mutate(
+        dplyr::across(.data$natural_mortality:.data$escapement_spawning,
+                      \(x) x / (.data$natural_mortality
+                                + .data$escapement_spawning
+                                + .data$fishery_mortality
+                                )
+        )
       )
   }
 
