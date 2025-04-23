@@ -85,11 +85,19 @@ reference:
         Functions that provide checks for the current data
     contents:
       - contains("check")
+  - title: "Stock summaries"
+    desc: >
+        Functions that descibe the fate of a stock
+    contents:
+      - stock_fate
+      - stock_fate_chinook
+      - stock_fate_coho
   - title: "Misc."
     desc: >
         Miscellaneous functions
     contents:
       - add_flag_text
+      - cohort_abundance
       - aeq_mortality
       - coho_mark_rates
       - input_summary_
