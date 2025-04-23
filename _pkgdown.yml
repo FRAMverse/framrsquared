@@ -1,0 +1,109 @@
+url: https://framverse.github.io/framrsquared/
+template:
+  bootstrap: 5
+reference:
+  - title: "Connecting to FRAM database"
+    desc: >
+      Functions to connect a disconnect to a FRAM database
+    contents:
+      - connect_fram_db
+      - disconnect_fram_db
+  - title: "Importing FRAM tables"
+    desc: >
+      Functions to import a FRAM database table into R
+    contents:
+      - starts_with("fetch_table")
+  - title: "FRAM filtering"
+    desc: >
+      Functions to filter FRAM tables by fishery
+    contents:
+      - starts_with("filter_")
+  - title: "Comparing FRAM runs"
+    desc: >
+      Functions that compare two FRAM runs within the same database
+    contents:
+      - starts_with("compare_")
+  - title: "FRAM Screen Reports"
+    desc: >
+      Functions that replicate FRAM UI screen reports
+    contents:
+      - starts_with("msf_")
+      - population_statistics
+      - fishery_mortality
+      - stock_mortality
+  - title: "Stock impact visualizations"
+    desc: >
+      Functions that visualize impacts of stocks in fisheries
+    contents:
+      - starts_with("plot_")
+      - make_impacts_per_catch_heatmap
+  - title: "Initializing R FRAM Projects"
+    desc: >
+      Creates a standardized workspace for fram related R projects
+    contents:
+      - initialize_project
+      - fetch_quarto_templates
+  - title: "Database altering functions"
+    desc: >
+      Functions that alter FRAM database tables, use with caution
+    contents:
+      - starts_with("copy_")
+      - starts_with("change_")
+      - remove_run
+  - title: "Week calculations"
+    desc: >
+      Functions calculate a week number
+    contents:
+      - ends_with("_week")
+  - title: "Validations"
+    desc: >
+      Functions that validate FRAM data
+    contents:
+      - contains("validate_")
+  - title: "Terminal Runs"
+    desc: >
+      Functions that unpack the TRuns table in the FRAM database
+    contents:
+      - contains("truns_")
+  - title: "Post-season FRAM"
+    desc: >
+      Functions that focus on post-season runs and backwards FRAM
+    contents:
+      - bkfram_checks_coho
+      - post_season_abundance
+  - title: "Describing the FRAM Database"
+    desc: >
+        Functions that describe the current FRAM database
+    contents:
+      - starts_with("fram_")
+      - get_run_ids
+      - find_tables_by_column_
+      - provide_table_names
+      - run_info
+  - title: "Data checking"
+    desc: >
+        Functions that provide checks for the current data
+    contents:
+      - contains("check")
+  - title: "Stock summaries"
+    desc: >
+        Functions that descibe the fate of a stock
+    contents:
+      - stock_fate
+      - stock_fate_chinook
+      - stock_fate_coho
+  - title: "Misc."
+    desc: >
+        Miscellaneous functions
+    contents:
+      - add_flag_text
+      - cohort_abundance
+      - aeq_mortality
+      - coho_mark_rates
+      - input_summary_
+      - mortality_scalers
+      - msp_mortality
+      - NR_flag_translate
+      - scalers_flag_translate
+      - stock_id_comp
+      - welcome

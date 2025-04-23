@@ -428,11 +428,11 @@ stock_age_checker = function(table_name,
 #'
 #' @return Numeric, returning number of warnings detected.
 #'
-stock_check_helper = function(table_name,
-                              NumStk,
-                              stock_vec,
-                              uniques_only = FALSE) {
-  cur_err = 0
+stock_check_helper <- function(table_name,
+                               NumStk,
+                               stock_vec,
+                               uniques_only = FALSE) {
+  cur_err <- 0
   if (uniques_only) {
     if (length(stock_vec) == NumStk) {
       cli::cli_alert_success("  One entry per stock.")
@@ -440,32 +440,32 @@ stock_check_helper = function(table_name,
       cli::cli_alert_danger(
         "  Duplicate StockID detected! Look for duplicate StockID(s) {paste0(unique(stock_vec[duplicated(stock_vec)]), collapse = ', ')}"
       )
-      cur_err = cur_err + 1
+      cur_err <- cur_err + 1
     }
   }
 
   if (length(unique(stock_vec)) == NumStk) {
     cli::cli_alert_success("  Number of stock in {table_name} table matches NumStk ({NumStk})")
-  } else{
+  } else {
     cli::cli_alert_danger(
       "  Number of stock in {table_name} table ({length(unique(stock_vec))}) must match NumStk ({NumStk}). Did you update the BaseID table `NumStock` column? Did you add the new stock to the {table_name} table?"
     )
-    cur_err = cur_err + 1
+    cur_err <- cur_err + 1
   }
   ## checking that stock numbers are sequential
   if (all(unique(stock_vec) %in% 1:NumStk)) {
     cli::cli_alert_success("  StockID appears to be sequential (1:{NumStk})")
-  } else{
+  } else {
     cli::cli_alert_danger(
       "  StockID in {table_name} table is not sequential -- missing StockID {paste0(setdiff(1:NumStk, unique(stock_vec)), collapse = ', ')}, have unexpected StockID {paste0(setdiff(unique(stock_vec), 1:NumStk), collapse = ', ')}"
     )
-    cur_err = cur_err + 1
+    cur_err <- cur_err + 1
   }
   return(cur_err)
 }
 
-setd = function(a, b) {
+setd <- function(a, b) {
   ## minor helper function, largely superfluous. Turns out cli:: functions that support glue
   ## will do the collapsing automatically. The above could be refactored to avoid this function.
-  paste0(setdiff(unique(a), b), collapse = ', ')
+  paste0(setdiff(unique(a), b), collapse = ", ")
 }
