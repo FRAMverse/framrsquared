@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">framrsquared</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -585,6 +585,35 @@
         </dt>
         <dd>Framrsquared style guide</dd>
       </dl></div><div class="section level2">
+      <h2 id="stock-summaries">Stock summaries<a class="anchor" aria-label="anchor" href="#stock-summaries"></a></h2>
+
+      <div class="section-desc"><p>Functions that descibe the fate of a stock</p></div>
+
+
+    </div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="stock_fate.html">stock_fate()</a></code>
+          <span class="badge lifecycle lifecycle-experimental">experimental</span>
+        </dt>
+        <dd><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental" class="external-link"><img src="figures/lifecycle-experimental.svg" alt="[Experimental]"></a> Summarizes the three true outcomes of a stocks abundance, where it dies to fishery related mortality, natural mortality, or reaches some sort of escapement. When run against the coho database spawning escapement will be displayed, when run against the Chinook database escapement to the river will be dislpayed along with recruits to the next year 'age_up'</dd>
+      </dl><dl><dt>
+
+          <code><a href="stock_fate_chinook.html">stock_fate_chinook()</a></code>
+          <span class="badge lifecycle lifecycle-experimental">experimental</span>
+        </dt>
+        <dd><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental" class="external-link"><img src="figures/lifecycle-experimental.svg" alt="[Experimental]"></a> Chinook flavor of the stock fate function</dd>
+      </dl><dl><dt>
+
+          <code><a href="stock_fate_coho.html">stock_fate_coho()</a></code>
+          <span class="badge lifecycle lifecycle-experimental">experimental</span>
+        </dt>
+        <dd><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental" class="external-link"><img src="figures/lifecycle-experimental.svg" alt="[Experimental]"></a> Coho flavor of the stock fate function</dd>
+      </dl></div><div class="section level2">
       <h2 id="misc-">Misc.<a class="anchor" aria-label="anchor" href="#misc-"></a></h2>
 
       <div class="section-desc"><p>Miscellaneous functions</p></div>
@@ -601,6 +630,12 @@
 
         </dt>
         <dd>Adds a column with a text version of flags for either non-retention or fishery scalers</dd>
+      </dl><dl><dt>
+
+          <code><a href="cohort_abundance.html">cohort_abundance()</a></code>
+          <span class="badge lifecycle lifecycle-experimental">experimental</span>
+        </dt>
+        <dd><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental" class="external-link"><img src="figures/lifecycle-experimental.svg" alt="[Experimental]"></a> Pulls the starting cohorts from the database, this is stored in the StockRecruit table, but can be wrong. It's best just to multiply the Stock Recruit Scalar by the base period abundance</dd>
       </dl><dl><dt>
 
           <code><a href="aeq_mortality.html">aeq_mortality()</a></code>

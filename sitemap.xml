@@ -14,6 +14,7 @@
 <url><loc>https://framverse.github.io/framrsquared/reference/bkfram_checks_coho.html</loc></url>
 <url><loc>https://framverse.github.io/framrsquared/reference/change_run_id.html</loc></url>
 <url><loc>https://framverse.github.io/framrsquared/reference/coho_mark_rates.html</loc></url>
+<url><loc>https://framverse.github.io/framrsquared/reference/cohort_abundance.html</loc></url>
 <url><loc>https://framverse.github.io/framrsquared/reference/compare_databases.html</loc></url>
 <url><loc>https://framverse.github.io/framrsquared/reference/compare_fishery_input_flags.html</loc></url>
 <url><loc>https://framverse.github.io/framrsquared/reference/compare_fishery_inputs.html</loc></url>
@@ -77,6 +78,9 @@
 <url><loc>https://framverse.github.io/framrsquared/reference/statistical_week.html</loc></url>
 <url><loc>https://framverse.github.io/framrsquared/reference/stock_age_checker.html</loc></url>
 <url><loc>https://framverse.github.io/framrsquared/reference/stock_check_helper.html</loc></url>
+<url><loc>https://framverse.github.io/framrsquared/reference/stock_fate.html</loc></url>
+<url><loc>https://framverse.github.io/framrsquared/reference/stock_fate_chinook.html</loc></url>
+<url><loc>https://framverse.github.io/framrsquared/reference/stock_fate_coho.html</loc></url>
 <url><loc>https://framverse.github.io/framrsquared/reference/stock_id_comp.html</loc></url>
 <url><loc>https://framverse.github.io/framrsquared/reference/stock_mortality.html</loc></url>
 <url><loc>https://framverse.github.io/framrsquared/reference/styleguide.html</loc></url>
