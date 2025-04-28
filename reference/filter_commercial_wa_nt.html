@@ -73,35 +73,43 @@ a <code>fishery_id</code> column name.</p>
 <span class="r-in"><span><span class="va">fram_dataframe</span> <span class="op">|&gt;</span> <span class="fu">filter_commercial_wa_NT</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
 <span class="r-in"><span><span class="fu">framrosetta</span><span class="fu">::</span><span class="va"><a href="https://framverse.github.io/framrosetta/reference/fishery_chinook_fram.html" class="external-link">fishery_chinook_fram</a></span> <span class="op">|&gt;</span> <span class="fu">filter_commercial_wa_nt</span><span class="op">(</span>species <span class="op">=</span> <span class="st">"CHINOOK"</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 56 × 5</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    species version_number fishery_id fishery_name fishery_title    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> CHINOOK              1         55 Tr 6B:9Net   Tr Area 6B:9 Net </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> CHINOOK              1         56 A 10 Sport   NT Area 10 Sport </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> CHINOOK              1         57 A 11 Sport   NT Area 11 Sport </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> CHINOOK              1         58 NT10:11Net   NT Area 10:11 Net</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> CHINOOK              1         59 Tr10:11Net   Tr Area 10:11 Net</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> CHINOOK              1         60 A 10A Sprt   NT Area 10A Sport</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> CHINOOK              1         61 Tr 10A Net   Tr Area 10A Net  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> CHINOOK              1         62 A 10E Sprt   NT Area 10E Sport</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> CHINOOK              1         63 Tr 10E Net   Tr Area 10E Net  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> CHINOOK              1         64 A 12 Sport   NT Area 12 Sport </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 46 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 10 × 5</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    species version_number fishery_id fishery_name fishery_title      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> CHINOOK              1         58 NT10:11Net   NT Area 10:11 Net  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> CHINOOK              1         65 NT HC Net    NT Hood Canal Net  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> CHINOOK              1         68 NT SPS Net   NT SPS Net         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> CHINOOK              1         70 NT 13A Net   NT Area 13A Net    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> CHINOOK              1         37 NT 7:7ANet   NT Area 6A:7:7A Net</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> CHINOOK              1         39 NT 7BCDNet   NT Area 7B-7D Net  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> CHINOOK              1         43 NT JDF Net   NT JDF Net         </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> CHINOOK              1         46 NT SkagNet   NT Skagit Net      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> CHINOOK              1         49 NT StSnNet   NT St/Snohomish Net</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> CHINOOK              1         51 NT TulaNet   NT Tulalip Bay Net </span>
 <span class="r-in"><span><span class="fu">framrosetta</span><span class="fu">::</span><span class="va"><a href="https://framverse.github.io/framrosetta/reference/fishery_coho_fram.html" class="external-link">fishery_coho_fram</a></span> <span class="op">|&gt;</span> <span class="fu">filter_commercial_wa_nt</span><span class="op">(</span>species <span class="op">=</span> <span class="st">"COHO"</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 144 × 5</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 20 × 5</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    species version_number fishery_id fishery_name fishery_title                 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                         </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> COHO                 1         23 Buoy10 Spt   Col. Rvr. Buoy 10 Sport       </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> COHO                 1         24 L ColR Spt   Col. Rvr. Lower R Sport       </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> COHO                 1         25 L ColR Net   Col. Rvr. Lower R Net         </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> COHO                 1         26 Yngs B Net   Col. Rvr. Youngs Bay Net      </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> COHO                 1         27 LCROrT Spt   Col. Rvr. Ore Trib Spt        </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> COHO                 1         28 Clackm Spt   Clackamas R Sport             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> COHO                 1         29 SandyR Spt   Sandy R Sport                 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> COHO                 1         30 LCRWaT Spt   Col. Rvr. Wash Trib Spt       </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> COHO                 1         31 UpColR Spt   Col. Rvr. Sport Above Bonnevi…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> COHO                 1         32 UpColR Net   Col. Rvr. Net Above Bonneville</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 134 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> COHO                 1         82 Ar6D NetNT   6D Non-Treaty Net (Dungeness …</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> COHO                 1         87 A6-7ANetNT   WA Area 7-7A Non-Treaty Net   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> COHO                 1         96 A7BCDNetNT   WA Area 7B-7C-7D Non-Treaty N…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> COHO                 1        101 Ar 8 NetNT   WA Area 8 Non-Treaty Net (Ska…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> COHO                 1        109 Ar8A NetNT   WA Area 8A Non-Treaty Net     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> COHO                 1        111 Ar8D NetNT   WA Area 8D Non-Treaty Net (Tu…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> COHO                 1        119 Ar10 NetNT   WA Area 10 Non-Treaty Net (Se…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> COHO                 1        121 Ar10ANetNT   WA Area 10A Non-Treaty Net (E…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> COHO                 1        123 Ar10ENetNT   WA Area 10E Non-Treaty Net (E…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> COHO                 1        130 Ar11 NetNT   WA Area 11 Non-Treaty Net (E/…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">11</span> COHO                 1        132 Ar11ANetNT   WA Area 11A Non-Treaty Net (C…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">12</span> COHO                 1        137 Ar13 NetNT   Area 13 Non-Treaty Net (So Pu…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">13</span> COHO                 1        139 Ar13CNetNT   Area 13C Non-Treaty Net (Cham…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">14</span> COHO                 1        141 Ar13ANetNT   Area 13A Non-Treaty Net (Carr…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">15</span> COHO                 1        143 Ar13DNetNT   Area 13D Non-Treaty Net       </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">16</span> COHO                 1        145 A13FKNetNT   Area 13F-13K Non-Treaty Net   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">17</span> COHO                 1        153 1212BNetNT   Area 12-12B Hood Canal Non-Tr…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">18</span> COHO                 1        155 A9-9ANetNT   Area 9/9A Non-Treaty Net      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">19</span> COHO                 1        157 Ar12ANetNT   Area 12A Non-Treaty Net (Quil…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">20</span> COHO                 1        159 A12CDNetNT   Area 12C-12D Non-Treaty Net (…</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
