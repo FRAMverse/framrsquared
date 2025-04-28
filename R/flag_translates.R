@@ -90,7 +90,7 @@ filter_flag <- function(.data){
     cli::cli_abort("Input is not a fishery scaler dataframe.")
   }
   .data |>
-    dplyr::group_by(fishery_id, time_step) |>
+    dplyr::group_by(.data$fishery_id, .data$time_step) |>
     dplyr::mutate(
       fishery_scale_factor = dplyr::if_else(any(.data$fishery_flag %in% c(1,17,18)), .data$fishery_scale_factor, NA_real_),
       msf_fishery_scale_factor = dplyr::if_else(any(.data$fishery_flag %in% c(7,17,27)), .data$msf_fishery_scale_factor, NA_real_),
