@@ -22,7 +22,7 @@ a \code{fishery_id} column name.
 }
 \examples{
 \dontrun{
-fram_dataframe |> filter_commercial_wa()
+fram_dataframe |> filter_commercial_wa_NT()
 }
 framrosetta::fishery_chinook_fram |> filter_commercial_wa_NT(species = "CHINOOK")
 framrosetta::fishery_coho_fram |> filter_commercial_wa_NT(species = "COHO")
