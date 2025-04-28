@@ -27,10 +27,10 @@ NR_flag_translate = function(vec) {
 #' @param vec vector of flags
 #' @export
 #' @examples
-#' \dontrun{scalers_flags_translate(sample(c(1, 2, 7, 8, 17, 18, 27, 28), 10, replace = T))}
+#' \dontrun{scalers_flag_translate(sample(c(1, 2, 7, 8, 17, 18, 27, 28), 10, replace = T))}
 #'
 scalers_flag_translate = function(vec) {
-  if(!all(is.numeric(vec))){
+  if(!is.numeric(vec)){
     cli::cli_abort("flags must be numeric")
   }
 

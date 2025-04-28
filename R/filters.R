@@ -418,8 +418,8 @@ filter_marine <- function(.data, species = NULL) {
 #' \dontrun{
 #' fram_dataframe |> filter_commercial_wa_NT()
 #' }
-#' framrosetta::fishery_chinook_fram |> filter_commercial_wa_NT(species = "CHINOOK")
-#' framrosetta::fishery_coho_fram |> filter_commercial_wa_NT(species = "COHO")
+#' framrosetta::fishery_chinook_fram |> filter_commercial_wa_nt(species = "CHINOOK")
+#' framrosetta::fishery_coho_fram |> filter_commercial_wa_nt(species = "COHO")
 
 filter_commercial_wa_nt <- function(.data, species = NULL) {
   validate_data_frame(.data)
