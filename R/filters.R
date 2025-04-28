@@ -408,7 +408,7 @@ filter_marine <- function(.data, species = NULL) {
   }
 }
 
-#' Filters a dataframe to WA commercial fisheries. Will
+#' Filters a dataframe to WA non-treaty commercial fisheries. Will
 #' automatically detect whether it's working with a Chinook or Coho
 #' dataset if the tables were generated within this package. Requires
 #' a `fishery_id` column name.
@@ -418,10 +418,10 @@ filter_marine <- function(.data, species = NULL) {
 #' \dontrun{
 #' fram_dataframe |> filter_commercial_wa()
 #' }
-#' framrosetta::fishery_chinook_fram |> filter_marine(species = "CHINOOK")
-#' framrosetta::fishery_coho_fram |> filter_marine(species = "COHO")
+#' framrosetta::fishery_chinook_fram |> filter_commercial_wa_NT(species = "CHINOOK")
+#' framrosetta::fishery_coho_fram |> filter_commercial_wa_NT(species = "COHO")
 
-filter_commercial_wa <- function(.data, species = NULL) {
+filter_commercial_wa_nt <- function(.data, species = NULL) {
   validate_data_frame(.data)
 
   if (!"fishery_id" %in% colnames(.data)) {
