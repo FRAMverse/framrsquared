@@ -26,8 +26,8 @@ post_season_abundance <- function(fram_db, units = c('ja3', 'oa3')){
 
   cohort_table <- run_id |>
     dplyr::inner_join(base_cohort,
-               by = 'base_period_id',
-               relationship = 'many-to-many') |> # making sure baseperiod is correct for run
+                      by = 'base_period_id',
+                      relationship = 'many-to-many') |> # making sure baseperiod is correct for run
     dplyr::inner_join(stock, by = 'stock_id') |>
     dplyr::filter(
       .data$run_year >= 2010, # don't care about earlier apparently
@@ -47,8 +47,8 @@ post_season_abundance <- function(fram_db, units = c('ja3', 'oa3')){
       )
     ) |> #count(origin)
     dplyr::select(.data$run_year, .data$run_id, .data$stock_id,  .data$stock_name,
-           .data$recruit_scale_factor, .data$base_cohort_size,
-           .data$recruit_cohort_size, .data$origin)
+                  .data$recruit_scale_factor, .data$base_cohort_size,
+                  .data$recruit_cohort_size, .data$origin)
 
 
   if(unit == 'ja3'){
@@ -80,7 +80,7 @@ post_season_abundance <- function(fram_db, units = c('ja3', 'oa3')){
       dplyr::mutate(
         dplyr::across(
           -c(.data$stock_id, .data$stock_name, .data$origin)
-      , \(x) x / 1.2317)
+          , \(x) x / 1.2317)
       )
   }
 
@@ -566,3 +566,156 @@ bkfram_checks_coho <-
       )
     )
   }
+
+
+
+#' Create table comparing mortalities
+#'
+#' Tool for investigating causes of ER overages identified in PSC reports (e.g., the Annual Report). For a given stock in a given year (typically one that experienced an ER overage), compares the predicted mortalities in each fishery in the preseason with the estimated mortalities in those fisheries in the postseason. Also provides the context of the preseason and postseason estimated mortalities of other stocks; for mixed stock fisheries, mismatches between preseason and postseason abundances of other stock can lead to ER overages of a focal stock in FRAM even if modeling of the focal stock itself was perfect.
+#'
+#' Intended as helper function for `present_mort_comparison()`, which provides a formatted `gt` table based on the output of this function. However, `create_mort_comparison()` will be useful for providing results in dataframes for further processing or plotting.
+#'
+#' @param con.pre Connection to a Coho preseason database, presumably the complete one managed by the PSC. Must contain a run for the `year` year.
+#' @param con.post Connection to a Coho postseason database, presumably the complete one managed by the PSC. Must contain a run for the `year` year.
+#' @param year.focal Year to compare
+#' @param stock.focal PSC stock to compare (`unique(framrosetta::stock_coho_psc$psc_stock_name)` to see all PSC stock)
+#'
+#' @return Dataframe of results:
+#'    * `$fishery_id`:  Fram fishery id
+#'    * `$preseason_mort_focal`:  Preseason estimated mortality of the focal stock (as defined with the `stock` parameter) in numbers of fish.
+#'    * `postseason_mort_focal`:  Postseason mortality of the focal stock (as defined with the `stock` parameter) in numbers of fish.
+#'    * `preseason_mort_other`:  Preseason estimated mortality of all stocks except the focal stock (as defined with the `stock` parameter) in numbers of fish.
+#'    * `postseason_mort_other`:  Postseason mortality of all stocks except the focal stock (as defined with the `stock` parameter) in numbers of fish.
+#'    * `overage`:  `postseason_mort_focal` - `preseason_mort_focal`. Positive values mean we believe we had higher mortality than we had estimated in the preseason.
+#'    * `fishery_title`:  Name of the FRAM fishery
+#'
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' create_mort_comparison(
+#' con.pre = framrsquared::connect_fram_db("PSC_CoTC_Preseason_CohoFRAMDB_thru2024_06182024.mdb"),
+#' con.post = framrsquared::connect_fram_db("PSC_CoTC_PostSeason_CohoFRAMDB_thru2022_03042024.mdb"),
+#' year = 2019,
+#' stock = "Grays Harbor"
+#' )
+#' }
+#'
+create_mort_comparison <- function(con.pre,
+                                   con.post,
+                                   year.focal,
+                                   stock.focal) {
+
+  ## identify run
+  id.pre <- framrsquared::fetch_table(con.pre, "RunID") |>
+    dplyr::filter(.data$run_year == year.focal) |>
+    dplyr::pull(.data$run_id)
+
+  id.post <- framrsquared::fetch_table(con.post, "RunID") |>
+    dplyr::filter(.data$run_year == year.focal) |>
+    dplyr::pull(.data$run_id)
+
+  stock_id_list <- framrosetta::stock_coho_psc |>
+    dplyr::filter(.data$psc_stock_name == stock.focal) |>
+    dplyr::pull(.data$fram_stock_id)
+
+  morts.pre <- framrsquared::fetch_table(con.pre, table_name = "Mortality") |>
+    dplyr::filter(.data$run_id == id.pre) |>
+    dplyr::mutate(focal_stock = as.character(.data$stock_id %in% stock_id_list)) |>
+    dplyr::mutate(
+      total_mort = .data$landed_catch + .data$non_retention + .data$shaker + .data$drop_off +
+        .data$msf_landed_catch + .data$msf_non_retention + .data$msf_shaker + .data$msf_drop_off
+    ) |>
+    dplyr::group_by(.data$fishery_id, .data$focal_stock) |>
+    dplyr::summarize(total_mort_pre = sum(.data$total_mort)) |>
+    dplyr::ungroup() |>
+    tidyr::pivot_wider(values_from = "total_mort_pre", names_from = "focal_stock") |>
+    dplyr::rename(
+      preseason_mort_focal = "TRUE",
+      preseason_mort_other = "FALSE"
+    ) |>
+    dplyr::mutate(preseason_mort_focal = dplyr::if_else(is.na(.data$preseason_mort_focal), 0, .data$preseason_mort_focal)) |>
+    dplyr::mutate(preseason_mort_other = dplyr::if_else(is.na(.data$preseason_mort_other), 0, .data$preseason_mort_other))
+
+  morts.post <- framrsquared::fetch_table(con.post, table_name = "Mortality") |>
+    dplyr::filter(.data$run_id == id.post) |>
+    dplyr::mutate(focal_stock = as.character(.data$stock_id %in% stock_id_list)) |>
+    dplyr::mutate(
+      total_mort = .data$landed_catch + .data$non_retention + .data$shaker + .data$drop_off +
+        .data$msf_landed_catch + .data$msf_non_retention + .data$msf_shaker + .data$msf_drop_off
+    ) |>
+    dplyr::group_by(.data$fishery_id, .data$focal_stock) |>
+    dplyr::summarize(total_mort_post = sum(.data$total_mort)) |>
+    dplyr::ungroup() |>
+    tidyr::pivot_wider(values_from = "total_mort_post", names_from = "focal_stock") |>
+    dplyr::rename(
+      postseason_mort_focal = "TRUE",
+      postseason_mort_other = "FALSE"
+    ) |>
+    dplyr::mutate(postseason_mort_focal = dplyr::if_else(is.na(.data$postseason_mort_focal), 0, .data$postseason_mort_focal)) |>
+    dplyr::mutate(postseason_mort_other = dplyr::if_else(is.na(.data$postseason_mort_other), 0, .data$postseason_mort_other))
+
+
+  mort_compare <- morts.pre |>
+    dplyr::left_join(morts.post, by = c("fishery_id")) |>
+    dplyr::left_join(
+      framrosetta::fishery_coho_fram |>
+        dplyr::select("fishery_id", "fishery_title"),
+      by = "fishery_id"
+    ) |>
+    dplyr::mutate(
+      overage = .data$postseason_mort_focal - .data$preseason_mort_focal,
+      .before = "fishery_title"
+    ) |>
+    dplyr::arrange(dplyr::desc(.data$overage)) |>
+    dplyr::relocate("preseason_mort_other", .before = "postseason_mort_other") |>
+    dplyr::relocate("postseason_mort_focal", .after = "preseason_mort_focal")
+  return(mort_compare)
+}
+
+#' Create gt table comparing mortalities
+#'
+#' Wrapper function for `create_mort_comparison` to provide pretty output. Filters
+#' out fisheries with less than 1 total fish, and fisheries that did not have at an overage of 1,
+#' then formats into a `gt` table with clear labels and pretty format choices.
+#'
+#' @inheritParams create_mort_comparison
+#'
+#' @return gt table
+#'
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' present_mort_comparison(
+#' con.pre = framrsquared::connect_fram_db("PSC_CoTC_Preseason_CohoFRAMDB_thru2024_06182024.mdb"),
+#' con.post = framrsquared::connect_fram_db("PSC_CoTC_PostSeason_CohoFRAMDB_thru2022_03042024.mdb"),
+#' year = 2019,
+#' stock = "Grays Harbor"
+#' )
+#' }
+#'
+present_mort_comparison <-  function(con.pre,
+                                     con.post,
+                                     year.focal,
+                                     stock.focal) {
+
+  mort_compare <- create_mort_comparison(con.pre,
+                                         con.post,
+                                         year.focal,
+                                         stock.focal)
+  mort_compare |>
+    dplyr::filter(.data$postseason_mort_focal > 1) |>
+    dplyr::filter(.data$postseason_mort_focal > (.data$preseason_mort_focal + 1)) |>
+    dplyr::select(-"fishery_id") |>
+    gt::gt() |>
+    gt::fmt_number(decimals = 0) |>
+    gt::cols_label(
+      .data$preseason_mort_focal ~ "Pre-season mortalities\n(focal stock)",
+      .data$postseason_mort_focal ~ "Post-season mortalities\n(focal stock)",
+      .data$preseason_mort_other ~ "Pre-season mortalities\n(other stock)",
+      .data$postseason_mort_other ~ "Post-season mortalities\n(other stock)",
+      .data$fishery_title ~ "FRAM fishery"
+    ) |>
+    gt::tab_header(glue::glue("{stock.focal} {year.focal}"))
+}
