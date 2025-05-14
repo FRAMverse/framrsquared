@@ -37,6 +37,7 @@ reference:
     contents:
       - starts_with("plot_")
       - make_impacts_per_catch_heatmap
+      - stock_comp
   - title: "Initializing R FRAM Projects"
     desc: >
       Creates a standardized workspace for fram related R projects
