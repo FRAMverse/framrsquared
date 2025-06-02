@@ -45,7 +45,8 @@ Depends:
 Suggests: 
     knitr,
     testthat (>= 3.0.0),
-    rmarkdown
+    rmarkdown,
+    forcats
 VignetteBuilder:
   knitr
 Config/testthat/edition: 3
