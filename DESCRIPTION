@@ -54,3 +54,4 @@ Roxygen: list(markdown = TRUE)
 Remotes: 
     FRAMverse/framrosetta
 URL: https://framverse.github.io/framrsquared/
+BugReports: https://github.com/FRAMverse/framrsquared
