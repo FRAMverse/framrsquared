@@ -12,6 +12,7 @@ A convenient tool for interfacing with FRAM access databases in R environments.
 Useful links:
 \itemize{
   \item \url{https://framverse.github.io/framrsquared/}
+  \item Report bugs at \url{https://github.com/FRAMverse/framrsquared}
 }
 
 }
