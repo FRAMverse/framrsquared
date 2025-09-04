@@ -1,3 +1,4 @@
+#' `r lifecycle::badge("experimental")`
 #' Parse TAAETRS table
 #'
 #' Terminal run information used by FRAM is stored in the TAAETRSList and (soon) the TAAETRSListChinook tables, but stored in a way that is not very human readable. `parse_terminal_info()` translates this to human-readable form, primarily to then be used by terminal_stocks() and terminal_fisheries().
@@ -7,7 +8,6 @@
 #'
 #' @return tibble of TAAETRSList or TAAETRSListChinook tables translated to long form.
 #' @export
-#'
 #' @examples \dontrun{fram_db |> parse_terminal_info()}
 parse_terminal_info <- function(fram_db, species = NULL){
 
@@ -31,7 +31,7 @@ parse_terminal_info <- function(fram_db, species = NULL){
       dplyr::rename(time_step = .data$time_step_id)
 
     tab <- fram_db |>
-      fetch_table("TAAETRSListChinook") |>
+      fetch_table("TAAETRSListChinook") |> # currently, this table does not exist
       dplyr::select("taa_num",
                     "taa_stk_list",
                     "taa_fish_list", "taa_time_step1", "taa_time_step2",
@@ -78,6 +78,7 @@ parse_terminal_info <- function(fram_db, species = NULL){
     dplyr::select("taa_name", "taa_num", "stock_label", "stock_id", "terminal_time_steps", "terminal_months", "fishery_label", "fishery_id")
 }
 
+#' `r lifecycle::badge("experimental")`
 #' List terminal stock information
 #'
 #' For each TAA, lists the associated FRAM stocks and timesteps.
@@ -94,7 +95,7 @@ terminal_stocks <- function(fram_db, species = NULL){
     dplyr::distinct()
 }
 
-
+#' `r lifecycle::badge("experimental")`
 #' List terminal stock information
 #'
 #' For each TAA, lists the associated fisheries
