@@ -45,7 +45,8 @@ Depends:
 Suggests: 
     knitr,
     testthat (>= 3.0.0),
-    rmarkdown
+    rmarkdown,
+    forcats
 VignetteBuilder:
   knitr
 Config/testthat/edition: 3
@@ -53,3 +54,4 @@ Roxygen: list(markdown = TRUE)
 Remotes: 
     FRAMverse/framrosetta
 URL: https://framverse.github.io/framrsquared/
+BugReports: https://github.com/FRAMverse/framrsquared

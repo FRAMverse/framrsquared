@@ -1,6 +1,14 @@
 url: https://framverse.github.io/framrsquared/
+
 template:
   bootstrap: 5
+  light-switch: true
+
+navbar:
+  structure:
+    left: [intro, reference, articles, news]
+    right: [search, github, lightswitch]
+
 reference:
   - title: "Connecting to FRAM database"
     desc: >
@@ -37,6 +45,7 @@ reference:
     contents:
       - starts_with("plot_")
       - make_impacts_per_catch_heatmap
+      - stock_comp
   - title: "Initializing R FRAM Projects"
     desc: >
       Creates a standardized workspace for fram related R projects
