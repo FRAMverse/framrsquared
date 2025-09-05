@@ -83,7 +83,7 @@ terminal_info <- function(fram_db, species = NULL){
 #'
 #' For each TAA, lists the associated FRAM stocks and timesteps.
 #'
-#' @inheritParams parse_terminal_info
+#' @inheritParams terminal_info
 #'
 #' @return taa of taa stocks and timesteps
 #' @export
@@ -100,7 +100,7 @@ terminal_stocks <- function(fram_db, species = NULL){
 #'
 #' For each TAA, lists the associated fisheries
 #'
-#' @inheritParams parse_terminal_info
+#' @inheritParams terminal_info
 #'
 #' @return tibble of taa fisheries
 #' @export

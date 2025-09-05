@@ -2,7 +2,8 @@
 % Please edit documentation in R/parse_terminal.R
 \name{terminal_stocks}
 \alias{terminal_stocks}
-\title{List terminal stock information}
+\title{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+List terminal stock information}
 \usage{
 terminal_stocks(fram_db, species = NULL)
 }
