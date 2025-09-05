@@ -9,7 +9,7 @@
 #' @return tibble of TAAETRSList or TAAETRSListChinook tables translated to long form.
 #' @export
 #' @examples \dontrun{fram_db |> parse_terminal_info()}
-parse_terminal_info <- function(fram_db, species = NULL){
+terminal_info <- function(fram_db, species = NULL){
 
   validate_fram_db(fram_db)
 
@@ -90,7 +90,7 @@ parse_terminal_info <- function(fram_db, species = NULL){
 #'
 #' @examples \dontrun{fram_db |> terminal_stocks()}
 terminal_stocks <- function(fram_db, species = NULL){
-  parse_terminal_info(fram_db, species) |>
+  terminal_info(fram_db, species) |>
     dplyr::select("taa_name", "stock_label", "terminal_months", "stock_id", "terminal_time_steps") |>
     dplyr::distinct()
 }
@@ -107,7 +107,7 @@ terminal_stocks <- function(fram_db, species = NULL){
 #'
 #' @examples \dontrun{fram_db |> terminal_fisheries()}
 terminal_fisheries <- function(fram_db, species = NULL){
-  parse_terminal_info(fram_db, species) |>
+  terminal_info(fram_db, species) |>
     dplyr::select("taa_name", "fishery_label", "fishery_id") |>
     dplyr::distinct()
 }
