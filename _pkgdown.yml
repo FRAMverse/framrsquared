@@ -107,7 +107,7 @@ reference:
     contents:
       - terminal_fisheries
       - terminal_stocks
-      - parse_terminal_info
+      - terminal_info
   - title: "Misc."
     desc: >
         Miscellaneous functions
