@@ -1,10 +1,18 @@
 url: https://framverse.github.io/framrsquared/
+
 template:
   bootstrap: 5
+  light-switch: true
+
+navbar:
+  structure:
+    left: [intro, reference, articles, news]
+    right: [search, github, lightswitch]
+
 reference:
   - title: "Connecting to FRAM database"
     desc: >
-      Functions to connect a disconnect to a FRAM database
+      Functions to connect to and disconnect from a FRAM database
     contents:
       - connect_fram_db
       - disconnect_fram_db
@@ -37,6 +45,7 @@ reference:
     contents:
       - starts_with("plot_")
       - make_impacts_per_catch_heatmap
+      - stock_comp
   - title: "Initializing R FRAM Projects"
     desc: >
       Creates a standardized workspace for fram related R projects
@@ -87,11 +96,18 @@ reference:
       - contains("check")
   - title: "Stock summaries"
     desc: >
-        Functions that descibe the fate of a stock
+        Functions that describe the fate of a stock
     contents:
       - stock_fate
       - stock_fate_chinook
       - stock_fate_coho
+  - title: "Describing Terminal Run Information"
+    desc: >
+        Functions that unpack the TAAETRS tables
+    contents:
+      - terminal_fisheries
+      - terminal_stocks
+      - terminal_info
   - title: "Misc."
     desc: >
         Miscellaneous functions

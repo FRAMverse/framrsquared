@@ -77,8 +77,16 @@ fram_database_type <- function(con) {
 #' @examples
 #' \dontrun{fram_database_species(con)}
 fram_database_species <- function(con){
-  run_id_table <- DBI::dbGetQuery(con, 'SELECT * FROM RunID;') |>
-    fram_clean_tables()
+
+  if(inherits(con, "ACCESS")){
+    run_id_table <- DBI::dbGetQuery(con, 'SELECT * FROM RunID;') |>
+      fram_clean_tables()
+  } else if(is.list(con) & "fram_db_connection" %in% names(con)){
+    run_id_table <- DBI::dbGetQuery(con$fram_db_connection, 'SELECT * FROM RunID;') |>
+      fram_clean_tables()
+  } else {
+    cli::cli_abort("`con` must be a connection to a fram database (either the connection itself, or the output of `connect_fram_db()`).")
+  }
 
   unique(run_id_table$species_name)
 }
@@ -333,7 +341,7 @@ validate_numeric <- function(x, ..., arg = rlang::caller_arg(x), call = rlang::c
 #' @return Character vector "species"
 #' @keywords internal
 validate_species <- function(.data,
-                                  species = NULL){
+                             species = NULL){
   if(!is.null(species)){
     species = standardize_species(species)
   }
