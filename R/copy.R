@@ -320,7 +320,7 @@ copy_tamms <- function(tamm_name, target_folder, run_id_vec, overwrite = FALSE){
 
 
 make_batch_runs <- function(fram_db, target_run, times = 1, label = 'copy', tamm_name, target_folder, force_many_runs = FALSE, verbose = TRUE){
-  new_run_ids <- framdb |>
+  new_run_ids <- fram_db |>
     copy_run(target_run = target_run, times = times, label = label, force_many_runs, verbose)
   copy_tamms(tamm_name, target_folder, run_id_vec = new_run_ids, overwrite = TRUE)
   cli::cli_alert_success(glue::glue("Batch runs ready! New Run Ids range from {min(new_run_ids)} to {max(new_run_ids)}.\nTAMMs are in {target_folder}."))

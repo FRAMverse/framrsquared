@@ -65,10 +65,10 @@ modify_table <- function(fram_db, table_name, df){
                             ")
   results = df |>
     dplyr::rowwise() |>
-    dplyr::mutate(db_call = glue::glue(glue_statement))
-
-  for (i in 1:nrow(results)){
-    DBI::dbExecute(fram_db$fram_db_connection,
-                   statement = results$db_call[i])
-  }
+    dplyr::mutate(db_call = glue::glue(glue_statement)) |>
+    dplyr::mutate(rows_affected = DBI::dbExecute(fram_db$fram_db_connection,
+                                               statement = .data$db_call)
+    ) |>
+    dplyr::mutate(db_call = as.list(.data$db_call))
+  return(results)
 }
