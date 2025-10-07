@@ -69,7 +69,7 @@ State level filters:
 - `filter_bc()` Filters fisheries to Canada
 - `filter_ca()` Filters fisheries to California
 - `filter_or()` Filters fisheries to Oregon
-- `filter_or()` Filters fisheries to Alaska
+- `filter_ak()` Filters fisheries to Alaska
 
 Gear level filters:
 

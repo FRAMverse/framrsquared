@@ -28,7 +28,7 @@ truns_fisheries <- function(fram_db){
     fetch_table('ReportDriver') |>
     dplyr::filter(.data$driver_name == 'PSCTRuns.DRV') |>
     dplyr::select(fishery_id = .data$option2, stock_name = .data$option5) |>
-    tidyr::separate_longer_delim(.data$ishery_id, ',') |>
+    tidyr::separate_longer_delim(.data$fishery_id, ',') |>
     dplyr::mutate(dplyr::across(.data$fishery_id, as.numeric))
 }
 
