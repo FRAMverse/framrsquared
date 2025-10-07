@@ -22,5 +22,6 @@ invisibly returns logical vector of \code{file.copy()} success.
 Preps a folder for batch running in the 'Run Multiple Runs' screen of the FRAM automation fork (https://github.com/FRAMverse/FRAM_automation), for use with the \code{advanced} approach to identify multiple runs. One TAMM file will be copied multiple times in the \code{target_folder} with suffixes that identify each of the run_ids. The "Use folder" button on the "Run Multiple Runs" screen can then use the target folder to set up large batch runs. Typically users should use \code{make_batch_runs()} instead (this first copies runs and then uses \code{copy_tamms} to create tamms that match the new runs).
 }
 \examples{
-\dontrun{copy_tamms(tamm_name = "C:/TAMMs/Chin2020.xlsx", target_folder = "C:/Batch_run_5", run_id_vec = 10:20)}
+\dontrun{copy_tamms(tamm_name = "C:/TAMMs/Chin2020.xlsx",
+target_folder = "C:/Batch_run_5", run_id_vec = 10:20)}
 }

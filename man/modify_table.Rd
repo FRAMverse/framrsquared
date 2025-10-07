@@ -23,11 +23,11 @@ As a simple example, imagine we want to see how modifying the size limits for Ar
 }
 \examples{
 \dontrun{
-df_total = tibble(match_Age = c(3,4,5))
-df_total$match_StockID = 100
-df_total$match_RunID = 396
-df_total$replace_RecruitScaleFactor = 1:3
-df_total$replace_RecruitCohortSize = 100:102
+df_total <- tibble(match_Age = c(3, 4, 5))
+df_total$match_StockID <- 100
+df_total$match_RunID <- 396
+df_total$replace_RecruitScaleFactor <- 1:3
+df_total$replace_RecruitCohortSize <- 100:102
 fram_db |> modify_db(table_name = "StockRecruit", df = df_total)
 }
 }

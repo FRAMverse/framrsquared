@@ -279,7 +279,8 @@ copy_run <- function(fram_db, target_run, times = 1, label = 'copy', force_many_
 #' @export
 #'
 #' @examples
-#' \dontrun{copy_tamms(tamm_name = "C:/TAMMs/Chin2020.xlsx", target_folder = "C:/Batch_run_5", run_id_vec = 10:20)}
+#' \dontrun{copy_tamms(tamm_name = "C:/TAMMs/Chin2020.xlsx",
+#' target_folder = "C:/Batch_run_5", run_id_vec = 10:20)}
 
 copy_tamms <- function(tamm_name, target_folder, run_id_vec, overwrite = FALSE){
   if(!is.numeric(run_id_vec) & all(!is.na(as.numeric(run_id_vec)))){
