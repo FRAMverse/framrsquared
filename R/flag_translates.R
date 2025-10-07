@@ -27,10 +27,10 @@ NR_flag_translate = function(vec) {
 #' @param vec vector of flags
 #' @export
 #' @examples
-#' \dontrun{scaler_flags_translate(sample(c(1, 2, 7, 8, 17, 18, 27, 28), 10, replace = T))}
+#' \dontrun{scalers_flag_translate(sample(c(1, 2, 7, 8, 17, 18, 27, 28), 10, replace = T))}
 #'
 scalers_flag_translate = function(vec) {
-  if(!all(is.numeric(vec))){
+  if(!is.numeric(vec)){
     cli::cli_abort("flags must be numeric")
   }
 
@@ -90,11 +90,13 @@ filter_flag <- function(.data){
     cli::cli_abort("Input is not a fishery scaler dataframe.")
   }
   .data |>
+    dplyr::group_by(.data$fishery_id, .data$time_step) |>
     dplyr::mutate(
-      fishery_scale_factor = dplyr::if_else(.data$fishery_flag %in% c(1,17,18), .data$fishery_scale_factor, NA_real_),
-      msf_fishery_scale_factor = dplyr::if_else(.data$fishery_flag %in% c(7,17,27), .data$msf_fishery_scale_factor, NA_real_),
-      quota = dplyr::if_else(.data$fishery_flag %in% c(2,27,28), .data$quota, NA_real_),
-      msf_quota = dplyr::if_else(.data$fishery_flag %in% c(8,18,28), .data$msf_quota, NA_real_)
-    )
+      fishery_scale_factor = dplyr::if_else(any(.data$fishery_flag %in% c(1,17,18)), .data$fishery_scale_factor, NA_real_),
+      msf_fishery_scale_factor = dplyr::if_else(any(.data$fishery_flag %in% c(7,17,27)), .data$msf_fishery_scale_factor, NA_real_),
+      quota = dplyr::if_else(any(.data$fishery_flag %in% c(2,27,28)), .data$quota, NA_real_),
+      msf_quota = dplyr::if_else(any(.data$fishery_flag %in% c(8,18,28)), .data$msf_quota, NA_real_)
+    ) |>
+      dplyr::ungroup()
 }
 

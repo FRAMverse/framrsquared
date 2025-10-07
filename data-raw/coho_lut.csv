@@ -1,0 +1,247 @@
+﻿Species,StockVersion,StockID,ProductionRegionNumber,ManagementUnitNumber,StockName,StockLongName,StockGroup
+COHO,1,1,1,1,U-nkskrw,Nooksack River Wild UnMarked,North Puget Sound
+COHO,1,2,1,2,M-nkskrw,Nooksack River Wild Marked,North Puget Sound
+COHO,1,3,1,3,U-kendlh,Kendall Creek Hatchery UnMarked,North Puget Sound
+COHO,1,4,1,4,M-kendlh,Kendall Creek Hatchery Marked,North Puget Sound
+COHO,1,5,1,5,U-skokmh,Skookum Creek Hatchery UnMarked,North Puget Sound
+COHO,1,6,1,6,M-skokmh,Skookum Creek Hatchery Marked,North Puget Sound
+COHO,1,7,1,7,U-lumpdh,Lummi Ponds Hatchery UnMarked,North Puget Sound
+COHO,1,8,1,8,M-lumpdh,Lummi Ponds Hatchery Marked,North Puget Sound
+COHO,1,9,1,9,U-bhambh,Bellingham Bay Net Pens UnMarked,North Puget Sound
+COHO,1,10,1,10,M-bhambh,Bellingham Bay Net Pens Marked,North Puget Sound
+COHO,1,11,1,11,U-samshw,Samish River Wild UnMarked,North Puget Sound
+COHO,1,12,1,12,M-samshw,Samish River Wild Marked,North Puget Sound
+COHO,1,13,1,13,U-ar77aw,Area 7/7A Independent Wild UnMarked,North Puget Sound
+COHO,1,14,1,14,M-ar77aw,Area 7/7A Independent Wild Marked,North Puget Sound
+COHO,1,15,1,15,U-whatch,Whatcom Creek Hatchery UnMarked,North Puget Sound
+COHO,1,16,1,16,M-whatch,Whatcom Creek Hatchery Marked,North Puget Sound
+COHO,1,17,2,1,U-skagtw,Skagit River Wild UnMarked,North Puget Sound
+COHO,1,18,2,2,M-skagtw,Skagit River Wild Marked,North Puget Sound
+COHO,1,19,2,3,U-skagth,Skagit River Hatchery UnMarked,North Puget Sound
+COHO,1,20,2,4,M-skagth,Skagit River Hatchery Marked,North Puget Sound
+COHO,1,21,2,5,U-skgbkh,Baker (Skagit) Hatchery UnMarked,North Puget Sound
+COHO,1,22,2,6,M-skgbkh,Baker (Skagit) Hatchery Marked,North Puget Sound
+COHO,1,23,2,7,U-skgbkw,Baker (Skagit) Wild UnMarked,North Puget Sound
+COHO,1,24,2,8,M-skgbkw,Baker (Skagit) Wild Marked,North Puget Sound
+COHO,1,25,2,9,U-swinch,Swinomish Channel Hatchery UnMarked,North Puget Sound
+COHO,1,26,2,10,M-swinch,Swinomish Channel Hatchery Marked,North Puget Sound
+COHO,1,27,2,11,U-oakhbh,Oak Harbor Net Pens UnMarked,Mid Puget Sound
+COHO,1,28,2,12,M-oakhbh,Oak Harbor Net Pens Marked,Mid Puget Sound
+COHO,1,29,3,1,U-stillw,Stillaguamish River Wild UnMarked,Mid Puget Sound
+COHO,1,30,3,2,M-stillw,Stillaguamish River Wild Marked,Mid Puget Sound
+COHO,1,31,3,3,U-stillh,Stillaguamish River Hatchery UnMarked,Mid Puget Sound
+COHO,1,32,3,4,M-stillh,Stillaguamish River Hatchery Marked,Mid Puget Sound
+COHO,1,33,3,5,U-tuliph,Tulalip Hatchery UnMarked,Mid Puget Sound
+COHO,1,34,3,6,M-tuliph,Tulalip Hatchery Marked,Mid Puget Sound
+COHO,1,35,3,7,U-snohow,Snohomish River Wild UnMarked,Mid Puget Sound
+COHO,1,36,3,8,M-snohow,Snohomish River Wild Marked,Mid Puget Sound
+COHO,1,37,3,9,U-snohoh,Snohomish River Hatchery UnMarked,Mid Puget Sound
+COHO,1,38,3,10,M-snohoh,Snohomish River Hatchery Marked,Mid Puget Sound
+COHO,1,39,3,11,U-ar8anh,Area 8A Net Pens UnMarked,Mid Puget Sound
+COHO,1,40,3,12,M-ar8anh,Area 8A Net Pens Marked,Mid Puget Sound
+COHO,1,41,4,1,U-ptgamh,Port Gamble Net Pens UnMarked,Mid Puget Sound
+COHO,1,42,4,2,M-ptgamh,Port Gamble Net Pens Marked,Mid Puget Sound
+COHO,1,43,4,3,U-ptgamw,Port Gamble Bay Wild UnMarked,Mid Puget Sound
+COHO,1,44,4,4,M-ptgamw,Port Gamble Bay Wild Marked,Mid Puget Sound
+COHO,1,45,4,5,U-ar12bw,Area 12/12B Wild UnMarked,Hood Canal
+COHO,1,46,4,6,M-ar12bw,Area 12/12B Wild Marked,Hood Canal
+COHO,1,47,4,7,U-qlcnbh,Quilcene Hatchery UnMarked,Hood Canal
+COHO,1,48,4,8,M-qlcnbh,Quilcene Hatchery Marked,Hood Canal
+COHO,1,49,4,9,U-qlcenh,Quilcene Bay Net Pens UnMarked,Hood Canal
+COHO,1,50,4,10,M-qlcenh,Quilcene Bay Net Pens Marked,Hood Canal
+COHO,1,51,4,11,U-ar12aw,Area 12A Wild UnMarked,Hood Canal
+COHO,1,52,4,12,M-ar12aw,Area 12A Wild Marked,Hood Canal
+COHO,1,53,4,13,U-hoodsh,Hoodsport Hatchery UnMarked,Hood Canal
+COHO,1,54,4,14,M-hoodsh,Hoodsport Hatchery Marked,Hood Canal
+COHO,1,55,4,15,U-ar12dw,Area 12C/12D Wild UnMarked,Hood Canal
+COHO,1,56,4,16,M-ar12dw,Area 12C/12D Wild Marked,Hood Canal
+COHO,1,57,4,17,U-gadamh,George Adams Hatchery UnMarked,Hood Canal
+COHO,1,58,4,18,M-gadamh,George Adams Hatchery Marked,Hood Canal
+COHO,1,59,4,19,U-skokrw,Skokomish River Wild UnMarked,Hood Canal
+COHO,1,60,4,20,M-skokrw,Skokomish River Wild Marked,Hood Canal
+COHO,1,61,5,1,U-ar13bw,Area 13B Miscellaneous Wild UnMarked,South Puget Sound
+COHO,1,62,5,2,M-ar13bw,Area 13B Miscellaneous Wild Marked,South Puget Sound
+COHO,1,63,5,3,U-deschw,Deschutes River (WA) Wild UnMarked,South Puget Sound
+COHO,1,64,5,4,M-deschw,Deschutes River (WA) Wild Marked,South Puget Sound
+COHO,1,65,5,5,U-ssdnph,South Puget Sound Net Pens UnMarked,South Puget Sound
+COHO,1,66,5,6,M-ssdnph,South Puget Sound Net Pens Marked,South Puget Sound
+COHO,1,67,5,7,U-nisqlh,Nisqually River Hatchery UnMarked,South Puget Sound
+COHO,1,68,5,8,M-nisqlh,Nisqually River Hatchery Marked,South Puget Sound
+COHO,1,69,5,9,U-nisqlw,Nisqually River Wild UnMarked,South Puget Sound
+COHO,1,70,5,10,M-nisqlw,Nisqually River Wild Marked,South Puget Sound
+COHO,1,71,5,11,U-foxish,Fox Island Net Pens UnMarked,South Puget Sound
+COHO,1,72,5,12,M-foxish,Fox Island Net Pens Marked,South Puget Sound
+COHO,1,73,5,13,U-mintch,Minter Creek Hatchery UnMarked,South Puget Sound
+COHO,1,74,5,14,M-mintch,Minter Creek Hatchery Marked,South Puget Sound
+COHO,1,75,5,15,U-ar13mw,Area 13 Miscellaneous Wild UnMarked,South Puget Sound
+COHO,1,76,5,16,M-ar13mw,Area 13 Miscellaneous Wild Marked,South Puget Sound
+COHO,1,77,5,17,U-chambh,Chambers Creek Hatchery UnMarked,South Puget Sound
+COHO,1,78,5,18,M-chambh,Chambers Creek Hatchery Marked,South Puget Sound
+COHO,1,79,5,19,U-ar13mh,Area 13 Miscellaneous Hatchery UnMarked,South Puget Sound
+COHO,1,80,5,20,M-ar13mh,Area 13 Miscellaneous Hatchery Marked,South Puget Sound
+COHO,1,81,5,21,U-ar13aw,Area 13A Miscellaneous Wild UnMarked,South Puget Sound
+COHO,1,82,5,22,M-ar13aw,Area 13A Miscellaneous Wild Marked,South Puget Sound
+COHO,1,83,5,23,U-puyalh,Puyallup River Hatchery UnMarked,Mid Puget Sound
+COHO,1,84,5,24,M-puyalh,Puyallup River Hatchery Marked,Mid Puget Sound
+COHO,1,85,5,25,U-puyalw,Puyallup River Wild UnMarked,Mid Puget Sound
+COHO,1,86,5,26,M-puyalw,Puyallup River Wild Marked,Mid Puget Sound
+COHO,1,87,5,27,U-are11h,Area 11 Hatchery UnMarked,Mid Puget Sound
+COHO,1,88,5,28,M-are11h,Area 11 Hatchery Marked,Mid Puget Sound
+COHO,1,89,5,29,U-ar11mw,Area 11 Miscellaneous Wild UnMarked,Mid Puget Sound
+COHO,1,90,5,30,M-ar11mw,Area 11 Miscellaneous Wild Marked,Mid Puget Sound
+COHO,1,91,5,31,U-ar10eh,Area 10E Hatchery UnMarked,Mid Puget Sound
+COHO,1,92,5,32,M-ar10eh,Area 10E Hatchery Marked,Mid Puget Sound
+COHO,1,93,5,33,U-ar10ew,Area 10E Miscellaneous Wild UnMarked,Mid Puget Sound
+COHO,1,94,5,34,M-ar10ew,Area 10E Miscellaneous Wild Marked,Mid Puget Sound
+COHO,1,95,5,35,U-greenh,Green River Hatchery UnMarked,Mid Puget Sound
+COHO,1,96,5,36,M-greenh,Green River Hatchery Marked,Mid Puget Sound
+COHO,1,97,5,37,U-greenw,Green River Wild UnMarked,Mid Puget Sound
+COHO,1,98,5,38,M-greenw,Green River Wild Marked,Mid Puget Sound
+COHO,1,99,5,39,U-lakwah,Lake Washington Hatchery UnMarked,Mid Puget Sound
+COHO,1,100,5,40,M-lakwah,Lake Washington Hatchery Marked,Mid Puget Sound
+COHO,1,101,5,41,U-lakwaw,Lake Washington Wild UnMarked,Mid Puget Sound
+COHO,1,102,5,42,M-lakwaw,Lake Washington Wild Marked,Mid Puget Sound
+COHO,1,103,5,43,U-are10h,Area 10 Hatchery UnMarked,Mid Puget Sound
+COHO,1,104,5,44,M-are10h,Area 10 Hatchery Marked,Mid Puget Sound
+COHO,1,105,5,45,U-ar10mw,Area 10 Miscellaneous Wild UnMarked,Mid Puget Sound
+COHO,1,106,5,46,M-ar10mw,Area 10 Miscellaneous Wild Marked,Mid Puget Sound
+COHO,1,107,6,1,U-dungew,Dungeness River Wild UnMarked,Strait of Juan de Fuca
+COHO,1,108,6,2,M-dungew,Dungeness River Wild Marked,Strait of Juan de Fuca
+COHO,1,109,6,3,U-dungeh,Dungeness Hatchery UnMarked,Strait of Juan de Fuca
+COHO,1,110,6,4,M-dungeh,Dungeness Hatchery Marked,Strait of Juan de Fuca
+COHO,1,111,6,5,U-elwhaw,Elwha River Wild UnMarked,Strait of Juan de Fuca
+COHO,1,112,6,6,M-elwhaw,Elwha River Wild Marked,Strait of Juan de Fuca
+COHO,1,113,6,7,U-elwhah,Elwha Hatchery UnMarked,Strait of Juan de Fuca
+COHO,1,114,6,8,M-elwhah,Elwha Hatchery Marked,Strait of Juan de Fuca
+COHO,1,115,6,9,U-ejdfmw,East JDF Miscellaneous Wild UnMarked,Strait of Juan de Fuca
+COHO,1,116,6,10,M-ejdfmw,East JDF Miscellaneous Wild Marked,Strait of Juan de Fuca
+COHO,1,117,6,11,U-wjdfmw,West JDF Miscellaneous Wild UnMarked,Strait of Juan de Fuca
+COHO,1,118,6,12,M-wjdfmw,West JDF Miscellaneous Wild Marked,Strait of Juan de Fuca
+COHO,1,119,6,13,U-hokoh,Hoko Hatchery UnMarked,Strait of Juan de Fuca
+COHO,1,120,6,14,M-hokoh,Hoko Hatchery Marked,Strait of Juan de Fuca
+COHO,1,121,6,15,U-area9w,Area 9 Miscellaneous Wild UnMarked,Strait of Juan de Fuca
+COHO,1,122,6,16,M-area9w,Area 9 Miscellaneous Wild Marked,Strait of Juan de Fuca
+COHO,1,123,7,1,U-makahw,Makah Coastal Wild UnMarked,Washington North Coast
+COHO,1,124,7,2,M-makahw,Makah Coastal Wild Marked,Washington North Coast
+COHO,1,125,7,3,U-makahh,Makah Coastal Hatchery UnMarked,Washington North Coast
+COHO,1,126,7,4,M-makahh,Makah Coastal Hatchery Marked,Washington North Coast
+COHO,1,127,8,1,U-quilsw,Quillayute River Summer Natural UnMarked,Washington North Coast
+COHO,1,128,8,2,M-quilsw,Quillayute River Summer Natural Marked,Washington North Coast
+COHO,1,129,8,3,U-quilsh,Quillayute River Summer Hatchery UnMarked,Washington North Coast
+COHO,1,130,8,4,M-quilsh,Quillayute River Summer Hatchery Marked,Washington North Coast
+COHO,1,131,8,5,U-quilfw,Quillayute River Fall Natural UnMarked,Washington North Coast
+COHO,1,132,8,6,M-quilfw,Quillayute River Fall Natural Marked,Washington North Coast
+COHO,1,133,8,7,U-quilfh,Quillayute River Fall Hatchery UnMarked,Washington North Coast
+COHO,1,134,8,8,M-quilfh,Quillayute River Fall Hatchery Marked,Washington North Coast
+COHO,1,135,9,1,U-hohrvw,Hoh River Wild UnMarked,Washington North Coast
+COHO,1,136,9,2,M-hohrvw,Hoh River Wild Marked,Washington North Coast
+COHO,1,137,9,3,U-hohrvh,Hoh River Hatchery UnMarked,Washington North Coast
+COHO,1,138,9,4,M-hohrvh,Hoh River Hatchery Marked,Washington North Coast
+COHO,1,139,10,1,U-quetfw,Queets River Fall Natural UnMarked,Washington North Coast
+COHO,1,140,10,2,M-quetfw,Queets River Fall Natural Marked,Washington North Coast
+COHO,1,141,10,3,U-quetfh,Queets River Fall Hatchery UnMarked,Washington North Coast
+COHO,1,142,10,4,M-quetfh,Queets River Fall Hatchery Marked,Washington North Coast
+COHO,1,143,10,5,U-quetph,Queets River Suppl. Hatchery UnMarked,Washington North Coast
+COHO,1,144,10,6,M-quetph,Queets River Suppl. Hatchery Marked,Washington North Coast
+COHO,1,145,11,1,U-quinfw,Quinault River Fall Natural UnMarked,Washington North Coast
+COHO,1,146,11,2,M-quinfw,Quinault River Fall Natural Marked,Washington North Coast
+COHO,1,147,11,3,U-quinfh,Quinault River Fall Hatchery UnMarked,Washington North Coast
+COHO,1,148,11,4,M-quinfh,Quinault River Fall Hatchery Marked,Washington North Coast
+COHO,1,149,12,1,U-chehlw,Chehalis River Wild UnMarked,Grays Harbor
+COHO,1,150,12,2,M-chehlw,Chehalis River Wild Marked,Grays Harbor
+COHO,1,151,12,3,U-chehlh,Chehalis River Hatchery UnMarked,Grays Harbor
+COHO,1,152,12,4,M-chehlh,Chehalis River Hatchery Marked,Grays Harbor
+COHO,1,153,12,5,U-humptw,Humptulips River Wild UnMarked,Grays Harbor
+COHO,1,154,12,6,M-humptw,Humptulips River Wild Marked,Grays Harbor
+COHO,1,155,12,7,U-humpth,Humptulips River Hatchery UnMarked,Grays Harbor
+COHO,1,156,12,8,M-humpth,Humptulips River Hatchery Marked,Grays Harbor
+COHO,1,157,12,9,U-gryhmw,Grays Harbor Miscellaneous Wild UnMarked,Grays Harbor
+COHO,1,158,12,10,M-gryhmw,Grays Harbor Miscellaneous Wild Marked,Grays Harbor
+COHO,1,159,12,11,U-gryhbh,Grays Harbor Net Pens UnMarked,Grays Harbor
+COHO,1,160,12,12,M-gryhbh,Grays Harbor Net Pens Marked,Grays Harbor
+COHO,1,161,13,1,U-willaw,Willapa Bay Natural UnMarked,Willapa Bay
+COHO,1,162,13,2,M-willaw,Willapa Bay Natural Marked,Willapa Bay
+COHO,1,163,13,3,U-willah,Willapa Bay Hatchery UnMarked,Willapa Bay
+COHO,1,164,13,4,M-willah,Willapa Bay Hatchery Marked,Willapa Bay
+COHO,1,165,14,1,U-colreh,Columbia River Early Hatchery UnMarked,Columbia River
+COHO,1,166,14,2,M-colreh,Columbia River Early Hatchery Marked,Columbia River
+COHO,1,167,14,3,U-youngh,Youngs Bay Hatchery UnMarked,Columbia River
+COHO,1,168,14,4,M-youngh,Youngs Bay Hatchery Marked,Columbia River
+COHO,1,169,14,5,U-crorew,Lower Col R Oregon Wild UnMarked,Columbia River
+COHO,1,170,14,6,M-crorew,Lower Col R Oregon Wild Marked,Columbia River
+COHO,1,171,14,7,U-washew,Wash Early Wild UnMarked,Columbia River
+COHO,1,172,14,8,M-washew,Wash Early Wild Marked,Columbia River
+COHO,1,173,14,9,U-washlw,Wash Late Wild UnMarked,Columbia River
+COHO,1,174,14,10,M-washlw,Wash Late Wild Marked,Columbia River
+COHO,1,175,14,11,U-colrlh,Columbia River Late Hatchery UnMarked,Columbia River
+COHO,1,176,14,12,M-colrlh,Columbia River Late Hatchery Marked,Columbia River
+COHO,1,177,15,1,U-orenoh,Oregon North Coast Hatchery UnMarked,Oregon
+COHO,1,178,15,2,M-orenoh,Oregon North Coast Hatchery Marked,Oregon
+COHO,1,179,15,3,U-orenow,Oregon North Coast Wild UnMarked,Oregon
+COHO,1,180,15,4,M-orenow,Oregon North Coast Wild Marked,Oregon
+COHO,1,181,15,5,U-orenmh,Oregon North-Mid Coast Hatchery UnMarked,Oregon
+COHO,1,182,15,6,M-orenmh,Oregon North-Mid Coast Hatchery Marked,Oregon
+COHO,1,183,15,7,U-orenmw,Oregon North-Mid Coast Wild UnMarked,Oregon
+COHO,1,184,15,8,M-orenmw,Oregon North-Mid Coast Wild Marked,Oregon
+COHO,1,185,15,9,U-oresmh,Oregon South-Mid Coast Hatchery UnMarked,Oregon
+COHO,1,186,15,10,M-oresmh,Oregon South-Mid Coast Hatchery Marked,Oregon
+COHO,1,187,15,11,U-oresmw,Oregon South-Mid Coast Wild UnMarked,Oregon
+COHO,1,188,15,12,M-oresmw,Oregon South-Mid Coast Wild Marked,Oregon
+COHO,1,189,15,13,U-oranah,Oregon Anadromous Hatchery UnMarked,Oregon
+COHO,1,190,15,14,M-oranah,Oregon Anadromous Hatchery Marked,Oregon
+COHO,1,191,15,15,U-oraqah,Oregon Aqua-Foods Hatchery UnMarked,Oregon
+COHO,1,192,15,16,M-oraqah,Oregon Aqua-Foods Hatchery Marked,Oregon
+COHO,1,193,16,1,U-oresoh,Oregon South Coast Hatchery UnMarked,Oregon
+COHO,1,194,16,2,M-oresoh,Oregon South Coast Hatchery Marked,Oregon
+COHO,1,195,16,3,U-oresow,Oregon South Coast Wild UnMarked,Oregon
+COHO,1,196,16,4,M-oresow,Oregon South Coast Wild Marked,Oregon
+COHO,1,197,16,5,U-calnoh,California North Coast Hatchery UnMarked,California
+COHO,1,198,16,6,M-calnoh,California North Coast Hatchery Marked,California
+COHO,1,199,16,7,U-calnow,California North Coast Wild UnMarked,California
+COHO,1,200,16,8,M-calnow,California North Coast Wild Marked,California
+COHO,1,201,16,9,U-calcnh,California Central Coast Hatchery UnMarked,California
+COHO,1,202,16,10,M-calcnh,California Central Coast Hatchery Marked,California
+COHO,1,203,16,11,U-calcnw,California Central Coast Wild UnMarked,California
+COHO,1,204,16,12,M-calcnw,California Central Coast Wild Marked,California
+COHO,1,205,17,1,U-gsmndh,Georgia Strait Mainland Hatchery UnMarked,Canada
+COHO,1,206,17,2,M-gsmndh,Georgia Strait Mainland Hatchery Marked,Canada
+COHO,1,207,17,3,U-gsmndw,Georgia Strait Mainland Wild UnMarked,Canada
+COHO,1,208,17,4,M-gsmndw,Georgia Strait Mainland Wild Marked,Canada
+COHO,1,209,18,1,U-gsvcih,Georgia Strait Vanc. Isl. Hatchery UnMarked,Canada
+COHO,1,210,18,2,M-gsvcih,Georgia Strait Vanc. Isl. Hatchery Marked,Canada
+COHO,1,211,18,3,U-gsvciw,Georgia Strait Vanc. Isl. Wild UnMarked,Canada
+COHO,1,212,18,4,M-gsvciw,Georgia Strait Vanc. Isl. Wild Marked,Canada
+COHO,1,213,19,1,U-jnstrh,Johnstone Strait Hatchery UnMarked,Canada
+COHO,1,214,19,2,M-jnstrh,Johnstone Strait Hatchery Marked,Canada
+COHO,1,215,19,3,U-jnstrw,Johnstone Strait Wild UnMarked,Canada
+COHO,1,216,19,4,M-jnstrw,Johnstone Strait Wild Marked,Canada
+COHO,1,217,20,1,U-swvcih,SW Vancouver Island Hatchery UnMarked,Canada
+COHO,1,218,20,2,M-swvcih,SW Vancouver Island Hatchery Marked,Canada
+COHO,1,219,20,3,U-swvciw,SW Vancouver Island Wild UnMarked,Canada
+COHO,1,220,20,4,M-swvciw,SW Vancouver Island Wild Marked,Canada
+COHO,1,221,21,1,U-nwvcih,NW Vancouver Island Hatchery UnMarked,Canada
+COHO,1,222,21,2,M-nwvcih,NW Vancouver Island Hatchery Marked,Canada
+COHO,1,223,21,3,U-nwvciw,NW Vancouver Island Wild UnMarked,Canada
+COHO,1,224,21,4,M-nwvciw,NW Vancouver Island Wild Marked,Canada
+COHO,1,225,22,1,U-frslwh,Lower Fraser River Hatchery UnMarked,Fraser
+COHO,1,226,22,2,M-frslwh,Lower Fraser River Hatchery Marked,Fraser
+COHO,1,227,22,3,U-frslww,Lower Fraser River Wild UnMarked,Fraser
+COHO,1,228,22,4,M-frslww,Lower Fraser River Wild Marked,Fraser
+COHO,1,229,23,1,U-frsuph,Upper Fraser River Hatchery UnMarked,Fraser
+COHO,1,230,23,2,M-frsuph,Upper Fraser River Hatchery Marked,Fraser
+COHO,1,231,23,3,U-frsupw,Upper Fraser River Wild UnMarked,Fraser
+COHO,1,232,23,4,M-frsupw,Upper Fraser River Wild Marked,Fraser
+COHO,1,233,25,1,U-bccnhw,BC Central Coast Hatchery/Wild UnMarked,Canada
+COHO,1,234,25,2,M-bccnhw,BC Central Coast Hatchery/Wild Marked,Canada
+COHO,1,235,26,1,U-bcnchw,BC North Coast Hatchery/Wild UnMarked,Canada
+COHO,1,236,26,2,M-bcnchw,BC North Coast Hatchery/Wild Marked,Canada
+COHO,1,237,30,1,U-tranhw,Trans Boundary Hatchery/Wild UnMarked,Canada
+COHO,1,238,30,2,M-tranhw,Trans Boundary Hatchery/Wild Marked,Canada
+COHO,1,239,31,1,U-niakhw,Alaska Northern Inside Hat/Wild UnMarked,Alaska
+COHO,1,240,31,2,M-niakhw,Alaska Northern Inside Hat/Wild Marked,Alaska
+COHO,1,241,32,1,U-noakhw,Alaska Northern Outside Hat/Wild UnMarked,Alaska
+COHO,1,242,32,2,M-noakhw,Alaska Northern Outside Hat/Wild Marked,Alaska
+COHO,1,243,33,1,U-siakhw,Alaska Southern Inside Hat/Wild UnMarked,Alaska
+COHO,1,244,33,2,M-siakhw,Alaska Southern Inside Hat/Wild Marked,Alaska
+COHO,1,245,34,1,U-soakhw,Alaska Southern Outside Hat/Wild UnMarked,Alaska
+COHO,1,246,34,2,M-soakhw,Alaska Southern Outside Hat/Wild Marked,Alaska

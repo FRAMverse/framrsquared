@@ -407,3 +407,42 @@ filter_marine <- function(.data, species = NULL) {
     cli::cli_abort('`species` must be "COHO" or "CHINOOK", not "{species}".')
   }
 }
+
+#' Filters a dataframe to WA non-treaty commercial fisheries. Will
+#' automatically detect whether it's working with a Chinook or Coho
+#' dataset if the tables were generated within this package. Requires
+#' a `fishery_id` column name.
+#' @inheritParams filter_sport
+#' @export
+#' @examples
+#' \dontrun{
+#' fram_dataframe |> filter_commercial_wa_NT()
+#' }
+#' framrosetta::fishery_chinook_fram |> filter_commercial_wa_nt(species = "CHINOOK")
+#' framrosetta::fishery_coho_fram |> filter_commercial_wa_nt(species = "COHO")
+
+filter_commercial_wa_nt <- function(.data, species = NULL) {
+  validate_data_frame(.data)
+
+  if (!"fishery_id" %in% colnames(.data)) {
+    cli::cli_abort("fishery_id column must be present in dataframe.")
+  }
+
+  species <- validate_species(.data, species)
+
+  if (species == "CHINOOK") {
+    .data |>
+      dplyr::filter(
+        .data$fishery_id %in% c(58, 65, 68, 70, 37, 39, 43, 46, 49, 51)
+       )
+  } else if (species == "COHO") {
+    .data |>
+      dplyr::filter(
+        .data$fishery_id %in%
+          c(82, 87, 96, 101, 109, 111, 119, 121, 123, 130, 132, 137, 139, 141, 143, 145, 153, 155, 157, 159)
+      )
+  } else {
+    cli::cli_abort('`species` must be "COHO" or "CHINOOK", not "{species}".')
+  }
+}
+
