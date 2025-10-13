@@ -5,7 +5,7 @@
 \title{Guestimate the impact on a particular stock by multiplying its mortalities
 by the \code{stock_mortality_ratio} produced by these functions.}
 \usage{
-mortality_scalers(fram_db, run_id, stock_id)
+mortality_scalers(fram_db, run_id, stock_id, msp = FALSE)
 }
 \arguments{
 \item{fram_db}{FRAM database object}
@@ -13,6 +13,8 @@ mortality_scalers(fram_db, run_id, stock_id)
 \item{run_id}{Run ID}
 
 \item{stock_id}{A focal stock or stocks}
+
+\item{msp}{Do we use MSP expansion? Logical, defaults to FALSE. Only relevant for Chinook}
 }
 \description{
 Guestimate the impact on a particular stock by multiplying its mortalities

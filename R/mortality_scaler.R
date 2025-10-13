@@ -3,10 +3,11 @@
 #' @param fram_db FRAM database object
 #' @param run_id Run ID
 #' @param stock_id A focal stock or stocks
+#' @param msp Do we use MSP expansion? Logical, defaults to FALSE. Only relevant for Chinook
 #' @export
 #' @examples
 #' \dontrun{fram_db |> mortality_scalers(run_id = 101, stock_id = c(17:18))}
-mortality_scalers <- function(fram_db, run_id, stock_id) {
+mortality_scalers <- function(fram_db, run_id, stock_id, msp = FALSE) {
   # checks on the run id
   if (is.null(run_id)) {
     cli::cli_abort('Run ID must be provided.')
@@ -18,7 +19,7 @@ mortality_scalers <- function(fram_db, run_id, stock_id) {
   validate_fram_db(fram_db)
   switch(
     fram_db$fram_db_species,
-    'CHINOOK' = mortality_scalers_chinook_(fram_db, run_id, stock_id),
+    'CHINOOK' = mortality_scalers_chinook_(fram_db, run_id, stock_id, msp = msp),
     'COHO' = mortality_scalers_coho_(fram_db, run_id, stock_id)
   )
 }
@@ -47,23 +48,14 @@ mortality_scalers_coho_ <- function(fram_db, run_id, stock_id) {
 }
 
 
-mortality_scalers_chinook_ <- function(fram_db, run_id, stock_id) {
+mortality_scalers_chinook_ <- function(fram_db, run_id, stock_id, msp) {
   scalers <- fram_db |>
     fetch_table('Mortality') |>
     dplyr::filter(run_id == .env$run_id)
 
-  AEQ <- fram_db |>
-    fetch_table('AEQ')
-  cli::cli_text(c('Output in terms of ', cli::col_yellow('AEQs')))
-  scalers |>
-    dplyr::inner_join(AEQ,  by = c('age', 'stock_id', 'time_step')) |>
-    dplyr::mutate(dplyr::across(
-      c(
-        .data$landed_catch:.data$drop_off,
-        .data$msf_landed_catch:.data$msf_drop_off
-      ),
-      \(x) x * .data$aeq
-    )) |>
+ fram_db |>
+    aeq_mortality(run_id = run_id,
+                       msp = msp) |>
     dplyr::mutate(
       total_mortality = .data$landed_catch + .data$non_retention + .data$shaker + .data$drop_off +
         .data$msf_landed_catch + .data$msf_non_retention +
