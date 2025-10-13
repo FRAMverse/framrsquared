@@ -381,3 +381,85 @@ standardize_species <- function(species){
   }
   return(species)
 }
+
+validate_table <- function(fram_db, table_name){
+  if (fram_db$fram_db_type == 'full') {
+    table_name <- rlang::arg_match(table_name,
+                                   provide_table_names(is_full = TRUE))
+  } else {
+    table_name <- rlang::arg_match(table_name,
+                                   provide_table_names(is_full = FALSE))
+  }
+}
+
+#' List names of FRAM table
+#'
+#' Provides list of FRAm database names, typically useful for internal functions.
+#'
+#' @param is_full Logical. Provide names for a full FRAM database (TRUE) or a model transfer (FALSE)?
+#'
+#' @return Character string of the names of FRAM tables
+#' @export
+#'
+#' @examples
+#' provide_table_names(is_full = FALSE)
+
+provide_table_names <- function(is_full = TRUE){
+  if(!is.logical(is_full)){
+    cli::cli_abort("`is_full` must be TRUE or FALSE, not `{is_full}`")
+  }
+  if(is_full){ ## list of possible table names from a full table
+    c('AEQ',
+      'BackwardsFRAM',
+      'BaseCohort',
+      'BaseExploitationRate',
+      'BaseID',
+      'ChinookBaseEncounterAdjustment',
+      'ChinookBaseSizeLimit',
+      'Cohort',
+      'EncounterRateAdjustment',
+      'Escapement',
+      'Fishery',
+      'FisheryModelStockProportion',
+      'FisheryMortality',
+      'FisheryScalers',
+      'Growth',
+      'IncidentalRate',
+      'MaturationRate',
+      'Mortality',
+      'NaturalMortality',
+      'NonRetention',
+      'PSCMaxER',
+      'ReportDriver',
+      'RunEncounterRateAdjustment',
+      'RunID',
+      'ShakerMortRate',
+      'SizeLimits',
+      'SLRatio',
+      'Stock',
+      'StockFisheryRateScaler',
+      'StockRecruit',
+      'TAAETRSList',
+      'TerminalFisheryFlag',
+      'TimeStep'
+    )
+  } else {
+    c(
+      'BackwardsFRAM',
+      'BaseID',
+      'Cohort',
+      'Escapement',
+      'FisheryMortality',
+      'FisheryScalers',
+      'Mortality',
+      'NonRetention',
+      'PSCMaxER',
+      'RunID',
+      'SizeLimits',
+      'SLRatio',
+      'StockFisheryRateScaler',
+      'StockRecruit',
+      'TAAETRSList'
+    )
+  }
+}

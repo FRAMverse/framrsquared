@@ -28,11 +28,7 @@ modify_table <- function(fram_db, table_name, df) {
   }
 
   ## get column names
-  table_columns <- DBI::dbGetQuery(
-    fram_db$fram_db_connection,
-    glue::glue("SELECT * FROM {table_name} where false;")
-  ) |>
-    colnames()
+  table_columns = fetch_table_colnames(fram_db, table_name)
 
   match_names <- grep("^match_", names(df), value = TRUE)
   match_names <- gsub("^match_", "", match_names)
