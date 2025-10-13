@@ -2,7 +2,8 @@
 % Please edit documentation in R/sensitivity.R
 \name{sensitivity_custom}
 \alias{sensitivity_custom}
-\title{Generate sensitivity analyses runs based on a list of match/replace dataframes}
+\title{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+Generate sensitivity analyses runs based on a list of match/replace dataframes}
 \usage{
 sensitivity_custom(
   fram_db,

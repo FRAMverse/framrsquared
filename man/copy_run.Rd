@@ -2,7 +2,8 @@
 % Please edit documentation in R/copy.R
 \name{copy_run}
 \alias{copy_run}
-\title{Copies a run a number of times}
+\title{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+Copies a run a number of times}
 \usage{
 copy_run(
   fram_db,

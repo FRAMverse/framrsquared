@@ -1,3 +1,4 @@
+#'  `r lifecycle::badge("experimental")`
 #' Generate sensitivity analyses runs scaled by template values
 #'
 #' From a template FRAM run, for a single vector of scaling factors (e.g., `c(0.5, 2)` would test halving and doubling), generate sensitivity analyses which rescale the columns specied in (`cols_to_vary`) for rows which match the conditions specified in `match_df`. Optionally creates corresponding tamms from a template TAMM, labeled to work with folder loading option in the FRAM multi-run fork.
@@ -156,6 +157,7 @@ get_unique_filename <- function(base_name, counter = 1, pad_width = 3) {
   }
 }
 
+#'  `r lifecycle::badge("experimental")`
 #' Generate sensitivity analyses runs based on exact values
 #'
 #' As `sensitivity_scaled`, but provide exact values for the sensitivity analyses (in argument `exact_values`) instead of
@@ -284,7 +286,7 @@ sensitivity_exact <- function(fram_db,
   }
 }
 
-
+#'  `r lifecycle::badge("experimental")`
 #' Generate sensitivity analyses runs based on a list of match/replace dataframes
 #'
 #' For complex sensitivity analyses, it may be easiest to programmatically create a series of
@@ -326,7 +328,6 @@ sensitivity_exact <- function(fram_db,
 #'                     label = "markrelease custom")
 #'disconnect_fram_db(fram_db)
 #' }
-
 sensitivity_custom <- function(fram_db,
                                template_run,
                                table_name,

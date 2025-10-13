@@ -2,7 +2,8 @@
 % Please edit documentation in R/sensitivity.R
 \name{sensitivity_exact}
 \alias{sensitivity_exact}
-\title{Generate sensitivity analyses runs based on exact values}
+\title{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+Generate sensitivity analyses runs based on exact values}
 \usage{
 sensitivity_exact(
   fram_db,

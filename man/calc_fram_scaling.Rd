@@ -2,7 +2,8 @@
 % Please edit documentation in R/modify_db.R
 \name{calc_fram_scaling}
 \alias{calc_fram_scaling}
-\title{Calculate match/replace df based on scaling}
+\title{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+Calculate match/replace df based on scaling}
 \usage{
 calc_fram_scaling(fram_db, table_name, df)
 }

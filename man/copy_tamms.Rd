@@ -2,7 +2,8 @@
 % Please edit documentation in R/copy.R
 \name{copy_tamms}
 \alias{copy_tamms}
-\title{Copy TAMM for FRAM batch runs}
+\title{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+Copy TAMM for FRAM batch runs}
 \usage{
 copy_tamms(tamm_name, target_folder, run_id_vec, overwrite = FALSE)
 }

@@ -2,7 +2,8 @@
 % Please edit documentation in R/modify_db.R
 \name{modify_table}
 \alias{modify_table}
-\title{Modify FRAM database based on match/replace dataframe}
+\title{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+Modify FRAM database based on match/replace dataframe}
 \usage{
 modify_table(fram_db, table_name, df)
 }

@@ -87,6 +87,7 @@ copy_fishery_scalers <- function(fram_db, from_run, to_run, fishery_id = NULL){
 
 }
 
+#'  `r lifecycle::badge("experimental")`
 #' Copies a run a number of times
 #'
 #' FRAM is stored in an access database; these have hard size limits of 2GB. Chinook and Coho are expected to reach this limit with ~540 runs. This function includes a failsafe to prevent databases from exceeding 500 runs. This can be overridden with optional `force_many_runs` argument.
@@ -266,6 +267,7 @@ copy_run <- function(fram_db, target_run, times = 1, label = 'copy', force_many_
   invisible(run_id_vec)
 }
 
+#'  `r lifecycle::badge("experimental")`
 #' Copy TAMM for FRAM batch runs
 #'
 #' Preps a folder for batch running in the 'Run Multiple Runs' screen of the FRAM automation fork (https://github.com/FRAMverse/FRAM_automation), for use with the `advanced` approach to identify multiple runs. One TAMM file will be copied multiple times in the `target_folder` with suffixes that identify each of the run_ids. The "Use folder" button on the "Run Multiple Runs" screen can then use the target folder to set up large batch runs. Typically users should use `make_batch_runs()` instead (this first copies runs and then uses `copy_tamms` to create tamms that match the new runs).

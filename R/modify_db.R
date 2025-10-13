@@ -1,3 +1,4 @@
+#'  `r lifecycle::badge("experimental")`
 #' Modify FRAM database based on match/replace dataframe
 #'
 #' Uses a special match/replace dataframe to modify values in a FRAM table.
@@ -71,6 +72,7 @@ modify_table <- function(fram_db, table_name, df) {
 }
 
 
+#'  `r lifecycle::badge("experimental")`
 #' Calculate match/replace df based on scaling
 #'
 #' Uses a match/replace-style table like in `modify_table()`, but allows user to specify

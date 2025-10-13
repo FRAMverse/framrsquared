@@ -2,7 +2,8 @@
 % Please edit documentation in R/sensitivity.R
 \name{sensitivity_scaled}
 \alias{sensitivity_scaled}
-\title{Generate sensitivity analyses runs scaled by template values}
+\title{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+Generate sensitivity analyses runs scaled by template values}
 \usage{
 sensitivity_scaled(
   fram_db,

@@ -33,7 +33,6 @@ For example, if we wanted to change the size limits for Chinook in Area 7 sport 
 We could specify those changes with the following match/replace dataframe
 
 ```{r}
-library(tidyverse)
 ## make the match/replace dataframe for a single run
 mr_df = data.frame(match_FisheryID = c(36, 36, 36), 
                    match_TimeStep = c(1,3,4),
@@ -50,7 +49,7 @@ mr_df
 If we used this as it is, as in `modify_table(fram_db, "SizeLimits", mr_df)`, `modify_table()` would find all entries with fishery 36 timestep 1 or 4 and replace the MinimumSize with 600. Similarly, i twould find all entries with fishery 36 timestep 3 and replace the MinimumSize with 450. We can constrain these changes to run ids 28 through 30 by adding a `match_RunID` column
 
 ```{r}
-mr_df = expand_grid(match_RunID = 28:30, mr_df)
+mr_df = tidyr::expand_grid(match_RunID = 28:30, mr_df)
 mr_df
 ```
 
@@ -89,6 +88,8 @@ We may sometimes want our sensitivity analysis to look at the effects of changin
 # Example
 
 As part of the Elwha Out of Base (OOB) work in 2025, we want to look at how changes to the Elwha starting abundances affect ERs across the board. I started by making a copy of the Elwa OOB "valid run" database to ensure I had no way of accidentally screwing up the reference database.
+
+**Remainder of this section to be completed after merging**
 
 
 
