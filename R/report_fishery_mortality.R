@@ -194,6 +194,10 @@ plot_stock_mortality_time_step <- function(fram_db, run_id, stock_id, top_n = 10
   validate_fram_db(fram_db, db_type = 'full')
   validate_run_id(fram_db, run_id)
 
+  species_used = fetch_table(fram_db, "RunID") |>
+    dplyr::filter(.data$run_id == .env$run_id) |>
+    dplyr::pull(.data$species_name)
+
   if (length(run_id)>1) {
     cli::cli_abort("Plot is not meaningful when combining multiple runs. Provide a single run in run_id.")
   }
