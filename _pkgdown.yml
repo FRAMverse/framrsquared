@@ -59,7 +59,7 @@ reference:
       - starts_with("copy_")
       - starts_with("change_")
       - remove_run
-      - modify_run
+      - modify_table
   - title: "Sensitivity analysis functions"
     desc: >
       Functions that create new FRAM database tables to align with a sensitivity analysis,
