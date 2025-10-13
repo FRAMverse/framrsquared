@@ -1,3 +1,5 @@
+# framrsquared 0.7.0
+
 # framrsquared 0.6.0
 
 ## New features
