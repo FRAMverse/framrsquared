@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">framrsquared</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -20,6 +20,7 @@
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/auditing_tools.html">auditing_tools</a></li>
+    <li><a class="dropdown-item" href="../articles/sensitivity_analyses.html">sensitivity_analyses</a></li>
   </ul></li>
 <li class="active nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
@@ -43,6 +44,25 @@
       <small>Source: <a href="https://github.com/FRAMverse/framrsquared/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.7.0" id="framrsquared-070">framrsquared 0.7.0<a class="anchor" aria-label="anchor" href="#framrsquared-070"></a></h2>
+<div class="section level3">
+<h3 id="new-features-0-7-0">New features<a class="anchor" aria-label="anchor" href="#new-features-0-7-0"></a></h3>
+<ul><li>
+<code><a href="../reference/modify_table.html">modify_table()</a></code> allows flexible modification of FRAM databases, <code>calc_fram_scaling</code> allows scaling of existing values of FRAM databases</li>
+<li>
+<code><a href="../reference/sensitivity_scaled.html">sensitivity_scaled()</a></code> and <code><a href="../reference/sensitivity_exact.html">sensitivity_exact()</a></code> allow easy creation of sensitivity analysis runs that are compatible with the multi-run fork of FRAM</li>
+<li>
+<code><a href="../reference/sensitivity_custom.html">sensitivity_custom()</a></code> allows definition of complex scenarios to run for a sensitivity analysis, presumably using programmatic generation. For example, could be used to explore how changing age composition (without changing abundance) affects ERs.</li>
+<li>Vignette on sensitivity analysis.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="bug-fixes-and-minor-improvements-0-7-0">Bug fixes and minor improvements<a class="anchor" aria-label="anchor" href="#bug-fixes-and-minor-improvements-0-7-0"></a></h3>
+<ul><li>Fix to <code><a href="../reference/post_season_abundance.html">post_season_abundance()</a></code>: previously the function would misbehave if both chinook and coho stocks were defined in the “Stock” table. This is no longer the case.</li>
+<li>Fix to <code>mortality_scaler()</code>: previously did not correctly account for terminal area fisheries, does now.</li>
+<li>minor additional validation functions, including <code>validate_table()</code>, <code>provide_table_name()</code> and <code>fetch_table_colnames()</code>.</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.6.0" id="framrsquared-060">framrsquared 0.6.0<a class="anchor" aria-label="anchor" href="#framrsquared-060"></a></h2>
 <div class="section level3">

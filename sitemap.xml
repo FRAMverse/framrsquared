@@ -5,6 +5,7 @@
 <url><loc>https://framverse.github.io/framrsquared/articles/auditing_tools.html</loc></url>
 <url><loc>https://framverse.github.io/framrsquared/articles/framrsquared.html</loc></url>
 <url><loc>https://framverse.github.io/framrsquared/articles/index.html</loc></url>
+<url><loc>https://framverse.github.io/framrsquared/articles/sensitivity_analyses.html</loc></url>
 <url><loc>https://framverse.github.io/framrsquared/authors.html</loc></url>
 <url><loc>https://framverse.github.io/framrsquared/index.html</loc></url>
 <url><loc>https://framverse.github.io/framrsquared/news/index.html</loc></url>
@@ -13,6 +14,7 @@
 <url><loc>https://framverse.github.io/framrsquared/reference/addstock_check.html</loc></url>
 <url><loc>https://framverse.github.io/framrsquared/reference/aeq_mortality.html</loc></url>
 <url><loc>https://framverse.github.io/framrsquared/reference/bkfram_checks_coho.html</loc></url>
+<url><loc>https://framverse.github.io/framrsquared/reference/calc_fram_scaling.html</loc></url>
 <url><loc>https://framverse.github.io/framrsquared/reference/change_run_id.html</loc></url>
 <url><loc>https://framverse.github.io/framrsquared/reference/coho_mark_rates.html</loc></url>
 <url><loc>https://framverse.github.io/framrsquared/reference/cohort_abundance.html</loc></url>
@@ -28,6 +30,8 @@
 <url><loc>https://framverse.github.io/framrsquared/reference/compare_stock_fishery_rate_scalers.html</loc></url>
 <url><loc>https://framverse.github.io/framrsquared/reference/connect_fram_db.html</loc></url>
 <url><loc>https://framverse.github.io/framrsquared/reference/copy_fishery_scalers.html</loc></url>
+<url><loc>https://framverse.github.io/framrsquared/reference/copy_run.html</loc></url>
+<url><loc>https://framverse.github.io/framrsquared/reference/copy_tamms.html</loc></url>
 <url><loc>https://framverse.github.io/framrsquared/reference/disconnect_fram_db.html</loc></url>
 <url><loc>https://framverse.github.io/framrsquared/reference/error_check_code.html</loc></url>
 <url><loc>https://framverse.github.io/framrsquared/reference/fetch_quarto_templates.html</loc></url>
@@ -57,6 +61,7 @@
 <url><loc>https://framverse.github.io/framrsquared/reference/input_summary_.html</loc></url>
 <url><loc>https://framverse.github.io/framrsquared/reference/make_impacts_per_catch_heatmap.html</loc></url>
 <url><loc>https://framverse.github.io/framrsquared/reference/management_week.html</loc></url>
+<url><loc>https://framverse.github.io/framrsquared/reference/modify_table.html</loc></url>
 <url><loc>https://framverse.github.io/framrsquared/reference/mortality_scalers.html</loc></url>
 <url><loc>https://framverse.github.io/framrsquared/reference/msf_encounters.html</loc></url>
 <url><loc>https://framverse.github.io/framrsquared/reference/msf_encounters_chinook_.html</loc></url>
@@ -76,6 +81,9 @@
 <url><loc>https://framverse.github.io/framrsquared/reference/remove_run.html</loc></url>
 <url><loc>https://framverse.github.io/framrsquared/reference/run_info.html</loc></url>
 <url><loc>https://framverse.github.io/framrsquared/reference/scalers_flag_translate.html</loc></url>
+<url><loc>https://framverse.github.io/framrsquared/reference/sensitivity_custom.html</loc></url>
+<url><loc>https://framverse.github.io/framrsquared/reference/sensitivity_exact.html</loc></url>
+<url><loc>https://framverse.github.io/framrsquared/reference/sensitivity_scaled.html</loc></url>
 <url><loc>https://framverse.github.io/framrsquared/reference/standardize_species.html</loc></url>
 <url><loc>https://framverse.github.io/framrsquared/reference/statistical_week.html</loc></url>
 <url><loc>https://framverse.github.io/framrsquared/reference/stock_age_checker.html</loc></url>
