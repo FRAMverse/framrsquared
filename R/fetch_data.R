@@ -45,13 +45,7 @@ fetch_table <- function(fram_db, table_name = NULL, warn = TRUE){
       )
     }
   } else{
-    if (fram_db$fram_db_type == 'full') {
-      table_name <- rlang::arg_match(table_name,
-                                     all_tables)
-    } else {
-      table_name <- rlang::arg_match(table_name,
-                                     limited_tables)
-    }
+    validate_table(fram_db, table_name)
     output_table <- DBI::dbGetQuery(fram_db$fram_db_connection,
                                     glue::glue('SELECT * FROM {table_name};')) |>
       fram_clean_tables()
@@ -105,76 +99,12 @@ fetch_table_bkchin <- function(fram_db){
   return(output_table)
 }
 
-
-#' List names of FRAM table
-#'
-#' Provides list of FRAm database names, typically useful for internal functions.
-#'
-#' @param is_full Logical. Provide names for a full FRAM database (TRUE) or a model transfer (FALSE)?
-#'
-#' @return Character string of the names of FRAM tables
-#' @export
-#'
-#' @examples
-#' provide_table_names(is_full = FALSE)
-
-provide_table_names <- function(is_full = TRUE){
-  if(!is.logical(is_full)){
-    cli::cli_abort("`is_full` must be TRUE or FALSE, not `{is_full}`")
-  }
-  if(is_full){ ## list of possible table names from a full table
-    c('AEQ',
-      'BackwardsFRAM',
-      'BaseCohort',
-      'BaseExploitationRate',
-      'BaseID',
-      'ChinookBaseEncounterAdjustment',
-      'ChinookBaseSizeLimit',
-      'Cohort',
-      'EncounterRateAdjustment',
-      'Escapement',
-      'Fishery',
-      'FisheryModelStockProportion',
-      'FisheryMortality',
-      'FisheryScalers',
-      'Growth',
-      'IncidentalRate',
-      'MaturationRate',
-      'Mortality',
-      'NaturalMortality',
-      'NonRetention',
-      'PSCMaxER',
-      'ReportDriver',
-      'RunEncounterRateAdjustment',
-      'RunID',
-      'ShakerMortRate',
-      'SizeLimits',
-      'SLRatio',
-      'Stock',
-      'StockFisheryRateScaler',
-      'StockRecruit',
-      'TAAETRSList',
-      'TerminalFisheryFlag',
-      'TimeStep'
-    )
-  } else {
-    c(
-      'BackwardsFRAM',
-      'BaseID',
-      'Cohort',
-      'Escapement',
-      'FisheryMortality',
-      'FisheryScalers',
-      'Mortality',
-      'NonRetention',
-      'PSCMaxER',
-      'RunID',
-      'SizeLimits',
-      'SLRatio',
-      'StockFisheryRateScaler',
-      'StockRecruit',
-      'TAAETRSList'
-    )
-  }
+fetch_table_colnames <- function(fram_db, table_name){
+  DBI::dbGetQuery(
+    fram_db$fram_db_connection,
+    glue::glue("SELECT * FROM {table_name} where false;")
+  ) |>
+    colnames()
 }
+
 

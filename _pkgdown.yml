@@ -59,6 +59,14 @@ reference:
       - starts_with("copy_")
       - starts_with("change_")
       - remove_run
+      - modify_table
+  - title: "Sensitivity analysis functions"
+    desc: >
+      Functions that create new FRAM database tables to align with a sensitivity analysis,
+      use with caution
+    contents:
+      - starts_with("sensitivity_")
+      - calc_fram_scaling
   - title: "Week calculations"
     desc: >
       Functions calculate a week number
@@ -122,4 +130,5 @@ reference:
       - NR_flag_translate
       - scalers_flag_translate
       - stock_id_comp
+      - provide_table_names
       - welcome

@@ -20,7 +20,9 @@ post_season_abundance <- function(fram_db, units = c('ja3', 'oa3')){
   # get data
   stock_recruit <- fram_db |> fetch_table('StockRecruit')
   base_cohort <- fram_db |> fetch_table('BaseCohort')
-  stock <- fram_db |> fetch_table('Stock')
+  stock <- fram_db |>
+    fetch_table('Stock') |>
+    dplyr::filter(.data$species == "COHO")
   run_id <- fram_db |> fetch_table('RunID') |>
     dplyr::filter(.data$run_type == 'Post') # only want post-season runs
 
