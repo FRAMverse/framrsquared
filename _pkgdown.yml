@@ -60,6 +60,7 @@ reference:
       - starts_with("change_")
       - remove_run
       - modify_table
+      - zero_fishery
   - title: "Sensitivity analysis functions"
     desc: >
       Functions that create new FRAM database tables to align with a sensitivity analysis,

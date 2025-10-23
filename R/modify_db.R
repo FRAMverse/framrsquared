@@ -65,7 +65,7 @@ modify_table <- function(fram_db, table_name, df) {
     dplyr::rowwise() |>
     dplyr::mutate(db_call = glue::glue(glue_statement)) |>
     dplyr::mutate(rows_affected = DBI::dbExecute(fram_db$fram_db_connection,
-      statement = .data$db_call
+                                                 statement = .data$db_call
     )) |>
     dplyr::mutate(db_call = as.list(.data$db_call))
   return(results)
@@ -149,7 +149,7 @@ calc_fram_scaling <- function(fram_db, table_name, df) {
 
   if (length(terms_included == 1)) {
     if (!all(df$scale_RecruitCohortSize ==
-      df$scale_RecruitScaleFactor)) {
+             df$scale_RecruitScaleFactor)) {
       cli::cli_abort("scale_RecruitCohortSize and scale_RecruitScaleFactor must match!")
     }
   }
@@ -175,10 +175,10 @@ calc_fram_scaling <- function(fram_db, table_name, df) {
 
   df_mod <- df_mod |>
     dplyr::rename_with(~ paste0("match_", .),
-      .cols = !dplyr::any_of(scale_names)
+                       .cols = !dplyr::any_of(scale_names)
     ) |>
     dplyr::rename_with(~ paste0("replace_", .),
-      .cols = dplyr::any_of(scale_names)
+                       .cols = dplyr::any_of(scale_names)
     )
 
   ## Shoudn't end up with NAs, but if something goes wrong with joins, want it to be obvious
@@ -191,3 +191,57 @@ calc_fram_scaling <- function(fram_db, table_name, df) {
 
   return(df_mod)
 }
+
+#'  `r lifecycle::badge("experimental")`
+#' Zero out fishery catch for selected fisheries
+#'
+#' Nukes a fishery for one or more timesteps; useful to streamline scenario modeling during the NoF process. Leaves FisheryFlag alone, and sets scaler, quota, msf scaler, and msf quota to 0. If using `zero_fishery()` on a database that is loaded into FRAM, remember to reload the database before doing more modeling!
+#'
+#' @param fram_db Fram database connected
+#' @param run_id One or more run IDs
+#' @param fishery_id One or more fishery ids
+#' @param time_step One or more timesteps. Default is NULL; in the case all ages are used.
+#'
+#' @export
+#'
+#' @examples
+#' \dontrun{fram_db <-  connect_fram_db(here::here("testChinookFram.mdb"))
+#'fram_db |>
+#'  zero_fishery(run_id = 66, fishery_id = 12, time_step = 2:3)
+#'disconnect_fram_db(fram_db)
+#' }
+zero_fishery = function(fram_db, run_id, fishery_id, time_step = NULL){
+  validate_fram_db(fram_db)
+  validate_run_id(fram_db, run_id)
+
+  if (!is.null(time_step)) {
+    if (!is.numeric(time_step)) {
+      cli::cli_abort("`time_step` must be numeric")
+    }
+  }
+
+  if(is.null(time_step)){
+    if(fram_db$fram_db_species == "CHINOOK"){
+      time_step = 1:4
+    }else{
+      time_step = 1:5
+    }
+  }
+
+    df = tidyr::expand_grid(match_RunID = run_id,
+                            match_FisheryID = fishery_id,
+                            replace_FisheryScaleFactor = 0,
+                            replace_Quota = 0,
+                            replace_MSFFisheryScaleFactor = 0,
+                            replace_MSFQuota = 0)
+    if(!is.null(time_step)){
+      df = tidyr::expand_grid(df,
+                             match_TimeStep = time_step)
+    }
+    out <- fram_db |> modify_table("FisheryScalers",
+                            df = df)
+    cli::cli_alert_success("{sum(out$rows_affected)} rows of FisheryScalers successfully zeroed out.")
+    cli::cli_alert_warning("If FRAM is currently open, you will need to reload this database!")
+
+}
+
