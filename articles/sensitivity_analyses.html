@@ -103,7 +103,7 @@ for a sensitivity analyses – need to identify</p>
 <li>What should be changed, and</li>
 <li>What new values should be used</li>
 </ol>
-<ol style="list-style-type: decimal">
+<!-- --><ol style="list-style-type: decimal">
 <li>requires both identify the table (e.g. maybe the StockRecruit
 table), the columns to change (e.g., maybe RecruitScaleFactor), and rows
 to change (maybe all rows with StockID 17 or 18, or all rows with Age 2,
@@ -249,15 +249,17 @@ scenarios in which multiple values should be changing differently from
 one another but proportionally to some starting ratio, it may be
 possible to do so by first modifying the values of the template run to
 the desired ratio and then using <code><a href="../reference/sensitivity_scaled.html">sensitivity_scaled()</a></code>).</p>
-<p>When designing a sensitivity analysis, we need to first decide: -
-what is our starting run? This determines <code>template_run</code>. -
-What do we want to be changing across these runs? This determines
-<code>table_name</code> and <code>match_df</code>. - What sequence of
-values do we want to look at? This determines <code>scale_values</code>
-or <code>exact_values</code>. Several notes here. First, because we
-provide a vector of values, we can choose to a linear scale (e.g.,
-<code>seq(0.1, 2, by = 0.1)</code>), OR we can choose a more complex
-scale like a log scale(e.g.,
+<p>When designing a sensitivity analysis, we need to first decide:</p>
+<ul>
+<li>what is our starting run? This determines
+<code>template_run</code>.</li>
+<li>What do we want to be changing across these runs? This determines
+<code>table_name</code> and <code>match_df</code>.</li>
+<li>What sequence of values do we want to look at? This determines
+<code>scale_values</code> or <code>exact_values</code>. Several notes
+here. First, because we provide a vector of values, we can choose to a
+linear scale (e.g., <code>seq(0.1, 2, by = 0.1)</code>), OR we can
+choose a more complex scale like a log scale(e.g.,
 <code>exp(seq(log(10), log(100000), length = 50)))</code>. Second, the
 length of the sequence of values we provide determines how many runs are
 generated. In general it looks like we need to keep the number of runs
@@ -265,12 +267,14 @@ in FRAM access databases to no more than 500, so bear that in mind when
 making sensitivity analyses. If there is a need for many more runs in a
 single database, consider updating the FRAM fork to fold in the SQLite
 support Ty wrote, and then modify these functions to work with SQLite as
-well. - Do we want to use TAMMs with our sensitivity runs? If so, what
-TAMM file do we want to be our template? Where do we want the
-sensitivity run TAMMs to be saved? Using TAMM runs will slow the actual
-sensitivity analyses run in FRAM, but are necessary to do things like
-account for coastal iterations (Coho) or do a bunch of important things
-(Chinook).</p>
+well.</li>
+<li>Do we want to use TAMMs with our sensitivity runs? If so, what TAMM
+file do we want to be our template? Where do we want the sensitivity run
+TAMMs to be saved? Using TAMM runs will slow the actual sensitivity
+analyses run in FRAM, but are necessary to do things like account for
+coastal iterations (Coho) or do a bunch of important things
+(Chinook).</li>
+</ul>
 </div>
 <div class="section level4">
 <h4 id="handling-complicated-things">Handling complicated things<a class="anchor" aria-label="anchor" href="#handling-complicated-things"></a>
@@ -301,13 +305,93 @@ to handle the TAMM modifications.</p>
 <div class="section level2">
 <h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
 </h2>
-<p>As part of the Elwha Out of Base (OOB) work in 2025, we want to look
+<p>As part of the Elwha Out of Base (OOB) work in 2025, I wanted to look
 at how changes to the Elwha starting abundances affect ERs across the
 board. I started by making a copy of the Elwa OOB “valid run” database
 to ensure I had no way of accidentally screwing up the reference
 database.</p>
-<p><strong>Remainder of this section to be completed after
-merging</strong></p>
+<p>With the new database ready for modification, I decided:</p>
+<ul>
+<li>That I would use the latest postseason run as my starting point.
+This had run ID 62 in the database.</li>
+<li>That I would use TAMMs for each run. I found the TAMM corresponding
+to the latest postseason run, which happened to be in the main folder of
+the working directory, titled “Valid2024_TAMM_2022.xlsx”. I decided my
+sensitivity analysis TAMMs should live in the folder
+“elwha-scaling-sensitivity”.</li>
+<li>That I would vary abundance relative to the template run rather than
+assigning StockRecruit numbers based on exact values. Using relative
+values is convenient when we want to change multiple values at once. In
+this case, I wanted to vary the stock recruit scalers for every age
+class.</li>
+</ul>
+<p>Using framrosetta, I found that Elwha is part of FRAM stocks 35 and
+36 (unmarked and marked stocks). Looking at the StockRecruit table, I
+found that I wanted I wanted the changes to be applied to all rows in
+which StockID was 35 or 36, and I needed the changes to be made to
+column “RecruitScaleFactor”. I decided to also have the proportional
+changes be applied to “RecruitCohortSize” so that they remained aligned
+with the scale factors. This choice is not important for the use of
+framrsquared, and instead is addressing a funky quirk of FRAM
+itself.</p>
+<p>(FRAM only <em>uses</em> RecruitScaleFactor, while RecruitCohortSize
+is present as any reference point (otherwise to get that number by
+multiplying the base cohort size by the RecruitScaleFactor term).
+However, at present FRAM only calculates RecruitCohortSize when making
+changes to the recruit scalers in the FRAM interface, so if we make
+changes to the RecruitScaleFactor values directly in the database,
+RecruitCohortSize will continue to show old values, making it
+meaningless. This isn’t a huge deal since it doesn’t get used anywhere,
+but it can be misleading to anyone looking at the database, so it’s good
+practice to try to keep them aligned.)</p>
+<p>I decided I want to look at abundances from 5% of the template run to
+2,000% (e.g., x0.05 through x20 abundances). I could do this on a linear
+scale, but it seemed more important to have more sensitivity runs in the
+5%-100% range, somewhat fewer in the 100%-1000% range, and fewer still
+in the 1000%-2000% range. We could achieve something similar by sampling
+evenly on a log scale, but it’s easy enough to just space our samples on
+piecewise linear scales:</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">scale_terms</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0.05</span>, <span class="fl">1</span>, by <span class="op">=</span> <span class="fl">0.05</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">10</span>, by <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">20</span>, by <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p>With all that in mind, creating the sensitivity analyses required
+very little work.</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://here.r-lib.org/" class="external-link">here</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://framverse.github.io/framrsquared/">framrsquared</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">fram_db</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/connect_fram_db.html">connect_fram_db</a></span><span class="op">(</span><span class="fu"><a href="https://here.r-lib.org/reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"Valid2024-elwha-Iter3-withTAMM_sensitivity.mdb"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">fram_db</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="../reference/sensitivity_scaled.html">sensitivity_scaled</a></span><span class="op">(</span>template_run <span class="op">=</span> <span class="fl">62</span>, </span>
+<span>                     table_name <span class="op">=</span> <span class="st">"StockRecruit"</span>,</span>
+<span>                      match_df <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>StockID <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">35</span>, <span class="fl">36</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>                     scale_values <span class="op">=</span> <span class="va">scale_terms</span>,</span>
+<span>                     cols_to_vary <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"RecruitScaleFactor"</span>, <span class="st">"RecruitCohortSize"</span><span class="op">)</span>,</span>
+<span>                     tamm_template <span class="op">=</span> <span class="fu"><a href="https://here.r-lib.org/reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"post-season-withOOB/Valid2024_TAMM_2022.xlsx"</span><span class="op">)</span>,</span>
+<span>                     tamm_target_folder <span class="op">=</span> <span class="fu"><a href="https://here.r-lib.org/reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"elwha-scaling-sensitivity"</span><span class="op">)</span>,</span>
+<span>                     label <span class="op">=</span> <span class="st">"elwha-sensitivity"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/disconnect_fram_db.html">disconnect_fram_db</a></span><span class="op">(</span><span class="va">fram_db</span><span class="op">)</span></span></code></pre></div>
+<p>That is all that is necessary to create 132 sensitivity analyses runs
+that are ready to run with the FRAM fork. We can even automate loading
+them in by opening a file explorer window and navigating to the folder
+with the tamm files (“elwha-scaling-sensitivity”) and copying the folder
+path into the “Advanced:..” field and clicking “Use folder”</p>
+<p><img src="images/clipboard-2627067857.png" style="width:100.0%"></p>
+<p>At this point, FRAM will be ready to hit the Run All button:</p>
+<p><img src="images/clipboard-2787309075.png" style="width:100.0%"></p>
+<p>The key pieces in the code call above that may not be intuitive:</p>
+<ul>
+<li>
+<code>match_df</code> is a dataframe with named columns that match
+the names of columns in the FRAM database. Here we only have one column,
+but if we wanted our changes to only apply to some age classes, for
+example, we would need a second column called “Age” that had the age
+classes we wanted to change.</li>
+<li>
+<code>cols_to_vary</code> is a vector of character strings that
+identify the columns of the table that should be varied.</li>
+</ul>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
