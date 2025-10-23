@@ -210,7 +210,7 @@ calc_fram_scaling <- function(fram_db, table_name, df) {
 #'  zero_fishery(run_id = 66, fishery_id = 12, time_step = 2:3)
 #'disconnect_fram_db(fram_db)
 #' }
-zero_fishery = function(fram_db, run_id, fishery_id, time_step = NULL){
+zero_fishery <- function(fram_db, run_id, fishery_id, time_step = NULL){
   validate_fram_db(fram_db)
   validate_run_id(fram_db, run_id)
 
@@ -222,20 +222,20 @@ zero_fishery = function(fram_db, run_id, fishery_id, time_step = NULL){
 
   if(is.null(time_step)){
     if(fram_db$fram_db_species == "CHINOOK"){
-      time_step = 1:4
+      time_step <- 1:4
     }else{
-      time_step = 1:5
+      time_step <-  1:5
     }
   }
 
-    df = tidyr::expand_grid(match_RunID = run_id,
+    df  <- tidyr::expand_grid(match_RunID = run_id,
                             match_FisheryID = fishery_id,
                             replace_FisheryScaleFactor = 0,
                             replace_Quota = 0,
                             replace_MSFFisheryScaleFactor = 0,
                             replace_MSFQuota = 0)
     if(!is.null(time_step)){
-      df = tidyr::expand_grid(df,
+      df <- tidyr::expand_grid(df,
                              match_TimeStep = time_step)
     }
     out <- fram_db |> modify_table("FisheryScalers",
