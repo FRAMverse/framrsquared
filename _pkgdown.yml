@@ -131,5 +131,5 @@ reference:
       - scalers_flag_translate
       - stock_id_comp
       - provide_table_names
-      - format_string_for_sql
+      - format_strings_for_sql
       - welcome
