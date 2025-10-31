@@ -7,6 +7,8 @@
 #'
 #' As a simple example, imagine we want to see how modifying the size limits for Area 7 Sport (chinook fishery id 36) affect our ERs. We would probably start by using copy_run to create multiple duplicate runs, and then we can use `modify_table` to change just the `MinimumSize` values of the "SizeLimits" table for just those rows for which fishery id was 36. If our run ids were 100, 101, and 102, and we wanted to look at minimum sizes of 450, 550, and 650, our `df` argument might look like `data.frame(match_RunID = c(100, 101, 102), match_FisheryID = c(36, 36, 36), replace_MinimumSize = c(450, 550, 650))`. Notably, we might create `df` programmatically to combine different run ids with multiple changes at once or to apply some kind of randomized parameter sampling scheme. Or we could even use an excel sheet to write out the experiment in a `df` format and then read in the sheet and feed it into `modify_table`.
 #'
+#' Warning: `modify_table()` automatically handles quotations of character strings (they need `'`s around them for use in SQL queries). This means that if columns intended to be numeric (e.g., in `$match_RunID`) are classified as characters by accident, the resulting SQL query will not behave properly. If something goes wrong, make sure the typeof() of the columns of argument `df` matches your expectations.
+#'
 #' @param fram_db FRAM database
 #' @param table_name Name of FRAM table
 #' @param df The match/replace dataframe or tibble with specially named columns. Columns must start with either "match_" or "replace_", and should otherwise match the names of columns in `table`. For example, modifications to the Cohort table might be achieved with columns "match_RunID", "match_StockID", "match_age", "match_TimeStep", "replace_StartCohort". See Details.
@@ -51,6 +53,10 @@ modify_table <- function(fram_db, table_name, df) {
     cli::cli_abort("`df` points to columns that are not in in `table_name`!")
   }
 
+  ## make sure strings are safe
+  df <- df |>
+    dplyr::mutate(dplyr::across(dplyr::where(is.character), ~ format_strings_for_sql(.x, fram_db$fram_db_connection)))
+
   glue_conditions <- glue::glue("{match_names} = {{match_{match_names}}}")
   glue_conditions <- paste0(glue_conditions, collapse = " AND ")
 
@@ -71,6 +77,25 @@ modify_table <- function(fram_db, table_name, df) {
   return(results)
 }
 
+#' Makes sure strings are formatted correctly for use in SQL queries used in `modify_table()`
+#'
+#' Ensures strings are surrounded by single quotes. If string is already surrounded, does not add
+#' additional sets of quotes. Warns if string contains internal single quote as this is unlikely to be intentional,
+#' but escapes single quotes in case this is intended.
+#'
+#' @param x character atomic or vector
+#' @param connection Connection to a database, typically from `$fram_db_connection` of a fram database connection.
+#'
+#' @return Character atomic or vector with appropriate single-quotes.
+#'
+format_strings_for_sql <-  function(x, connection){
+  x <- gsub("^'", "", x)
+  x <- gsub("'$", "", x)
+  if(any(grepl("'", x))){
+    cli::cli_alert_warning("One or more strings intended for use in SQL query contain internal single quotes. This is unlikely to be intended.")
+  }
+  as.character(DBI::dbQuoteString(connection, x))
+}
 
 #'  `r lifecycle::badge("experimental")`
 #' Calculate match/replace df based on scaling
