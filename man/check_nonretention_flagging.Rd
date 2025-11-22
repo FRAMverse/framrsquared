@@ -11,7 +11,7 @@ check_nonretention_flagging(fram_db, run_id, wa_only = FALSE)
 
 \item{run_id}{FRAM run id}
 
-\item{wa_only}{Look only at WA non-retention? Defaults to FALSE.}
+\item{wa_only}{Check only Washington fisheries? Logical, defaults to \code{TRUE}}
 }
 \value{
 Invisibly returns a modified version of NonRetention table, with new columns
