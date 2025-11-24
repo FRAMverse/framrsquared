@@ -37,8 +37,10 @@ check_nonretention_flagging <- function(fram_db,
 
   if (fram_db$fram_db_species == "COHO") {
     cli::cli_alert("This is a Coho database; non-retention is much simpler and should be error free. Checking...")
+    nr_df <- nr_df |>
+      dplyr::mutate(exist_ignored_vals = .data$cnr_input2 != 0 | .data$cnr_input3 != 0 | .data$cnr_input4 != 0)
     dud_fisheries <- nr_df |>
-      dplyr::filter(.data$cnr_input2 != 0 | .data$cnr_input3 != 0 | .data$cnr_input4 != 0) |>
+      dplyr::filter(.data$exist_ignored_vals) |>
       dplyr::pull(.data$fishery_id) |>
       unique()
     if (length(dud_fisheries) > 0) {
@@ -48,7 +50,8 @@ check_nonretention_flagging <- function(fram_db,
       cli::cli_alert_success("All non-retention values are in the correct column (cnr input 1).")
     }
 
-    return(NULL)
+      return(invisible(nr_df |>
+                         dplyr::filter(.data$exist_ignored_vals)))
   }
 
   if (wa_only) {
