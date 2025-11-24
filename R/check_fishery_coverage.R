@@ -242,9 +242,10 @@ plot_nonretention_coverage <- function(fram_db, run_id, wa_only = TRUE, sport_on
     ggplot2::ggplot(ggplot2::aes(x = .data$time_step, y = .data$fishery_label, fill = .data$has_nr)) +
     ggplot2::geom_tile() +
     ggplot2::geom_tile(fill = NA, color = "black") +
-    # scale_fill_discrete()
+    ggplot2::scale_fill_manual(values = c("cornflowerblue", NA), breaks = c(TRUE, FALSE))+
     ggplot2::theme_minimal(base_size = 13) +
-    ggplot2::theme(legend.position = "top") +
+    ggplot2::theme(legend.position = "top",
+                   panel.grid= ggplot2::element_blank()) +
     ggplot2::labs(x = "Timestep", y = "", fill = "Nonretention modeled")
   if (length(unique(df$run_id)) == 1) {
     gp <- gp +
