@@ -209,6 +209,7 @@ check_nonretention_coverage <- function(fram_db, run_id) {
 #' @param run_id One or more run ids. If multiple are provided, plot will use facet wrapping.
 #' @param wa_only Plot only for Washington fisheries? Logical, defaults to `TRUE`
 #' @param sport_only Plot only sport fisheries? Logical, defaults to `TRUE`
+#' @param puget_only Plot only fisheries in puget sound? Logical, defaults to `TRUE`
 #'
 #' @return ggplot object
 #' @export
@@ -219,7 +220,7 @@ check_nonretention_coverage <- function(fram_db, run_id) {
 #' \dontrun{
 #' fram_db |> plot_nonretention_coverage(run_id = 47)
 #' }
-plot_nonretention_coverage <- function(fram_db, run_id, wa_only = TRUE, sport_only = TRUE) {
+plot_nonretention_coverage <- function(fram_db, run_id, wa_only = TRUE, sport_only = TRUE, puget_only = TRUE) {
   df <- check_nonretention_coverage(fram_db, run_id) |>
     framrosetta::label_fisheries()
   if (wa_only) {
@@ -230,10 +231,17 @@ plot_nonretention_coverage <- function(fram_db, run_id, wa_only = TRUE, sport_on
     df <- df |>
       filter_sport()
   }
+  if (puget_only) {
+    df <- df |>
+      filter_puget_sound()
+  }
 
   gp <- df |>
+    dplyr::arrange(dplyr::desc(.data$fishery_id)) |>
+    dplyr::mutate(fishery_label = factor(.data$fishery_label, levels = unique(.data$fishery_label))) |>
     ggplot2::ggplot(ggplot2::aes(x = .data$time_step, y = .data$fishery_label, fill = .data$has_nr)) +
     ggplot2::geom_tile() +
+    ggplot2::geom_tile(fill = NA, color = "black") +
     # scale_fill_discrete()
     ggplot2::theme_minimal(base_size = 13) +
     ggplot2::theme(legend.position = "top") +

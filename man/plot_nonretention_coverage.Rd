@@ -4,7 +4,13 @@
 \alias{plot_nonretention_coverage}
 \title{Plot non-retention coverage}
 \usage{
-plot_nonretention_coverage(fram_db, run_id, wa_only = TRUE, sport_only = TRUE)
+plot_nonretention_coverage(
+  fram_db,
+  run_id,
+  wa_only = TRUE,
+  sport_only = TRUE,
+  puget_only = TRUE
+)
 }
 \arguments{
 \item{fram_db}{FRAM database}
@@ -14,6 +20,8 @@ plot_nonretention_coverage(fram_db, run_id, wa_only = TRUE, sport_only = TRUE)
 \item{wa_only}{Plot only for Washington fisheries? Logical, defaults to \code{TRUE}}
 
 \item{sport_only}{Plot only sport fisheries? Logical, defaults to \code{TRUE}}
+
+\item{puget_only}{Plot only fisheries in puget sound? Logical, defaults to \code{TRUE}}
 }
 \value{
 ggplot object
