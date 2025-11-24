@@ -36,3 +36,6 @@ This function checks for the following issues:
 fram_db |> check_nonretention_flagging(48, wa_only = TRUE)
 }
 }
+\seealso{
+\code{\link[=plot_nonretention_coverage]{plot_nonretention_coverage()}}, \code{\link[=check_nonretention_coverage]{check_nonretention_coverage()}}
+}

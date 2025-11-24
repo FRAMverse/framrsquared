@@ -22,6 +22,7 @@
 #' }
 #'
 #' @export
+#' @seealso [plot_nonretention_coverage()], [check_nonretention_coverage()]
 #'
 #' @examples
 #' \dontrun{
@@ -32,9 +33,25 @@ check_nonretention_flagging <- function(fram_db,
                                         wa_only = FALSE) {
   nr_df <- fram_db |>
     fetch_table("NonRetention") |>
-    dplyr::filter(.data$run_id %in% run_id)
+    dplyr::filter(.data$run_id %in% .env$run_id)
 
-  if(wa_only){
+  if (fram_db$fram_db_species == "COHO") {
+    cli::cli_alert("This is a Coho database; non-retention is much simpler and should be error free. Checking...")
+    dud_fisheries <- nr_df |>
+      dplyr::filter(.data$cnr_input2 != 0 | .data$cnr_input3 != 0 | .data$cnr_input4 != 0) |>
+      dplyr::pull(.data$fishery_id) |>
+      unique()
+    if (length(dud_fisheries) > 0) {
+      cli::cli_alert_warning("WARNING! {length(dud_fisheries)} fisheries have values in ignored cnr input columns 2-4! Problem fisheries:")
+      cli::cli_alert("{dud_fisheries}")
+    } else {
+      cli::cli_alert_success("All non-retention values are in the correct column (cnr input 1).")
+    }
+
+    return(NULL)
+  }
+
+  if (wa_only) {
     nr_df <- nr_df |>
       filter_wa()
   }
@@ -42,6 +59,7 @@ check_nonretention_flagging <- function(fram_db,
   nr_df <- nr_df |>
     dplyr::mutate(exist_ignored_vals = dplyr::case_match(
       .data$non_retention_flag,
+      0 ~ .data$cnr_input1 + .data$cnr_input2 + .data$cnr_input3 + .data$cnr_input4 > 0,
       1 ~ .data$cnr_input1 + .data$cnr_input2 > 0,
       2 ~ FALSE,
       3 ~ .data$cnr_input3 + .data$cnr_input4 > 0,
@@ -49,6 +67,7 @@ check_nonretention_flagging <- function(fram_db,
     )) |>
     dplyr::mutate(exist_unexpected_zeroes = dplyr::case_match(
       .data$non_retention_flag,
+      0 ~ FALSE,
       1 ~ (.data$cnr_input1 == 0) | (.data$cnr_input2 == 0),
       2 ~ (.data$cnr_input1 == 0) | (.data$cnr_input2 == 0) |
         (.data$cnr_input3 == 0) | (.data$cnr_input4 == 0),
@@ -56,8 +75,8 @@ check_nonretention_flagging <- function(fram_db,
       4 ~ .data$cnr_input1 == 0,
     )) |>
     dplyr::mutate(zeroes_exist_class = dplyr::if_else(.data$exist_unexpected_zeroes,
-                                                      "Other warning!",
-                                                      NA_character_
+      "Other warning!",
+      NA_character_
     )) |>
     dplyr::mutate(zeroes_exist_class = dplyr::if_else(
       .data$exist_unexpected_zeroes & .data$non_retention_flag == 3,
@@ -72,7 +91,7 @@ check_nonretention_flagging <- function(fram_db,
     ))
 
   if (wa_only) {
-    cli::cli_h1("Comparing flags to non-retention entries, WA ONLY")
+    cli::cli_h1("Comparing flag to non-retention entries, WA ONLY")
   } else {
     cli::cli_h1("Comparing flags to non-retention entries, ALL FISHERIES")
   }
@@ -105,7 +124,7 @@ check_nonretention_flagging <- function(fram_db,
   }
 
   return(invisible(nr_df |>
-                     dplyr::filter(.data$exist_ignored_vals | .data$exist_unexpected_zeroes)))
+    dplyr::filter(.data$exist_ignored_vals | .data$exist_unexpected_zeroes)))
 }
 
 
@@ -133,8 +152,7 @@ check_nonretention_flagging <- function(fram_db,
 #' \dontrun{
 #' fram_db |> check_nonretention_coverage(run_id = 47)
 #' }
-check_nonretention_coverage = function(fram_db, run_id){
-
+check_nonretention_coverage <- function(fram_db, run_id) {
   nr_df <- fram_db |>
     fetch_table("NonRetention") |>
     dplyr::filter(.data$run_id %in% run_id)
@@ -158,13 +176,18 @@ check_nonretention_coverage = function(fram_db, run_id){
     fetch_table("RunID") |>
     dplyr::select("run_id", "run_title", "run_name")
 
-  fishery_nr <- tidyr::expand_grid(fishery_id = all_fisheries$fishery_id,
-                                   time_step = all_timesteps$time_step_id,
-                                   run_id = run_id)
+  fishery_nr <- tidyr::expand_grid(
+    fishery_id = all_fisheries$fishery_id,
+    time_step = all_timesteps$time_step_id,
+    run_id = run_id
+  )
   res <- dplyr::left_join(fishery_nr, nr_df,
-            by = c("fishery_id", "time_step", "run_id")) |>
-    dplyr::mutate(non_retention_flag = dplyr::coalesce(.data$non_retention_flag, 0),
-                  has_nr = dplyr::coalesce(.data$has_nr, FALSE)) |>
+    by = c("fishery_id", "time_step", "run_id")
+  ) |>
+    dplyr::mutate(
+      non_retention_flag = dplyr::coalesce(.data$non_retention_flag, 0),
+      has_nr = dplyr::coalesce(.data$has_nr, FALSE)
+    ) |>
     dplyr::select("run_id", "fishery_id", "time_step", "non_retention_flag", "has_nr") |>
     dplyr::left_join(run_info, by = c("run_id"))
   attr(res, "species") <- fram_db$fram_db_species
@@ -187,30 +210,32 @@ check_nonretention_coverage = function(fram_db, run_id){
 #' @return ggplot object
 #' @export
 #'
+#' @seealso [check_nonretention_flagging()], [check_nonretention_coverage()]
+#'
 #' @examples
 #' \dontrun{
 #' fram_db |> plot_nonretention_coverage(run_id = 47)
 #' }
-plot_nonretention_coverage <- function(fram_db, run_id, wa_only = TRUE, sport_only = TRUE){
+plot_nonretention_coverage <- function(fram_db, run_id, wa_only = TRUE, sport_only = TRUE) {
   df <- check_nonretention_coverage(fram_db, run_id) |>
     framrosetta::label_fisheries()
-  if(wa_only){
+  if (wa_only) {
     df <- df |>
       filter_wa()
   }
-  if(sport_only){
+  if (sport_only) {
     df <- df |>
       filter_sport()
   }
 
   gp <- df |>
-    ggplot2::ggplot(ggplot2::aes(x = .data$time_step, y = .data$fishery_label, fill = .data$has_nr))+
-    ggplot2::geom_tile()+
+    ggplot2::ggplot(ggplot2::aes(x = .data$time_step, y = .data$fishery_label, fill = .data$has_nr)) +
+    ggplot2::geom_tile() +
     # scale_fill_discrete()
-    ggplot2::theme_minimal(base_size = 13)+
-    ggplot2::theme(legend.position = "top")+
+    ggplot2::theme_minimal(base_size = 13) +
+    ggplot2::theme(legend.position = "top") +
     ggplot2::labs(x = "Timestep", y = "", fill = "Nonretention modeled")
-  if(length(unique(df$run_id)) == 1){
+  if (length(unique(df$run_id)) == 1) {
     gp <- gp +
       ggplot2::labs(title = glue::glue("Run {df$run_id[1]}: {df$run_name[1]}"))
   } else {

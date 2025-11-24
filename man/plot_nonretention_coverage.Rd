@@ -28,3 +28,6 @@ Washington sport fisheries. This can be changed with optional arguments \code{wa
 fram_db |> plot_nonretention_coverage(run_id = 47)
 }
 }
+\seealso{
+\code{\link[=check_nonretention_flagging]{check_nonretention_flagging()}}, \code{\link[=check_nonretention_coverage]{check_nonretention_coverage()}}
+}
