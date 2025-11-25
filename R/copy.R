@@ -109,6 +109,9 @@ copy_run <- function(fram_db, target_run, times = 1, label = 'copy', force_many_
   # target_run = 139
   # times = 1
   #
+  if(fram_db$fram_read_only){
+    cli::cli_abort('This database connection is designated read-only!! If you are certain this database can be modified, create a new connection using `connect_fram_db()` with `read_only = TRUE`')
+  }
   run_count_current = fram_db |> fetch_table("RunID") |> nrow()
   if((run_count_current + times > 150) & verbose){
       cli::cli_alert("Official FRAM cannot currently read databases with >150 run ids.\n  Use FRAM_Automation (https://github.com/FRAMverse/FRAM_automation)\n  or change FRAM source code declaration of vectors `RunID`, `RunIDName`, and `RunBasePeriodID` in `FVS_ModelRunSelection.vb`.")

@@ -23,6 +23,10 @@
 #' fram_db |> modify_db(table_name = "StockRecruit", df = df_total)
 #' }
 modify_table <- function(fram_db, table_name, df) {
+
+  if(fram_db$fram_read_only){
+    cli::cli_abort('This database connection is designated read-only!! If you are certain this database can be modified, create a new connection using `connect_fram_db()` with `read_only = TRUE`')
+  }
   ## check format of names:
   if (length(grep("^match_.*|^replace_.*", names(df), invert = TRUE)) > 0) {
     cli::cli_abort("`df` must have named columns starting with 'match_' or 'replace_'")

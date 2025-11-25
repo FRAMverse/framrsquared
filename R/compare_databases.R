@@ -1,7 +1,4 @@
 
-## add in input checks.
-## check coho
-
 #' Compare tables in two equivalent FRAM databases
 #'
 #' Function supports QAQC practices by comparing the tables of two FRAM databases and identifying (and quantifying) differences.

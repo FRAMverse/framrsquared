@@ -48,6 +48,9 @@ compare_inputs <- function(fram_db, run_ids){
 #' @param .data Dataframe origination from the compare_inputs() function
 #' @export
 #' @examples
+#'
+#' @seealso [compare_inputs()]
+#'
 #' \dontrun{fram_db |> compare_inputs(c(100, 101)) |> compare_inputs_chart()}
 compare_inputs_chart <- function(.data){
   validate_data_frame(.data)
@@ -115,6 +118,7 @@ input_summary_ <- function(.data, run_id){
 #' @param tolerance Tolerance for detecting changes
 #' @param verbose If `TRUE`, print an update to screen when there are no differences in recruits.
 #' @export
+#' @seealso [compare_runs()]
 #' @examples
 #' \dontrun{fram_db |> compare_recruits()}
 compare_recruits <- function(fram_db, run_ids, tolerance = .01, verbose = TRUE){
@@ -181,6 +185,7 @@ compare_recruits <- function(fram_db, run_ids, tolerance = .01, verbose = TRUE){
 #' Compares the fishery inputs of two runs
 #' @inheritParams compare_recruits
 #' @export
+#' @seealso [compare_runs()]
 #' @examples
 #' \dontrun{fram_db |> compare_fishery_inputs(c(55, 56))}
 compare_fishery_inputs <- function(fram_db, run_ids, tolerance = .01, verbose = TRUE){
@@ -243,6 +248,7 @@ compare_fishery_inputs <- function(fram_db, run_ids, tolerance = .01, verbose = 
 #' Compares the fishery flags of two runs
 #' @inheritParams compare_recruits
 #' @export
+#' @seealso [compare_runs()]
 #' @examples
 #' \dontrun{fram_db |> compare_fishery_input_flags(c(55, 56))}
 compare_fishery_input_flags <- function(fram_db, run_ids, verbose = TRUE){
@@ -303,6 +309,7 @@ compare_fishery_input_flags <- function(fram_db, run_ids, verbose = TRUE){
 #' Compares the non retention inputs of two runs
 #' @inheritParams compare_recruits
 #' @export
+#' @seealso [compare_runs()]
 #' @examples
 #' \dontrun{fram_db |> compare_non_retention_inputs(c(55, 56))}
 compare_non_retention_inputs <- function(fram_db, run_ids, verbose = TRUE){
@@ -364,6 +371,7 @@ compare_non_retention_inputs <- function(fram_db, run_ids, verbose = TRUE){
 #' @inheritParams compare_recruits
 #' @param run_ids Two run ids
 #' @export
+#' @seealso [compare_runs()]
 #' @examples
 #' \dontrun{fram_db |> compare_non_retention_inputs(c(55, 56))}
 compare_non_retention_input_flags <- function(fram_db, run_ids, verbose = TRUE){
@@ -423,6 +431,7 @@ compare_non_retention_input_flags <- function(fram_db, run_ids, verbose = TRUE){
 #' @param fram_db FRAM database object
 #' @param run_ids Two run ids
 #' @export
+#' @seealso [compare_runs()]
 #' @examples
 #' \dontrun{fram_db |> compare_stock_fishery_rate_scalers(c(55, 56))}
 compare_stock_fishery_rate_scalers <- function(fram_db, run_ids){

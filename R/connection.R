@@ -9,6 +9,7 @@
 #' Additional details...
 #'
 #' @export
+#' @seealso [disconnect_fram_db()]
 #' @examples
 #' \dontrun{fram_db <- connect_fram_db('<path>')}
 #'

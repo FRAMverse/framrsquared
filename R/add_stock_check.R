@@ -361,6 +361,8 @@ addstock_check <-
 #' @param df Dataframe
 #' @param stock_ref numeric vector of all stock IDs. Should be stock_df$stock_id.
 #'
+#' @seealso [addstock_check()]
+#'
 #' @return numeric; 0 if no warning, 1 if warning.
 stock_id_comp = function(table_name, df, stock_ref) {
   #helper function to check that stock id exist in the Stock database
@@ -427,6 +429,8 @@ stock_age_checker = function(table_name,
 #' @param uniques_only Do we want warnings if there are duplicats of StockIDs? Useful for tables like Stock and Growth that should have only one entry per stock. Logical, default = `FALSE`.
 #'
 #' @return Numeric, returning number of warnings detected.
+#'
+#' @seealso [addstock_check()]
 #'
 stock_check_helper <- function(table_name,
                                NumStk,
