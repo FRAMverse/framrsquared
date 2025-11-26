@@ -2,7 +2,7 @@
 % Please edit documentation in R/report_population_statistics.R
 \name{population_statistics}
 \alias{population_statistics}
-\title{Returns a tibble matching the Population Statistics screen.}
+\title{Replicate Population Statistics screen}
 \usage{
 population_statistics(fram_db, run_id = NULL)
 }

@@ -1,10 +1,11 @@
 #' Filters a dataframe to sport fisheries. Will
 #' automatically detect whether it's working with a Chinook or Coho
-#' dataset if the tables were generated within this package. Requires
+#' dataset if the tables were generated within this package. `.data` must have
 #' a `fishery_id` column name.
 #' @param .data Dataframe containing `fishery_id` column. Commonly, output from `framrsquared::fetch_table()`.
-#' @param species Optional argument to identify species if `.data` doesn't already. If provided, must be "COHO" or "CHINOOK". Defaults to `NULL`
+#' @param species Optional argument to identify species if `.data` doesn't already. If provided, must be "COHO" or "CHINOOK" or variations thereof. Defaults to `NULL`
 #' @export
+#' @seealso [filter_net()], [filter_puget_sound()], [filter_wa()], [filter_bc()], [filter_ak()], [filter_ca()], [filter_or()], #' [filter_coast()], [filter_marine()], [filter_commercial_wa_nt()]
 #' @examples
 #' \dontrun{
 #' fram_dataframe |> filter_sport()
@@ -54,12 +55,14 @@ filter_sport <- function(.data, species = NULL) {
 
 #' Filters a dataframe to net fisheries. Will
 #' automatically detect whether it's working with a Chinook or Coho
-#' dataset if the tables were generated within this package. Requires
+#' dataset if the tables were generated within this package. `.data` must have
 #' a `fishery_id` column name.
 #'
 #' @inheritParams filter_sport
 #'
 #' @export
+#' @seealso [filter_sport()], [filter_puget_sound()], [filter_wa()], [filter_bc()], [filter_ak()], [filter_ca()], [filter_or()],
+#' [filter_coast()], [filter_marine()], [filter_commercial_wa_nt()]
 #' @examples
 #' \dontrun{
 #' fram_dataframe |> filter_net()
@@ -112,10 +115,12 @@ filter_net <- function(.data, species = NULL) {
 
 #' Filters a dataframe to Puget Sound fisheries. Will
 #' automatically detect whether it's working with a Chinook or Coho
-#' dataset if the tables were generated within this package. Requires
+#' dataset if the tables were generated within this package. `.data` must have
 #' a `fishery_id` column name.
 #' @inheritParams filter_sport
 #' @export
+#' @seealso [filter_sport()], [filter_net()], [filter_wa()], [filter_bc()], [filter_ak()], [filter_ca()], [filter_or()],
+#' [filter_coast()], [filter_marine()], [filter_commercial_wa_nt()]
 #' @examples
 #' \dontrun{
 #' fram_dataframe |> filter_puget_sound()
@@ -149,10 +154,11 @@ filter_puget_sound <- function(.data, species = NULL) {
 
 #' Filters a dataframe to Washington State fisheries. Will
 #' automatically detect whether it's working with a Chinook or Coho
-#' dataset if the tables were generated within this package. Requires
+#' dataset if the tables were generated within this package. `.data` must have
 #' a `fishery_id` column name.
 #' @inheritParams filter_sport
 #' @export
+#' @seealso [filter_sport()], [filter_net()], [filter_puget_sound()], [filter_bc()], [filter_ak()], [filter_ca()], [filter_or()], #' [filter_coast()], [filter_marine()], [filter_commercial_wa_nt()]
 #' @examples
 #' \dontrun{
 #' fram_dataframe |> filter_wa()
@@ -185,10 +191,12 @@ filter_wa <- function(.data, species = NULL) {
 
 #' Filters a dataframe to Canadian (BC) fisheries. Will
 #' automatically detect whether it's working with a Chinook or Coho
-#' dataset if the tables were generated within this package. Requires
+#' dataset if the tables were generated within this package. `.data` must have
 #' a `fishery_id` column name.
 #' @inheritParams filter_sport
 #' @export
+#' @seealso [filter_sport()], [filter_net()], [filter_puget_sound()], [filter_ak()], [filter_wa()], [filter_ca()], [filter_or()],
+#' [filter_coast()], [filter_marine()], [filter_commercial_wa_nt()]
 #' @examples
 #' \dontrun{
 #' fram_dataframe |> filter_bc()
@@ -221,10 +229,12 @@ filter_bc <- function(.data, species = NULL) {
 
 #' Filters a dataframe to Alaska fisheries. Will
 #' automatically detect whether it's working with a Chinook or Coho
-#' dataset if the tables were generated within this package. Requires
+#' dataset if the tables were generated within this package. `.data` must have
 #' a `fishery_id` column name.
 #' @inheritParams filter_sport
 #' @export
+#' @seealso [filter_sport()], [filter_net()], [filter_puget_sound()], [filter_bc()], [filter_wa()], [filter_ca()], [filter_or()],
+#' [filter_coast()], [filter_marine()], [filter_commercial_wa_nt()]
 #' @examples
 #' \dontrun{
 #' fram_dataframe |> filter_ak()
@@ -258,10 +268,12 @@ filter_ak <- function(.data, species = NULL) {
 
 #' Filters a dataframe to California fisheries. Will
 #' automatically detect whether it's working with a Chinook or Coho
-#' dataset if the tables were generated within this package. Requires
+#' dataset if the tables were generated within this package. `.data` must have
 #' a `fishery_id` column name.
 #' @inheritParams filter_sport
 #' @export
+#' @seealso [filter_sport()], [filter_net()], [filter_puget_sound()], [filter_ak()], [filter_bc()], [filter_wa()], [filter_or()],
+#' [filter_coast()], [filter_marine()], [filter_commercial_wa_nt()]
 #' @examples
 #' \dontrun{
 #' fram_dataframe |> filter_ca()
@@ -294,10 +306,12 @@ filter_ca <- function(.data, species = NULL) {
 
 #' Filters a dataframe to Oregon fisheries. Will
 #' automatically detect whether it's working with a Chinook or Coho
-#' dataset if the tables were generated within this package. Requires
+#' dataset if the tables were generated within this package. `.data` must have
 #' a `fishery_id` column name.
 #' @inheritParams filter_sport
 #' @export
+#' @seealso [filter_sport()], [filter_net()], [filter_puget_sound()], [filter_ak()], [filter_bc()], [filter_wa()], [filter_ca()],
+#' [filter_coast()], [filter_marine()], [filter_commercial_wa_nt()]
 #' @examples
 #' \dontrun{
 #' fram_dataframe |> filter_or()
@@ -331,10 +345,12 @@ filter_or <- function(.data, species = NULL) {
 
 #' Filters a dataframe to Coastal fisheries. Will
 #' automatically detect whether it's working with a Chinook or Coho
-#' dataset if the tables were generated within this package. Requires
+#' dataset if the tables were generated within this package. `.data` must have
 #' a `fishery_id` column name.
 #' @inheritParams filter_sport
 #' @export
+#' @seealso [filter_sport()], [filter_net()], [filter_puget_sound()], [filter_ak()], [filter_bc()], [filter_wa()], [filter_ca()], [filter_or()],
+#' [filter_marine()], [filter_commercial_wa_nt()]
 #' @examples
 #' \dontrun{
 #' fram_dataframe |> filter_coast()
@@ -367,10 +383,12 @@ filter_coast <- function(.data, species = NULL) {
 
 #' Filters a dataframe to marine fisheries. Will
 #' automatically detect whether it's working with a Chinook or Coho
-#' dataset if the tables were generated within this package. Requires
+#' dataset if the tables were generated within this package. `.data` must have
 #' a `fishery_id` column name.
 #' @inheritParams filter_sport
 #' @export
+#' @seealso [filter_sport()], [filter_net()], [filter_puget_sound()], [filter_ak()], [filter_bc()], [filter_wa()], [filter_ca()], [filter_or()],
+#' [filter_coast()], [filter_commercial_wa_nt()]
 #' @examples
 #' \dontrun{
 #' fram_dataframe |> filter_marine()
@@ -410,10 +428,12 @@ filter_marine <- function(.data, species = NULL) {
 
 #' Filters a dataframe to WA non-treaty commercial fisheries. Will
 #' automatically detect whether it's working with a Chinook or Coho
-#' dataset if the tables were generated within this package. Requires
+#' dataset if the tables were generated within this package. `.data` must have
 #' a `fishery_id` column name.
 #' @inheritParams filter_sport
 #' @export
+#' @seealso [filter_sport()], [filter_net()], [filter_puget_sound()], [filter_ak()], [filter_bc()], [filter_wa()], [filter_ca()], [filter_or()],
+#' [filter_coast()], [filter_marine()]
 #' @examples
 #' \dontrun{
 #' fram_dataframe |> filter_commercial_wa_NT()

@@ -1,3 +1,5 @@
+#' Plot stock composition
+#'
 #' Produces a stock composition chart, low frequency stocks are
 #' grouped into geographic area.
 #' @export
@@ -12,7 +14,17 @@
 #' fram_db |> stock_comp(run_id = 132)
 #' }
 
-stock_comp <- function(fram_db, run_id, fishery_id, time_step, group_threshold = .01) {
+plot_stock_comp <- function(fram_db, run_id, fishery_id, time_step, group_threshold = .01) {
+
+  validate_fram_db(fram_db)
+  validate_run_id(fram_db, run_id)
+  validate_fishery_ids(fram_db, fishery_id)
+  validate_numeric(time_step)
+  if(! time_step %in% 1:5){
+    cli::cli_abort("`time_step` must be a valid timestep (1-4 for Chinook, 1-5 for Coho)")
+  }
+  validate_numeric(group_threshold, 1)
+
 
   if(!rlang::is_installed("forcats")) {
     cli::cli_abort('Please install the {.pkg forcats} package to use this funciton.')
@@ -33,11 +45,8 @@ stock_comp <- function(fram_db, run_id, fishery_id, time_step, group_threshold =
 
   # sum mortality
   mortality <- mort |>
-    dplyr::mutate(
-      total_mort = .data$landed_catch + .data$non_retention + .data$shaker + .data$drop_off
-      + .data$msf_landed_catch + .data$msf_non_retention + .data$msf_shaker + .data$msf_drop_off
-    ) |>
-    dplyr::select(.data$run_id, .data$stock_id, .data$age, .data$fishery_id, .data$time_step, .data$total_mort) |>
+    add_total_mortality() |>
+    dplyr::select(.data$run_id, .data$stock_id, .data$age, .data$fishery_id, .data$time_step, total_mort = .data$total_mortality) |>
     dplyr::inner_join(stock, by = 'stock_id')
 
   # preak out into percentages

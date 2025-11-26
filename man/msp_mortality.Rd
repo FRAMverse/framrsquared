@@ -9,7 +9,7 @@ msp_mortality(fram_db, run_id = NULL)
 \arguments{
 \item{fram_db}{FRAM database object}
 
-\item{run_id}{Run ID (optional)}
+\item{run_id}{One or more run ids (optional)}
 }
 \value{
 Mortality table with mortality values expanded by msp
@@ -21,4 +21,7 @@ See https://framverse.github.io/fram_doc/calcs_data_chin.html#46_Model-Stock_Pro
 \dontrun{
 fram_db |> msp_mortality(run_id = 132)
 }
+}
+\seealso{
+\code{\link[=aeq_mortality]{aeq_mortality()}}
 }

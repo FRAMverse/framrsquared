@@ -25,7 +25,7 @@ sensitivity_scaled(
 
 \item{table_name}{Name of FRAM table that will be modified for the sensitivity analyses}
 
-\item{match_df}{dataframe that defines which rows should be modified during sensitivity analyses. To modify some values for marked and unmarked Stillaguamish stocks, we would use data.frame(StockID = c(17, 18)). To modify values only for Stillaguamish age 2s, we would use expand_grid(StockID = c(17, 19), Age = 2). Unlike match/replace dataframes for \code{modify_table()}, column names do not need to start with "match_" (but this function will still work if they do).}
+\item{match_df}{dataframe that defines which rows should be modified during sensitivity analyses. To modify some values for marked and unmarked Stillaguamish stocks, we would use data.frame(StockID = c(17, 18)). To modify values only for Stillaguamish age 2s, we would use expand_grid(StockID = c(17, 19), Age = 2). Unlike match/replace dataframes for \code{\link[=modify_table]{modify_table()}}, column names do not need to start with "match_" (but this function will still work if they do).}
 
 \item{scale_values}{Numeric vector of the scaling factors to be be used, one per sensitivity analysis run. Defines the number of runs generated. For example, \code{scale_values = 2:10} would generate 9 runs. The first would multiply the values of interest by 2, the second by 3, etc.}
 
@@ -70,4 +70,7 @@ fram_db |>
   )
 disconnect_fram_db(fram_db)
 }
+}
+\seealso{
+\code{\link[=sensitivity_exact]{sensitivity_exact()}}, \code{\link[=sensitivity_custom]{sensitivity_custom()}}
 }

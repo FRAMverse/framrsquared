@@ -19,3 +19,6 @@ Compares the fishery flags of two runs
 \examples{
 \dontrun{fram_db |> compare_fishery_input_flags(c(55, 56))}
 }
+\seealso{
+\code{\link[=compare_runs]{compare_runs()}}
+}

@@ -26,7 +26,7 @@ plot_stock_mortality_time_step(
 
 \item{filters_list}{list of framrsquared filter functions to apply before plotting.}
 
-\item{msp}{Use Model Stock Proportion expansion? Default is true}
+\item{msp}{Use Model Stock Proportion? Logical, defaults to TRUE.}
 }
 \description{
 Creates an ordered bar chart with
@@ -38,4 +38,7 @@ fishery and time step.
 fram_db |> stock_mortality_time_step(run_id = 132, stock_id = 17)
 }
 
+}
+\seealso{
+\code{\link[=plot_stock_mortality]{plot_stock_mortality()}}, \code{\link[=plot_impacts_per_catch_heatmap]{plot_impacts_per_catch_heatmap()}}
 }

@@ -14,7 +14,7 @@ addstock_check(
 \arguments{
 \item{file_name}{filepath to database. If \code{NULL}, provide summary of process instead. Default = \code{NULL}.}
 
-\item{run_id}{RunID associated with the new stock in the FRAM database. IF left \code{NULL}, provide summary of process instead. Default = \code{NULL}.}
+\item{run_id}{RunID associated with the new stock in the FRAM database. If left as \code{NULL}, provide summary of process instead. Default = \code{NULL}.}
 
 \item{old_stockcount}{The number of stocks previously present to treat as the "baseline" -- several checking steps will focus solely on newly added stocks. Defaults to 78.}
 

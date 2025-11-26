@@ -6,16 +6,15 @@
 
 NR_flag_translate = function(vec) {
 
-  if(!all(is.numeric(vec))){
-    cli::cli_abort("flags must be numeric")
-  }
+  validate_numeric(vec)
 
-  if(!all(vec %in% 1:4)){
+  if(!all(vec %in% 0:4)){
     cli::cli_abort("input includes flags not matching non-retention flags")
   }
 
   dplyr::case_match(
     vec,
+    0 ~ "ZERO",
     1 ~ "Computed CNR",
     2 ~ "Ratio of CNR Days",
     3 ~ "Legal/Sublegal Encounters",
@@ -30,9 +29,8 @@ NR_flag_translate = function(vec) {
 #' \dontrun{scalers_flag_translate(sample(c(1, 2, 7, 8, 17, 18, 27, 28), 10, replace = T))}
 #'
 scalers_flag_translate = function(vec) {
-  if(!is.numeric(vec)){
-    cli::cli_abort("flags must be numeric")
-  }
+
+  validate_numeric(vec)
 
   if(!all(vec %in% c(0, 1, 2, 7, 8, 17, 18, 27, 28))){
     cli::cli_abort("input includes flags not matching non-retention flags")
@@ -54,26 +52,39 @@ scalers_flag_translate = function(vec) {
 
 #' Adds a column with a text version of flags for either non-retention or fishery scalers
 #' @param .data fetched FisheryScalers or NonRetentions
+#' @param species Optional, identifying species if `.data` doesn't. If provided, should be "CHINOOK" or "COHO" (or variants)
+#' @param warn Logical, defaults to TRUE. Warn if neither flag column is present in dataframe?
 #' @export
 #' @examples
 #' \dontrun{ mortality_table |> add_flag_text()}
-add_flag_text = function(.data) {
+label_flags = function(.data,
+                         species = NULL,
+                         warn = TRUE) {
   validate_data_frame(.data)
+  species = validate_species(.data, species)
   if(!any(c("fishery_flag", "non_retention_flag") %in% names(.data))){
-    cli::cli_abort("Missing 'fishery_flag' or 'non_retention_flag' column in data")
-  }
-  if ("fishery_flag" %in% names(.data)) {
-    dplyr::mutate(.data,
-                  fishery_flag_text = scalers_flag_translate(.data$fishery_flag)) |>
-      dplyr::relocate(.data$fishery_flag_text,
+    if(warn){
+      cli::cli_alert_warning("Missing 'fishery_flag' or 'non_retention_flag' column in data")
+    }
+  } else {
+    if ("fishery_flag" %in% names(.data)) {
+      .data <- .data |>
+        dplyr::mutate(fishery_flag_label = scalers_flag_translate(.data$fishery_flag),
                       .after = .data$fishery_flag)
-  } else{
-    ##otherwise it's a non_retention_flag
-    dplyr::mutate(.data,
-                  non_retention_flag_text = NR_flag_translate(.data$non_retention_flag)) |>
-      dplyr::relocate(.data$non_retention_flag_text,
-                      .after = .data$non_retention_flag)
+    }
+    if("non_retention_flag" %in% names(.data)){
+      if(species == "CHINOOK"){
+      .data <- .data |>
+        dplyr::mutate(non_retention_flag_label = NR_flag_translate(.data$non_retention_flag),
+                      .after =.data$non_retention_flag)
+      } else {
+        .data <- .data |>
+          dplyr::mutate(non_retention_flag_label = "Total dead fish",
+                        .after =.data$non_retention_flag)
+      }
+    }
   }
+  return(.data)
 }
 
 #' NA's all the information in the FisheryScalers that's not being used
@@ -97,6 +108,6 @@ filter_flag <- function(.data){
       quota = dplyr::if_else(any(.data$fishery_flag %in% c(2,27,28)), .data$quota, NA_real_),
       msf_quota = dplyr::if_else(any(.data$fishery_flag %in% c(8,18,28)), .data$msf_quota, NA_real_)
     ) |>
-      dplyr::ungroup()
+    dplyr::ungroup()
 }
 

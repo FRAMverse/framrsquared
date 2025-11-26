@@ -449,12 +449,9 @@ bkfram_checks_coho <-
         .data$time_step %in% c(4:5),
         .data$fishery_id %in% c(65:72)
       ) |> # all in river
-      dplyr::mutate(
-        all_mortality = .data$landed_catch + .data$shaker + .data$non_retention + .data$drop_off +
-          .data$msf_landed_catch + .data$msf_shaker + .data$msf_non_retention + .data$msf_drop_off
-      ) |>
+      add_total_mortality()
       dplyr::group_by(.data$stock_id, .data$stock_name) |>
-      dplyr::summarize(etrs_mort = sum(.data$all_mortality),
+      dplyr::summarize(etrs_mort = sum(.data$total_mortality),
                        .groups = 'drop')
 
     cli::cli_alert_warning('When reading this table remember to use escapement flags correctly')

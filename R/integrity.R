@@ -116,6 +116,28 @@ get_run_ids <- function(fram_db){
     dplyr::pull(.data$run_id)
 }
 
+#' Gets all fishery_ids of FRAM database
+#' @param fram_db Fram database object
+#' @export
+#' @examples
+#' \dontrun{fram_dataframe |> get_run_ids()}
+get_fishery_ids <- function(fram_db){
+  fram_db |>
+    fetch_table('Fishery') |>
+    dplyr::pull(.data$fishery_id)
+}
+
+#' Gets all stock_id of FRAM database
+#' @param fram_db Fram database object
+#' @export
+#' @examples
+#' \dontrun{fram_dataframe |> get_run_ids()}
+get_stock_ids <- function(fram_db){
+  fram_db |>
+    fetch_table('Stock') |>
+    dplyr::pull(.data$stock_id)
+}
+
 #' Finds tables that contain a specific column name
 #' @param fram_db FRAM database object
 #' @param column_name Name of a column
@@ -143,60 +165,7 @@ find_tables_by_column_ <- function(fram_db, column_name) {
 
 
 
-#' Changes a run's ID number in a FRAM database
-#' @param fram_db FRAM database object
-#' @param old_run_id FRAM run ID to be changed
-#' @param new_run_id New FRAM run ID
-#' @export
-#' @examples
-#' \dontrun{fram_db |> change_run_id(old_run_id = 132, new_run_id = 300)}
-#'
-change_run_id <- function(fram_db, old_run_id, new_run_id){
 
-  run_id_tables <- find_tables_by_column_(fram_db, 'RunID')
-
-  run_id_tables$value |>
-    purrr::walk(.f = \(value) tryCatch(
-      suppressWarnings(DBI::dbSendQuery(
-        fram_db$fram_db_connection,
-        glue::glue(
-          'UPDATE {value}
-           SET RunID = {new_run_id}
-           WHERE RunID = {old_run_id};'
-        )
-      )),
-      error = function(e) {} # dead end
-    ))
-
-}
-
-
-
-
-#' Removes a run in a FRAM database
-#' @param fram_db FRAM database object
-#' @param run_id FRAM run ID to be deleted
-#' @export
-#' @examples
-#' \dontrun{fram_db |> delete_run(run_id = 132)}
-#'
-remove_run <- function(fram_db, run_id){
-
-  run_id_tables <- find_tables_by_column_(fram_db, 'RunID')
-
-  run_id_tables$value |>
-    purrr::walk(.f = \(value) tryCatch(
-      suppressWarnings(DBI::dbSendQuery(
-        fram_db$fram_db_connection,
-        glue::glue(
-          'DELETE FROM {value}
-           WHERE RunID = {run_id};'
-        )
-      )),
-      error = function(e) {} # dead end
-    ))
-
-}
 
 #' Provides a print out of Run ID information
 #' @param fram_db FRAM database object
@@ -317,6 +286,45 @@ validate_run_id <- function(fram_db, run_id, call = rlang::caller_env()){
   }
 }
 
+#' Convenience function to check fishery input
+#'
+#' No error checking for transfer databases
+#'
+#' @param fram_db FRAM database object
+#' @param fishery_id one or more fishery_ids
+#' @param call internal use: identify name of function that called this function (for informative error message)
+validate_fishery_ids <- function(fram_db, fishery_id, call = rlang::caller_env()){
+  validate_numeric(fishery_id)
+  if(fram_db$fram_db_type == "full"){
+    available_fishery_ids <- get_fishery_ids(fram_db)
+    if (! all(fishery_id %in% available_fishery_ids)){
+      cli::cli_abort('fishery_id(s) not present in this {fram_db$fram_db_species} database.
+                     Available fisheries: {min(available_fishery_ids)}:{max(available_fishery_ids)}',
+                     call = call)
+    }
+  }
+}
+
+#' Convenience function to check fishery input
+#'
+#' No error checking for transfer databases
+#'
+#' @param fram_db FRAM database object
+#' @param stock_id one or more stock_ids
+#' @param call internal use: identify name of function that called this function (for informative error message)
+validate_stock_ids <- function(fram_db, stock_id, call = rlang::caller_env()){
+  validate_numeric(stock_id)
+  if(fram_db$fram_db_type == "full"){
+    available_stock_ids <- get_stock_ids(fram_db)
+    if (! all(stock_id %in% available_stock_ids)){
+      cli::cli_abort('stock_id(s) not present in this {fram_db$fram_db_species} database.
+                     Available stocks: {min(available_stock_ids)}:{max(available_stock_ids)}',
+                     call = call)
+    }
+  }
+}
+
+
 
 validate_data_frame <- function(x, ..., arg = rlang::caller_arg(x), call = rlang::caller_env()) {
   # checks for data frame, stolen from the tidyr package
@@ -325,9 +333,31 @@ validate_data_frame <- function(x, ..., arg = rlang::caller_arg(x), call = rlang
   }
 }
 
-validate_numeric <- function(x, ..., arg = rlang::caller_arg(x), call = rlang::caller_env()) {
+validate_numeric <- function(x, n = NULL, ..., arg = rlang::caller_arg(x), call = rlang::caller_env()) {
   if (!is.numeric(x)) {
     cli::cli_abort("{.arg {arg}} must be a numeric, not {class(x)}.", ..., call = call)
+  }
+  if(!is.null(n)){
+    if(length(x) != n){
+      cli::cli_abort("{.arg {arg}} must be a numeric of length {n}.", ..., call = call)
+    }
+  }
+}
+
+validate_character <- function(x, n = NULL, ..., arg = rlang::caller_arg(x), call = rlang::caller_env()) {
+  if (!is.character(x)) {
+    cli::cli_abort("{.arg {arg}} must be a character, not {class(x)}.", ..., call = call)
+  }
+  if(!is.null(n)){
+    if(length(x) != n){
+      cli::cli_abort("{.arg {arg}} must be a character of length {n}.", ..., call = call)
+    }
+  }
+}
+
+validate_flag <- function(x, ..., arg = rlang::caller_arg(x), call = rlang::caller_env()){
+  if (!is.logical(x) | length(x) != 1) {
+    cli::cli_abort("{.arg {arg}} must be a a logical of length 1.", ..., call = call)
   }
 }
 
@@ -360,6 +390,8 @@ validate_species <- function(.data,
   }
   return(species)
 }
+
+
 
 #' Allow multiple species identifiers
 #'

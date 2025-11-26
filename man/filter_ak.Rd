@@ -4,7 +4,7 @@
 \alias{filter_ak}
 \title{Filters a dataframe to Alaska fisheries. Will
 automatically detect whether it's working with a Chinook or Coho
-dataset if the tables were generated within this package. Requires
+dataset if the tables were generated within this package. \code{.data} must have
 a \code{fishery_id} column name.}
 \usage{
 filter_ak(.data, species = NULL)
@@ -12,12 +12,12 @@ filter_ak(.data, species = NULL)
 \arguments{
 \item{.data}{Dataframe containing \code{fishery_id} column. Commonly, output from \code{framrsquared::fetch_table()}.}
 
-\item{species}{Optional argument to identify species if \code{.data} doesn't already. If provided, must be "COHO" or "CHINOOK". Defaults to \code{NULL}}
+\item{species}{Optional argument to identify species if \code{.data} doesn't already. If provided, must be "COHO" or "CHINOOK" or variations thereof. Defaults to \code{NULL}}
 }
 \description{
 Filters a dataframe to Alaska fisheries. Will
 automatically detect whether it's working with a Chinook or Coho
-dataset if the tables were generated within this package. Requires
+dataset if the tables were generated within this package. \code{.data} must have
 a \code{fishery_id} column name.
 }
 \examples{
@@ -26,4 +26,8 @@ fram_dataframe |> filter_ak()
 }
 framrosetta::fishery_chinook_fram |> filter_ak(species = "CHINOOK")
 framrosetta::fishery_coho_fram |> filter_ak(species = "COHO")
+}
+\seealso{
+\code{\link[=filter_sport]{filter_sport()}}, \code{\link[=filter_net]{filter_net()}}, \code{\link[=filter_puget_sound]{filter_puget_sound()}}, \code{\link[=filter_bc]{filter_bc()}}, \code{\link[=filter_wa]{filter_wa()}}, \code{\link[=filter_ca]{filter_ca()}}, \code{\link[=filter_or]{filter_or()}},
+\code{\link[=filter_coast]{filter_coast()}}, \code{\link[=filter_marine]{filter_marine()}}, \code{\link[=filter_commercial_wa_nt]{filter_commercial_wa_nt()}}
 }

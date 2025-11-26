@@ -2,8 +2,7 @@
 % Please edit documentation in R/report_msf_coho.R
 \name{msf_encounters_coho_}
 \alias{msf_encounters_coho_}
-\title{Returns a tibble matching the MSF screen report encounters for Coho
-This is specific for Coho and in most cases msf_encounters() is preferable.}
+\title{Replicate MSF screen report encounters for COHO}
 \usage{
 msf_encounters_coho_(fram_db)
 }
@@ -17,4 +16,7 @@ This is specific for Coho and in most cases msf_encounters() is preferable.
 \examples{
 \dontrun{fram_db |> msf_encounters_coho_()}
 
+}
+\seealso{
+\code{\link[=msf_encounters]{msf_encounters()}}, \code{\link[=msf_landed_catch_coho_]{msf_landed_catch_coho_()}}, \code{\link[=msf_mortalities_coho_]{msf_mortalities_coho_()}}
 }

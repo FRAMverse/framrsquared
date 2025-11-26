@@ -18,3 +18,6 @@ Safely disconnect from FRAM database
 \dontrun{disconnect_fram_db(fram_db)}
 
 }
+\seealso{
+\code{\link[=connect_fram_db]{connect_fram_db()}}
+}

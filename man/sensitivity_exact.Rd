@@ -25,7 +25,7 @@ sensitivity_exact(
 
 \item{table_name}{Name of FRAM table that will be modified for the sensitivity analyses}
 
-\item{match_df}{dataframe that defines which rows should be modified during sensitivity analyses. To modify some values for marked and unmarked Stillaguamish stocks, we would use data.frame(StockID = c(17, 18)). To modify values only for Stillaguamish age 2s, we would use expand_grid(StockID = c(17, 19), Age = 2). Unlike match/replace dataframes for \code{modify_table()}, column names do not need to start with "match_" (but this function will still work if they do).}
+\item{match_df}{dataframe that defines which rows should be modified during sensitivity analyses. To modify some values for marked and unmarked Stillaguamish stocks, we would use data.frame(StockID = c(17, 18)). To modify values only for Stillaguamish age 2s, we would use expand_grid(StockID = c(17, 19), Age = 2). Unlike match/replace dataframes for \code{\link[=modify_table]{modify_table()}}, column names do not need to start with "match_" (but this function will still work if they do).}
 
 \item{exact_values}{numeric vector of values to exact values to use for sensitivity analyses.}
 

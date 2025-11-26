@@ -2,7 +2,8 @@
 % Please edit documentation in R/compare_databases.R
 \name{compare_databases}
 \alias{compare_databases}
-\title{Compare tables in two equivalent FRAM databases}
+\title{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+Compare tables in two equivalent FRAM databases}
 \usage{
 compare_databases(
   file1,

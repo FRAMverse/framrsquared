@@ -1,16 +1,28 @@
-#' Fetches a complete table from a FRAM database. Returns a cleaned
-#' tibble.
+#' Fetch a complete table from a FRAM database.
+#'
+#' Returns a cleaned tibble, with column labels that were camel case (e.g., TimeStep) converted to snake case (e.g., time_step).
+#' **WARNING**: the Chinook "BackwardsFRAM" table uses a *different* stock_id numbering system from every other table. To avoid errors when joining that with other tables, instead fetch with [fetch_table_bkchin()]
+#'
 #' @param fram_db FRAM database object
-#' @param table_name Table to be fetched. If not given, a list of options will be printed
-#' @param warn Print a warning when fetching BackwardsFRAM table from a Chinook database? Defaults to `TRUE`.
+#' @param table_name Atomic character of name of table to be fetched. If not given, a list of options will be printed.
+#' @param label Logical, defaults to TRUE. Add human-readable columns for flags, fisheries, stocks?
+#' @param warn Print a warning when fetching BackwardsFRAM table from a Chinook database? Logical, defaults to `TRUE`.
 #' @export
 #' @examples
-#' \dontrun{fram_db |> fetch_table('Mortality')}
+#' \dontrun{
+#' fram_db <- connect_fram_db("validat2024.mdb")
+#' fram_db |> fetch_table('Mortality')}
 #'
 
-fetch_table <- function(fram_db, table_name = NULL, warn = TRUE){
+fetch_table <- function(fram_db, table_name = NULL, label = TRUE, warn = TRUE){
   ## adding input checking
   validate_fram_db(fram_db)
+  validate_flag(warn)
+  if(!is.null(table_name)){
+    if(!is.character(table_name) | length(table_name)!= 1){
+      cli::cli_abort("`table` must be a character atomic.")
+    }
+  }
   all_tables = provide_table_names(is_full = TRUE)
   limited_tables = provide_table_names(is_full = FALSE)
 
@@ -49,7 +61,21 @@ fetch_table <- function(fram_db, table_name = NULL, warn = TRUE){
     output_table <- DBI::dbGetQuery(fram_db$fram_db_connection,
                                     glue::glue('SELECT * FROM {table_name};')) |>
       fram_clean_tables()
+
     attr(output_table, 'species') <- fram_db$fram_db_species
+
+    if(label){
+      output_table <- output_table |>
+        label_flags(warn = FALSE)
+      if("fishery_id" %in% names(output_table)){
+        output_table <- output_table |>
+          framrosetta::label_fisheries()
+      }
+      if("stock_id" %in% names(output_table)){
+        output_table <- output_table |>
+          framrosetta::label_stocks()
+      }
+    }
 
     if(warn & fram_db$fram_db_species == "CHINOOK" & table_name == "BackwardsFRAM"){
       cli::cli_alert_danger("Chinook BackwardsFRAM tables use different numbering for stock_id!\n This can cause problems when merging with other tables!\n Recommend fetch_table_bkchin() instead.")

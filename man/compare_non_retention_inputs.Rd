@@ -19,3 +19,6 @@ Compares the non retention inputs of two runs
 \examples{
 \dontrun{fram_db |> compare_non_retention_inputs(c(55, 56))}
 }
+\seealso{
+\code{\link[=compare_runs]{compare_runs()}}
+}

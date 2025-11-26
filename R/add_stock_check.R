@@ -5,7 +5,7 @@
 #' and checks the tables for potential errors associated with adding new stock.
 #'
 #' @param file_name filepath to database. If `NULL`, provide summary of process instead. Default = `NULL`.
-#' @param run_id RunID associated with the new stock in the FRAM database. IF left `NULL`, provide summary of process instead. Default = `NULL`.
+#' @param run_id RunID associated with the new stock in the FRAM database. If left as `NULL`, provide summary of process instead. Default = `NULL`.
 #' @param old_stockcount The number of stocks previously present to treat as the "baseline" -- several checking steps will focus solely on newly added stocks. Defaults to 78.
 #' @param override_db_checks Ignore species, database type. When `FALSE`, function will stop if the database is not Chinook or if it's a transfer file. Defaults to FALSE.
 #'
@@ -71,6 +71,8 @@ addstock_check <-
       cli::cli_alert("Checking for additional stock (beyond stockID = 78)...")
 
       con = connect_fram_db(file_name)
+
+      validate_run_id(con, run_id)
 
       ## checking database qualities
       if(con$fram_db_species != "CHINOOK"){

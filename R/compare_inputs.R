@@ -43,14 +43,16 @@ compare_inputs <- function(fram_db, run_ids){
 }
 
 
-#' Generates a heat map of changed between two run inputs. Can be a very busy
-#' chart if not filtered down. Consider using a filter.
+#' Generate heat map of changed values between two run inputs.
+#'
+#' Can be a very busy chart if not filtered down. Consider using a filter on the dataframe before piping into `compare_input_chart`.
+#'
 #' @param .data Dataframe origination from the compare_inputs() function
 #' @export
-#' @examples
 #'
 #' @seealso [compare_inputs()]
 #'
+#' @examples
 #' \dontrun{fram_db |> compare_inputs(c(100, 101)) |> compare_inputs_chart()}
 compare_inputs_chart <- function(.data){
   validate_data_frame(.data)
@@ -125,6 +127,19 @@ compare_recruits <- function(fram_db, run_ids, tolerance = .01, verbose = TRUE){
   validate_fram_db(fram_db)
   validate_run_id(fram_db, run_ids)
 
+  if (!is.numeric(tolerance) || length(tolerance) != 1) {
+    cli::cli_abort('`tolerance` must be a numeric of length 1')
+  }
+
+  if(tolerance < 0){
+    cli::cli_abort('`tolerance` must be positive')
+  }
+
+  if (!is.logical(verbose) || length(verbose) != 1) {
+    cli::cli_abort('`verbose` must be a logical of length 1')
+  }
+
+
   runs <- fram_db |>
     fetch_table('RunID') |>
     dplyr::select(.data$run_id, .data$run_name)
@@ -192,6 +207,19 @@ compare_fishery_inputs <- function(fram_db, run_ids, tolerance = .01, verbose = 
   validate_fram_db(fram_db)
   validate_run_id(fram_db, run_ids)
 
+  if (!is.numeric(tolerance) || length(tolerance) != 1) {
+    cli::cli_abort('`tolerance` must be a numeric of length 1')
+  }
+
+  if(tolerance < 0){
+    cli::cli_abort('`tolerance` must be positive')
+  }
+
+  if (!is.logical(verbose) || length(verbose) != 1) {
+    cli::cli_abort('`verbose` must be a logical of length 1')
+  }
+
+
   fishery_scalers <- fram_db |>
     fetch_table('FisheryScalers')
 
@@ -255,6 +283,11 @@ compare_fishery_input_flags <- function(fram_db, run_ids, verbose = TRUE){
   validate_fram_db(fram_db)
   validate_run_id(fram_db, run_ids)
 
+ if (!is.logical(verbose) || length(verbose) != 1) {
+    cli::cli_abort('`verbose` must be a logical of length 1')
+  }
+
+
   fishery_scalers <- fram_db |>
     fetch_table('FisheryScalers') |>
     dplyr::filter(.data$run_id %in% run_ids)
@@ -315,6 +348,10 @@ compare_fishery_input_flags <- function(fram_db, run_ids, verbose = TRUE){
 compare_non_retention_inputs <- function(fram_db, run_ids, verbose = TRUE){
   validate_fram_db(fram_db)
   validate_run_id(fram_db, run_ids)
+  if (!is.logical(verbose) || length(verbose) != 1) {
+    cli::cli_abort('`verbose` must be a logical of length 1')
+  }
+
 
   runs <- fram_db |>
     fetch_table('RunID') |>
@@ -377,6 +414,10 @@ compare_non_retention_inputs <- function(fram_db, run_ids, verbose = TRUE){
 compare_non_retention_input_flags <- function(fram_db, run_ids, verbose = TRUE){
   validate_fram_db(fram_db)
   validate_run_id(fram_db, run_ids)
+  if (!is.logical(verbose) || length(verbose) != 1) {
+    cli::cli_abort('`verbose` must be a logical of length 1')
+  }
+
 
   runs <- fram_db |>
     fetch_table('RunID') |>
@@ -519,6 +560,13 @@ compare_stock_fishery_rate_scalers <- function(fram_db, run_ids){
 compare_runs <- function(fram_db, run_ids, tolerance = .01){
   validate_fram_db(fram_db)
   validate_run_id(fram_db, run_ids)
+  if (!is.numeric(tolerance) || length(tolerance) != 1) {
+    cli::cli_abort('`tolerance` must be a positive numeric of length 1')
+  }
+  if(tolerance < 0){
+    cli::cli_abort('`tolerance` must be positive')
+  }
+
 
   runs <- fram_db |>
     fetch_table('RunID')

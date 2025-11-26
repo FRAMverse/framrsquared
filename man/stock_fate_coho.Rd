@@ -23,3 +23,6 @@ Coho flavor of the stock fate function
 fram_db |> stock_fate_coho(run_id = 145)
 }
 }
+\seealso{
+\code{\link[=stock_fate]{stock_fate()}}
+}

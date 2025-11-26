@@ -2,6 +2,9 @@
 #' by the TRuns report driver
 #' @param fram_db FRAM database object
 #' @export
+#'
+#' @seealso [truns_fisheries()]
+#'
 #' @examples
 #' \dontrun{truns <- truns_stocks(fram_db)}
 #'
@@ -19,6 +22,9 @@ truns_stocks <- function(fram_db){
 #' by the TRuns report driver
 #' @param fram_db FRAM database object
 #' @export
+#'
+#' @seealso [truns_stocks()]
+#'
 #' @examples
 #' \dontrun{truns <- truns_fisheries(fram_db)}
 #'

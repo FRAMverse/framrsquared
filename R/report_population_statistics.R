@@ -1,4 +1,8 @@
+
+#' Replicate Population Statistics screen
+#'
 #' Returns a tibble matching the Population Statistics screen.
+#'
 #' @param fram_db FRAM database object
 #' @param run_id Run ID
 #' @export

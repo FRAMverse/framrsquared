@@ -21,3 +21,6 @@ Compares the recruit scalers of two runs
 \examples{
 \dontrun{fram_db |> compare_recruits()}
 }
+\seealso{
+\code{\link[=compare_runs]{compare_runs()}}
+}

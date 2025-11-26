@@ -1,11 +1,19 @@
+#' Replicate MSF screen report mortalities for Chinook
+#'
 #' Returns a tibble matching the MSF screen report mortalities for Chinook. This is
-#' specific for Chinook and in most cases msf_mortalities() is preferable.
+#' specific for Chinook and in most cases [msf_mortalities()] is preferable.
 #' @param fram_db FRAM database object
 #' @export
+#'
+#' @seealso [msf_mortalities()], [msf_encounters_chinook_()], [msf_landed_catch_chinook_()]
+#'
 #' @examples
 #' \dontrun{fram_db |> msf_mortalities_chinook_(run_id = 101)}
 #'
 msf_mortalities_chinook_ <- function(fram_db){
+
+  validate_fram_db(fram_db)
+
   mortalities_ <- fram_db |>
                     msp_mortality()
 
@@ -42,15 +50,23 @@ msf_mortalities_chinook_ <- function(fram_db){
 }
 
 
+#' Replicate MSF screen report encounters for Chinook
+#'
 #' Returns a tibble matching the MSF screen report encounters for Chinook.
-#'  This is specific for Chinook and in most cases msf_encounters() is preferable.
+#'  This is specific for Chinook and in most cases [msf_encounters()] is preferable.
 #' @param fram_db FRAM database object
 #' @export
+#'
+#' @seealso [msf_encounters()], [msf_mortalities_chinook_()], [msf_landed_catch_chinook_()]
+#'
 #' @examples
 #' \dontrun{fram_db |> msf_encounters_chinook_(run_id = 101)}
 #'
 
 msf_encounters_chinook_ <- function(fram_db){
+
+  validate_fram_db(fram_db)
+
   encounters_ <- fram_db |>
     msp_mortality()
 
@@ -86,14 +102,22 @@ msf_encounters_chinook_ <- function(fram_db){
     `attr<-`('species', fram_db$fram_db_species)
 }
 
+#' Replicate MSF screen report landed catch for Chinook
+#'
 #' Returns a tibble matching the MSF screen report landed catch for Chinook.
-#'  This is specific for Chinook and in most cases msf_landed_catch() is preferable.
+#'  This is specific for Chinook and in most cases [msf_landed_catch()] is preferable.
 #' @param fram_db FRAM database object
 #' @export
+#'
+#' @seealso [msf_landed_catch()], [msf_mortalities_chinook_()], [msf_encounters_chinook_()]
+#'
 #' @examples
 #' \dontrun{fram_db |> msf_landed_catch_chinook_(run_id = 101)}
 #'
 msf_landed_catch_chinook_ <- function(fram_db){
+
+  validate_fram_db(fram_db)
+
   landed_catch_ <- fram_db |>
     msp_mortality()
   landed_catch <- landed_catch_ |>

@@ -1,4 +1,4 @@
-
+#'  `r lifecycle::badge("experimental")`
 #' Compare tables in two equivalent FRAM databases
 #'
 #' Function supports QAQC practices by comparing the tables of two FRAM databases and identifying (and quantifying) differences.
@@ -122,6 +122,14 @@ compare_databases <-  function(file1,
                           tables_use = NULL,
                           slim = FALSE,
                           quiet = TRUE) {
+
+  if (length(file1) != 1 || !is.character(file1)) cli::cli_abort("`file1` must be a single character string")
+  if (length(file2) != 1 || !is.character(file2)) cli::cli_abort("`file2` must be a single character string")
+  if (!is.null(runid_use) && !all(is.numeric(runid_use))) cli::cli_abort("`runid_use` must be NULL or numeric vector")
+  if (!is.null(tables_use) && !all(is.character(tables_use))) cli::cli_abort("`tables_use` must be NULL or character vector")
+  if (!is.logical(slim) || length(slim) != 1) cli::cli_abort("`slim` must be a single logical value")
+  if (!is.logical(quiet) || length(quiet) != 1) cli::cli_abort("`quiet` must be a single logical value")
+
   ## columns to NOT compare, and instead use as keys for for merging.
   labs.template  <-  c(
     "base_period_id",

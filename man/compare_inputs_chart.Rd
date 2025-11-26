@@ -2,8 +2,7 @@
 % Please edit documentation in R/compare_inputs.R
 \name{compare_inputs_chart}
 \alias{compare_inputs_chart}
-\title{Generates a heat map of changed between two run inputs. Can be a very busy
-chart if not filtered down. Consider using a filter.}
+\title{Generate heat map of changed values between two run inputs.}
 \usage{
 compare_inputs_chart(.data)
 }
@@ -11,9 +10,11 @@ compare_inputs_chart(.data)
 \item{.data}{Dataframe origination from the compare_inputs() function}
 }
 \description{
-Generates a heat map of changed between two run inputs. Can be a very busy
-chart if not filtered down. Consider using a filter.
+Can be a very busy chart if not filtered down. Consider using a filter on the dataframe before piping into \code{compare_input_chart}.
 }
 \examples{
 \dontrun{fram_db |> compare_inputs(c(100, 101)) |> compare_inputs_chart()}
+}
+\seealso{
+\code{\link[=compare_inputs]{compare_inputs()}}
 }

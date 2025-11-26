@@ -1,7 +1,7 @@
 #' Returns a tibble matching the Fishery Mortality screen.
 #' @param fram_db FRAM database object
 #' @param run_id Run ID
-#' @param msp Model Stock Proportion, default TRUE
+#' @param msp Use Model Stock Proportion? Logical, defaults to TRUE.
 #' @export
 #' @examples
 #' \dontrun{
@@ -10,6 +10,7 @@
 fishery_mortality <- function(fram_db, run_id = NULL, msp = TRUE) {
   validate_fram_db(fram_db)
   if(!is.numeric(run_id)){validate_run_id(fram_db, run_id)}
+  validate_flag(msp)
 
   fishery_mort <- fram_db |>
     fetch_table("Mortality") |>
@@ -61,6 +62,8 @@ fishery_mortality <- function(fram_db, run_id = NULL, msp = TRUE) {
 
 
 
+#' Plot total mortalities by fishery
+#'
 #' Creates an ordered bar chart with
 #' the top number of mortalities per
 #' fishery.
@@ -72,33 +75,30 @@ fishery_mortality <- function(fram_db, run_id = NULL, msp = TRUE) {
 #' @param stock_id numeric, ID of focal stock
 #' @param top_n numeric, Number of fisheries to display
 #' @param filters_list list of framrsquared filter functions to apply before plotting.
-#' @param msp Use Model Stock Proportion expansion? Default is true
+#' @param msp Use Model Stock Proportion? Logical, defaults to TRUE.
+#'
+#' @seealso [plot_impacts_per_catch_heatmap()], [plot_stock_mortality_time_step()]
 #'
 #' @examples
 #' \dontrun{
 #' fram_db |> plot_stock_mortality(run_id = 132, stock_id = 17)
 #' fram_db |> plot_stock_mortality(run_id = 132, stock_id = 17,
-#'         filters_list = list(filter_wa, filter_marine))
+#'         filters_list = list(filter_wa, filter_sport))
 #' }
 #'
 
 plot_stock_mortality <- function(fram_db, run_id, stock_id, top_n = 10, filters_list = NULL, msp = TRUE){
   validate_fram_db(fram_db)
   validate_run_id(fram_db, run_id)
+  validate_stock_ids(fram_db, stock_id)
+  validate_flag(msp)
+
 
   if (length(run_id)>1) {
     cli::cli_abort("Plot is not meaningful when combining multiple runs. Provide a single run in run_id.")
   }
 
-  if (!is.logical(msp)) {
-    cli::cli_abort("msp must be TRUE or FALSE.")
-  }
-
   # make sure run ids are integers
-  if (!is.numeric(stock_id)) {
-    cli::cli_abort("Stock ID must be and integer")
-  }
-
   if (length(stock_id)>1) {
     cli::cli_abort("Plot is not meaningful when combining stock. Provide a single value for stock_id.")
   }
@@ -128,7 +128,9 @@ plot_stock_mortality <- function(fram_db, run_id, stock_id, top_n = 10, filters_
     dplyr::select(.data$fishery_id, .data$fishery_name)
 
   if(species_used == "CHINOOK"){
-    mortality <- fram_db |> aeq_mortality(msp = msp)
+    mortality <- fram_db |>
+      aeq_mortality(msp = msp) |>
+      dplyr::filter(.data$time_step != 1)
   } else {
     mortality <- fram_db |> fetch_table('Mortality')
   }
@@ -140,11 +142,8 @@ plot_stock_mortality <- function(fram_db, run_id, stock_id, top_n = 10, filters_
       dplyr::across(c(.data$landed_catch:.data$drop_off,
                       .data$msf_landed_catch:.data$msf_drop_off), \(x) sum(x)),
       .groups='drop') |>
-    dplyr::mutate(
-      total_mort = .data$landed_catch + .data$non_retention + .data$shaker + .data$drop_off +
-        .data$msf_landed_catch + .data$msf_non_retention + .data$msf_shaker + .data$msf_drop_off
-    ) |>
-    dplyr::select(.data$run_id, .data$stock_id, .data$fishery_id, .data$total_mort)
+    add_total_mortality() |>
+    dplyr::select(.data$run_id, .data$stock_id, .data$fishery_id, total_mort = .data$total_mortality)
 
   if(!is.null(filters_list)){
     ## give species for filtering
@@ -169,8 +168,9 @@ plot_stock_mortality <- function(fram_db, run_id, stock_id, top_n = 10, filters_
     ggplot2::ggplot(ggplot2::aes(.data$total_mort, stats::reorder(.data$fishery_name, .data$total_mort))) +
     ggplot2::geom_col() +
     ggplot2::labs(
-      subtitle = glue::glue('Top mortality for stock {stock_name} ({run_name})'),
-      x = ifelse(species_used == 'COHO','Mortalities', 'AEQs'),
+      title = glue::glue('Top mortality for stock {stock_name} (stock_id = {stock_id})'),
+      subtitle = glue::glue('{run_name} (run_id = {run_id})'),
+      x = ifelse(species_used == 'COHO','Mortalities', 'AEQs (timesteps 2-4)'),
       y = 'Fishery'
     )
 }
@@ -183,6 +183,8 @@ plot_stock_mortality <- function(fram_db, run_id, stock_id, top_n = 10, filters_
 #'
 #' @inheritParams plot_stock_mortality
 #'
+#' @seealso [plot_stock_mortality()], [plot_impacts_per_catch_heatmap()]
+#'
 #' @examples
 #' \dontrun{
 #' fram_db |> stock_mortality_time_step(run_id = 132, stock_id = 17)
@@ -190,19 +192,27 @@ plot_stock_mortality <- function(fram_db, run_id, stock_id, top_n = 10, filters_
 #'
 
 plot_stock_mortality_time_step <- function(fram_db, run_id, stock_id, top_n = 10, filters_list = NULL, msp = TRUE){
-  #lifecycle::deprecate_warn('0.3.0','coho_stock_mortality_time_step()', with = 'stock_mortality()')
-  validate_fram_db(fram_db, db_type = 'full')
+  validate_fram_db(fram_db)
   validate_run_id(fram_db, run_id)
+  validate_stock_ids(fram_db, stock_id)
+  validate_flag(msp)
+
 
   if (length(run_id)>1) {
     cli::cli_abort("Plot is not meaningful when combining multiple runs. Provide a single run in run_id.")
   }
 
   # make sure run ids are integers
-  if (!is.numeric(stock_id)) {
-    cli::cli_abort("Stock ID must be and integer")
+  if (length(stock_id)>1) {
+    cli::cli_abort("Plot is not meaningful when combining stock. Provide a single value for stock_id.")
   }
 
+  if(!is.null(filters_list) & !is.list(filters_list)){
+    cli::cli_abort("If provided, filters_list must be a list of fishery filter functions.")
+  }
+  if(!is.null(filters_list) & !all(purrr::map_vec(filters_list, \(x) is.function(x)))){
+    cli::cli_abort("If provided, filters_list must be a list of fishery filter functions. One or more list items is not a function.")
+  }
 
   species_used = fetch_table(fram_db, "RunID") |>
     dplyr::filter(.data$run_id == .env$run_id) |>
@@ -283,7 +293,8 @@ plot_stock_mortality_time_step <- function(fram_db, run_id, stock_id, top_n = 10
     ggplot2::geom_col(alpha = .6) +
     ggplot2::scale_fill_brewer(palette = 'Set1') +
     ggplot2::labs(
-      subtitle = glue::glue('Top mortality for stock {stock_name} ({run_name})'),
+      title = glue::glue('Top mortality for stock {stock_name} (stock_id = {stock_id})'),
+      subtitle = glue::glue('{run_name} (run_id = {run_id})'),
       x = 'Mortalities',
       y = 'Fishery'
     ) +

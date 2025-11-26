@@ -3,9 +3,7 @@
 \name{cohort_abundance}
 \alias{cohort_abundance}
 \title{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
-Pulls the starting cohorts from the database, this is stored in the
-StockRecruit table, but can be wrong. It's best just to multiply the
-Stock Recruit Scalar by the base period abundance}
+Calculate starting cohort abundance}
 \usage{
 cohort_abundance(fram_db, run_id = NULL)
 }
@@ -15,10 +13,8 @@ cohort_abundance(fram_db, run_id = NULL)
 \item{run_id}{Run ID (optional)}
 }
 \description{
-\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
-Pulls the starting cohorts from the database, this is stored in the
-StockRecruit table, but can be wrong. It's best just to multiply the
-Stock Recruit Scalar by the base period abundance
+The starting cohort abundance listed in the database can be wrong. This function
+calculates the value by multipying the Stock Recruit Scalar by the base period abundance.
 }
 \examples{
 \dontrun{

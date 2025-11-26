@@ -2,8 +2,7 @@
 % Please edit documentation in R/mortality_scaler.R
 \name{mortality_scalers}
 \alias{mortality_scalers}
-\title{Guestimate the impact on a particular stock by multiplying its mortalities
-by the \code{stock_mortality_ratio} produced by these functions.}
+\title{Quantify the proportion of fishery mortalities associated with stock(s) of interest}
 \usage{
 mortality_scalers(fram_db, run_id, stock_id, msp = FALSE)
 }
@@ -17,9 +16,12 @@ mortality_scalers(fram_db, run_id, stock_id, msp = FALSE)
 \item{msp}{Do we use MSP expansion? Logical, defaults to FALSE. Only relevant for Chinook}
 }
 \description{
-Guestimate the impact on a particular stock by multiplying its mortalities
-by the \code{stock_mortality_ratio} produced by these functions.
+Supports guestimating the impact of making changes to a fishery on a particular stock (or group of stocks)
+by multiplying its mortalities by the \code{stock_mortality_ratio} produced by \code{mortality_scalers()}.
 }
 \examples{
 \dontrun{fram_db |> mortality_scalers(run_id = 101, stock_id = c(17:18))}
+}
+\seealso{
+\code{\link[=plot_impacts_per_catch_heatmap]{plot_impacts_per_catch_heatmap()}}
 }
