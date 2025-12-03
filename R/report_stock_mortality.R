@@ -1,4 +1,4 @@
-#' Replicate Fisheyr Mortality screen
+#' Replicate Fishery Mortality screen
 #'
 #' Returns a tibble matching the Fishery Mortality screen.
 #'

@@ -2,7 +2,7 @@
 % Please edit documentation in R/report_stock_mortality.R
 \name{stock_mortality}
 \alias{stock_mortality}
-\title{Replicate Fisheyr Mortality screen}
+\title{Replicate Fishery Mortality screen}
 \usage{
 stock_mortality(fram_db, run_id = NULL)
 }

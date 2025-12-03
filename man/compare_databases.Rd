@@ -10,7 +10,7 @@ compare_databases(
   file2,
   runid_use = NULL,
   tables_use = NULL,
-  slim = FALSE,
+  slim = TRUE,
   quiet = TRUE
 )
 }
@@ -23,7 +23,7 @@ compare_databases(
 
 \item{tables_use}{Vector of character strings. Optional. If provided, only compare the listed tables.}
 
-\item{slim}{Logical. Optional, defaults to FALSE. If TRUE, do not include \verb{$tabs_file1} and \verb{$tabs_file2} in output list.}
+\item{slim}{Logical. Optional, defaults to TRUE. If TRUE, do not include \verb{$tabs_file1} and \verb{$tabs_file2} in output list.}
 
 \item{quiet}{Logical, defaults to TRUE. When TRUE, suppress messages showing individual steps.}
 }
@@ -31,8 +31,8 @@ compare_databases(
 List of lists and tibbles containing comparison information:
 \itemize{
 \item \verb{$ratios} tibble comparing every entry of every relevant column of every table. See "Details" for column descriptions.
-\item \verb{$ratios_detailed} list of tibbles showing the contents of \verb{$ratios} broken into tables, with additional non-compared columns present (e.g., \code{stock_name} in \verb{$ratios_detailed$Stock})
-\item \verb{$nrow_tracker} dataframe providing the number of rows in each table of file1 (\verb{$nrow.prod}), file2 (\verb{$nrow.fork}), and the joined comparison (\verb{$nrow.comp}). Useful to track down cause of many-to-many join warnings that can result from duplicated table entries; unless there are duplicate entries, \verb{$nrow.comp} should be less than or equal to the minimum of \verb{$nrow.prod} and \verb{$nrow.fork}.
+\item \verb{$ratios_detailed} list of tibbles showing the contents of \verb{$ratios} broken into tables, with additional non-compared columns present (e.g., \code{stock_name} in \verb{$ratios_detailed$Stock}). Not shown if \code{slim} is TRUE.
+\item \verb{$nrow_tracker} dataframe providing the number of rows in each table of file1 (\verb{$nrow_original}), file2 (\verb{$nrow_new}), and the joined comparison (\verb{$nrow_comparison}). Useful to track down cause of many-to-many join warnings that can result from duplicated table entries; unless there are duplicate entries, \verb{$nrow_comparison} should be less than or equal to the minimum of \verb{$nrow_original} and \verb{$nrow_new}.
 \item \verb{$tabs_file1} List containing the original fetched tables from \code{file1}. Not returned if argument \code{slim} is TRUE
 \item \verb{$tabs_file2} List containing the original fetched tables from \code{file2}. Not returned if argument \code{slim} is TRUE.
 }
@@ -47,12 +47,12 @@ corresponding table rows using appropriate key columns (e.g. run_id, fishery_id,
 stock_id, age, time_step, etc).
 
 In \verb{$ratios}, the \code{table} and \code{variable} columns
-specify the table column being compared, respectively. \code{prop.err}, \code{abs.err},
-and \code{scale.err} provide measures of the changes between the "original" value
+specify the table column being compared, respectively. \code{prop_err}, \code{abs_err},
+and \code{scale_err} provide measures of the changes between the "original" value
 (from \code{file1}) and the "comparison" value (from \code{file2}). More on those below.
-The \code{original} and \code{comparison} columns give the actual values being compared.
-\code{run_id} through \code{time_step} specify the rows being compared. \code{bkfram.off.by.fish}
-and \code{bkfram.off.by.prop} provide the context for the comparison (more on that below).
+The \code{original} and \code{new} columns give the actual values being compared.
+\code{run_id} through \code{time_step} specify the rows being compared. \code{bkfram_off_by_fish}
+and \code{bkfram_off_by_prop} provide the context for the comparison (more on that below).
 
 \strong{Quantifying error}
 
@@ -60,40 +60,40 @@ Because FRAM involves numerical solvers, we expect some small differences in tab
 even when comparing two effectively equivalent databases. \code{compare_databases()} provides three metrics for these changes.
 In each case, it is assumed that \code{file1} is the reference file; the "error" measures all show how much the  value
 in \code{file2} changed relative to the corresponding value in \code{file1}.
-The simplest measure of error is the \code{abs.err}. This is the absolute value of the difference between
+The simplest measure of error is the \code{abs_err}. This is the absolute value of the difference between
 the two values. If we're looking at an entry with table = "Mortality" and variable = "landed_catch",
 then an abs.err of 5 means that the \code{file2} entry was five fish more or less than the \code{file1} entry. You can confirm this
-by looking at the \code{original} and \code{comparison} columns. While \code{abs.err} is the most easily interpreted,
-it is often not very meaningful when looking across tables and variables. After all, an \code{abs.err} value of 5 could mean a
+by looking at the \code{original} and \code{new} columns. While \code{abs_err} is the most easily interpreted,
+it is often not very meaningful when looking across tables and variables. After all, an \code{abs_err} value of 5 could mean a
 a relatively meaningless change of five fish for a landed catch entry that was originally thousands of fish,
 but the same value of 5 would be a huge change in fishing effort if it were for a fishery scaler entry.
 
 One way to make error comparable across tables and variables is to calculate the proportional error.
-If an entry changed by 0.01\%, that's not meaningful, while if it changed by 10\%, that is. \verb{$prop.err} provides
+If an entry changed by 0.01\%, that's not meaningful, while if it changed by 10\%, that is. \verb{$prop_err} provides
 this proportional error, where -0.5 means the entry in file2 was 50\% less than the corresponding value in file1,
 and a value of 2 means the entry in file2 was 200\% more than the corresponding value in file2. '
 This gives error in context of the original value, and is often a good a way to look for problems. However,
-we sometimes find very large \verb{$prop.err} values for changes that aren't concerning. For example,
+we sometimes find very large \verb{$prop_err} values for changes that aren't concerning. For example,
 we may have an entry for landed catch in the mortality table that was 0.00001 fish in file1,
 and 0 fish in file2. In all practicality these two values are identical, and the
 0.00001 fish difference is likely one of random jitter in the numerical solver or rounding differences.
-However, our \verb{$prop.err} value for this cell is \code{-1}, the most extreme negative change we can get.
-We can jointly look at \verb{$abs.err} and \verb{$prop.err} to address the potential for
-misleadingly large errors \verb{$prop.err}, but it would be nice to have a single error metric that
+However, our \verb{$prop_err} value for this cell is \code{-1}, the most extreme negative change we can get.
+We can jointly look at \verb{$abs_err} and \verb{$prop_err} to address the potential for
+misleadingly large errors \verb{$prop_err}, but it would be nice to have a single error metric that
 provides error in context without being sensitive to very small entries in file1.
 
-\code{scale.err} is an elaboration on \verb{$prop.err} that provides broader context. \verb{$prop.err}
-takes the absolute error and scales by the original value in file1. \verb{$scale.err} generalizes this idea,
+\code{scale_err} is an elaboration on \verb{$prop_err} that provides broader context. \verb{$prop_err}
+takes the absolute error and scales by the original value in file1. \verb{$scale_err} generalizes this idea,
 first calculating the average error for each table-variable combination, and then scaling the
 absolute error by the corresponding table-variable average. That is, if an entry for landed_catch in the
 Mortality table was 0.001 in file1, and was then 0.002 in file2, and the average of all landed_catch
-entries in file 1 was 1000, then the \code{prop.err} would be \code{1} (since file2 had double the value of file1, or \code{(0.002-0.001)/0.001}),
+entries in file 1 was 1000, then the \code{prop_err} would be \code{1} (since file2 had double the value of file1, or \code{(0.002-0.001)/0.001}),
 and the \code{scale.err} would be \code{0.000001} (\code{(0.002-0.001)/1000}). This better captures our intuition
 that a difference of 0.001 fish in the landed catch isn't a big deal, since those values are typically huge.
-\code{scale.err} is thus a measure of error that is comparable across variables and tables, essentially answer the question
+\code{scale_err} is thus a measure of error that is comparable across variables and tables, essentially answer the question
 "Has this entry changed a lot for this kind of variable and table?".
 
-While \code{scale.err} is frequently the most useful error metric, \code{compare_databases()} provides all three.
+While \code{scale_err} is frequently the most useful error metric, \code{compare_databases()} provides all three.
 There may be contexts in which it's important to focus on the proportional error. For example,
 large proportional errors landed catch for the catch rare stocks can be important, but
 the much larger catch from other stock could water down the \code{scale_err} metric.
@@ -107,17 +107,17 @@ This wiggle can propagate to other tables, especially for stock-age-timesteps in
 the target values were quite small (so a wiggle of +/- 1 fish would be a proportionally large
 amount). For this reason, it can be useful to see how our measures of error correspond to the errors in the
 corresponding bk fram table. For every table entry for which this makes sense (e.g., has a stock id, age, and timestep),
-\verb{$bkfram.off.by.fish} gives the absolute error in the corresponding row of the BackwardsFram table, and
-\code{bkfram.off.by.prop} give the relative error (as a proportion)
+\verb{$bkfram_off_by_fish} gives the absolute error in the corresponding row of the BackwardsFram table, and
+\code{bkfram_off_by_prop} give the relative error (as a proportion)
 in the corresponding row of the BackwardsFram table. If
 this bkfram wiggle were the cause of observed errors, we would expect the
 largest errors to correspond to the largest
-\verb{$bkfram.off.by.fish} or \verb{$bkfram.off.by.prop} values.
+\verb{$bkfram_off_by_fish} or \verb{$bkfram_off_by_prop} values.
 
 \strong{Suggestions}
 
-For simple plotting to see if the original and comparison values fall on the 1:1
-line, \code{ggplot2::geom_point()} can be used, with \verb{$ratios$original} and \verb{$ratios$comparison}
+For simple plotting to see if the original and new values fall on the 1:1
+line, \code{ggplot2::geom_point()} can be used, with \verb{$ratios$original} and \verb{$ratios$new}
 for x and y, and a facet_wrap by \code{table} (and perhaps \code{variable}) to
 make plots readable. For identifying meaningful change, scale.err is likely the best measure of error.
 It can be helpful to plot scale.err against bkfram.off.by.fish or bkfram.off.by.prop to

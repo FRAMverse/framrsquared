@@ -26,6 +26,13 @@ fetch_table <- function(fram_db, table_name = NULL, label = TRUE, warn = TRUE){
   all_tables = provide_table_names(is_full = TRUE)
   limited_tables = provide_table_names(is_full = FALSE)
 
+  if(fram_db$fram_db_species == "CHINOOK" & table_name == "BackwardsFRAM"){
+    if(warn){
+      cli::cli_alert_danger("Chinook BackwardsFRAM tables use different numbering for stock_id!\n This can cause problems when merging with other tables!\n Recommend fetch_table_bkchin() instead.")
+    }
+    label = FALSE
+  }
+
   if (is.null(table_name)) {
     if (fram_db$fram_db_type == 'full') {
       cli::cli_alert_info('A table name must be provided, see available options:')
@@ -75,10 +82,6 @@ fetch_table <- function(fram_db, table_name = NULL, label = TRUE, warn = TRUE){
         output_table <- output_table |>
           framrosetta::label_stocks()
       }
-    }
-
-    if(warn & fram_db$fram_db_species == "CHINOOK" & table_name == "BackwardsFRAM"){
-      cli::cli_alert_danger("Chinook BackwardsFRAM tables use different numbering for stock_id!\n This can cause problems when merging with other tables!\n Recommend fetch_table_bkchin() instead.")
     }
 
     return(output_table)

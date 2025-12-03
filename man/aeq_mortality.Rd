@@ -6,7 +6,7 @@
 stripped down from the framr package written by Dan Auerbach.
 https://github.com/FRAMverse/framr/}
 \usage{
-aeq_mortality(fram_db, run_id = NULL, msp = TRUE)
+aeq_mortality(fram_db, run_id = NULL, msp = TRUE, label = TRUE)
 }
 \arguments{
 \item{fram_db}{Fram database object}
@@ -14,6 +14,8 @@ aeq_mortality(fram_db, run_id = NULL, msp = TRUE)
 \item{run_id}{numeric, RunID(s) as ID or ID:ID}
 
 \item{msp}{Do we use MSP expansion? Logical, default true.}
+
+\item{label}{Logical, defaults to TRUE. Add human-readable columns for flags, fisheries, stocks?}
 }
 \description{
 Extract AEQ mortality from Chinook FRAM database. Refactored and
