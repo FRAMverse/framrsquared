@@ -26,12 +26,7 @@ fetch_table <- function(fram_db, table_name = NULL, label = TRUE, warn = TRUE){
   all_tables = provide_table_names(is_full = TRUE)
   limited_tables = provide_table_names(is_full = FALSE)
 
-  if(fram_db$fram_db_species == "CHINOOK" & table_name == "BackwardsFRAM"){
-    if(warn){
-      cli::cli_alert_danger("Chinook BackwardsFRAM tables use different numbering for stock_id!\n This can cause problems when merging with other tables!\n Recommend fetch_table_bkchin() instead.")
-    }
-    label = FALSE
-  }
+
 
   if (is.null(table_name)) {
     if (fram_db$fram_db_type == 'full') {
@@ -65,6 +60,15 @@ fetch_table <- function(fram_db, table_name = NULL, label = TRUE, warn = TRUE){
     }
   } else{
     validate_table(fram_db, table_name)
+
+
+    if(fram_db$fram_db_species == "CHINOOK" & table_name == "BackwardsFRAM"){
+      if(warn){
+        cli::cli_alert_danger("Chinook BackwardsFRAM tables use different numbering for stock_id!\n This can cause problems when merging with other tables!\n Recommend fetch_table_bkchin() instead.")
+      }
+      label = FALSE
+    }
+
     output_table <- DBI::dbGetQuery(fram_db$fram_db_connection,
                                     glue::glue('SELECT * FROM {table_name};')) |>
       fram_clean_tables()

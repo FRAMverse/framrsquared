@@ -12,6 +12,7 @@
 #'  `run_ids`, respectively.
 #'
 #' @export
+#' @seealso [compare_inputs_chart()]
 #' @examples
 #' \dontrun{fram_db |> compare_inputs(c(100,101))}
 #'
