@@ -21,7 +21,7 @@ compare_inputs <- function(fram_db, run_ids){
   # abort if do have two run ids
   if(length(run_ids) != 2 | !is.numeric(run_ids)){cli::cli_abort('Two valid run ids must be provided')}
   scalers <- fram_db |>
-    fetch_table('FisheryScalers') |>
+    fetch_table('FisheryScalers', label = FALSE) |>
     dplyr::filter(.data$run_id %in% .env$run_ids)
 
   original <- scalers |>
@@ -141,7 +141,7 @@ compare_recruits <- function(fram_db, run_ids, tolerance = .01, verbose = TRUE){
 
 
   runs <- fram_db |>
-    fetch_table('RunID') |>
+    fetch_table('RunID', label = FALSE) |>
     dplyr::select(.data$run_id, .data$run_name)
 
 
@@ -158,18 +158,18 @@ compare_recruits <- function(fram_db, run_ids, tolerance = .01, verbose = TRUE){
 
 
   recruit_scalers <- fram_db |>
-    fetch_table('StockRecruit')
+    fetch_table('StockRecruit', label = FALSE)
 
   base_period_recruit <- fram_db |>
-    fetch_table('BaseCohort')
+    fetch_table('BaseCohort', label = FALSE)
 
   stocks <- fram_db |>
-    fetch_table('Stock') |>
+    fetch_table('Stock', label = FALSE) |>
     dplyr::filter(.data$species == fram_db$fram_db_species) |>
     dplyr::select(.data$stock_id, .data$stock_name)
 
   run_base_period <- fram_db |>
-    fetch_table('RunID') |>
+    fetch_table('RunID', label = FALSE) |>
     dplyr::select(.data$run_id, .data$base_period_id)
 
   # recalc recruit cohort size
@@ -221,14 +221,14 @@ compare_fishery_inputs <- function(fram_db, run_ids, tolerance = .01, verbose = 
 
 
   fishery_scalers <- fram_db |>
-    fetch_table('FisheryScalers')
+    fetch_table('FisheryScalers', label = FALSE)
 
   runs <- fram_db |>
-    fetch_table('RunID') |>
+    fetch_table('RunID', label = FALSE) |>
     dplyr::select(.data$run_id, .data$run_name)
 
   fisheries <- fram_db |>
-    fetch_table('Fishery') |>
+    fetch_table('Fishery', label = FALSE) |>
     dplyr::filter(.data$species == fram_db$fram_db_species) |>
     dplyr::select(.data$fishery_id, .data$fishery_name)
 
@@ -289,15 +289,15 @@ compare_fishery_input_flags <- function(fram_db, run_ids, verbose = TRUE){
 
 
   fishery_scalers <- fram_db |>
-    fetch_table('FisheryScalers') |>
+    fetch_table('FisheryScalers', label = FALSE) |>
     dplyr::filter(.data$run_id %in% run_ids)
 
   runs <- fram_db |>
-    fetch_table('RunID') |>
+    fetch_table('RunID', label = FALSE) |>
     dplyr::select(.data$run_id, .data$run_name)
 
   fisheries <- fram_db |>
-    fetch_table('Fishery') |>
+    fetch_table('Fishery', label = FALSE) |>
     dplyr::filter(.data$species == fram_db$fram_db_species) |>
     dplyr::select(.data$fishery_id, .data$fishery_name)
 
@@ -354,18 +354,18 @@ compare_non_retention_inputs <- function(fram_db, run_ids, verbose = TRUE){
 
 
   runs <- fram_db |>
-    fetch_table('RunID') |>
+    fetch_table('RunID', label = FALSE) |>
     dplyr::select(.data$run_id, .data$run_name)
 
   fisheries <- fram_db |>
-    fetch_table('Fishery') |>
+    fetch_table('Fishery', label = FALSE) |>
     dplyr::filter(.data$species == fram_db$fram_db_species) |>
     dplyr::select(.data$fishery_id, .data$fishery_name)
 
 
   # non retention
   non_retention <- fram_db |>
-    fetch_table('NonRetention') |>
+    fetch_table('NonRetention', label = FALSE) |>
     dplyr::select(.data$run_id,
                   .data$fishery_id,
                   .data$time_step,
@@ -420,18 +420,18 @@ compare_non_retention_input_flags <- function(fram_db, run_ids, verbose = TRUE){
 
 
   runs <- fram_db |>
-    fetch_table('RunID') |>
+    fetch_table('RunID', label = FALSE) |>
     dplyr::select(.data$run_id, .data$run_name)
 
   fisheries <- fram_db |>
-    fetch_table('Fishery') |>
+    fetch_table('Fishery', label = FALSE) |>
     dplyr::filter(.data$species == fram_db$fram_db_species) |>
     dplyr::select(.data$fishery_id, .data$fishery_name)
 
 
   # non retention
   non_retention <- fram_db |>
-    fetch_table('NonRetention') |>
+    fetch_table('NonRetention', label = FALSE) |>
     dplyr::select(.data$run_id,
                   .data$fishery_id,
                   .data$time_step,
@@ -484,23 +484,23 @@ compare_stock_fishery_rate_scalers <- function(fram_db, run_ids){
   }
 
   runs <- fram_db |>
-    fetch_table('RunID') |>
+    fetch_table('RunID', label = FALSE) |>
     dplyr::select(.data$run_id, .data$run_name)
 
   stocks <- fram_db |>
-    fetch_table('Stock') |>
+    fetch_table('Stock', label = FALSE) |>
     dplyr::filter(.data$species == fram_db$fram_db_species) |>
     dplyr::select(.data$stock_id, .data$stock_name)
 
   fisheries <- fram_db |>
-    fetch_table('Fishery') |>
+    fetch_table('Fishery', label = FALSE) |>
     dplyr::filter(.data$species == fram_db$fram_db_species) |>
     dplyr::select(.data$fishery_id, .data$fishery_name)
 
 
   # stock fishery rate scalers
   sfrs <- fram_db |>
-    fetch_table('StockFisheryRateScaler') |>
+    fetch_table('StockFisheryRateScaler', label = FALSE) |>
     dplyr::select(.data$run_id,
                   .data$stock_id,
                   .data$fishery_id,
@@ -569,7 +569,7 @@ compare_runs <- function(fram_db, run_ids, tolerance = .01){
 
 
   runs <- fram_db |>
-    fetch_table('RunID')
+    fetch_table('RunID', label = FALSE)
 
   base_run_name <- runs |>
     dplyr::filter(.data$run_id == run_ids[[1]]) |>

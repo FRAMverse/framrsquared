@@ -89,24 +89,24 @@ label_flags = function(.data,
 
 #' NA's all the information in the FisheryScalers that's not being used
 #' e.g Flag 1 only NS Scalers will be returned
-#' @param .data Fishery Scalers table
+#' @param data Fishery Scalers table
 #' @export
 #' @examples
 #' \dontrun{ fishery_scalers_table |> filter_flag()}
 #'
-filter_flag <- function(.data){
-  validate_data_frame(.data)
+filter_flag <- function(data){
+  validate_data_frame(data)
   if(!all(c("fishery_scale_factor", "msf_fishery_scale_factor",
-            "quota", "msf_quota") %in% names(.data))){
+            "quota", "msf_quota") %in% names(data))){
     cli::cli_abort("Input is not a fishery scaler dataframe.")
   }
-  .data |>
+  data |>
     dplyr::group_by(.data$fishery_id, .data$time_step) |>
     dplyr::mutate(
-      fishery_scale_factor = dplyr::if_else(any(.data$fishery_flag %in% c(1,17,18)), .data$fishery_scale_factor, NA_real_),
-      msf_fishery_scale_factor = dplyr::if_else(any(.data$fishery_flag %in% c(7,17,27)), .data$msf_fishery_scale_factor, NA_real_),
-      quota = dplyr::if_else(any(.data$fishery_flag %in% c(2,27,28)), .data$quota, NA_real_),
-      msf_quota = dplyr::if_else(any(.data$fishery_flag %in% c(8,18,28)), .data$msf_quota, NA_real_)
+      fishery_scale_factor = dplyr::if_else(.data$fishery_flag %in% c(1,17,18), .data$fishery_scale_factor, NA_real_),
+      msf_fishery_scale_factor = dplyr::if_else(.data$fishery_flag %in% c(7,17,27), .data$msf_fishery_scale_factor, NA_real_),
+      quota = dplyr::if_else(.data$fishery_flag %in% c(2,27,28), .data$quota, NA_real_),
+      msf_quota = dplyr::if_else(.data$fishery_flag %in% c(8,18,28), .data$msf_quota, NA_real_)
     ) |>
     dplyr::ungroup()
 }
