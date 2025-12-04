@@ -88,6 +88,16 @@ fetch_table <- function(fram_db, table_name = NULL, label = TRUE, warn = TRUE){
       }
     }
 
+    if(table_name == "Mortality" & warn == TRUE){
+      neg_mort_runs <- output_table |>
+        dplyr::filter(dplyr::if_any(landed_catch:msf_encounter, ~ . < 0)) |>
+        dplyr::pull(run_id) |>
+        unique()
+      if(length(neg_mort_runs>0)){
+        cli::cli_alert_danger("DANGER!! Run ID(s) {neg_mort_runs} have one or more negative mortality or encounter values in the 'Mortality' table!")
+      }
+    }
+
     return(output_table)
   }
 }

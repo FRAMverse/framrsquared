@@ -94,13 +94,14 @@ label_flags = function(.data,
 #' @examples
 #' \dontrun{ fishery_scalers_table |> filter_flag()}
 #'
-filter_flag <- function(data){
-  validate_data_frame(data)
+filter_flag <- function(.data){
+  validate_data_frame(.data)
+  species = attr(.data, "species")
   if(!all(c("fishery_scale_factor", "msf_fishery_scale_factor",
-            "quota", "msf_quota") %in% names(data))){
+            "quota", "msf_quota") %in% names(.data))){
     cli::cli_abort("Input is not a fishery scaler dataframe.")
   }
-  data |>
+  res <- .data |>
     dplyr::group_by(.data$fishery_id, .data$time_step) |>
     dplyr::mutate(
       fishery_scale_factor = dplyr::if_else(.data$fishery_flag %in% c(1,17,18), .data$fishery_scale_factor, NA_real_),
@@ -109,5 +110,7 @@ filter_flag <- function(data){
       msf_quota = dplyr::if_else(.data$fishery_flag %in% c(8,18,28), .data$msf_quota, NA_real_)
     ) |>
     dplyr::ungroup()
+  attr(res, "species") <- species
+  return(res)
 }
 

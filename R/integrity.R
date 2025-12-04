@@ -178,6 +178,7 @@ find_tables_by_column_ <- function(fram_db, column_name) {
 run_info <- function(fram_db, run_id) {
   if (!is.numeric (run_id)){cli::cli_abort('run_id must be numeric')}
   if (length(run_id) > 1) {cli::cli_abort('Provide only one run ID')}
+  validate_fram_db(fram_db)
   validate_run_id(fram_db, run_id)
 
   if (! run_id %in% get_run_ids(fram_db)){

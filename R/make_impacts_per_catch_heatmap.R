@@ -25,6 +25,7 @@
 plot_impacts_per_catch_heatmap <- function(fram_db, run_id, stock_id, filters_list = list(filter_wa, filter_sport), msp = TRUE) {
   validate_fram_db(fram_db)
   validate_run_id(fram_db, run_id)
+  validate_stock_ids(fram_db, stock_id)
 
   validate_stock_ids(fram_db, stock_id)
   if(length(stock_id)>1){
@@ -33,7 +34,7 @@ plot_impacts_per_catch_heatmap <- function(fram_db, run_id, stock_id, filters_li
 
   validate_flag(msp)
 
-  run_info <- framrsquared::fetch_table(fram_db, "RunID") |>
+  run_info <- fetch_table(fram_db, "RunID") |>
     dplyr::filter(run_id == .env$run_id)
   print(dim(run_info))
   cli::cli_alert(
@@ -42,7 +43,7 @@ plot_impacts_per_catch_heatmap <- function(fram_db, run_id, stock_id, filters_li
     )
   )
 
-  stock_table <- framrsquared::fetch_table(fram_db, "Stock")
+  stock_table <- fetch_table(fram_db, "Stock", label = FALSE)
   stock_name <- stock_table |>
     dplyr::filter(stock_id == .env$stock_id) |>
     dplyr::pull(.data$stock_name)
@@ -55,9 +56,8 @@ plot_impacts_per_catch_heatmap <- function(fram_db, run_id, stock_id, filters_li
     )
   }
 
-  framrsquared::fetch_table(fram_db, "Mortality")
 
-  fishery_landed <- framrsquared::fishery_mortality(fram_db, run_id = run_id) |>
+  fishery_landed <- fishery_mortality(fram_db, run_id = run_id) |>
     dplyr::group_by(.data$fishery_id, .data$time_step) |>
     dplyr::summarize(landed_catch = sum(.data$landed_catch))
 
@@ -65,14 +65,14 @@ plot_impacts_per_catch_heatmap <- function(fram_db, run_id, stock_id, filters_li
   ## for chinook
 
   if (fram_db$fram_db_species == "CHINOOK") {
-    stock_mort = framrsquared::aeq_mortality(fram_db, run_id = run_id, msp = msp) |>
+    stock_mort = aeq_mortality(fram_db, run_id = run_id, msp = msp) |>
       dplyr::filter(stock_id == .env$stock_id) |>
       add_total_mortality() |>
       dplyr::group_by(.data$fishery_id, .data$time_step) |>
       dplyr::summarize(mort = sum(.data$total_mortality)) |>
       dplyr::ungroup()
   } else{
-    stock_mort = framrsquared::stock_mortality(fram_db, run_id = run_id) |>
+    stock_mort = stock_mortality(fram_db, run_id = run_id) |>
       dplyr::mutate(total_mortality = .data$landed_catch + .data$non_retention + .data$shaker + .data$drop_off) |>
       dplyr::filter(stock_id == .env$stock_id) |>
       dplyr::group_by(.data$fishery_id, .data$time_step) |>
