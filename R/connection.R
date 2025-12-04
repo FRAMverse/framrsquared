@@ -88,6 +88,9 @@ connect_fram_db <-
       cli::cli_abort('Something went wrong connecting to a database')
     }
 
+    con_id <- as.character(as.numeric(Sys.time()) * 1000000)
+    .fram_connections[[con_id]] <- con
+
     # returns database type, checks if fram database is valid
     fram_db_type <- fram_database_type(con)
 
@@ -100,6 +103,7 @@ connect_fram_db <-
     return(
       list(
         fram_db_connection = con, # pass connection back
+        fram_db_connection_id = con_id,
         fram_db_type = fram_db_type$type,
         fram_db_species = fram_db_species,
         fram_db_medium = tools::file_ext(db_path),
@@ -129,8 +133,21 @@ disconnect_fram_db <- function(fram_db,
 
   db_var_name <- deparse(substitute(fram_db))
   DBI::dbDisconnect(fram_db$fram_db_connection)
+
+  rm(list = fram_db$fram_db_connection_id, envir = .fram_connections)
+
   if(!quiet){
     cli::cli_alert_success(glue::glue('Successfully disconnected from FRAM database ({db_var_name})'))
+  }
+}
+
+disconnect_all_fram_connections <- function(){
+  for (con_id in names(.fram_connections)) {
+    con <- .fram_connections[[con_id]]
+    if (DBI::dbIsValid(con)) {
+      DBI::dbDisconnect(con)
+    }
+    rm(list = con_id, envir = .fram_connections)
   }
 }
 
