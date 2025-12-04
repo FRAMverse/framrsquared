@@ -116,7 +116,7 @@ calc_fram_scaling <- function(fram_db, table_name, df) {
   ## Complication: input and output
 
   tab <- fram_db |>
-    fetch_table(table_name)
+    fetch_table(table_name, label = FALSE)
   db_names <- DBI::dbGetQuery(
     fram_db$fram_db_connection,
     glue::glue("SELECT * FROM {table_name} where false;")
@@ -214,7 +214,7 @@ change_run_id <- function(fram_db, old_run_id, new_run_id){
 
   run_id_tables$value |>
     purrr::walk(.f = \(value) tryCatch(
-      suppressWarnings(DBI::dbSendQuery(
+      suppressWarnings(DBI::dbExecute(
         fram_db$fram_db_connection,
         glue::glue(
           'UPDATE {value}
@@ -232,7 +232,7 @@ change_run_id <- function(fram_db, old_run_id, new_run_id){
 
 #' Removes a run in a FRAM database
 #' @param fram_db FRAM database object
-#' @param run_id FRAM run ID to be deleted
+#' @param run_id FRAM run ID or IDs to be deleted
 #' @export
 #' @examples
 #' \dontrun{fram_db |> delete_run(run_id = 132)}
@@ -245,10 +245,12 @@ remove_run <- function(fram_db, run_id){
     cli::cli_abort('This database connection is designated read-only!! If you are certain this database can be modified, create a new connection using `connect_fram_db()` with `read_only = TRUE`')
   }
 
-  run_id_tables <- find_tables_by_column_(fram_db, 'RunID')
+  run_id_tables <- tidyr::expand_grid(find_tables_by_column_(fram_db, 'RunID'),
+                               run_id)
 
-  run_id_tables$value |>
-    purrr::walk(.f = \(value) tryCatch(
+  run_id_tables|>
+    dplyr::select(value, run_id) |>
+    purrr::pwalk(.f = \(value, run_id) tryCatch(
       suppressWarnings(DBI::dbSendQuery(
         fram_db$fram_db_connection,
         glue::glue(
@@ -294,7 +296,7 @@ copy_fishery_scalers <- function(fram_db, from_run, to_run, fishery_id = NULL){
   }
 
   copy_scalers <- fram_db |>
-    fetch_table('FisheryScalers') |>
+    fetch_table('FisheryScalers', label = FALSE) |>
     dplyr::filter(.data$run_id == .env$from_run)
 
   if (!is.null(fishery_id)) {
@@ -324,7 +326,7 @@ copy_fishery_scalers <- function(fram_db, from_run, to_run, fishery_id = NULL){
     ))
 
   original_notes <- fram_db |>
-    fetch_table('RunID') |>
+    fetch_table('RunID', label = FALSE) |>
     dplyr::filter(.data$run_id == .env$to_run) |>
     dplyr::pull(.data$run_comments)
   update_notes <- paste0(original_notes,
@@ -398,7 +400,7 @@ copy_run <- function(fram_db, target_run, times = 1, label = 'copy', force_many_
     cli::cli_abort('This database connection is designated read-only!! If you are certain this database can be modified, create a new connection using `connect_fram_db()` with `read_only = TRUE`')
   }
 
-  run_count_current = fram_db |> fetch_table("RunID") |> nrow()
+  run_count_current = fram_db |> fetch_table("RunID", label = FALSE) |> nrow()
   if((run_count_current + times > 150) & verbose){
       cli::cli_alert("Official FRAM cannot currently read databases with >150 run ids.\n  Use FRAM_Automation (https://github.com/FRAMverse/FRAM_automation)\n  or change FRAM source code declaration of vectors `RunID`, `RunIDName`, and `RunBasePeriodID` in `FVS_ModelRunSelection.vb`.")
   }

@@ -50,6 +50,27 @@ connect_fram_db <-
       cli::cli_abort("`quiet` must be a logical of length 1")
     }
 
+    ## NEW CODE: SEE IF WE CAN AVOID ORPHANS
+    # Get the variable name being assigned to (if possible)
+    assign_var <- tryCatch(
+      as.character(substitute(db_path)),
+      error = function(e) NULL
+    )
+
+    # Check if assignment variable exists and has open connection
+    if (!is.null(assign_var) && exists(assign_var, envir = parent.frame())) {
+      existing <- get(assign_var, envir = parent.frame())
+      if (is.list(existing) &&
+          "fram_db_connection" %in% names(existing) &&
+          DBI::dbIsValid(existing$fram_db_connection)) {
+        if (!quiet) {
+          cli::cli_alert_warning("Closing existing connection before creating new one")
+        }
+        DBI::dbDisconnect(existing$fram_db_connection)
+      }
+    }
+
+
 
     # connect to database
     if(tools::file_ext(db_path) == 'mdb'){
