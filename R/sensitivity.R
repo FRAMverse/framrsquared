@@ -8,7 +8,7 @@
 #' @param fram_db Fram database
 #' @param template_run Run ID of the run that should be used as a template for the sensitivity analyses.
 #' @param table_name Name of FRAM table that will be modified for the sensitivity analyses
-#' @param match_df dataframe that defines which rows should be modified during sensitivity analyses. To modify some values for marked and unmarked Stillaguamish stocks, we would use data.frame(StockID = c(17, 18)). To modify values only for Stillaguamish age 2s, we would use expand_grid(StockID = c(17, 19), Age = 2). Unlike match/replace dataframes for `modify_table()`, column names do not need to start with "match_" (but this function will still work if they do).
+#' @param match_df dataframe that defines which rows should be modified during sensitivity analyses. To modify some values for marked and unmarked Stillaguamish stocks, we would use data.frame(StockID = c(17, 18)). To modify values only for Stillaguamish age 2s, we would use expand_grid(StockID = c(17, 19), Age = 2). Unlike match/replace dataframes for [modify_table()], column names do not need to start with "match_" (but this function will still work if they do).
 #' @param scale_values Numeric vector of the scaling factors to be be used, one per sensitivity analysis run. Defines the number of runs generated. For example, `scale_values = 2:10` would generate 9 runs. The first would multiply the values of interest by 2, the second by 3, etc.
 #' @param cols_to_vary Character or character vector of column names of FRAM table `table_name` that should be rescaled.
 #' @param tamm_template Optional; character string of filepath of a TAMM to be used as a template. If provided (and tamm_target_folder provided), `sensitivity_scaled` will make a tamm for each sensitivity analysis run, using names that work with the FRAM multirun fork "Use folder" option.
@@ -20,6 +20,8 @@
 #'   $scales_by_runs contains a row for each sensitivity run and maps the scaling factors to run ids.
 #'   $full_df is the full match/scale factor used by calc_fram_scaling, and shows the match conditions and scaling used for each run.
 #' @export
+#'
+#' @seealso [sensitivity_exact()], [sensitivity_custom()]
 #'
 #' @examples
 #' \dontrun{
@@ -85,6 +87,9 @@ sensitivity_scaled <- function(fram_db,
     cli::cli_abort("TAMM copying only works if both `tamm_template` and `tamm_target_folder` are provided; only one of those arguments is defined!")
   }
 
+  validate_character(label, n = 1)
+  validate_flag(save_log)
+
 
   ## relabel match_df headers as needed
   ind.nomatch <- grep("^match_", names(match_df), invert = TRUE)
@@ -98,7 +103,7 @@ sensitivity_scaled <- function(fram_db,
     copy_run(
       target_run = template_run,
       times = length(scale_values),
-      label = "sensitivity"
+      label = label
     )
 
   cli::cli_alert("Generating {length(run_ids)} new runs for sensitivity analysis, with RunIDs from {min(run_ids)} to {max(run_ids)}.")
@@ -235,6 +240,10 @@ sensitivity_exact <- function(fram_db,
   }
 
 
+  validate_character(label, n = 1)
+
+  validate_flag(save_log)
+
   ## relabel match_df headers as needed
   ind.nomatch <- grep("^match_", names(match_df), invert = TRUE)
   if (length(ind.nomatch) > 0) {
@@ -246,7 +255,7 @@ sensitivity_exact <- function(fram_db,
     copy_run(
       target_run = template_run,
       times = length(exact_values),
-      label = "sensitivity"
+      label = label
     )
 
   cli::cli_alert("Generating {length(run_ids)} new runs for sensitivity analysis, with RunIDs from {min(run_ids)} to {max(run_ids)}.")
@@ -302,6 +311,8 @@ sensitivity_exact <- function(fram_db,
 #' @return Invisibly returns object `scenario_list`, but with list items named with the corresponding RunID.
 #' @export
 #'
+#' @seealso [sensitivity_scaled()], [sensitivity_exact()]
+#'
 #' @examples
 #' \dontrun{
 #' ## silly quick-and-dirty example: try these
@@ -356,12 +367,17 @@ sensitivity_custom <- function(fram_db,
     cli::cli_abort("TAMM copying only works if both `tamm_template` and `tamm_target_folder` are provided; only one of those arguments is defined!")
   }
 
+
+  validate_character(label, n = 1)
+
+  validate_flag(save_log)
+
   ## make copies of template run
   run_ids <- fram_db |>
     copy_run(
       target_run = template_run,
       times = length(scenario_list),
-      label = "sensitivity"
+      label = label
     )
 
   cli::cli_alert("Generating {length(run_ids)} new runs for sensitivity analysis, with RunIDs from {min(run_ids)} to {max(run_ids)}.")

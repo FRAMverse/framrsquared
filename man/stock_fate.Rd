@@ -17,7 +17,7 @@ stock_fate(fram_db, run_id = NULL, units = c("fish", "percentage"))
 
 \item{run_id}{Run ID (optional)}
 
-\item{units}{'fish' or 'percentage'. Percentage is proportion of starting adbundace}
+\item{units}{'fish' or 'percentage'. Percentage is proportion of starting adundance}
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}

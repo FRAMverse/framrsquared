@@ -17,10 +17,11 @@
 #' @param quarto Boolean. If TRUE, add quarto yaml file and style.css
 #' @param organization Character, defaults to "WDFW". Specifies the set of quarto templates to use. Currently only supports "WDFW".
 #' @param renv Boolean to initialize renv. Defaults to FALSE.
-#' @param template.overwrite Boolean. Overwrite _quarto.yml and style.css files if they already exist? Defaults to TRUE
+#' @param template_overwrite Boolean. Overwrite _quarto.yml and style.css files if they already exist? Defaults to TRUE
 #' @param color Character string, defaults to "coffee". Specifies quarto template to use; organizations may have several.
 #' @param quiet Boolean, defaults to FALSE. If TRUE, suppresses informational messages.
 #' @export
+#' @seealso [fetch_quarto_templates()]
 #' @examples
 #' \dontrun{
 #' framrsquared::initialize_project()
@@ -35,12 +36,22 @@ initialize_project <-
     'results/quarto_output'
   ),
   quarto = TRUE,
-  organization = "WDFW",
+  organization = c("WDFW"),
   renv = FALSE,
-  template.overwrite = TRUE,
+  template_overwrite = TRUE,
   color = "coffee",
   quiet = TRUE) {
-    organization  <- rlang::arg_match(organization, c("WDFW"))
+
+    validate_flag(quarto)
+    organization  <- rlang::arg_match(organization)
+    validate_flag(renv)
+    validate_flag(template_overwrite)
+
+    if(!is.character(color) | length(color) != 1){
+      cli::cli_abort("`color` must be a single character string identifying a quarto template to use.")
+    }
+
+    validate_flag(quiet)
 
     purrr::walk(folders,
                 \(folder) dir.create(here::here(glue::glue("{folder}"))))
@@ -64,7 +75,7 @@ initialize_project <-
       fetch_quarto_templates(to.path = ".",
                              organization = organization,
                              color = color,
-                             overwrite = template.overwrite)
+                             overwrite = template_overwrite)
 
     }
     if (!quiet) {
@@ -95,13 +106,14 @@ initialize_project <-
 #'
 #' @return Nothing.
 #' @export
-#'
+#' @seealso [initialize_project()]
 fetch_quarto_templates = function(to.path,
-                                  organization = "WDFW",
+                                  organization = c("WDFW"),
                                   color = "coffee",
                                   overwrite = FALSE) {
   rlang::arg_match(organization, c("WDFW")) ## add more as appropriate.
   rlang::arg_match(color, c("green", "coffee"))
+  validate_flag(overwrite)
   ## The associated yaml and style files should be added to the `inst` folder with a subfolder
   ## that matches the organization name
 

@@ -4,9 +4,10 @@
 #' See https://framverse.github.io/fram_doc/calcs_data_chin.html#46_Model-Stock_Proportion.
 #'
 #' @param fram_db FRAM database object
-#' @param run_id Run ID (optional)
+#' @param run_id One or more run ids (optional)
 #' @return Mortality table with mortality values expanded by msp
 #' @export
+#' @seealso [aeq_mortality()]
 #' @examples
 #' \dontrun{
 #' fram_db |> msp_mortality(run_id = 132)
@@ -14,15 +15,18 @@
 msp_mortality = function(fram_db, run_id = NULL){
 
   validate_fram_db(fram_db, db_type = 'full', db_species = 'CHINOOK')
+  if(!is.null(run_id)){
+    validate_run_id(fram_db, run_id)
+  }
 
   runid <- fram_db |>
-    fetch_table('RunID')
+    fetch_table_('RunID')
 
   msp <- fram_db |>
-    fetch_table('FisheryModelStockProportion')
+    fetch_table_('FisheryModelStockProportion')
 
   mortality <- fram_db |>
-    fetch_table('Mortality')
+    fetch_table_('Mortality')
 
   msp_run_id <- runid |>
     dplyr::inner_join(msp, by = 'base_period_id', relationship = 'many-to-many') |>

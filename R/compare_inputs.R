@@ -12,6 +12,7 @@
 #'  `run_ids`, respectively.
 #'
 #' @export
+#' @seealso [compare_inputs_chart()]
 #' @examples
 #' \dontrun{fram_db |> compare_inputs(c(100,101))}
 #'
@@ -21,7 +22,7 @@ compare_inputs <- function(fram_db, run_ids){
   # abort if do have two run ids
   if(length(run_ids) != 2 | !is.numeric(run_ids)){cli::cli_abort('Two valid run ids must be provided')}
   scalers <- fram_db |>
-    fetch_table('FisheryScalers') |>
+    fetch_table_('FisheryScalers') |>
     dplyr::filter(.data$run_id %in% .env$run_ids)
 
   original <- scalers |>
@@ -43,10 +44,15 @@ compare_inputs <- function(fram_db, run_ids){
 }
 
 
-#' Generates a heat map of changed between two run inputs. Can be a very busy
-#' chart if not filtered down. Consider using a filter.
+#' Generate heat map of changed values between two run inputs.
+#'
+#' Can be a very busy chart if not filtered down. Consider using a filter on the dataframe before piping into `compare_input_chart`.
+#'
 #' @param .data Dataframe origination from the compare_inputs() function
 #' @export
+#'
+#' @seealso [compare_inputs()]
+#'
 #' @examples
 #' \dontrun{fram_db |> compare_inputs(c(100, 101)) |> compare_inputs_chart()}
 compare_inputs_chart <- function(.data){
@@ -115,14 +121,28 @@ input_summary_ <- function(.data, run_id){
 #' @param tolerance Tolerance for detecting changes
 #' @param verbose If `TRUE`, print an update to screen when there are no differences in recruits.
 #' @export
+#' @seealso [compare_runs()]
 #' @examples
 #' \dontrun{fram_db |> compare_recruits()}
 compare_recruits <- function(fram_db, run_ids, tolerance = .01, verbose = TRUE){
   validate_fram_db(fram_db)
   validate_run_id(fram_db, run_ids)
 
+  if (!is.numeric(tolerance) || length(tolerance) != 1) {
+    cli::cli_abort('`tolerance` must be a numeric of length 1')
+  }
+
+  if(tolerance < 0){
+    cli::cli_abort('`tolerance` must be positive')
+  }
+
+  if (!is.logical(verbose) || length(verbose) != 1) {
+    cli::cli_abort('`verbose` must be a logical of length 1')
+  }
+
+
   runs <- fram_db |>
-    fetch_table('RunID') |>
+    fetch_table_('RunID') |>
     dplyr::select(.data$run_id, .data$run_name)
 
 
@@ -139,18 +159,18 @@ compare_recruits <- function(fram_db, run_ids, tolerance = .01, verbose = TRUE){
 
 
   recruit_scalers <- fram_db |>
-    fetch_table('StockRecruit')
+    fetch_table_('StockRecruit')
 
   base_period_recruit <- fram_db |>
-    fetch_table('BaseCohort')
+    fetch_table_('BaseCohort')
 
   stocks <- fram_db |>
-    fetch_table('Stock') |>
+    fetch_table_('Stock') |>
     dplyr::filter(.data$species == fram_db$fram_db_species) |>
     dplyr::select(.data$stock_id, .data$stock_name)
 
   run_base_period <- fram_db |>
-    fetch_table('RunID') |>
+    fetch_table_('RunID') |>
     dplyr::select(.data$run_id, .data$base_period_id)
 
   # recalc recruit cohort size
@@ -181,21 +201,35 @@ compare_recruits <- function(fram_db, run_ids, tolerance = .01, verbose = TRUE){
 #' Compares the fishery inputs of two runs
 #' @inheritParams compare_recruits
 #' @export
+#' @seealso [compare_runs()]
 #' @examples
 #' \dontrun{fram_db |> compare_fishery_inputs(c(55, 56))}
 compare_fishery_inputs <- function(fram_db, run_ids, tolerance = .01, verbose = TRUE){
   validate_fram_db(fram_db)
   validate_run_id(fram_db, run_ids)
 
+  if (!is.numeric(tolerance) || length(tolerance) != 1) {
+    cli::cli_abort('`tolerance` must be a numeric of length 1')
+  }
+
+  if(tolerance < 0){
+    cli::cli_abort('`tolerance` must be positive')
+  }
+
+  if (!is.logical(verbose) || length(verbose) != 1) {
+    cli::cli_abort('`verbose` must be a logical of length 1')
+  }
+
+
   fishery_scalers <- fram_db |>
-    fetch_table('FisheryScalers')
+    fetch_table_('FisheryScalers')
 
   runs <- fram_db |>
-    fetch_table('RunID') |>
+    fetch_table_('RunID') |>
     dplyr::select(.data$run_id, .data$run_name)
 
   fisheries <- fram_db |>
-    fetch_table('Fishery') |>
+    fetch_table_('Fishery') |>
     dplyr::filter(.data$species == fram_db$fram_db_species) |>
     dplyr::select(.data$fishery_id, .data$fishery_name)
 
@@ -243,22 +277,28 @@ compare_fishery_inputs <- function(fram_db, run_ids, tolerance = .01, verbose = 
 #' Compares the fishery flags of two runs
 #' @inheritParams compare_recruits
 #' @export
+#' @seealso [compare_runs()]
 #' @examples
 #' \dontrun{fram_db |> compare_fishery_input_flags(c(55, 56))}
 compare_fishery_input_flags <- function(fram_db, run_ids, verbose = TRUE){
   validate_fram_db(fram_db)
   validate_run_id(fram_db, run_ids)
 
+ if (!is.logical(verbose) || length(verbose) != 1) {
+    cli::cli_abort('`verbose` must be a logical of length 1')
+  }
+
+
   fishery_scalers <- fram_db |>
-    fetch_table('FisheryScalers') |>
+    fetch_table_('FisheryScalers') |>
     dplyr::filter(.data$run_id %in% run_ids)
 
   runs <- fram_db |>
-    fetch_table('RunID') |>
+    fetch_table_('RunID') |>
     dplyr::select(.data$run_id, .data$run_name)
 
   fisheries <- fram_db |>
-    fetch_table('Fishery') |>
+    fetch_table_('Fishery') |>
     dplyr::filter(.data$species == fram_db$fram_db_species) |>
     dplyr::select(.data$fishery_id, .data$fishery_name)
 
@@ -303,25 +343,30 @@ compare_fishery_input_flags <- function(fram_db, run_ids, verbose = TRUE){
 #' Compares the non retention inputs of two runs
 #' @inheritParams compare_recruits
 #' @export
+#' @seealso [compare_runs()]
 #' @examples
 #' \dontrun{fram_db |> compare_non_retention_inputs(c(55, 56))}
 compare_non_retention_inputs <- function(fram_db, run_ids, verbose = TRUE){
   validate_fram_db(fram_db)
   validate_run_id(fram_db, run_ids)
+  if (!is.logical(verbose) || length(verbose) != 1) {
+    cli::cli_abort('`verbose` must be a logical of length 1')
+  }
+
 
   runs <- fram_db |>
-    fetch_table('RunID') |>
+    fetch_table_('RunID') |>
     dplyr::select(.data$run_id, .data$run_name)
 
   fisheries <- fram_db |>
-    fetch_table('Fishery') |>
+    fetch_table_('Fishery') |>
     dplyr::filter(.data$species == fram_db$fram_db_species) |>
     dplyr::select(.data$fishery_id, .data$fishery_name)
 
 
   # non retention
   non_retention <- fram_db |>
-    fetch_table('NonRetention') |>
+    fetch_table_('NonRetention') |>
     dplyr::select(.data$run_id,
                   .data$fishery_id,
                   .data$time_step,
@@ -364,25 +409,30 @@ compare_non_retention_inputs <- function(fram_db, run_ids, verbose = TRUE){
 #' @inheritParams compare_recruits
 #' @param run_ids Two run ids
 #' @export
+#' @seealso [compare_runs()]
 #' @examples
 #' \dontrun{fram_db |> compare_non_retention_inputs(c(55, 56))}
 compare_non_retention_input_flags <- function(fram_db, run_ids, verbose = TRUE){
   validate_fram_db(fram_db)
   validate_run_id(fram_db, run_ids)
+  if (!is.logical(verbose) || length(verbose) != 1) {
+    cli::cli_abort('`verbose` must be a logical of length 1')
+  }
+
 
   runs <- fram_db |>
-    fetch_table('RunID') |>
+    fetch_table_('RunID') |>
     dplyr::select(.data$run_id, .data$run_name)
 
   fisheries <- fram_db |>
-    fetch_table('Fishery') |>
+    fetch_table_('Fishery') |>
     dplyr::filter(.data$species == fram_db$fram_db_species) |>
     dplyr::select(.data$fishery_id, .data$fishery_name)
 
 
   # non retention
   non_retention <- fram_db |>
-    fetch_table('NonRetention') |>
+    fetch_table_('NonRetention') |>
     dplyr::select(.data$run_id,
                   .data$fishery_id,
                   .data$time_step,
@@ -423,6 +473,7 @@ compare_non_retention_input_flags <- function(fram_db, run_ids, verbose = TRUE){
 #' @param fram_db FRAM database object
 #' @param run_ids Two run ids
 #' @export
+#' @seealso [compare_runs()]
 #' @examples
 #' \dontrun{fram_db |> compare_stock_fishery_rate_scalers(c(55, 56))}
 compare_stock_fishery_rate_scalers <- function(fram_db, run_ids){
@@ -434,23 +485,23 @@ compare_stock_fishery_rate_scalers <- function(fram_db, run_ids){
   }
 
   runs <- fram_db |>
-    fetch_table('RunID') |>
+    fetch_table_('RunID') |>
     dplyr::select(.data$run_id, .data$run_name)
 
   stocks <- fram_db |>
-    fetch_table('Stock') |>
+    fetch_table_('Stock') |>
     dplyr::filter(.data$species == fram_db$fram_db_species) |>
     dplyr::select(.data$stock_id, .data$stock_name)
 
   fisheries <- fram_db |>
-    fetch_table('Fishery') |>
+    fetch_table_('Fishery') |>
     dplyr::filter(.data$species == fram_db$fram_db_species) |>
     dplyr::select(.data$fishery_id, .data$fishery_name)
 
 
   # stock fishery rate scalers
   sfrs <- fram_db |>
-    fetch_table('StockFisheryRateScaler') |>
+    fetch_table_('StockFisheryRateScaler') |>
     dplyr::select(.data$run_id,
                   .data$stock_id,
                   .data$fishery_id,
@@ -510,9 +561,16 @@ compare_stock_fishery_rate_scalers <- function(fram_db, run_ids){
 compare_runs <- function(fram_db, run_ids, tolerance = .01){
   validate_fram_db(fram_db)
   validate_run_id(fram_db, run_ids)
+  if (!is.numeric(tolerance) || length(tolerance) != 1) {
+    cli::cli_abort('`tolerance` must be a positive numeric of length 1')
+  }
+  if(tolerance < 0){
+    cli::cli_abort('`tolerance` must be positive')
+  }
+
 
   runs <- fram_db |>
-    fetch_table('RunID')
+    fetch_table_('RunID')
 
   base_run_name <- runs |>
     dplyr::filter(.data$run_id == run_ids[[1]]) |>

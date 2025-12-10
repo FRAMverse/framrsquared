@@ -18,3 +18,6 @@ by the TRuns report driver
 \dontrun{truns <- truns_fisheries(fram_db)}
 
 }
+\seealso{
+\code{\link[=truns_stocks]{truns_stocks()}}
+}

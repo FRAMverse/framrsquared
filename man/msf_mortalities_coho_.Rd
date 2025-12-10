@@ -2,8 +2,7 @@
 % Please edit documentation in R/report_msf_coho.R
 \name{msf_mortalities_coho_}
 \alias{msf_mortalities_coho_}
-\title{Returns a tibble matching the MSF screen report mortalities for Coho This is
-specific for Coho and in most cases msf_mortalities() is preferable.}
+\title{Replicate MSF screen report mortalities for COHO}
 \usage{
 msf_mortalities_coho_(fram_db)
 }
@@ -11,10 +10,13 @@ msf_mortalities_coho_(fram_db)
 \item{fram_db}{FRAM database object}
 }
 \description{
-Returns a tibble matching the MSF screen report mortalities for Coho This is
-specific for Coho and in most cases msf_mortalities() is preferable.
+Returns a tibble matching the MSF screen report mortalities for Coho. This is
+specific for Coho and in most cases \code{\link[=msf_mortalities]{msf_mortalities()}} is preferable.
 }
 \examples{
 \dontrun{fram_db |> msf_mortalities_coho_()}
 
+}
+\seealso{
+\code{\link[=msf_mortalities]{msf_mortalities()}}, \code{\link[=msf_encounters_coho_]{msf_encounters_coho_()}}, \code{\link[=msf_landed_catch_coho_]{msf_landed_catch_coho_()}}
 }

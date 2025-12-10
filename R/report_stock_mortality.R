@@ -1,4 +1,7 @@
-#' Returns a tibble matching the Fishery Mortality screen.
+#' Replicate Stock Mortality screen
+#'
+#' Returns a tibble matching the Stock Mortality screen.
+#'
 #' @param fram_db FRAM database object
 #' @param run_id Run ID
 #' @export
@@ -11,16 +14,13 @@
 #' }
 stock_mortality <- function(fram_db, run_id = NULL) {
 
-  if(!is.numeric(run_id) && !is.null(run_id)) {
-    cli::cli_abort('Run ID must be and integer')
-  }
-
-  if(!DBI::dbIsValid(fram_db$fram_db_connection)) {
-    cli::cli_abort('Must connect to a FRAM database first...')
+  validate_fram_db(fram_db)
+  if(!is.null(run_id)){
+    validate_run_id(fram_db, run_id)
   }
 
   stock_mort <- fram_db |>
-    fetch_table("Mortality") |>
+    fetch_table_("Mortality") |>
     dplyr::group_by(
       .data$run_id,
       .data$age,

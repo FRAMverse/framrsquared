@@ -5,12 +5,14 @@
 \title{Generates post-season January age 3 abundances by stock from post-season databases.
 Used for forecasting.}
 \usage{
-post_season_abundance(fram_db, units = c("ja3", "oa3"))
+post_season_abundance(fram_db, units = c("ja3", "oa3"), run_ids = NULL)
 }
 \arguments{
 \item{fram_db}{FRAM database object}
 
 \item{units}{Default January Age 3 'ja3', optional ocean age 3 'oa3'}
+
+\item{run_ids}{Numeric vector of run_ids to use, necessary when there are multiple runs with the same run_year in the database. Optional, defaults to NULL.}
 }
 \description{
 Generates post-season January age 3 abundances by stock from post-season databases.

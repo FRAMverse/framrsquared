@@ -2,8 +2,7 @@
 % Please edit documentation in R/report_msf.R
 \name{msf_encounters}
 \alias{msf_encounters}
-\title{Produces the MSF screen report numbers for encounters. Returns different
-format depending database.}
+\title{Reproduce MSF encounters screen}
 \usage{
 msf_encounters(fram_db, run_id = NULL)
 }
@@ -18,4 +17,7 @@ format depending database.
 }
 \examples{
 \dontrun{fram_db |> msf_encounters(run_id = 101)}
+}
+\seealso{
+\code{\link[=msf_mortalities]{msf_mortalities()}}, \code{\link[=msf_landed_catch]{msf_landed_catch()}}
 }

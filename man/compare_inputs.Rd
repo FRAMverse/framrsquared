@@ -29,3 +29,6 @@ This includes percent changes ($percent.diff)include percent changes (infinite w
 \dontrun{fram_db |> compare_inputs(c(100,101))}
 
 }
+\seealso{
+\code{\link[=compare_inputs_chart]{compare_inputs_chart()}}
+}

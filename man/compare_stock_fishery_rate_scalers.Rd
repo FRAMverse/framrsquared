@@ -17,3 +17,6 @@ Compares the stock fishery rate scalers of two runs
 \examples{
 \dontrun{fram_db |> compare_stock_fishery_rate_scalers(c(55, 56))}
 }
+\seealso{
+\code{\link[=compare_runs]{compare_runs()}}
+}

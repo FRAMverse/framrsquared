@@ -2,34 +2,41 @@
 % Please edit documentation in R/connection.R
 \name{connect_fram_db}
 \alias{connect_fram_db}
-\title{This is a connection object to a FRAM database. Returns a list
-used throughout the rest of this package which carries meta data.}
+\title{Connect to FRAM database}
 \usage{
-connect_fram_db(
-  db_path,
-  enforce_type = c("full", "transfer"),
-  read_only = FALSE,
-  quiet = FALSE
-)
+connect_fram_db(db_path, read_only = FALSE, quiet = FALSE)
 }
 \arguments{
 \item{db_path}{Path to a FRAM database.}
 
-\item{enforce_type}{Not used}
-
-\item{read_only}{Optional argument to flag this connection as read-only (if set to \code{TRUE}). If \code{TRUE}, framrsquared functions that modify
+\item{read_only}{Logical, defaults to FALSE. Optional argument to flag this connection as read-only (if set to \code{TRUE}). If \code{TRUE}, framrsquared functions that modify
 the database will abort rather than run. Use as a safety feature when working with a database that \emph{must not} be modified.}
 
-\item{quiet}{Logical. Optitional argument; when TRUE, silences success message and database summary.}
+\item{quiet}{Logical, defaults to FALSE. Optional argument; when TRUE, silences success message and database summary.}
 }
 \description{
-This is a connection object to a FRAM database. Returns a list
-used throughout the rest of this package which carries meta data.
+This produces a connection object to a FRAM database, which is a necessary precursor
+for almost all framrsquared functions. For most users, can just treat the connection
+object as a black box that's used as an argument in other functions. See details for an explanation of the returned object.
 }
 \details{
-Additional details...
+The returned object of \code{connect_fram_db()} is a list of useful objects for other framrsquared functions.
+\describe{
+\item{\verb{$fram_db_connection}}{connection object, used for SQL calls.}
+\item{\verb{$fram_db_connection_id}}{connection name in .fram_connections, used for orphan cleanup via \code{disconnect_all_fram_connections()}.}
+\item{\verb{$fram_db_type}}{"full" or "transfer", useful for validation for specific functions.}
+\item{\verb{$fram_db_species}}{"COHO" or "CHINOOK"}
+\item{\verb{$fram_db_species}}{filetype, typeically "mdb"}
+\item{\verb{$fram_read_only}}{Optional user-specified safety measure, TRUE or FALSE. Functions that modify the fram database should error out if TRUE.}
+}
+
+framrsquared creates a special environment in the global environment, \code{.fram_connections}. Whenever a new connection is made with \code{connect_fram_db}, it is added to that environment as well; whenever the connection is closed with \code{disconnect_fram_db()}, the connection is removed from that environment. This tracking allows \code{disconnect_all_fram_connections()} to clear out any orphan connections made by assigning a connection to an existing connection object.
 }
 \examples{
-\dontrun{fram_db <- connect_fram_db('<path>')}
+\dontrun{fram_db <- connect_fram_db('<path>')
+fram_db |> fetch_table("Mortality")}
 
+}
+\seealso{
+\code{\link[=disconnect_fram_db]{disconnect_fram_db()}}, \code{\link[=disconnect_all_fram_connections]{disconnect_all_fram_connections()}}
 }

@@ -12,7 +12,7 @@ stock_fate_chinook(fram_db, run_id = NULL, units = c("fish", "percentage"))
 
 \item{run_id}{Run ID (optional)}
 
-\item{units}{'fish' or 'percentage'. Percentage is proportion of starting adbundace}
+\item{units}{'fish' or 'percentage'. Percentage is proportion of starting abundance}
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
@@ -22,4 +22,7 @@ Chinook flavor of the stock fate function
 \dontrun{
 fram_db |> stock_fate_chinook(run_id = 145)
 }
+}
+\seealso{
+\code{\link[=stock_fate]{stock_fate()}}
 }

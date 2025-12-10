@@ -1,14 +1,22 @@
-#' Returns a tibble matching the MSF screen report mortalities for Coho This is
-#' specific for Coho and in most cases msf_mortalities() is preferable.
+#' Replicate MSF screen report mortalities for COHO
+#'
+#' Returns a tibble matching the MSF screen report mortalities for Coho. This is
+#' specific for Coho and in most cases [msf_mortalities()] is preferable.
 #' @param fram_db FRAM database object
 #' @export
+#'
+#' @seealso [msf_mortalities()], [msf_encounters_coho_()], [msf_landed_catch_coho_()]
+#'
 #' @examples
 #' \dontrun{fram_db |> msf_mortalities_coho_()}
 #'
 
 msf_mortalities_coho_ <- function(fram_db){
+
+  validate_fram_db(fram_db)
+
   mortalities_ <- fram_db |>
-    fetch_table('Mortality')#|>
+    fetch_table_('Mortality')#|>
     #dplyr::filter(.data$run_id == .env$run_id)
 
   mortalities_ <- mortalities_ |>
@@ -27,18 +35,24 @@ msf_mortalities_coho_ <- function(fram_db){
 
 }
 
+#' Replicate MSF screen report landed catch for COHO
+#'
 #' Returns a tibble matching the MSF screen report landed catch for Coho
 #'  This is specific for Coho and in most cases msf_landed_catch() is preferable.
 #' @param fram_db FRAM database object
 #' @export
+#'
+#' @seealso [msf_landed_catch()], [msf_encounters_coho_()], [msf_mortalities_coho_()]
+#'
 #' @examples
 #' \dontrun{fram_db |> msf_landed_catch_coho_()}
 #'
 msf_landed_catch_coho_ <- function(fram_db){
 
+  validate_fram_db(fram_db)
+
   landed_catch_ <- fram_db |>
-    fetch_table('Mortality') #|>
-    #dplyr::filter(.data$run_id == .env$run_id)
+    fetch_table_('Mortality')
 
 
   landed_catch <- landed_catch_ |>
@@ -57,18 +71,24 @@ msf_landed_catch_coho_ <- function(fram_db){
     `attr<-`('species', fram_db$fram_db_species)
 }
 
-
+#' Replicate MSF screen report encounters for COHO
+#'
 #' Returns a tibble matching the MSF screen report encounters for Coho
 #'  This is specific for Coho and in most cases msf_encounters() is preferable.
 #' @param fram_db FRAM database object
 #' @export
+#'
+#' @seealso [msf_encounters()], [msf_landed_catch_coho_()], [msf_mortalities_coho_()]
+#'
 #' @examples
 #' \dontrun{fram_db |> msf_encounters_coho_()}
 #'
 msf_encounters_coho_ <- function(fram_db){
+
+  validate_fram_db(fram_db)
+
   encounters_ <- fram_db |>
-    fetch_table('Mortality') #|>
-   # dplyr::filter(.data$run_id == .env$run_id)
+    fetch_table_('Mortality')
 
   encounters <- encounters_ |>
     dplyr::select(.data$run_id, .data$stock_id, .data$fishery_id, .data$time_step,

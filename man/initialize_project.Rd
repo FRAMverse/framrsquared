@@ -9,9 +9,9 @@ initialize_project(
   folders = c("scripts", "original_data", "cleaned_data", "figures", "results",
     "results/quarto_output"),
   quarto = TRUE,
-  organization = "WDFW",
+  organization = c("WDFW"),
   renv = FALSE,
-  template.overwrite = TRUE,
+  template_overwrite = TRUE,
   color = "coffee",
   quiet = TRUE
 )
@@ -25,7 +25,7 @@ initialize_project(
 
 \item{renv}{Boolean to initialize renv. Defaults to FALSE.}
 
-\item{template.overwrite}{Boolean. Overwrite _quarto.yml and style.css files if they already exist? Defaults to TRUE}
+\item{template_overwrite}{Boolean. Overwrite _quarto.yml and style.css files if they already exist? Defaults to TRUE}
 
 \item{color}{Character string, defaults to "coffee". Specifies quarto template to use; organizations may have several.}
 
@@ -47,4 +47,7 @@ in \code{fetch_quarto_templates()}.
 \dontrun{
 framrsquared::initialize_project()
 }
+}
+\seealso{
+\code{\link[=fetch_quarto_templates]{fetch_quarto_templates()}}
 }

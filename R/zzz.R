@@ -11,6 +11,9 @@ startup_message <- function(){
         ,'        `.    \\  /
         |  O        \\___/ |
       ~^~^~^~^~^~^~^~^~^~^~^~^~
-          framrsquared 0.6.0
+          framrsquared 0.8.0
               "
 }
+
+## to track connections and clean up orphans
+.fram_connections <- new.env(parent = emptyenv())

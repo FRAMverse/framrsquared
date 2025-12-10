@@ -11,7 +11,7 @@ fishery_mortality(fram_db, run_id = NULL, msp = TRUE)
 
 \item{run_id}{Run ID}
 
-\item{msp}{Model Stock Proportion, default TRUE}
+\item{msp}{Use Model Stock Proportion? Logical, defaults to TRUE.}
 }
 \description{
 Returns a tibble matching the Fishery Mortality screen.

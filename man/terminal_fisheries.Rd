@@ -10,7 +10,7 @@ terminal_fisheries(fram_db, species = NULL)
 \arguments{
 \item{fram_db}{Fram database object}
 
-\item{species}{"COHO" or "CHINOOK". Optional, defaults to the database species. Provide this only if fram_db connects to a database with both Chinook and Coho information.}
+\item{species}{"COHO" or "CHINOOK". Optional, defaults to the database species. Provide this only if fram_db connects to a database with both Chinook and Coho information. And try to avoid that -- those databases are sketchy to work with.}
 }
 \value{
 tibble of taa fisheries

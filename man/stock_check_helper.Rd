@@ -23,3 +23,6 @@ More thorough checking than stock_id_comp. Checks that the number of stock IDs m
 that Stock IDs are sequential (in the sense that if NumStk = n, every integer up to n is represented).
 Optionally, can check that each stock ID is unique.
 }
+\seealso{
+\code{\link[=addstock_check]{addstock_check()}}
+}

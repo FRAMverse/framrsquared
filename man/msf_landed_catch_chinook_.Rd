@@ -2,8 +2,7 @@
 % Please edit documentation in R/report_msf_chinook.R
 \name{msf_landed_catch_chinook_}
 \alias{msf_landed_catch_chinook_}
-\title{Returns a tibble matching the MSF screen report landed catch for Chinook.
-This is specific for Chinook and in most cases msf_landed_catch() is preferable.}
+\title{Replicate MSF screen report landed catch for Chinook}
 \usage{
 msf_landed_catch_chinook_(fram_db)
 }
@@ -12,9 +11,12 @@ msf_landed_catch_chinook_(fram_db)
 }
 \description{
 Returns a tibble matching the MSF screen report landed catch for Chinook.
-This is specific for Chinook and in most cases msf_landed_catch() is preferable.
+This is specific for Chinook and in most cases \code{\link[=msf_landed_catch]{msf_landed_catch()}} is preferable.
 }
 \examples{
 \dontrun{fram_db |> msf_landed_catch_chinook_(run_id = 101)}
 
+}
+\seealso{
+\code{\link[=msf_landed_catch]{msf_landed_catch()}}, \code{\link[=msf_mortalities_chinook_]{msf_mortalities_chinook_()}}, \code{\link[=msf_encounters_chinook_]{msf_encounters_chinook_()}}
 }

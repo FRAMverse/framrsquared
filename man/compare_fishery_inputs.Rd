@@ -21,3 +21,6 @@ Compares the fishery inputs of two runs
 \examples{
 \dontrun{fram_db |> compare_fishery_inputs(c(55, 56))}
 }
+\seealso{
+\code{\link[=compare_runs]{compare_runs()}}
+}

@@ -2,9 +2,7 @@
 % Please edit documentation in R/report_fishery_mortality.R
 \name{plot_stock_mortality}
 \alias{plot_stock_mortality}
-\title{Creates an ordered bar chart with
-the top number of mortalities per
-fishery.}
+\title{Plot total mortalities by fishery}
 \usage{
 plot_stock_mortality(
   fram_db,
@@ -26,7 +24,7 @@ plot_stock_mortality(
 
 \item{filters_list}{list of framrsquared filter functions to apply before plotting.}
 
-\item{msp}{Use Model Stock Proportion expansion? Default is true}
+\item{msp}{Use Model Stock Proportion? Logical, defaults to TRUE.}
 }
 \description{
 Creates an ordered bar chart with
@@ -37,7 +35,10 @@ fishery.
 \dontrun{
 fram_db |> plot_stock_mortality(run_id = 132, stock_id = 17)
 fram_db |> plot_stock_mortality(run_id = 132, stock_id = 17,
-        filters_list = list(filter_wa, filter_marine))
+        filters_list = list(filter_wa, filter_sport))
 }
 
+}
+\seealso{
+\code{\link[=plot_impacts_per_catch_heatmap]{plot_impacts_per_catch_heatmap()}}, \code{\link[=plot_stock_mortality_time_step]{plot_stock_mortality_time_step()}}
 }

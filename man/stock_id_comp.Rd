@@ -19,3 +19,6 @@ numeric; 0 if no warning, 1 if warning.
 \description{
 Intended for internal use, makes some assumptions about inputs.
 }
+\seealso{
+\code{\link[=addstock_check]{addstock_check()}}
+}

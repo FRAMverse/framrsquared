@@ -6,7 +6,7 @@
 \usage{
 fetch_quarto_templates(
   to.path,
-  organization = "WDFW",
+  organization = c("WDFW"),
   color = "coffee",
   overwrite = FALSE
 )
@@ -28,4 +28,7 @@ Creates template files from specified organization in the specified path. Genera
 \code{initialize_project()} will be more useful for new R projects, while \code{fetch_quarto_templates()}
 can be helpful when working with existing projects. See \code{initialize_project()}
 for details on adding template files for new organizations.
+}
+\seealso{
+\code{\link[=initialize_project]{initialize_project()}}
 }

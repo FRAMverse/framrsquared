@@ -1,4 +1,8 @@
+
+#' Replicate Population Statistics screen
+#'
 #' Returns a tibble matching the Population Statistics screen.
+#'
 #' @param fram_db FRAM database object
 #' @param run_id Run ID
 #' @export
@@ -10,7 +14,7 @@ population_statistics <- function(fram_db, run_id = NULL) {
   if(!is.null(run_id)){validate_run_id(fram_db, run_id)}
 
   cohort <- fram_db |>
-    fetch_table('Cohort') |>
+    fetch_table_('Cohort') |>
     dplyr::select(
       .data$run_id,
       .data$stock_id,
@@ -23,7 +27,7 @@ population_statistics <- function(fram_db, run_id = NULL) {
     )
 
   escapement <- fram_db |>
-    fetch_table('Escapement') |>
+    fetch_table_('Escapement') |>
     dplyr::select(-.data$primary_key)
 
   pop_stat <- cohort |>

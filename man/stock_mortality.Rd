@@ -2,7 +2,7 @@
 % Please edit documentation in R/report_stock_mortality.R
 \name{stock_mortality}
 \alias{stock_mortality}
-\title{Returns a tibble matching the Fishery Mortality screen.}
+\title{Replicate Stock Mortality screen}
 \usage{
 stock_mortality(fram_db, run_id = NULL)
 }
@@ -12,7 +12,7 @@ stock_mortality(fram_db, run_id = NULL)
 \item{run_id}{Run ID}
 }
 \description{
-Returns a tibble matching the Fishery Mortality screen.
+Returns a tibble matching the Stock Mortality screen.
 }
 \examples{
 \dontrun{

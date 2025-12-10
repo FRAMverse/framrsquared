@@ -2,23 +2,26 @@
 % Please edit documentation in R/fetch_data.R
 \name{fetch_table}
 \alias{fetch_table}
-\title{Fetches a complete table from a FRAM database. Returns a cleaned
-tibble.}
+\title{Fetch a complete table from a FRAM database.}
 \usage{
-fetch_table(fram_db, table_name = NULL, warn = TRUE)
+fetch_table(fram_db, table_name = NULL, label = TRUE, warn = TRUE)
 }
 \arguments{
 \item{fram_db}{FRAM database object}
 
-\item{table_name}{Table to be fetched. If not given, a list of options will be printed}
+\item{table_name}{Atomic character of name of table to be fetched. If not given, a list of options will be printed.}
 
-\item{warn}{Print a warning when fetching BackwardsFRAM table from a Chinook database? Defaults to \code{TRUE}.}
+\item{label}{Logical, defaults to TRUE. Add human-readable columns for flags, fisheries, stocks?}
+
+\item{warn}{Print a warning when fetching BackwardsFRAM table from a Chinook database? Logical, defaults to \code{TRUE}.}
 }
 \description{
-Fetches a complete table from a FRAM database. Returns a cleaned
-tibble.
+Returns a cleaned tibble, with column labels that were camel case (e.g., TimeStep) converted to snake case (e.g., time_step).
+\strong{WARNING}: the Chinook "BackwardsFRAM" table uses a \emph{different} stock_id numbering system from every other table. To avoid errors when joining that with other tables, instead fetch with \code{\link[=fetch_table_bkchin]{fetch_table_bkchin()}}
 }
 \examples{
-\dontrun{fram_db |> fetch_table('Mortality')}
+\dontrun{
+fram_db <- connect_fram_db("validat2024.mdb")
+fram_db |> fetch_table('Mortality')}
 
 }
