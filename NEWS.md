@@ -1,7 +1,5 @@
 # framrsquared 0.8.0
 
-# framrsquared ongoing
-
 ## New Features
 
 - Tracks connections made with `connect_fram_db()` in `.fram_connections`, a new addition to the global environment. This allows identification of existing connections (including orphans) with `list_extant_fram_connections()` and disconnecting all existing connections (including orphans) with `disconnect_all_fram_connections()`.
