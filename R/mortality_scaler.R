@@ -55,7 +55,7 @@ add_total_mortality = function(.data){
 
 mortality_scalers_coho_ <- function(fram_db, run_id, stock_id) {
   scalers <- fram_db |>
-    fetch_table('Mortality') |>
+    fetch_table_('Mortality') |>
     dplyr::filter(run_id == .env$run_id)
 
   scalers |>
@@ -74,11 +74,11 @@ mortality_scalers_coho_ <- function(fram_db, run_id, stock_id) {
 
 mortality_scalers_chinook_ <- function(fram_db, run_id, stock_id, msp) {
   scalers <- fram_db |>
-    fetch_table('Mortality') |>
+    fetch_table_('Mortality') |>
     dplyr::filter(run_id == .env$run_id)
 
  fram_db |>
-    aeq_mortality(run_id = run_id,
+    aeq_mortality_(run_id = run_id,
                        msp = msp) |>
     add_total_mortality() |>
     dplyr::group_by(.data$run_id, .data$fishery_id, .data$time_step) |>

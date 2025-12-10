@@ -22,7 +22,6 @@ NULL
 #> NULL
 
 #' @rdname styleguide
-#' @export
 #' @examples
 #' \dontrun{
 #' frs_stylecheck_assignment("R/copy.R")
@@ -49,7 +48,6 @@ frs_stylecheck_assignment = function(filepath, n = Inf){
 }
 
 #' @rdname styleguide
-#' @export
 frs_stylecheck_snakecase = function(filepath, n = Inf){
   cli::cli_text(cli::col_blue(paste("Checking", gsub(".*[/]", "", filepath), "for variables that are not named using snake_case.")))
   cli::cli_text(cli::col_grey("Note that this will also list single-word variables, which should be fine. Make sure assignment all uses `<- ` (`frs_stylecheck_assignment()` streamlines this)"))

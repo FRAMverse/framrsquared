@@ -197,18 +197,18 @@ compare_databases <-  function(file1,
   tabs_prod <- tabs_fork <-  list()
 
   ## for the chinook case, figure out what the maximum number of stock is for backwards_fram id mapping
-  stock_max <- max(c(fetch_table(con_prod, "BaseID")$num_stocks, fetch_table(con_fork, "BaseID")$num_stocks))
+  stock_max <- max(c(fetch_table_(con_prod, "BaseID")$num_stocks, fetch_table_(con_fork, "BaseID")$num_stocks))
 
   if(!quiet){cli::cli_alert_info("Fetching tables")}
   for (cur_table in tables_names) {
-    tabs_prod[[cur_table]] <- fetch_table(con_prod, cur_table, warn = FALSE, label = FALSE) |>
+    tabs_prod[[cur_table]] <- fetch_table_(con_prod, cur_table, warn = FALSE) |>
       dplyr::distinct()
     if (!is.null(runid_use) &
         "run_id" %in% names(tabs_prod[[cur_table]])) {
       tabs_prod[[cur_table]] <- tabs_prod[[cur_table]] |>
         dplyr::filter(.data$run_id %in% runid_use)
     }
-    tabs_fork[[cur_table]] <- fetch_table(con_fork, cur_table, warn = FALSE, label = FALSE)
+    tabs_fork[[cur_table]] <- fetch_table_(con_fork, cur_table, warn = FALSE)
     if (!is.null(runid_use) &
         "run_id" %in% names(tabs_fork[[cur_table]])) {
       tabs_fork[[cur_table]] <- tabs_fork[[cur_table]] |>

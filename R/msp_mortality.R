@@ -20,13 +20,13 @@ msp_mortality = function(fram_db, run_id = NULL){
   }
 
   runid <- fram_db |>
-    fetch_table('RunID', label = FALSE)
+    fetch_table_('RunID')
 
   msp <- fram_db |>
-    fetch_table('FisheryModelStockProportion', label = FALSE)
+    fetch_table_('FisheryModelStockProportion')
 
   mortality <- fram_db |>
-    fetch_table('Mortality', label = FALSE)
+    fetch_table_('Mortality')
 
   msp_run_id <- runid |>
     dplyr::inner_join(msp, by = 'base_period_id', relationship = 'many-to-many') |>

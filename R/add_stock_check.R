@@ -96,7 +96,7 @@ addstock_check <-
       }
 
 
-      run_info = fetch_table(con, "RunID")
+      run_info = fetch_table_(con, "RunID")
       if (!run_id %in% run_info$run_id) {
         cli::cli_abort(
           paste0(
@@ -112,7 +112,7 @@ addstock_check <-
       ## BaseID -- get NumStk
       cli::cli_text()
       cli::cli_alert("Checking BaseID table...")
-      baseid_df = fetch_table(con, "BaseID") |>
+      baseid_df = fetch_table_(con, "BaseID") |>
         dplyr::filter(.data$base_period_id == .env$bp_id)
       NumStk = baseid_df |> dplyr::pull(.data$num_stocks)
       cli::cli_alert(paste0("  NumStk = ", NumStk))
@@ -126,7 +126,7 @@ addstock_check <-
       ## Stock table
       cli::cli_text()
       cli::cli_alert("Checking Stock table...")
-      stock_df = fetch_table(con, "Stock") |>
+      stock_df = fetch_table_(con, "Stock") |>
         dplyr::arrange(dplyr::desc(.data$stock_id)) #|>
       #dplyr::mutate(stock_id = dplyr::if_else(stock_id == 80, 81, stock_id)) # for testing the error messages.
       ## dimension check
@@ -152,7 +152,7 @@ addstock_check <-
       ## StockRecruit table
       cli::cli_text()
       cli::cli_alert("Checking StockRecruit table...")
-      stock_recruit_df = fetch_table(con, "StockRecruit") |>
+      stock_recruit_df = fetch_table_(con, "StockRecruit") |>
         dplyr::filter(.data$run_id == .env$run_id)
       ## check for presence of stock, stock numbering
 
@@ -170,7 +170,7 @@ addstock_check <-
       ## BaseCohort
       cli::cli_text()
       cli::cli_alert("Checking BaseCohort table...")
-      base_cohort_df = fetch_table(con, "BaseCohort") |>
+      base_cohort_df = fetch_table_(con, "BaseCohort") |>
         dplyr::filter(.data$base_period_id == .env$bp_id)
       ## check that stock IDs make sense
       error_count = error_count + stock_id_comp("BaseCohort", base_cohort_df, stock_ref = stock_df$stock_id)
@@ -193,7 +193,7 @@ addstock_check <-
       cli::cli_text()
       cli::cli_alert("Checking BackwardsFRAM table...")
       cli::cli_alert_info("  Remember, StockID here is different from everywhere else, unfortunately.")
-      bkfram_df = fetch_table(con, "BackwardsFRAM") |>
+      bkfram_df = fetch_table_(con, "BackwardsFRAM") |>
         dplyr::filter(.data$stock_id > old_stockcount * 3 / 2 - 1) |>  ## filter to recently added stock. Formula is annoying, but so is bkfram stock_id
         dplyr::mutate("stock_pop_id" = floor(.data$stock_id / 3))
       vals_expect = (old_stockcount * 3 / 2):(NumStk * 3 / 2 - 1)
@@ -258,7 +258,7 @@ addstock_check <-
       ## BaseExploitationRate
       cli::cli_text()
       cli::cli_alert("Checking BaseExploitationRate table...")
-      bper_df = fetch_table(con, "BaseExploitationRate") |>
+      bper_df = fetch_table_(con, "BaseExploitationRate") |>
         dplyr::filter(.data$base_period_id == .env$bp_id)
       error_count = error_count + stock_id_comp("BaseExploitationRate", bper_df, stock_ref = stock_df$stock_id)
       cli::cli_alert("  Cannot easily check that no stock_age-fishery-timestep values are missing.")
@@ -277,7 +277,7 @@ addstock_check <-
       ## Growth
       cli::cli_text()
       cli::cli_alert("Checking Growth table...")
-      growth_df = fetch_table(con, "Growth")
+      growth_df = fetch_table_(con, "Growth")
       error_count = error_count + stock_check_helper(
         "Growth",
         NumStk = NumStk,
@@ -289,11 +289,11 @@ addstock_check <-
       ## MaturationRate
       cli::cli_text()
       cli::cli_alert("Checking MaturationRate table...")
-      mat_df = fetch_table(con, "MaturationRate")
+      mat_df = fetch_table_(con, "MaturationRate")
       stock_id_comp("MaturationRate", mat_df, stock_ref = stock_df$stock_id)
       mat_df = mat_df |> dplyr::filter(.data$stock_id > old_stockcount)
       ## Checking for stock_age-timestep combinations
-      ts_df = fetch_table(con, "TimeStep")
+      ts_df = fetch_table_(con, "TimeStep")
       mat_df_comp = paste0("StockID: ",
                            mat_df$stock_id,
                            " Age: ",

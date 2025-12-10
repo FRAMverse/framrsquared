@@ -87,10 +87,7 @@ sensitivity_scaled <- function(fram_db,
     cli::cli_abort("TAMM copying only works if both `tamm_template` and `tamm_target_folder` are provided; only one of those arguments is defined!")
   }
 
-  if(!is.character(label) | length(label) != 1){
-    cli::cli_abort("`label` must be an atomic character string.")
-  }
-
+  validate_character(label, n = 1)
   validate_flag(save_log)
 
 
@@ -243,9 +240,7 @@ sensitivity_exact <- function(fram_db,
   }
 
 
-  if(!is.character(label) | length(label) != 1){
-    cli::cli_abort("`label` must be an atomic character string.")
-  }
+  validate_character(label, n = 1)
 
   validate_flag(save_log)
 
@@ -373,9 +368,7 @@ sensitivity_custom <- function(fram_db,
   }
 
 
-  if(!is.character(label) | length(label) != 1){
-    cli::cli_abort("`label` must be an atomic character string.")
-  }
+  validate_character(label, n = 1)
 
   validate_flag(save_log)
 

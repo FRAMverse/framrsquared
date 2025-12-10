@@ -89,7 +89,7 @@ label_flags = function(.data,
 
 #' NA's all the information in the FisheryScalers that's not being used
 #' e.g Flag 1 only NS Scalers will be returned
-#' @param data Fishery Scalers table
+#' @param .data Fishery Scalers table
 #' @export
 #' @examples
 #' \dontrun{ fishery_scalers_table |> filter_flag()}

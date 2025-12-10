@@ -39,7 +39,7 @@ terminal_info <- function(fram_db, old_table_name = TRUE, species = NULL){
       dplyr::rename(time_step = .data$time_step_id)
 
     tab <- fram_db |>
-      fetch_table(table_name, label = FALSE) |> # currently, this table does not exist
+      fetch_table_(table_name) |> # currently, this table does not exist
       dplyr::select("taa_num",
                     "taa_stk_list",
                     "taa_fish_list", "taa_time_step1", "taa_time_step2",
@@ -54,7 +54,7 @@ terminal_info <- function(fram_db, old_table_name = TRUE, species = NULL){
       dplyr::rename(time_step = .data$time_step_id)
 
     tab <- fram_db |>
-      fetch_table("TAAETRSList", label = FALSE) |>
+      fetch_table_("TAAETRSList") |>
       dplyr::select("taa_num",
                     "taa_stk_list",
                     "taa_fish_list", "taa_time_step1", "taa_time_step2",
@@ -121,40 +121,3 @@ terminal_fisheries <- function(fram_db, species = NULL){
     dplyr::select("taa_name", "fishery_label", "fishery_id") |>
     dplyr::distinct()
 }
-
-
-# taa_parsed = tab |>
-#   mutate(taa_stk_list = str_split(taa_stk_list, ","),
-#          taa_fish_list = str_split(taa_fish_list, ",")) |>
-#   unnest(taa_stk_list) |>
-#   unnest(taa_fish_list) |>
-#   rename(stock_id = taa_stk_list,
-#          fishery_id = taa_fish_list) |>
-#   mutate(across(c(stock_id, fishery_id), ~as.numeric(.x))) |>
-#   left_join(framrosetta::stock_coho_fram |>
-#               select(stock_id, stock_long_name),
-#             by = "stock_id") |>
-#   left_join(framrosetta::fishery_coho_fram |>
-#               select(fishery_id, fishery_title),
-#             by = "fishery_id") |>
-#   mutate(terminal_time_steps = glue("{taa_time_step1}-{taa_time_step2}")) |>
-#   left_join(timesteps_coho |>
-#               select(taa_time_step1 = time_step,
-#                      timestep_start), by = "taa_time_step1") |>
-#   left_join(timesteps_coho |>
-#               select(taa_time_step2 = time_step,
-#                      timestep_end), by = "taa_time_step2") |>
-#   mutate(terminal_months = glue("{timestep_start}-{timestep_end}")) |>
-#   select(taa_name, taa_num, stock_long_name, stock_id, terminal_time_steps, terminal_months, fishery_title, fishery_id)
-#
-# taa_stocks_summary = taa_parsed |>
-#   select(taa_name, stock_long_name, terminal_months, stock_id, terminal_time_steps) |>
-#   distinct()
-#
-# taa_fishery_summary = taa_parsed |>
-#   select(taa_name, fishery_title, fishery_id) |>
-#   distinct()
-#
-# write_csv(taa_parsed, "coho_taa_parsed.csv")
-# write_csv(taa_stocks_summary, "coho_taa_stocks.csv")
-# write_csv(taa_fishery_summary, "coho_taa_fishery.csv")

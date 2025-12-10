@@ -112,7 +112,7 @@ fram_clean_tables <- function(.data) {
 #' \dontrun{fram_dataframe |> get_run_ids()}
 get_run_ids <- function(fram_db){
   fram_db |>
-    fetch_table('RunID') |>
+    fetch_table_('RunID') |>
     dplyr::pull(.data$run_id)
 }
 
@@ -123,7 +123,7 @@ get_run_ids <- function(fram_db){
 #' \dontrun{fram_dataframe |> get_run_ids()}
 get_fishery_ids <- function(fram_db){
   fram_db |>
-    fetch_table('Fishery') |>
+    fetch_table_('Fishery') |>
     dplyr::pull(.data$fishery_id)
 }
 
@@ -134,7 +134,7 @@ get_fishery_ids <- function(fram_db){
 #' \dontrun{fram_dataframe |> get_run_ids()}
 get_stock_ids <- function(fram_db){
   fram_db |>
-    fetch_table('Stock') |>
+    fetch_table_('Stock') |>
     dplyr::pull(.data$stock_id)
 }
 
@@ -186,7 +186,7 @@ run_info <- function(fram_db, run_id) {
                           paste0(get_run_ids(fram_db), collapse = ", ")))
   }else{
     run_info <- fram_db |>
-      fetch_table('RunID') |>
+      fetch_table_('RunID') |>
       dplyr::filter(.data$run_id == .env$run_id)
   }
 

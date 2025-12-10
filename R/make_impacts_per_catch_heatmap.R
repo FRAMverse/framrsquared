@@ -34,7 +34,7 @@ plot_impacts_per_catch_heatmap <- function(fram_db, run_id, stock_id, filters_li
 
   validate_flag(msp)
 
-  run_info <- fetch_table(fram_db, "RunID") |>
+  run_info <- fetch_table_(fram_db, "RunID") |>
     dplyr::filter(run_id == .env$run_id)
   print(dim(run_info))
   cli::cli_alert(
@@ -43,7 +43,7 @@ plot_impacts_per_catch_heatmap <- function(fram_db, run_id, stock_id, filters_li
     )
   )
 
-  stock_table <- fetch_table(fram_db, "Stock", label = FALSE)
+  stock_table <- fetch_table_(fram_db, "Stock")
   stock_name <- stock_table |>
     dplyr::filter(stock_id == .env$stock_id) |>
     dplyr::pull(.data$stock_name)
@@ -65,7 +65,7 @@ plot_impacts_per_catch_heatmap <- function(fram_db, run_id, stock_id, filters_li
   ## for chinook
 
   if (fram_db$fram_db_species == "CHINOOK") {
-    stock_mort = aeq_mortality(fram_db, run_id = run_id, msp = msp) |>
+    stock_mort = aeq_mortality_(fram_db, run_id = run_id, msp = msp) |>
       dplyr::filter(stock_id == .env$stock_id) |>
       add_total_mortality() |>
       dplyr::group_by(.data$fishery_id, .data$time_step) |>
@@ -76,7 +76,7 @@ plot_impacts_per_catch_heatmap <- function(fram_db, run_id, stock_id, filters_li
       dplyr::mutate(total_mortality = .data$landed_catch + .data$non_retention + .data$shaker + .data$drop_off) |>
       dplyr::filter(stock_id == .env$stock_id) |>
       dplyr::group_by(.data$fishery_id, .data$time_step) |>
-      dplyr::summarize(mort = sum(.data$mort)) |>
+      dplyr::summarize(mort = sum(.data$total_mortality)) |>
       dplyr::ungroup()
   }
 

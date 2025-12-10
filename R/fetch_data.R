@@ -79,19 +79,29 @@ fetch_table <- function(fram_db, table_name = NULL, label = TRUE, warn = TRUE){
       output_table <- output_table |>
         label_flags(warn = FALSE)
       if("fishery_id" %in% names(output_table)){
+        if(fram_db$fram_db_type == "full"){
         output_table <- output_table |>
-          framrosetta::label_fisheries()
+          label_fisheries_db(fram_db)
+        } else if(fram_db$fram_db_type == "transfer"){
+          output_table <- output_table |>
+            framrosetta::label_fisheries()
+        }
       }
       if("stock_id" %in% names(output_table)){
+        if(fram_db$fram_db_type == "full"){
+          output_table <- output_table |>
+            label_stocks_db(fram_db)
+        } else if(fram_db$fram_db_type == "transfer"){
         output_table <- output_table |>
           framrosetta::label_stocks()
+        }
       }
     }
 
     if(table_name == "Mortality" & warn == TRUE){
       neg_mort_runs <- output_table |>
-        dplyr::filter(dplyr::if_any(landed_catch:msf_encounter, ~ . < 0)) |>
-        dplyr::pull(run_id) |>
+        dplyr::filter(dplyr::if_any(.data$landed_catch:.data$msf_encounter, ~ . < 0)) |>
+        dplyr::pull(.data$run_id) |>
         unique()
       if(length(neg_mort_runs>0)){
         cli::cli_alert_danger("DANGER!! Run ID(s) {neg_mort_runs} have one or more negative mortality or encounter values in the 'Mortality' table!")
@@ -100,6 +110,14 @@ fetch_table <- function(fram_db, table_name = NULL, label = TRUE, warn = TRUE){
 
     return(output_table)
   }
+}
+
+## alias for fetch_table with label = FALSE
+fetch_table_ <- function(fram_db, table_name = NULL, warn = TRUE){
+  fetch_table(fram_db = fram_db,
+              table_name = table_name,
+              warn = warn,
+              label = FALSE)
 }
 
 #' Safely fetch Chinook BackwardsFRAM table
@@ -134,7 +152,7 @@ fetch_table_bkchin <- function(fram_db){
     cli::cli_abort("`fetch_table_bkchin()` only appropriate for CHINOOK databases, not {fram_db$fram_db_species} database.")
   }
 
-  output_table <- fetch_table(fram_db, table_name = "BackwardsFRAM",
+  output_table <- fetch_table_(fram_db, table_name = "BackwardsFRAM",
                               warn = FALSE) |>
     dplyr::rename(bk_stock_id = .data$stock_id) |>
     dplyr::left_join(framrosetta::bk_lookup_chin, by = "bk_stock_id")

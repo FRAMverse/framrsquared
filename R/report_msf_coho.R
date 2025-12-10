@@ -16,7 +16,7 @@ msf_mortalities_coho_ <- function(fram_db){
   validate_fram_db(fram_db)
 
   mortalities_ <- fram_db |>
-    fetch_table('Mortality')#|>
+    fetch_table_('Mortality')#|>
     #dplyr::filter(.data$run_id == .env$run_id)
 
   mortalities_ <- mortalities_ |>
@@ -52,8 +52,7 @@ msf_landed_catch_coho_ <- function(fram_db){
   validate_fram_db(fram_db)
 
   landed_catch_ <- fram_db |>
-    fetch_table('Mortality') #|>
-    #dplyr::filter(.data$run_id == .env$run_id)
+    fetch_table_('Mortality')
 
 
   landed_catch <- landed_catch_ |>
@@ -89,8 +88,7 @@ msf_encounters_coho_ <- function(fram_db){
   validate_fram_db(fram_db)
 
   encounters_ <- fram_db |>
-    fetch_table('Mortality') #|>
-   # dplyr::filter(.data$run_id == .env$run_id)
+    fetch_table_('Mortality')
 
   encounters <- encounters_ |>
     dplyr::select(.data$run_id, .data$stock_id, .data$fishery_id, .data$time_step,

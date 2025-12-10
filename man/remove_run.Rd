@@ -9,7 +9,7 @@ remove_run(fram_db, run_id)
 \arguments{
 \item{fram_db}{FRAM database object}
 
-\item{run_id}{FRAM run ID to be deleted}
+\item{run_id}{FRAM run ID or IDs to be deleted}
 }
 \description{
 Removes a run in a FRAM database

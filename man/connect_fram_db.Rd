@@ -17,18 +17,20 @@ the database will abort rather than run. Use as a safety feature when working wi
 \description{
 This produces a connection object to a FRAM database, which is a necessary precursor
 for almost all framrsquared functions. For most users, can just treat the connection
-object as a black box that's used as an argument in other functions. See details for an
-explanation of the returned object.
+object as a black box that's used as an argument in other functions. See details for an explanation of the returned object.
 }
 \details{
 The returned object of \code{connect_fram_db()} is a list of useful objects for other framrsquared functions.
 \describe{
 \item{\verb{$fram_db_connection}}{connection object, used for SQL calls.}
+\item{\verb{$fram_db_connection_id}}{connection name in .fram_connections, used for orphan cleanup via \code{disconnect_all_fram_connections()}.}
 \item{\verb{$fram_db_type}}{"full" or "transfer", useful for validation for specific functions.}
 \item{\verb{$fram_db_species}}{"COHO" or "CHINOOK"}
 \item{\verb{$fram_db_species}}{filetype, typeically "mdb"}
 \item{\verb{$fram_read_only}}{Optional user-specified safety measure, TRUE or FALSE. Functions that modify the fram database should error out if TRUE.}
 }
+
+framrsquared creates a special environment in the global environment, \code{.fram_connections}. Whenever a new connection is made with \code{connect_fram_db}, it is added to that environment as well; whenever the connection is closed with \code{disconnect_fram_db()}, the connection is removed from that environment. This tracking allows \code{disconnect_all_fram_connections()} to clear out any orphan connections made by assigning a connection to an existing connection object.
 }
 \examples{
 \dontrun{fram_db <- connect_fram_db('<path>')
@@ -36,5 +38,5 @@ fram_db |> fetch_table("Mortality")}
 
 }
 \seealso{
-\code{\link[=disconnect_fram_db]{disconnect_fram_db()}}
+\code{\link[=disconnect_fram_db]{disconnect_fram_db()}}, \code{\link[=disconnect_all_fram_connections]{disconnect_all_fram_connections()}}
 }

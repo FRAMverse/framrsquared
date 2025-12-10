@@ -2,8 +2,7 @@
 #'
 #' This produces a connection object to a FRAM database, which is a necessary precursor
 #' for almost all framrsquared functions. For most users, can just treat the connection
-#' object as a black box that's used as an argument in other functions. See details for an
-#' explanation of the returned object.
+#' object as a black box that's used as an argument in other functions. See details for an explanation of the returned object.
 #'
 #'
 #'
@@ -16,14 +15,17 @@
 #' The returned object of `connect_fram_db()` is a list of useful objects for other framrsquared functions.
 #' \describe{
 #'   \item{`$fram_db_connection`}{connection object, used for SQL calls.}
+#'   \item{`$fram_db_connection_id`}{connection name in .fram_connections, used for orphan cleanup via `disconnect_all_fram_connections()`.}
 #'   \item{`$fram_db_type`}{"full" or "transfer", useful for validation for specific functions.}
 #'   \item{`$fram_db_species`}{"COHO" or "CHINOOK"}
 #'   \item{`$fram_db_species`}{filetype, typeically "mdb"}
 #'   \item{`$fram_read_only`}{Optional user-specified safety measure, TRUE or FALSE. Functions that modify the fram database should error out if TRUE.}
 #' }
 #'
+#' framrsquared creates a special environment in the global environment, `.fram_connections`. Whenever a new connection is made with `connect_fram_db`, it is added to that environment as well; whenever the connection is closed with `disconnect_fram_db()`, the connection is removed from that environment. This tracking allows `disconnect_all_fram_connections()` to clear out any orphan connections made by assigning a connection to an existing connection object.
+#'
 #' @export
-#' @seealso [disconnect_fram_db()]
+#' @seealso [disconnect_fram_db()], [disconnect_all_fram_connections()]
 #' @examples
 #' \dontrun{fram_db <- connect_fram_db('<path>')
 #' fram_db |> fetch_table("Mortality")}
@@ -50,28 +52,6 @@ connect_fram_db <-
       cli::cli_abort("`quiet` must be a logical of length 1")
     }
 
-    ## NEW CODE: SEE IF WE CAN AVOID ORPHANS
-    # Get the variable name being assigned to (if possible)
-    assign_var <- tryCatch(
-      as.character(substitute(db_path)),
-      error = function(e) NULL
-    )
-
-    # Check if assignment variable exists and has open connection
-    if (!is.null(assign_var) && exists(assign_var, envir = parent.frame())) {
-      existing <- get(assign_var, envir = parent.frame())
-      if (is.list(existing) &&
-          "fram_db_connection" %in% names(existing) &&
-          DBI::dbIsValid(existing$fram_db_connection)) {
-        if (!quiet) {
-          cli::cli_alert_warning("Closing existing connection before creating new one")
-        }
-        DBI::dbDisconnect(existing$fram_db_connection)
-      }
-    }
-
-
-
     # connect to database
     if(tools::file_ext(db_path) == 'mdb'){
       con <- DBI::dbConnect(
@@ -88,8 +68,7 @@ connect_fram_db <-
       cli::cli_abort('Something went wrong connecting to a database')
     }
 
-    con_id <- as.character(as.numeric(Sys.time()) * 1000000)
-    .fram_connections[[con_id]] <- con
+
 
     # returns database type, checks if fram database is valid
     fram_db_type <- fram_database_type(con)
@@ -100,17 +79,20 @@ connect_fram_db <-
 
     if(!quiet && !tools::file_ext(db_path) == 'db'){welcome(con)}
 
-    return(
-      list(
-        fram_db_connection = con, # pass connection back
-        fram_db_connection_id = con_id,
-        fram_db_type = fram_db_type$type,
-        fram_db_species = fram_db_species,
-        fram_db_medium = tools::file_ext(db_path),
-        fram_read_only = read_only
-      )
+    con_id <- as.character(as.numeric(Sys.time()) * 1000000)
+
+    con_obj <- list(
+      fram_db_connection = con, # pass connection back
+      fram_db_connection_id = con_id,
+      fram_db_type = fram_db_type$type,
+      fram_db_species = fram_db_species,
+      fram_db_medium = tools::file_ext(db_path),
+      fram_read_only = read_only
     )
 
+    .fram_connections[[con_id]] <- con_obj
+
+    return(con_obj)
 
   }
 
@@ -126,10 +108,7 @@ connect_fram_db <-
 disconnect_fram_db <- function(fram_db,
                                quiet = TRUE){
   validate_fram_db(fram_db)
-
-  if(!is.logical(quiet) | length(quiet) != 1){
-    cli::cli_abort("`quiet` must be a logical of length 1")
-  }
+  validate_flag(quiet)
 
   db_var_name <- deparse(substitute(fram_db))
   DBI::dbDisconnect(fram_db$fram_db_connection)
@@ -141,13 +120,55 @@ disconnect_fram_db <- function(fram_db,
   }
 }
 
+#' Clear all connections
+#'
+#' It is relatively easy to create an orphan connection using framrsquared by assigning a connection to `fram_db`, and then assigning another connection to `fram_db` without disconnecting the first connection using `disconnect_fram_db()`. Orphaned connections can make it frustrating to work with database files (moving, deleting, etc) without restarting rstudio or rebooting your computer. `disconnect_all_fram_connections()` disconnects any existing connections made by framrsquared in this R session.
+#'
+#' @return nothing
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' fram_db = connect_fram_db("Chin2025.mdb")
+#' fram_db = connect_fram_db("Chin2025.mdb")
+#' disconnect_fram_db(fram_db)
+#'
+#' list_extant_fram_connections()
+#' ## oops, still a connection left.
+#'
+#' disconnect_all_fram_connections()
+#'
+#' list_extant_fram_connections
+#' }
 disconnect_all_fram_connections <- function(){
+  total_connections = length(.fram_connections)
   for (con_id in names(.fram_connections)) {
     con <- .fram_connections[[con_id]]
-    if (DBI::dbIsValid(con)) {
-      DBI::dbDisconnect(con)
+    if (DBI::dbIsValid(con$fram_db_connection)) {
+      DBI::dbDisconnect(con$fram_db_connection)
     }
     rm(list = con_id, envir = .fram_connections)
   }
+  cli::cli_alert_success("Disconnected all ({total_connections}) extant connections to FRAM databases")
 }
 
+
+#' Describe existing fram connections (including orphans)
+#'
+#' Provides information in the terminal, including the number of existing FRAM database connections created in this R session using framrsquared, as well as the files those connections connect to. Note that there may be multiple connections to the same file.
+#'
+#' @export
+#'
+list_extant_fram_connections = function(){
+  cli::cli_alert("{length(.fram_connections)} existing connections to FRAM databases.")
+
+  if(length(.fram_connections) > 0){
+    objs <- names(.fram_connections)
+    db_names <- purrr::map_chr(objs,
+                               .f = \(x){DBI::dbGetInfo(.fram_connections[[x]]$fram_db_connection)$dbname}) |>
+      unique()
+    cli::cli_alert_warning("The following databases have extant connections to them:")
+    names(db_names) = rep("*", length(db_names))
+    cli::cli_bullets(db_names)
+  }
+}

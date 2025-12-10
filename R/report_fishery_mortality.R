@@ -13,7 +13,7 @@ fishery_mortality <- function(fram_db, run_id = NULL, msp = TRUE) {
   validate_flag(msp)
 
   fishery_mort <- fram_db |>
-    fetch_table("Mortality") |>
+    fetch_table_("Mortality") |>
     dplyr::group_by(
       .data$run_id,
       .data$age,
@@ -100,7 +100,7 @@ plot_stock_mortality <- function(fram_db, run_id, stock_id, top_n = 10, filters_
 
   # make sure run ids are integers
   if (length(stock_id)>1) {
-    cli::cli_abort("Plot is not meaningful when combining stock. Provide a single value for stock_id.")
+    cli::cli_alert_warning("Plot is likely meaningful when combining stock (unless combining marked and unmarked fish of the same overall stock). Consider providing a single value for stock_id.")
   }
 
   if(!is.null(filters_list) & !is.list(filters_list)){
@@ -111,28 +111,28 @@ plot_stock_mortality <- function(fram_db, run_id, stock_id, top_n = 10, filters_
   }
 
   # identify species used
-  species_used = fetch_table(fram_db, "RunID") |>
+  species_used = fetch_table_(fram_db, "RunID") |>
     dplyr::filter(.data$run_id == .env$run_id) |>
     dplyr::pull(.data$species_name)
 
   # lut for display of stock name
   stocks <- fram_db |>
-    fetch_table('Stock') |>
+    fetch_table_('Stock') |>
     dplyr::filter(.data$species == fram_db$fram_db_species) |>
     dplyr::select(.data$stock_id, .data$stock_name)
 
   # lut for display of fishery
   fisheries <- fram_db |>
-    fetch_table('Fishery') |>
+    fetch_table_('Fishery') |>
     dplyr::filter(.data$species == fram_db$fram_db_species) |>
     dplyr::select(.data$fishery_id, .data$fishery_name)
 
   if(species_used == "CHINOOK"){
     mortality <- fram_db |>
-      aeq_mortality(msp = msp) |>
+      aeq_mortality_(msp = msp) |>
       dplyr::filter(.data$time_step != 1)
   } else {
-    mortality <- fram_db |> fetch_table('Mortality')
+    mortality <- fram_db |> fetch_table_('Mortality')
   }
   mortality <- mortality |>
     dplyr::filter(.data$run_id == .env$run_id,
@@ -155,7 +155,7 @@ plot_stock_mortality <- function(fram_db, run_id, stock_id, top_n = 10, filters_
   }
 
   run_name <- fram_db |>
-    fetch_table('RunID') |>
+    fetch_table_('RunID') |>
     dplyr::filter(.data$run_id == .env$run_id) |>
     dplyr::pull(.data$run_name)
 
@@ -204,7 +204,7 @@ plot_stock_mortality_time_step <- function(fram_db, run_id, stock_id, top_n = 10
 
   # make sure run ids are integers
   if (length(stock_id)>1) {
-    cli::cli_abort("Plot is not meaningful when combining stock. Provide a single value for stock_id.")
+    cli::cli_alert_warning("Plot is likely meaningful when combining stock (unless combining marked and unmarked fish of the same overall stock). Consider providing a single value for stock_id.")
   }
 
   if(!is.null(filters_list) & !is.list(filters_list)){
@@ -214,26 +214,26 @@ plot_stock_mortality_time_step <- function(fram_db, run_id, stock_id, top_n = 10
     cli::cli_abort("If provided, filters_list must be a list of fishery filter functions. One or more list items is not a function.")
   }
 
-  species_used = fetch_table(fram_db, "RunID") |>
+  species_used = fetch_table_(fram_db, "RunID") |>
     dplyr::filter(.data$run_id == .env$run_id) |>
     dplyr::pull(.data$species_name)
 
   # lut for display of stock name
   stocks <- fram_db |>
-    fetch_table('Stock') |>
+    fetch_table_('Stock') |>
     dplyr::filter(.data$species == fram_db$fram_db_species) |>
     dplyr::select(.data$stock_id, .data$stock_name)
 
   # lut for display of fishery
   fisheries <- fram_db |>
-    fetch_table('Fishery') |>
+    fetch_table_('Fishery') |>
     dplyr::filter(.data$species == fram_db$fram_db_species) |>
     dplyr::select(.data$fishery_id, .data$fishery_name)
 
   if(fram_db$fram_db_species == "CHINOOK"){
-    mortality <- fram_db |> aeq_mortality(msp = msp)
+    mortality <- fram_db |> aeq_mortality_(msp = msp)
   } else {
-    mortality <- fram_db |> fetch_table('Mortality')
+    mortality <- fram_db |> fetch_table_('Mortality')
   }
   mortality <- mortality |>
     dplyr::filter(.data$run_id == .env$run_id,
@@ -259,7 +259,7 @@ plot_stock_mortality_time_step <- function(fram_db, run_id, stock_id, top_n = 10
   }
 
   run_name <- fram_db |>
-    fetch_table('RunID') |>
+    fetch_table_('RunID') |>
     dplyr::filter(.data$run_id == .env$run_id) |>
     dplyr::pull(.data$run_name)
 

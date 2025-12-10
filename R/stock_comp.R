@@ -31,16 +31,16 @@ plot_stock_comp <- function(fram_db, run_id, fishery_id, time_step, group_thresh
   }
   # pull data
   mort <- fram_db |>
-    fetch_table('Mortality') |> dplyr::filter(.data$run_id == .env$run_id,
+    fetch_table_('Mortality') |> dplyr::filter(.data$run_id == .env$run_id,
                                        .data$fishery_id == .env$fishery_id,
                                        .data$time_step == .env$time_step)
 
   fishery_name <- fram_db |>
-    fetch_table('Fishery') |>
+    fetch_table_('Fishery') |>
     dplyr::filter(.data$fishery_id == .env$fishery_id) |>
     dplyr::pull(.data$fishery_name)
 
-  stock <- fram_db |> fetch_table('Stock') |> dplyr::select(.data$stock_id, .data$stock_long_name)
+  stock <- fram_db |> fetch_table_('Stock') |> dplyr::select(.data$stock_id, .data$stock_long_name)
 
 
   # sum mortality
@@ -56,7 +56,7 @@ plot_stock_comp <- function(fram_db, run_id, fishery_id, time_step, group_thresh
       mark = dplyr::if_else(.data$stock_id %% 2 == 0, 'Marked', 'Unmarked')
     ) |>
     dplyr::arrange(-.data$ts) |>
-    dplyr::inner_join(coho_stock_comp_lut, by = 'stock_id') |> # coho_lut_stock_comp coming from package data
+    dplyr::inner_join(coho_stock_comp_lut, by = 'stock_id') |>
     dplyr::mutate(
       stock_long_name = dplyr::if_else(.data$ts < .env$group_threshold, .data$stock_group, .data$stock_long_name)
     ) |>

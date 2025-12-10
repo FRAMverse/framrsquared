@@ -1,6 +1,6 @@
-#' Replicate Fishery Mortality screen
+#' Replicate Stock Mortality screen
 #'
-#' Returns a tibble matching the Fishery Mortality screen.
+#' Returns a tibble matching the Stock Mortality screen.
 #'
 #' @param fram_db FRAM database object
 #' @param run_id Run ID
@@ -20,7 +20,7 @@ stock_mortality <- function(fram_db, run_id = NULL) {
   }
 
   stock_mort <- fram_db |>
-    fetch_table("Mortality") |>
+    fetch_table_("Mortality") |>
     dplyr::group_by(
       .data$run_id,
       .data$age,

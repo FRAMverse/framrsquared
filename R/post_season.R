@@ -2,14 +2,19 @@
 #' Used for forecasting.
 #' @param fram_db FRAM database object
 #' @param units Default January Age 3 'ja3', optional ocean age 3 'oa3'
+#' @param run_ids Numeric vector of run_ids to use, necessary when there are multiple runs with the same run_year in the database. Optional, defaults to NULL.
 #' @export
 #' @examples
 #' \dontrun{framdb |> post_season_abundance()}
 #'
 
-post_season_abundance <- function(fram_db, units = c('ja3', 'oa3')){
+post_season_abundance <- function(fram_db, units = c('ja3', 'oa3'), run_ids = NULL){
 
   validate_fram_db(fram_db)
+
+  if(!is.null(run_ids)){
+    validate_run_id(fram_db, run_ids)
+  }
 
   unit <- rlang::arg_match(units)
 
@@ -18,18 +23,18 @@ post_season_abundance <- function(fram_db, units = c('ja3', 'oa3')){
   }
 
   # get data
-  stock_recruit <- fram_db |> fetch_table('StockRecruit')
-  base_cohort <- fram_db |> fetch_table('BaseCohort')
+  stock_recruit <- fram_db |> fetch_table_('StockRecruit')
+  base_cohort <- fram_db |> fetch_table_('BaseCohort')
   stock <- fram_db |>
-    fetch_table('Stock') |>
+    fetch_table_('Stock') |>
     dplyr::filter(.data$species == "COHO")
-  run_id <- fram_db |> fetch_table('RunID') |>
+  run_id <- fram_db |> fetch_table_('RunID') |>
     dplyr::filter(.data$run_type == 'Post') # only want post-season runs
 
   cohort_table <- run_id |>
     dplyr::inner_join(base_cohort,
-               by = 'base_period_id',
-               relationship = 'many-to-many') |> # making sure baseperiod is correct for run
+                      by = 'base_period_id',
+                      relationship = 'many-to-many') |> # making sure baseperiod is correct for run
     dplyr::inner_join(stock, by = 'stock_id') |>
     dplyr::filter(
       .data$run_year >= 2010, # don't care about earlier apparently
@@ -49,8 +54,24 @@ post_season_abundance <- function(fram_db, units = c('ja3', 'oa3')){
       )
     ) |> #count(origin)
     dplyr::select(.data$run_year, .data$run_id, .data$stock_id,  .data$stock_name,
-           .data$recruit_scale_factor, .data$base_cohort_size,
-           .data$recruit_cohort_size, .data$origin)
+                  .data$recruit_scale_factor, .data$base_cohort_size,
+                  .data$recruit_cohort_size, .data$origin) |>
+    dplyr::arrange(.data$run_year)
+
+  if(!is.null(run_ids)){
+    cohort_table <- cohort_table |>
+      dplyr::filter(.data$run_id %in% run_ids)
+  }
+
+  duplicated_years <- cohort_table |>
+    dplyr::distinct(.data$run_year, .data$run_id) |>
+    dplyr::filter(duplicated(.data$run_year)) |>
+    dplyr::pull(.data$run_year) |>
+    unique()
+
+  if(length(duplicated_years)>0){
+    cli::cli_abort("If `run_ids` is not provided, database must contain only one run per run year, but the following year(s) have multiple runs associated with them: {duplicated_years}. Provide vector of run_ids to use such that there is only one run id per run year, in optional `run_ids` argument.")
+  }
 
 
   if(unit == 'ja3'){
@@ -82,7 +103,7 @@ post_season_abundance <- function(fram_db, units = c('ja3', 'oa3')){
       dplyr::mutate(
         dplyr::across(
           -c(.data$stock_id, .data$stock_name, .data$origin)
-      , \(x) x / 1.2317)
+          , \(x) x / 1.2317)
       )
   }
 
@@ -128,39 +149,39 @@ bkfram_checks_coho <-
 
     # pull out the target escapements
     run <- fram_db |>
-      fetch_table('RunID')
+      fetch_table_('RunID')
     cli::cli_alert_success('Imported RunID Table')
 
     # pull out the fishery scalers table
     fishery_scaler <- fram_db |>
-      fetch_table('FisheryScalers')
+      fetch_table_('FisheryScalers')
     cli::cli_alert_success('Imported FisheryScalers Table')
 
     # pull out the escapement table
     escapement <- fram_db |>
-      fetch_table('Escapement')
+      fetch_table_('Escapement')
     cli::cli_alert_success('Imported Escapement Table')
 
     # pull out the target escapements
     target_escapement <- fram_db |>
-      fetch_table('BackwardsFRAM')
+      fetch_table_('BackwardsFRAM')
     cli::cli_alert_success('Imported BackwardsFRAM Table')
 
     # pull out fishery mortality (queets quilly ETRS)
     mortality <- fram_db |>
-      fetch_table('Mortality')
+      fetch_table_('Mortality')
     cli::cli_alert_success('Imported Mortality Table')
 
     # pull out stocks for lookups
     stocks <- fram_db |>
-      fetch_table('Stock') |>
+      fetch_table_('Stock') |>
       dplyr::filter(.data$species == 'COHO') |>
       dplyr::select(.data$stock_id, .data$stock_name)
     cli::cli_alert_success('Imported Stock Look-up Table')
 
     # pull out fisheries for lookups
     fisheries <- fram_db |>
-      fetch_table('Fishery') |>
+      fetch_table_('Fishery') |>
       dplyr::filter(.data$species == 'COHO') |>
       dplyr::select(.data$fishery_id, .data$fishery_name)
     cli::cli_alert_success('Imported Fishery Look-up Table')
@@ -449,7 +470,7 @@ bkfram_checks_coho <-
         .data$time_step %in% c(4:5),
         .data$fishery_id %in% c(65:72)
       ) |> # all in river
-      add_total_mortality()
+      add_total_mortality() |>
       dplyr::group_by(.data$stock_id, .data$stock_name) |>
       dplyr::summarize(etrs_mort = sum(.data$total_mortality),
                        .groups = 'drop')

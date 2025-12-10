@@ -23,9 +23,14 @@
 #' fram_db |> modify_db(table_name = "StockRecruit", df = df_total)
 #' }
 modify_table <- function(fram_db, table_name, df) {
+  validate_fram_db(fram_db)
   ## check format of names:
   if (length(grep("^match_.*|^replace_.*", names(df), invert = TRUE)) > 0) {
     cli::cli_abort("`df` must have named columns starting with 'match_' or 'replace_'")
+  }
+
+  if(fram_db$fram_read_only){
+    cli::cli_abort('This database connection is designated read-only!! If you are certain this database can be modified, create a new connection using `connect_fram_db()` with `read_only = TRUE`')
   }
 
   ## get column names
@@ -116,7 +121,7 @@ calc_fram_scaling <- function(fram_db, table_name, df) {
   ## Complication: input and output
 
   tab <- fram_db |>
-    fetch_table(table_name, label = FALSE)
+    fetch_table_(table_name)
   db_names <- DBI::dbGetQuery(
     fram_db$fram_db_connection,
     glue::glue("SELECT * FROM {table_name} where false;")
@@ -249,7 +254,7 @@ remove_run <- function(fram_db, run_id){
                                run_id)
 
   run_id_tables|>
-    dplyr::select(value, run_id) |>
+    dplyr::select(.data$value, .data$run_id) |>
     purrr::pwalk(.f = \(value, run_id) tryCatch(
       suppressWarnings(DBI::dbSendQuery(
         fram_db$fram_db_connection,
@@ -296,7 +301,7 @@ copy_fishery_scalers <- function(fram_db, from_run, to_run, fishery_id = NULL){
   }
 
   copy_scalers <- fram_db |>
-    fetch_table('FisheryScalers', label = FALSE) |>
+    fetch_table_('FisheryScalers') |>
     dplyr::filter(.data$run_id == .env$from_run)
 
   if (!is.null(fishery_id)) {
@@ -326,7 +331,7 @@ copy_fishery_scalers <- function(fram_db, from_run, to_run, fishery_id = NULL){
     ))
 
   original_notes <- fram_db |>
-    fetch_table('RunID', label = FALSE) |>
+    fetch_table_('RunID') |>
     dplyr::filter(.data$run_id == .env$to_run) |>
     dplyr::pull(.data$run_comments)
   update_notes <- paste0(original_notes,
@@ -400,7 +405,7 @@ copy_run <- function(fram_db, target_run, times = 1, label = 'copy', force_many_
     cli::cli_abort('This database connection is designated read-only!! If you are certain this database can be modified, create a new connection using `connect_fram_db()` with `read_only = TRUE`')
   }
 
-  run_count_current = fram_db |> fetch_table("RunID", label = FALSE) |> nrow()
+  run_count_current = fram_db |> fetch_table_("RunID") |> nrow()
   if((run_count_current + times > 150) & verbose){
       cli::cli_alert("Official FRAM cannot currently read databases with >150 run ids.\n  Use FRAM_Automation (https://github.com/FRAMverse/FRAM_automation)\n  or change FRAM source code declaration of vectors `RunID`, `RunIDName`, and `RunBasePeriodID` in `FVS_ModelRunSelection.vb`.")
   }
@@ -613,7 +618,35 @@ copy_tamms <- function(tamm_name, target_folder, run_id_vec, overwrite = FALSE){
 }
 
 
-make_batch_runs <- function(fram_db, target_run, times = 1, label = 'copy', tamm_name, target_folder, force_many_runs = FALSE, verbose = TRUE){
+#' Make batch runs
+#'
+#' Make multiple copies of a FRAM run, make copies of specified TAMM in
+#' `target_folder` with run_id suffixes matching newly created runs.
+#' Intended to streamline using the multi-run fork of FRAM.
+#' Primarily for use internally, in the sensitivity analysis functions
+#'
+#' @param fram_db Fram database connection
+#' @param target_run Run id of target run
+#' @param tamm_name Filepath/name of tamm to copy
+#' @param target_folder Location TAMMs should be saved
+#' @param times number of run copies to make. Numeric, defaults to 1.
+#' @param label Title suffix for newly created runs. Character, defaults to 'copy'. An index number is added after this suffix to distinguish copied runs.
+#' @param force_many_runs Ignore limits on number of runs in fram database? Logical, defaults to FALSE.
+#' @param verbose Print details to console? Logical, defaults to TRUE.
+#'
+#' @export
+#'
+#' @seealso [sensitivity_exact()], [sensitivity_scaled()], [sensitivity_custom()]
+#'
+make_batch_runs <- function(fram_db, target_run, tamm_name, target_folder, times = 1, label = 'copy',force_many_runs = FALSE, verbose = TRUE){
+  validate_fram_db(fram_db)
+  validate_run_id(fram_db, target_run)
+  validate_numeric(times, 1)
+  validate_character(label, 1)
+  validate_character(tamm_name, 1)
+  validate_flag(force_many_runs)
+  validate_flag(verbose)
+
   new_run_ids <- fram_db |>
     copy_run(target_run = target_run, times = times, label = label, force_many_runs, verbose)
   copy_tamms(tamm_name, target_folder, run_id_vec = new_run_ids, overwrite = TRUE)

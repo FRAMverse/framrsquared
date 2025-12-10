@@ -36,19 +36,19 @@ aeq_mortality <- function(fram_db, run_id = NULL, msp = TRUE, label = TRUE) {
       dplyr::select(-.data$primary_key)
   }else{
     mortality <- fram_db |>
-      fetch_table("Mortality", label = FALSE) |>
+      fetch_table_("Mortality") |>
       dplyr::select(-.data$primary_key)
   }
 
   runid <- fram_db |>
-    fetch_table("RunID", label = FALSE) |>
+    fetch_table_("RunID") |>
     dplyr::select(.data$run_id, .data$base_period_id)
 
   aeq <- fram_db |>
-    fetch_table("AEQ", label = FALSE)
+    fetch_table_("AEQ")
 
   terminal_fishery_flag <- fram_db |>
-    fetch_table("TerminalFisheryFlag", label = FALSE)
+    fetch_table_("TerminalFisheryFlag")
 
 
   aeq_mort <- mortality |>
@@ -89,4 +89,12 @@ aeq_mortality <- function(fram_db, run_id = NULL, msp = TRUE, label = TRUE) {
   } else {
     aeq_m
   }
+}
+
+## alias with labeling set to false
+aeq_mortality_ <- function(fram_db, run_id = NULL, msp = TRUE) {
+  aeq_mortality(fram_db = fram_db,
+                run_id = run_id,
+                msp = msp,
+                label = FALSE)
 }
