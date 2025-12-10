@@ -6,8 +6,8 @@
 Compare tables in two equivalent FRAM databases}
 \usage{
 compare_databases(
-  file1,
-  file2,
+  fram_db_1,
+  fram_db_2,
   runid_use = NULL,
   tables_use = NULL,
   slim = TRUE,
@@ -15,9 +15,9 @@ compare_databases(
 )
 }
 \arguments{
-\item{file1}{Character string. FRAM database that contains the results from running baseline FRAM runs (e.g., our "production" version).}
+\item{fram_db_1}{connection to FRAM database that contains the results from running baseline FRAM runs (e.g., our "original" version).}
 
-\item{file2}{Character string. FRAM database that contains the results from running modified FRAM runs (e.g., running a forked version of FRAM or using modified input values)}
+\item{fram_db_2}{connection to FRAM database that contains the results from running modified FRAM runs (e.g., running a new version of FRAM or using modified input values)}
 
 \item{runid_use}{Numeric vector of the run_ids to compare. Optional. If not provided, compare all run ids in the databases.}
 
@@ -49,7 +49,7 @@ stock_id, age, time_step, etc).
 In \verb{$ratios}, the \code{table} and \code{variable} columns
 specify the table column being compared, respectively. \code{prop_err}, \code{abs_err},
 and \code{scale_err} provide measures of the changes between the "original" value
-(from \code{file1}) and the "comparison" value (from \code{file2}). More on those below.
+(from \code{fram_db_1}) and the "comparison" value (from \code{fram_db_2}). More on those below.
 The \code{original} and \code{new} columns give the actual values being compared.
 \code{run_id} through \code{time_step} specify the rows being compared. \code{bkfram_off_by_fish}
 and \code{bkfram_off_by_prop} provide the context for the comparison (more on that below).
@@ -58,11 +58,11 @@ and \code{bkfram_off_by_prop} provide the context for the comparison (more on th
 
 Because FRAM involves numerical solvers, we expect some small differences in table entries
 even when comparing two effectively equivalent databases. \code{compare_databases()} provides three metrics for these changes.
-In each case, it is assumed that \code{file1} is the reference file; the "error" measures all show how much the  value
-in \code{file2} changed relative to the corresponding value in \code{file1}.
+In each case, it is assumed that \code{fram_db_1} is the reference file; the "error" measures all show how much the  value
+in \code{fram_db_2} changed relative to the corresponding value in \code{fram_db_1}.
 The simplest measure of error is the \code{abs_err}. This is the absolute value of the difference between
 the two values. If we're looking at an entry with table = "Mortality" and variable = "landed_catch",
-then an abs.err of 5 means that the \code{file2} entry was five fish more or less than the \code{file1} entry. You can confirm this
+then an abs.err of 5 means that the \code{fram_db_2} entry was five fish more or less than the \code{fram_db_1} entry. You can confirm this
 by looking at the \code{original} and \code{new} columns. While \code{abs_err} is the most easily interpreted,
 it is often not very meaningful when looking across tables and variables. After all, an \code{abs_err} value of 5 could mean a
 a relatively meaningless change of five fish for a landed catch entry that was originally thousands of fish,
@@ -70,24 +70,24 @@ but the same value of 5 would be a huge change in fishing effort if it were for 
 
 One way to make error comparable across tables and variables is to calculate the proportional error.
 If an entry changed by 0.01\%, that's not meaningful, while if it changed by 10\%, that is. \verb{$prop_err} provides
-this proportional error, where -0.5 means the entry in file2 was 50\% less than the corresponding value in file1,
-and a value of 2 means the entry in file2 was 200\% more than the corresponding value in file2. '
+this proportional error, where -0.5 means the entry in fram_db_2 was 50\% less than the corresponding value in fram_db_1,
+and a value of 2 means the entry in fram_db_2 was 200\% more than the corresponding value in fram_db_1. '
 This gives error in context of the original value, and is often a good a way to look for problems. However,
 we sometimes find very large \verb{$prop_err} values for changes that aren't concerning. For example,
-we may have an entry for landed catch in the mortality table that was 0.00001 fish in file1,
-and 0 fish in file2. In all practicality these two values are identical, and the
+we may have an entry for landed catch in the mortality table that was 0.00001 fish in fram_db_1,
+and 0 fish in fram_db_2. In all practicality these two values are identical, and the
 0.00001 fish difference is likely one of random jitter in the numerical solver or rounding differences.
 However, our \verb{$prop_err} value for this cell is \code{-1}, the most extreme negative change we can get.
 We can jointly look at \verb{$abs_err} and \verb{$prop_err} to address the potential for
 misleadingly large errors \verb{$prop_err}, but it would be nice to have a single error metric that
-provides error in context without being sensitive to very small entries in file1.
+provides error in context without being sensitive to very small entries in fram_db_1.
 
 \code{scale_err} is an elaboration on \verb{$prop_err} that provides broader context. \verb{$prop_err}
-takes the absolute error and scales by the original value in file1. \verb{$scale_err} generalizes this idea,
+takes the absolute error and scales by the original value in fram_db_1. \verb{$scale_err} generalizes this idea,
 first calculating the average error for each table-variable combination, and then scaling the
 absolute error by the corresponding table-variable average. That is, if an entry for landed_catch in the
-Mortality table was 0.001 in file1, and was then 0.002 in file2, and the average of all landed_catch
-entries in file 1 was 1000, then the \code{prop_err} would be \code{1} (since file2 had double the value of file1, or \code{(0.002-0.001)/0.001}),
+Mortality table was 0.001 in fram_db_1, and was then 0.002 in fram_db_2, and the average of all landed_catch
+entries in fram_db_1 was 1000, then the \code{prop_err} would be \code{1} (since fram_db_2 had double the value of fram_db_1, or \code{(0.002-0.001)/0.001}),
 and the \code{scale.err} would be \code{0.000001} (\code{(0.002-0.001)/1000}). This better captures our intuition
 that a difference of 0.001 fish in the landed catch isn't a big deal, since those values are typically huge.
 \code{scale_err} is thus a measure of error that is comparable across variables and tables, essentially answer the question
@@ -129,8 +129,8 @@ which contains additional columns which did not fit into the standardized format
 }
 \examples{
 \dontrun{
-file1 = "Valid2022_Round_7_1_1_11142023_REFERENCE_fixed - fork rebuild.mdb"
-file2 = "Valid2022_Round_7.1.1_11142023 - green river split.mdb"
-out = tables_compare(file1, file2)
+fram_db_1 = connect_fram_db("Valid2022_Round_7_1_1_11142023_REFERENCE_fixed - fork rebuild.mdb")
+fram_db_2 = connect_fram_db("Valid2022_Round_7.1.1_11142023 - green river split.mdb")
+out = tables_compare(fram_db_1, fram_db_2)
 }
 }

@@ -16,6 +16,8 @@ reference:
     contents:
       - connect_fram_db
       - disconnect_fram_db
+      - list_extant_fram_connections
+      - disconnect_all_fram_connections
   - title: "Importing FRAM tables"
     desc: >
       Functions to import a FRAM database table into R
@@ -44,8 +46,6 @@ reference:
       Functions that visualize impacts of stocks in fisheries
     contents:
       - starts_with("plot_")
-      - make_impacts_per_catch_heatmap
-      - stock_comp
   - title: "Initializing R FRAM Projects"
     desc: >
       Creates a standardized workspace for fram related R projects
@@ -60,6 +60,7 @@ reference:
       - starts_with("change_")
       - remove_run
       - modify_table
+      - make_batch_runs
   - title: "Sensitivity analysis functions"
     desc: >
       Functions that create new FRAM database tables to align with a sensitivity analysis,
@@ -116,11 +117,16 @@ reference:
       - terminal_fisheries
       - terminal_stocks
       - terminal_info
+  - title: "Labeling"
+    desc: >
+        Functions that add label columns based on ids or flags
+    contents:
+      - starts_with("label_")
   - title: "Misc."
     desc: >
         Miscellaneous functions
     contents:
-      - add_flag_text
+      - add_total_mortality
       - cohort_abundance
       - aeq_mortality
       - coho_mark_rates
@@ -132,3 +138,10 @@ reference:
       - stock_id_comp
       - provide_table_names
       - welcome
+  - title: "Get ids"
+    desc: >
+        Functions to extract ids for runs, stocks, fisheries
+    contents:
+      - get_run_ids
+      - get_fishery_ids
+      - get_stock_ids

@@ -3,8 +3,8 @@
 #'
 #' Function supports QAQC practices by comparing the tables of two FRAM databases and identifying (and quantifying) differences.
 #'
-#' @param file1 Character string. FRAM database that contains the results from running baseline FRAM runs (e.g., our "production" version).
-#' @param file2 Character string. FRAM database that contains the results from running modified FRAM runs (e.g., running a forked version of FRAM or using modified input values)
+#' @param fram_db_1 connection to FRAM database that contains the results from running baseline FRAM runs (e.g., our "original" version).
+#' @param fram_db_2 connection to FRAM database that contains the results from running modified FRAM runs (e.g., running a new version of FRAM or using modified input values)
 #' @param runid_use Numeric vector of the run_ids to compare. Optional. If not provided, compare all run ids in the databases.
 #' @param tables_use Vector of character strings. Optional. If provided, only compare the listed tables.
 #' @param slim Logical. Optional, defaults to TRUE. If TRUE, do not include `$tabs_file1` and `$tabs_file2` in output list.
@@ -27,7 +27,7 @@
 #' In `$ratios`, the `table` and `variable` columns
 #' specify the table column being compared, respectively. `prop_err`, `abs_err`,
 #' and `scale_err` provide measures of the changes between the "original" value
-#' (from `file1`) and the "comparison" value (from `file2`). More on those below.
+#' (from `fram_db_1`) and the "comparison" value (from `fram_db_2`). More on those below.
 #' The `original` and `new` columns give the actual values being compared.
 #' `run_id` through `time_step` specify the rows being compared. `bkfram_off_by_fish`
 #'  and `bkfram_off_by_prop` provide the context for the comparison (more on that below).
@@ -36,12 +36,12 @@
 #'
 #'  Because FRAM involves numerical solvers, we expect some small differences in table entries
 #'  even when comparing two effectively equivalent databases. `compare_databases()` provides three metrics for these changes.
-#'  In each case, it is assumed that `file1` is the reference file; the "error" measures all show how much the  value
-#'  in `file2` changed relative to the corresponding value in `file1`.
+#'  In each case, it is assumed that `fram_db_1` is the reference file; the "error" measures all show how much the  value
+#'  in `fram_db_2` changed relative to the corresponding value in `fram_db_1`.
 
 #'  The simplest measure of error is the `abs_err`. This is the absolute value of the difference between
 #'  the two values. If we're looking at an entry with table = "Mortality" and variable = "landed_catch",
-#'  then an abs.err of 5 means that the `file2` entry was five fish more or less than the `file1` entry. You can confirm this
+#'  then an abs.err of 5 means that the `fram_db_2` entry was five fish more or less than the `fram_db_1` entry. You can confirm this
 #'  by looking at the `original` and `new` columns. While `abs_err` is the most easily interpreted,
 #'  it is often not very meaningful when looking across tables and variables. After all, an `abs_err` value of 5 could mean a
 #'  a relatively meaningless change of five fish for a landed catch entry that was originally thousands of fish,
@@ -49,24 +49,24 @@
 #'
 #'  One way to make error comparable across tables and variables is to calculate the proportional error.
 #'  If an entry changed by 0.01%, that's not meaningful, while if it changed by 10%, that is. `$prop_err` provides
-#'  this proportional error, where -0.5 means the entry in file2 was 50% less than the corresponding value in file1,
-#'  and a value of 2 means the entry in file2 was 200% more than the corresponding value in file2. '
+#'  this proportional error, where -0.5 means the entry in fram_db_2 was 50% less than the corresponding value in fram_db_1,
+#'  and a value of 2 means the entry in fram_db_2 was 200% more than the corresponding value in fram_db_1. '
 #'  This gives error in context of the original value, and is often a good a way to look for problems. However,
 #'  we sometimes find very large `$prop_err` values for changes that aren't concerning. For example,
-#'  we may have an entry for landed catch in the mortality table that was 0.00001 fish in file1,
-#'  and 0 fish in file2. In all practicality these two values are identical, and the
+#'  we may have an entry for landed catch in the mortality table that was 0.00001 fish in fram_db_1,
+#'  and 0 fish in fram_db_2. In all practicality these two values are identical, and the
 #'  0.00001 fish difference is likely one of random jitter in the numerical solver or rounding differences.
 #'  However, our `$prop_err` value for this cell is `-1`, the most extreme negative change we can get.
 #'  We can jointly look at `$abs_err` and `$prop_err` to address the potential for
 #'  misleadingly large errors `$prop_err`, but it would be nice to have a single error metric that
-#'  provides error in context without being sensitive to very small entries in file1.
+#'  provides error in context without being sensitive to very small entries in fram_db_1.
 #'
 #'  `scale_err` is an elaboration on `$prop_err` that provides broader context. `$prop_err`
-#'  takes the absolute error and scales by the original value in file1. `$scale_err` generalizes this idea,
+#'  takes the absolute error and scales by the original value in fram_db_1. `$scale_err` generalizes this idea,
 #'  first calculating the average error for each table-variable combination, and then scaling the
 #'  absolute error by the corresponding table-variable average. That is, if an entry for landed_catch in the
-#'  Mortality table was 0.001 in file1, and was then 0.002 in file2, and the average of all landed_catch
-#'  entries in file 1 was 1000, then the `prop_err` would be `1` (since file2 had double the value of file1, or `(0.002-0.001)/0.001`),
+#'  Mortality table was 0.001 in fram_db_1, and was then 0.002 in fram_db_2, and the average of all landed_catch
+#'  entries in fram_db_1 was 1000, then the `prop_err` would be `1` (since fram_db_2 had double the value of fram_db_1, or `(0.002-0.001)/0.001`),
 #'  and the `scale.err` would be `0.000001` (`(0.002-0.001)/1000`). This better captures our intuition
 #'  that a difference of 0.001 fish in the landed catch isn't a big deal, since those values are typically huge.
 #'  `scale_err` is thus a measure of error that is comparable across variables and tables, essentially answer the question
@@ -112,19 +112,19 @@
 #'
 #' @examples
 #' \dontrun{
-#' file1 = "Valid2022_Round_7_1_1_11142023_REFERENCE_fixed - fork rebuild.mdb"
-#' file2 = "Valid2022_Round_7.1.1_11142023 - green river split.mdb"
-#' out = tables_compare(file1, file2)
+#' fram_db_1 = connect_fram_db("Valid2022_Round_7_1_1_11142023_REFERENCE_fixed - fork rebuild.mdb")
+#' fram_db_2 = connect_fram_db("Valid2022_Round_7.1.1_11142023 - green river split.mdb")
+#' out = tables_compare(fram_db_1, fram_db_2)
 #' }
-compare_databases <-  function(file1,
-                          file2,
-                          runid_use = NULL,
-                          tables_use = NULL,
-                          slim = TRUE,
-                          quiet = TRUE) {
+compare_databases <-  function(fram_db_1,
+                               fram_db_2,
+                               runid_use = NULL,
+                               tables_use = NULL,
+                               slim = TRUE,
+                               quiet = TRUE) {
 
-  if (length(file1) != 1 || !is.character(file1)) cli::cli_abort("`file1` must be a single character string")
-  if (length(file2) != 1 || !is.character(file2)) cli::cli_abort("`file2` must be a single character string")
+  validate_fram_db(fram_db_1)
+  validate_fram_db(fram_db_2)
   if (!is.null(runid_use) && !all(is.numeric(runid_use))) cli::cli_abort("`runid_use` must be NULL or numeric vector")
   if (!is.null(tables_use) && !all(is.character(tables_use))) cli::cli_abort("`tables_use` must be NULL or character vector")
   if (!is.logical(slim) || length(slim) != 1) cli::cli_abort("`slim` must be a single logical value")
@@ -160,17 +160,14 @@ compare_databases <-  function(file1,
     age = NA_real_
   )
 
-  con_prod <- connect_fram_db(file1, quiet = quiet)
-  con_fork <- connect_fram_db(file2, quiet = quiet)
-
   ## identify meaningful tables (dbListTables also returns Queries and internal Access tables)
-  tables_use_prod <- intersect(DBI::dbListTables(con_prod$fram_db_connection),
-                              provide_table_names())
-  tables_use_fork <- intersect(DBI::dbListTables(con_fork$fram_db_connection),
-                              provide_table_names())
+  tables_use_prod <- intersect(DBI::dbListTables(fram_db_1$fram_db_connection),
+                               provide_table_names())
+  tables_use_fork <- intersect(DBI::dbListTables(fram_db_2$fram_db_connection),
+                               provide_table_names())
   ## identify if databases have mismatching tables, give warning.
   tables_setdiff <- setdiff(tables_use_prod,
-                           tables_use_fork)
+                            tables_use_fork)
   if (length(tables_setdiff) > 0) {
     cli::cli_alert_warning(
       "The provided database files contain different tables. Check that they are intended for comparison. Tables present in only one database: {tables_setdiff}"
@@ -192,23 +189,23 @@ compare_databases <-  function(file1,
   if(!is.null(tables_use)){
     tables_names <- intersect(tables_names, tables_use)
   }
-  species_cur <- con_prod$fram_db_species
+  species_cur <- fram_db_1$fram_db_species
 
   tabs_prod <- tabs_fork <-  list()
 
   ## for the chinook case, figure out what the maximum number of stock is for backwards_fram id mapping
-  stock_max <- max(c(fetch_table_(con_prod, "BaseID")$num_stocks, fetch_table_(con_fork, "BaseID")$num_stocks))
+  stock_max <- max(c(fetch_table_(fram_db_1, "BaseID")$num_stocks, fetch_table_(fram_db_2, "BaseID")$num_stocks))
 
   if(!quiet){cli::cli_alert_info("Fetching tables")}
   for (cur_table in tables_names) {
-    tabs_prod[[cur_table]] <- fetch_table_(con_prod, cur_table, warn = FALSE) |>
+    tabs_prod[[cur_table]] <- fetch_table_(fram_db_1, cur_table, warn = FALSE) |>
       dplyr::distinct()
     if (!is.null(runid_use) &
         "run_id" %in% names(tabs_prod[[cur_table]])) {
       tabs_prod[[cur_table]] <- tabs_prod[[cur_table]] |>
         dplyr::filter(.data$run_id %in% runid_use)
     }
-    tabs_fork[[cur_table]] <- fetch_table_(con_fork, cur_table, warn = FALSE)
+    tabs_fork[[cur_table]] <- fetch_table_(fram_db_2, cur_table, warn = FALSE)
     if (!is.null(runid_use) &
         "run_id" %in% names(tabs_fork[[cur_table]])) {
       tabs_fork[[cur_table]] <- tabs_fork[[cur_table]] |>
@@ -229,8 +226,6 @@ compare_databases <-  function(file1,
         dplyr::filter(!is.na(.data$stock_id))
     }
   }
-  disconnect_fram_db(con_prod)
-  disconnect_fram_db(con_fork)
   if(!quiet){cli::cli_alert_success("Tables fetched")}
 
 
@@ -246,7 +241,7 @@ compare_databases <-  function(file1,
   if ("BackwardsFRAM" %in% names(tabs_prod)) {
     cur_table <- "BackwardsFRAM"
     labs_used <- intersect(names(tabs_prod[[cur_table]]),
-                          labs_template)
+                           labs_template)
 
     df_orig <- tabs_prod[[cur_table]] |>
       dplyr::select(!dplyr::any_of(c("primary_key"))) |>
@@ -289,7 +284,7 @@ compare_databases <-  function(file1,
   for (cur_table in names(tabs_prod)) {
     if(!quiet){cli::cli_alert_info("Diffing {cur_table}.")}
     labs_used <- intersect(names(tabs_prod[[cur_table]]),
-                          labs_template)
+                           labs_template)
 
     df_comp <- tabs_prod[[cur_table]] |>
       dplyr::select(!dplyr::any_of(c("primary_key"))) |>
