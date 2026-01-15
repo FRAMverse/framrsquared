@@ -12,12 +12,12 @@ Source:
 [`DESCRIPTION`](https://github.com/FRAMverse/framrsquared/blob/main/DESCRIPTION)
 
 Garber T, Edwards C (2026). *framrsquared: FRAM Database Interface*. R
-package version 0.8.0, <https://framverse.github.io/framrsquared/>.
+package version 0.8.1, <https://framverse.github.io/framrsquared/>.
 
     @Manual{,
       title = {framrsquared: FRAM Database Interface},
       author = {Ty Garber and Collin Edwards},
       year = {2026},
-      note = {R package version 0.8.0},
+      note = {R package version 0.8.1},
       url = {https://framverse.github.io/framrsquared/},
     }

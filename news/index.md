@@ -1,5 +1,17 @@
 # Changelog
 
+## framrsquared 0.8.1
+
+- fixed bug in which
+  [`fetch_table()`](https://framverse.github.io/framrsquared/reference/fetch_table.md)
+  could cause row duplications if a database had more than 1 version (or
+  species) of stock or fishery id unless labeling was turned off. This
+  has been resolved.
+  [`fetch_table()`](https://framverse.github.io/framrsquared/reference/fetch_table.md)
+  no longer labels tables when working with a transfer database, as in
+  that case the mapping of labels to stock or fishery IDs are ambigious
+  with overhaul of framrosetta (and possibly even then).
+
 ## framrsquared 0.8.0
 
 ### New Features
