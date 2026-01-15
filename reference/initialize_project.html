@@ -13,7 +13,7 @@ reach out to the developers with a _quarto.yml and (optionally) style.css file."
 
     <a class="navbar-brand me-2" href="../index.html">framrsquared</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -64,9 +64,9 @@ reach out to the developers with a <code>_quarto.yml</code> and (optionally) <co
 <span>  folders <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"scripts"</span>, <span class="st">"original_data"</span>, <span class="st">"cleaned_data"</span>, <span class="st">"figures"</span>, <span class="st">"results"</span>,</span>
 <span>    <span class="st">"results/quarto_output"</span><span class="op">)</span>,</span>
 <span>  quarto <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  organization <span class="op">=</span> <span class="st">"WDFW"</span>,</span>
+<span>  organization <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"WDFW"</span><span class="op">)</span>,</span>
 <span>  renv <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  template.overwrite <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  template_overwrite <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  color <span class="op">=</span> <span class="st">"coffee"</span>,</span>
 <span>  quiet <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -92,7 +92,7 @@ reach out to the developers with a <code>_quarto.yml</code> and (optionally) <co
 <dd><p>Boolean to initialize renv. Defaults to FALSE.</p></dd>
 
 
-<dt id="arg-template-overwrite">template.overwrite<a class="anchor" aria-label="anchor" href="#arg-template-overwrite"></a></dt>
+<dt id="arg-template-overwrite">template_overwrite<a class="anchor" aria-label="anchor" href="#arg-template-overwrite"></a></dt>
 <dd><p>Boolean. Overwrite _quarto.yml and style.css files if they already exist? Defaults to TRUE</p></dd>
 
 
@@ -111,6 +111,10 @@ in a subfolder matching an R-friendly organization name,
 and the same name should be added to the <code>organization</code> parameter description here and the <code>supported_organizations</code>
 in <code><a href="fetch_quarto_templates.html">fetch_quarto_templates()</a></code>.</p>
     </div>
+    <div class="section level2">
+    <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
+    <div class="dont-index"><p><code><a href="fetch_quarto_templates.html">fetch_quarto_templates()</a></code></p></div>
+    </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
@@ -128,7 +132,7 @@ in <code><a href="fetch_quarto_templates.html">fetch_quarto_templates()</a></cod
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>

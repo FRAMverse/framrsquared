@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">framrsquared</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -48,8 +48,7 @@
 
       <div class="section-desc"><p>Functions to connect to and disconnect from a FRAM database</p></div>
 
-
-    </div><div class="section level2">
+      <dl></dl></div><div class="section level2">
 
 
 
@@ -59,20 +58,34 @@
           <code><a href="connect_fram_db.html">connect_fram_db()</a></code>
 
         </dt>
-        <dd>This is a connection object to a FRAM database. Returns a list used throughout the rest of this package which carries meta data.</dd>
-      </dl><dl><dt>
+        <dd>Connect to FRAM database</dd>
+
+        <dt>
 
           <code><a href="disconnect_fram_db.html">disconnect_fram_db()</a></code>
 
         </dt>
         <dd>Safely disconnect from FRAM database</dd>
+
+        <dt>
+
+          <code><a href="list_extant_fram_connections.html">list_extant_fram_connections()</a></code>
+
+        </dt>
+        <dd>Describe existing fram connections (including orphans)</dd>
+
+        <dt>
+
+          <code><a href="disconnect_all_fram_connections.html">disconnect_all_fram_connections()</a></code>
+
+        </dt>
+        <dd>Clear all connections</dd>
       </dl></div><div class="section level2">
       <h2 id="importing-fram-tables">Importing FRAM tables<a class="anchor" aria-label="anchor" href="#importing-fram-tables"></a></h2>
 
       <div class="section-desc"><p>Functions to import a FRAM database table into R</p></div>
 
-
-    </div><div class="section level2">
+      <dl></dl></div><div class="section level2">
 
 
 
@@ -82,8 +95,9 @@
           <code><a href="fetch_table.html">fetch_table()</a></code>
 
         </dt>
-        <dd>Fetches a complete table from a FRAM database. Returns a cleaned tibble.</dd>
-      </dl><dl><dt>
+        <dd>Fetch a complete table from a FRAM database.</dd>
+
+        <dt>
 
           <code><a href="fetch_table_bkchin.html">fetch_table_bkchin()</a></code>
 
@@ -94,8 +108,7 @@
 
       <div class="section-desc"><p>Functions to filter FRAM tables by fishery</p></div>
 
-
-    </div><div class="section level2">
+      <dl></dl></div><div class="section level2">
 
 
 
@@ -105,80 +118,90 @@
           <code><a href="filter_ak.html">filter_ak()</a></code>
 
         </dt>
-        <dd>Filters a dataframe to Alaska fisheries. Will automatically detect whether it's working with a Chinook or Coho dataset if the tables were generated within this package. Requires a <code>fishery_id</code> column name.</dd>
-      </dl><dl><dt>
+        <dd>Filters a dataframe to Alaska fisheries. Will automatically detect whether it's working with a Chinook or Coho dataset if the tables were generated within this package. <code>.data</code> must have a <code>fishery_id</code> column name.</dd>
+
+        <dt>
 
           <code><a href="filter_bc.html">filter_bc()</a></code>
 
         </dt>
-        <dd>Filters a dataframe to Canadian (BC) fisheries. Will automatically detect whether it's working with a Chinook or Coho dataset if the tables were generated within this package. Requires a <code>fishery_id</code> column name.</dd>
-      </dl><dl><dt>
+        <dd>Filters a dataframe to Canadian (BC) fisheries. Will automatically detect whether it's working with a Chinook or Coho dataset if the tables were generated within this package. <code>.data</code> must have a <code>fishery_id</code> column name.</dd>
+
+        <dt>
 
           <code><a href="filter_ca.html">filter_ca()</a></code>
 
         </dt>
-        <dd>Filters a dataframe to California fisheries. Will automatically detect whether it's working with a Chinook or Coho dataset if the tables were generated within this package. Requires a <code>fishery_id</code> column name.</dd>
-      </dl><dl><dt>
+        <dd>Filters a dataframe to California fisheries. Will automatically detect whether it's working with a Chinook or Coho dataset if the tables were generated within this package. <code>.data</code> must have a <code>fishery_id</code> column name.</dd>
+
+        <dt>
 
           <code><a href="filter_coast.html">filter_coast()</a></code>
 
         </dt>
-        <dd>Filters a dataframe to Coastal fisheries. Will automatically detect whether it's working with a Chinook or Coho dataset if the tables were generated within this package. Requires a <code>fishery_id</code> column name.</dd>
-      </dl><dl><dt>
+        <dd>Filters a dataframe to Coastal fisheries. Will automatically detect whether it's working with a Chinook or Coho dataset if the tables were generated within this package. <code>.data</code> must have a <code>fishery_id</code> column name.</dd>
+
+        <dt>
 
           <code><a href="filter_commercial_wa_nt.html">filter_commercial_wa_nt()</a></code>
 
         </dt>
-        <dd>Filters a dataframe to WA non-treaty commercial fisheries. Will automatically detect whether it's working with a Chinook or Coho dataset if the tables were generated within this package. Requires a <code>fishery_id</code> column name.</dd>
-      </dl><dl><dt>
+        <dd>Filters a dataframe to WA non-treaty commercial fisheries. Will automatically detect whether it's working with a Chinook or Coho dataset if the tables were generated within this package. <code>.data</code> must have a <code>fishery_id</code> column name.</dd>
+
+        <dt>
 
           <code><a href="filter_flag.html">filter_flag()</a></code>
 
         </dt>
         <dd>NA's all the information in the FisheryScalers that's not being used e.g Flag 1 only NS Scalers will be returned</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="filter_marine.html">filter_marine()</a></code>
 
         </dt>
-        <dd>Filters a dataframe to marine fisheries. Will automatically detect whether it's working with a Chinook or Coho dataset if the tables were generated within this package. Requires a <code>fishery_id</code> column name.</dd>
-      </dl><dl><dt>
+        <dd>Filters a dataframe to marine fisheries. Will automatically detect whether it's working with a Chinook or Coho dataset if the tables were generated within this package. <code>.data</code> must have a <code>fishery_id</code> column name.</dd>
+
+        <dt>
 
           <code><a href="filter_net.html">filter_net()</a></code>
 
         </dt>
-        <dd>Filters a dataframe to net fisheries. Will automatically detect whether it's working with a Chinook or Coho dataset if the tables were generated within this package. Requires a <code>fishery_id</code> column name.</dd>
-      </dl><dl><dt>
+        <dd>Filters a dataframe to net fisheries. Will automatically detect whether it's working with a Chinook or Coho dataset if the tables were generated within this package. <code>.data</code> must have a <code>fishery_id</code> column name.</dd>
+
+        <dt>
 
           <code><a href="filter_or.html">filter_or()</a></code>
 
         </dt>
-        <dd>Filters a dataframe to Oregon fisheries. Will automatically detect whether it's working with a Chinook or Coho dataset if the tables were generated within this package. Requires a <code>fishery_id</code> column name.</dd>
-      </dl><dl><dt>
+        <dd>Filters a dataframe to Oregon fisheries. Will automatically detect whether it's working with a Chinook or Coho dataset if the tables were generated within this package. <code>.data</code> must have a <code>fishery_id</code> column name.</dd>
+
+        <dt>
 
           <code><a href="filter_puget_sound.html">filter_puget_sound()</a></code>
 
         </dt>
-        <dd>Filters a dataframe to Puget Sound fisheries. Will automatically detect whether it's working with a Chinook or Coho dataset if the tables were generated within this package. Requires a <code>fishery_id</code> column name.</dd>
-      </dl><dl><dt>
+        <dd>Filters a dataframe to Puget Sound fisheries. Will automatically detect whether it's working with a Chinook or Coho dataset if the tables were generated within this package. <code>.data</code> must have a <code>fishery_id</code> column name.</dd>
+
+        <dt>
 
           <code><a href="filter_sport.html">filter_sport()</a></code>
 
         </dt>
-        <dd>Filters a dataframe to sport fisheries. Will automatically detect whether it's working with a Chinook or Coho dataset if the tables were generated within this package. Requires a <code>fishery_id</code> column name.</dd>
-      </dl><dl><dt>
+        <dd>Filters a dataframe to sport fisheries. Will automatically detect whether it's working with a Chinook or Coho dataset if the tables were generated within this package. <code>.data</code> must have a <code>fishery_id</code> column name.</dd>
+
+        <dt>
 
           <code><a href="filter_wa.html">filter_wa()</a></code>
 
         </dt>
-        <dd>Filters a dataframe to Washington State fisheries. Will automatically detect whether it's working with a Chinook or Coho dataset if the tables were generated within this package. Requires a <code>fishery_id</code> column name.</dd>
+        <dd>Filters a dataframe to Washington State fisheries. Will automatically detect whether it's working with a Chinook or Coho dataset if the tables were generated within this package. <code>.data</code> must have a <code>fishery_id</code> column name.</dd>
       </dl></div><div class="section level2">
       <h2 id="comparing-fram-runs">Comparing FRAM runs<a class="anchor" aria-label="anchor" href="#comparing-fram-runs"></a></h2>
 
       <div class="section-desc"><p>Functions that compare two FRAM runs within the same database</p></div>
 
-
-    </div><div class="section level2">
+      <dl></dl></div><div class="section level2">
 
 
 
@@ -188,56 +211,65 @@
           <code><a href="compare_databases.html">compare_databases()</a></code>
 
         </dt>
-        <dd>Compare tables in two equivalent FRAM databases</dd>
-      </dl><dl><dt>
+        <dd><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental" class="external-link"><img src="figures/lifecycle-experimental.svg" alt="[Experimental]"></a> Compare tables in two equivalent FRAM databases</dd>
+
+        <dt>
 
           <code><a href="compare_fishery_input_flags.html">compare_fishery_input_flags()</a></code>
 
         </dt>
         <dd>Compares the fishery flags of two runs</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="compare_fishery_inputs.html">compare_fishery_inputs()</a></code>
 
         </dt>
         <dd>Compares the fishery inputs of two runs</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="compare_inputs.html">compare_inputs()</a></code>
 
         </dt>
         <dd>Generates a dataframe that compares fishery scalers table for two runs identified by run_id's</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="compare_inputs_chart.html">compare_inputs_chart()</a></code>
 
         </dt>
-        <dd>Generates a heat map of changed between two run inputs. Can be a very busy chart if not filtered down. Consider using a filter.</dd>
-      </dl><dl><dt>
+        <dd>Generate heat map of changed values between two run inputs.</dd>
+
+        <dt>
 
           <code><a href="compare_non_retention_input_flags.html">compare_non_retention_input_flags()</a></code>
 
         </dt>
         <dd>Compares the non retention flags of two runs</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="compare_non_retention_inputs.html">compare_non_retention_inputs()</a></code>
 
         </dt>
         <dd>Compares the non retention inputs of two runs</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="compare_recruits.html">compare_recruits()</a></code>
 
         </dt>
         <dd>Compares the recruit scalers of two runs</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="compare_runs.html">compare_runs()</a></code>
 
         </dt>
         <dd>Generates a report to the console of changes to inputs between two runs</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="compare_stock_fishery_rate_scalers.html">compare_stock_fishery_rate_scalers()</a></code>
 
@@ -248,8 +280,7 @@
 
       <div class="section-desc"><p>Functions that replicate FRAM UI screen reports</p></div>
 
-
-    </div><div class="section level2">
+      <dl></dl></div><div class="section level2">
 
 
 
@@ -259,115 +290,127 @@
           <code><a href="msf_encounters.html">msf_encounters()</a></code>
 
         </dt>
-        <dd>Produces the MSF screen report numbers for encounters. Returns different format depending database.</dd>
-      </dl><dl><dt>
+        <dd>Reproduce MSF encounters screen</dd>
+
+        <dt>
 
           <code><a href="msf_encounters_chinook_.html">msf_encounters_chinook_()</a></code>
 
         </dt>
-        <dd>Returns a tibble matching the MSF screen report encounters for Chinook. This is specific for Chinook and in most cases msf_encounters() is preferable.</dd>
-      </dl><dl><dt>
+        <dd>Replicate MSF screen report encounters for Chinook</dd>
+
+        <dt>
 
           <code><a href="msf_encounters_coho_.html">msf_encounters_coho_()</a></code>
 
         </dt>
-        <dd>Returns a tibble matching the MSF screen report encounters for Coho This is specific for Coho and in most cases msf_encounters() is preferable.</dd>
-      </dl><dl><dt>
+        <dd>Replicate MSF screen report encounters for COHO</dd>
+
+        <dt>
 
           <code><a href="msf_landed_catch.html">msf_landed_catch()</a></code>
 
         </dt>
-        <dd>Produces the MSF screen report numbers for landed catch. Returns different format depending database.</dd>
-      </dl><dl><dt>
+        <dd>Reproduce MSF landed catch screen</dd>
+
+        <dt>
 
           <code><a href="msf_landed_catch_chinook_.html">msf_landed_catch_chinook_()</a></code>
 
         </dt>
-        <dd>Returns a tibble matching the MSF screen report landed catch for Chinook. This is specific for Chinook and in most cases msf_landed_catch() is preferable.</dd>
-      </dl><dl><dt>
+        <dd>Replicate MSF screen report landed catch for Chinook</dd>
+
+        <dt>
 
           <code><a href="msf_landed_catch_coho_.html">msf_landed_catch_coho_()</a></code>
 
         </dt>
-        <dd>Returns a tibble matching the MSF screen report landed catch for Coho This is specific for Coho and in most cases msf_landed_catch() is preferable.</dd>
-      </dl><dl><dt>
+        <dd>Replicate MSF screen report landed catch for COHO</dd>
+
+        <dt>
 
           <code><a href="msf_mortalities.html">msf_mortalities()</a></code>
 
         </dt>
-        <dd>Produces the MSF screen report numbers for mortalities. Returns different format depending database.</dd>
-      </dl><dl><dt>
+        <dd>Reproduce MSF mortalities screen</dd>
+
+        <dt>
 
           <code><a href="msf_mortalities_chinook_.html">msf_mortalities_chinook_()</a></code>
 
         </dt>
-        <dd>Returns a tibble matching the MSF screen report mortalities for Chinook. This is specific for Chinook and in most cases msf_mortalities() is preferable.</dd>
-      </dl><dl><dt>
+        <dd>Replicate MSF screen report mortalities for Chinook</dd>
+
+        <dt>
 
           <code><a href="msf_mortalities_coho_.html">msf_mortalities_coho_()</a></code>
 
         </dt>
-        <dd>Returns a tibble matching the MSF screen report mortalities for Coho This is specific for Coho and in most cases msf_mortalities() is preferable.</dd>
-      </dl><dl><dt>
+        <dd>Replicate MSF screen report mortalities for COHO</dd>
+
+        <dt>
 
           <code><a href="population_statistics.html">population_statistics()</a></code>
 
         </dt>
-        <dd>Returns a tibble matching the Population Statistics screen.</dd>
-      </dl><dl><dt>
+        <dd>Replicate Population Statistics screen</dd>
+
+        <dt>
 
           <code><a href="fishery_mortality.html">fishery_mortality()</a></code>
 
         </dt>
         <dd>Returns a tibble matching the Fishery Mortality screen.</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="stock_mortality.html">stock_mortality()</a></code>
 
         </dt>
-        <dd>Returns a tibble matching the Fishery Mortality screen.</dd>
+        <dd>Replicate Stock Mortality screen</dd>
       </dl></div><div class="section level2">
       <h2 id="stock-impact-visualizations">Stock impact visualizations<a class="anchor" aria-label="anchor" href="#stock-impact-visualizations"></a></h2>
 
       <div class="section-desc"><p>Functions that visualize impacts of stocks in fisheries</p></div>
 
-
-    </div><div class="section level2">
+      <dl></dl></div><div class="section level2">
 
 
 
 
       <dl><dt>
 
+          <code><a href="plot_impacts_per_catch_heatmap.html">plot_impacts_per_catch_heatmap()</a></code>
+
+        </dt>
+        <dd>Make plots to show the amount of landed catch_per_impact</dd>
+
+        <dt>
+
+          <code><a href="plot_stock_comp.html">plot_stock_comp()</a></code>
+
+        </dt>
+        <dd>Plot stock composition</dd>
+
+        <dt>
+
           <code><a href="plot_stock_mortality.html">plot_stock_mortality()</a></code>
 
         </dt>
-        <dd>Creates an ordered bar chart with the top number of mortalities per fishery.</dd>
-      </dl><dl><dt>
+        <dd>Plot total mortalities by fishery</dd>
+
+        <dt>
 
           <code><a href="plot_stock_mortality_time_step.html">plot_stock_mortality_time_step()</a></code>
 
         </dt>
         <dd>Creates an ordered bar chart with the top number of mortalities per fishery and time step.</dd>
-      </dl><dl><dt>
-
-          <code><a href="make_impacts_per_catch_heatmap.html">make_impacts_per_catch_heatmap()</a></code>
-
-        </dt>
-        <dd>Make plots to show the amount of landed catch_per_impact</dd>
-      </dl><dl><dt>
-
-          <code><a href="stock_comp.html">stock_comp()</a></code>
-
-        </dt>
-        <dd>Produces a stock composition chart, low frequency stocks are grouped into geographic area.</dd>
       </dl></div><div class="section level2">
       <h2 id="initializing-r-fram-projects">Initializing R FRAM Projects<a class="anchor" aria-label="anchor" href="#initializing-r-fram-projects"></a></h2>
 
       <div class="section-desc"><p>Creates a standardized workspace for fram related R projects</p></div>
 
-
-    </div><div class="section level2">
+      <dl></dl></div><div class="section level2">
 
 
 
@@ -378,7 +421,8 @@
 
         </dt>
         <dd><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental" class="external-link"><img src="figures/lifecycle-experimental.svg" alt="[Experimental]"></a> Initializes a FRAM project</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="fetch_quarto_templates.html">fetch_quarto_templates()</a></code>
 
@@ -389,8 +433,7 @@
 
       <div class="section-desc"><p>Functions that alter FRAM database tables, use with caution</p></div>
 
-
-    </div><div class="section level2">
+      <dl></dl></div><div class="section level2">
 
 
 
@@ -401,43 +444,54 @@
 
         </dt>
         <dd>Experimental copying scaler inputs from one run to another DANGEROUS</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="copy_run.html">copy_run()</a></code>
 
         </dt>
         <dd><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental" class="external-link"><img src="figures/lifecycle-experimental.svg" alt="[Experimental]"></a> Copies a run a number of times</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="copy_tamms.html">copy_tamms()</a></code>
 
         </dt>
         <dd><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental" class="external-link"><img src="figures/lifecycle-experimental.svg" alt="[Experimental]"></a> Copy TAMM for FRAM batch runs</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="change_run_id.html">change_run_id()</a></code>
 
         </dt>
         <dd>Changes a run's ID number in a FRAM database</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="remove_run.html">remove_run()</a></code>
 
         </dt>
         <dd>Removes a run in a FRAM database</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="modify_table.html">modify_table()</a></code>
 
         </dt>
         <dd><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental" class="external-link"><img src="figures/lifecycle-experimental.svg" alt="[Experimental]"></a> Modify FRAM database based on match/replace dataframe</dd>
+
+        <dt>
+
+          <code><a href="make_batch_runs.html">make_batch_runs()</a></code>
+
+        </dt>
+        <dd>Make batch runs</dd>
       </dl></div><div class="section level2">
       <h2 id="sensitivity-analysis-functions">Sensitivity analysis functions<a class="anchor" aria-label="anchor" href="#sensitivity-analysis-functions"></a></h2>
 
       <div class="section-desc"><p>Functions that create new FRAM database tables to align with a sensitivity analysis, use with caution</p></div>
 
-
-    </div><div class="section level2">
+      <dl></dl></div><div class="section level2">
 
 
 
@@ -448,19 +502,22 @@
 
         </dt>
         <dd><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental" class="external-link"><img src="figures/lifecycle-experimental.svg" alt="[Experimental]"></a> Generate sensitivity analyses runs based on a list of match/replace dataframes</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="sensitivity_exact.html">sensitivity_exact()</a></code>
 
         </dt>
         <dd><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental" class="external-link"><img src="figures/lifecycle-experimental.svg" alt="[Experimental]"></a> Generate sensitivity analyses runs based on exact values</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="sensitivity_scaled.html">sensitivity_scaled()</a></code>
 
         </dt>
         <dd><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental" class="external-link"><img src="figures/lifecycle-experimental.svg" alt="[Experimental]"></a> Generate sensitivity analyses runs scaled by template values</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="calc_fram_scaling.html">calc_fram_scaling()</a></code>
 
@@ -471,8 +528,7 @@
 
       <div class="section-desc"><p>Functions calculate a week number</p></div>
 
-
-    </div><div class="section level2">
+      <dl></dl></div><div class="section level2">
 
 
 
@@ -483,7 +539,8 @@
 
         </dt>
         <dd>Vectorized approach to calculating the management week, returns an integer</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="statistical_week.html">statistical_week()</a></code>
 
@@ -494,31 +551,44 @@
 
       <div class="section-desc"><p>Functions that validate FRAM data</p></div>
 
-
-    </div><div class="section level2">
+      <dl></dl></div><div class="section level2">
 
 
 
 
       <dl><dt>
 
+          <code><a href="validate_fishery_ids.html">validate_fishery_ids()</a></code>
+
+        </dt>
+        <dd>Convenience function to check fishery input</dd>
+
+        <dt>
+
           <code><a href="validate_fram_db.html">validate_fram_db()</a></code>
 
         </dt>
         <dd>Convenience function to check fram_db input</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="validate_run_id.html">validate_run_id()</a></code>
 
         </dt>
         <dd>Convenience function to check run_id input</dd>
+
+        <dt>
+
+          <code><a href="validate_stock_ids.html">validate_stock_ids()</a></code>
+
+        </dt>
+        <dd>Convenience function to check fishery input</dd>
       </dl></div><div class="section level2">
       <h2 id="terminal-runs">Terminal Runs<a class="anchor" aria-label="anchor" href="#terminal-runs"></a></h2>
 
       <div class="section-desc"><p>Functions that unpack the TRuns table in the FRAM database</p></div>
 
-
-    </div><div class="section level2">
+      <dl></dl></div><div class="section level2">
 
 
 
@@ -529,7 +599,8 @@
 
         </dt>
         <dd>Returns a dataframe with fisheries defined by the TRuns report driver</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="truns_stocks.html">truns_stocks()</a></code>
 
@@ -540,8 +611,7 @@
 
       <div class="section-desc"><p>Functions that focus on post-season runs and backwards FRAM</p></div>
 
-
-    </div><div class="section level2">
+      <dl></dl></div><div class="section level2">
 
 
 
@@ -552,7 +622,8 @@
 
         </dt>
         <dd>Performs error checks of a backwards FRAM run Returns nested tibble with diagnostics</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="post_season_abundance.html">post_season_abundance()</a></code>
 
@@ -563,8 +634,7 @@
 
       <div class="section-desc"><p>Functions that describe the current FRAM database</p></div>
 
-
-    </div><div class="section level2">
+      <dl></dl></div><div class="section level2">
 
 
 
@@ -575,37 +645,43 @@
 
         </dt>
         <dd>Cleans the names of FRAM tables and coverts to a tibble</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="fram_database_species.html">fram_database_species()</a></code>
 
         </dt>
         <dd>Identifies the FRAM database species focus - Chinook or Coho</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="fram_database_type.html">fram_database_type()</a></code>
 
         </dt>
         <dd>Identifies the FRAM database type - Full or Transfer</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="get_run_ids.html">get_run_ids()</a></code>
 
         </dt>
         <dd>Gets all run_ids of FRAM database</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="find_tables_by_column_.html">find_tables_by_column_()</a></code>
 
         </dt>
         <dd>Finds tables that contain a specific column name</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="provide_table_names.html">provide_table_names()</a></code>
 
         </dt>
         <dd>List names of FRAM table</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="run_info.html">run_info()</a></code>
 
@@ -616,8 +692,7 @@
 
       <div class="section-desc"><p>Functions that provide checks for the current data</p></div>
 
-
-    </div><div class="section level2">
+      <dl></dl></div><div class="section level2">
 
 
 
@@ -628,31 +703,36 @@
 
         </dt>
         <dd>Check FRAM database after adding new stock</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="bkfram_checks_coho.html">bkfram_checks_coho()</a></code>
 
         </dt>
         <dd>Performs error checks of a backwards FRAM run Returns nested tibble with diagnostics</dd>
-      </dl><dl><dt>
 
-          <code><a href="error_check_code.html">error_check_code()</a></code>
+        <dt>
+
+          <code><a href="check_demo_coverage.html">check_demo_coverage()</a></code>
 
         </dt>
-        <dd>Check code for common errors</dd>
-      </dl><dl><dt>
+        <dd>Check if exported functions are documented in a file</dd>
+
+        <dt>
 
           <code><a href="stock_age_checker.html">stock_age_checker()</a></code>
 
         </dt>
         <dd>Helper function to check that all stock x age combinations are present</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="stock_check_helper.html">stock_check_helper()</a></code>
 
         </dt>
         <dd>Helper function to check that stock id make sense</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="styleguide.html">frs_stylecheck_assignment()</a></code> <code><a href="styleguide.html">frs_stylecheck_snakecase()</a></code>
 
@@ -663,8 +743,7 @@
 
       <div class="section-desc"><p>Functions that describe the fate of a stock</p></div>
 
-
-    </div><div class="section level2">
+      <dl></dl></div><div class="section level2">
 
 
 
@@ -675,13 +754,15 @@
           <span class="badge lifecycle lifecycle-experimental">experimental</span>
         </dt>
         <dd><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental" class="external-link"><img src="figures/lifecycle-experimental.svg" alt="[Experimental]"></a> Summarizes the three true outcomes of a stocks abundance, where it dies to fishery related mortality, natural mortality, or reaches some sort of escapement. When run against the coho database spawning escapement will be displayed, when run against the Chinook database escapement to the river will be dislpayed along with recruits to the next year 'age_up'</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="stock_fate_chinook.html">stock_fate_chinook()</a></code>
           <span class="badge lifecycle lifecycle-experimental">experimental</span>
         </dt>
         <dd><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental" class="external-link"><img src="figures/lifecycle-experimental.svg" alt="[Experimental]"></a> Chinook flavor of the stock fate function</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="stock_fate_coho.html">stock_fate_coho()</a></code>
           <span class="badge lifecycle lifecycle-experimental">experimental</span>
@@ -692,8 +773,7 @@
 
       <div class="section-desc"><p>Functions that unpack the TAAETRS tables</p></div>
 
-
-    </div><div class="section level2">
+      <dl></dl></div><div class="section level2">
 
 
 
@@ -704,101 +784,173 @@
 
         </dt>
         <dd><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental" class="external-link"><img src="figures/lifecycle-experimental.svg" alt="[Experimental]"></a> List terminal stock information</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="terminal_stocks.html">terminal_stocks()</a></code>
 
         </dt>
         <dd><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental" class="external-link"><img src="figures/lifecycle-experimental.svg" alt="[Experimental]"></a> List terminal stock information</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="terminal_info.html">terminal_info()</a></code>
 
         </dt>
         <dd><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental" class="external-link"><img src="figures/lifecycle-experimental.svg" alt="[Experimental]"></a> Parse TAAETRS table</dd>
       </dl></div><div class="section level2">
-      <h2 id="misc-">Misc.<a class="anchor" aria-label="anchor" href="#misc-"></a></h2>
+      <h2 id="labeling">Labeling<a class="anchor" aria-label="anchor" href="#labeling"></a></h2>
 
-      <div class="section-desc"><p>Miscellaneous functions</p></div>
+      <div class="section-desc"><p>Functions that add label columns based on ids or flags</p></div>
 
-
-    </div><div class="section level2">
+      <dl></dl></div><div class="section level2">
 
 
 
 
       <dl><dt>
 
-          <code><a href="add_flag_text.html">add_flag_text()</a></code>
+          <code><a href="label_fisheries_db.html">label_fisheries_db()</a></code>
+
+        </dt>
+        <dd>Label fisheries based on FRAM database</dd>
+
+        <dt>
+
+          <code><a href="label_flags.html">label_flags()</a></code>
 
         </dt>
         <dd>Adds a column with a text version of flags for either non-retention or fishery scalers</dd>
-      </dl><dl><dt>
+
+        <dt>
+
+          <code><a href="label_stocks_db.html">label_stocks_db()</a></code>
+
+        </dt>
+        <dd>Label stocks based on FRAM database</dd>
+      </dl></div><div class="section level2">
+      <h2 id="misc-">Misc.<a class="anchor" aria-label="anchor" href="#misc-"></a></h2>
+
+      <div class="section-desc"><p>Miscellaneous functions</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="add_total_mortality.html">add_total_mortality()</a></code>
+
+        </dt>
+        <dd>Sum separate mortality columns into new "total_mortality" column</dd>
+
+        <dt>
 
           <code><a href="cohort_abundance.html">cohort_abundance()</a></code>
-          <span class="badge lifecycle lifecycle-experimental">experimental</span>
+
         </dt>
-        <dd><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental" class="external-link"><img src="figures/lifecycle-experimental.svg" alt="[Experimental]"></a> Pulls the starting cohorts from the database, this is stored in the StockRecruit table, but can be wrong. It's best just to multiply the Stock Recruit Scalar by the base period abundance</dd>
-      </dl><dl><dt>
+        <dd><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental" class="external-link"><img src="figures/lifecycle-experimental.svg" alt="[Experimental]"></a> Calculate starting cohort abundance</dd>
+
+        <dt>
 
           <code><a href="aeq_mortality.html">aeq_mortality()</a></code>
 
         </dt>
         <dd>Extract AEQ mortality from Chinook FRAM database. Refactored and stripped down from the framr package written by Dan Auerbach. https://github.com/FRAMverse/framr/</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="coho_mark_rates.html">coho_mark_rates()</a></code>
           <span class="badge lifecycle lifecycle-experimental">experimental</span>
         </dt>
         <dd><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental" class="external-link"><img src="figures/lifecycle-experimental.svg" alt="[Experimental]"></a> Returns a tibble displaying predicted FRAMencounter mark rates by fishery, fishery type, and time-step.</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="input_summary_.html">input_summary_()</a></code>
 
         </dt>
         <dd>Generates an input summary based on a FisheryScalers dataframe. Probably end up streamlining / revising this.</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="mortality_scalers.html">mortality_scalers()</a></code>
 
         </dt>
-        <dd>Guestimate the impact on a particular stock by multiplying its mortalities by the <code>stock_mortality_ratio</code> produced by these functions.</dd>
-      </dl><dl><dt>
+        <dd>Quantify the proportion of fishery mortalities associated with stock(s) of interest</dd>
+
+        <dt>
 
           <code><a href="msp_mortality.html">msp_mortality()</a></code>
 
         </dt>
         <dd>Expand Chinook mortality table using Model-Stock Proportion</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="NR_flag_translate.html">NR_flag_translate()</a></code>
 
         </dt>
         <dd>Provides English translation of numeric non-retention flags</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="scalers_flag_translate.html">scalers_flag_translate()</a></code>
 
         </dt>
         <dd>Provides English translation of numeric scalers flags</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="stock_id_comp.html">stock_id_comp()</a></code>
 
         </dt>
         <dd>Helper function to check that stock id exist in the Stock database</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="provide_table_names.html">provide_table_names()</a></code>
 
         </dt>
         <dd>List names of FRAM table</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="welcome.html">welcome()</a></code>
 
         </dt>
         <dd>Welcome message, summarizing database information</dd>
+      </dl></div><div class="section level2">
+      <h2 id="get-ids">Get ids<a class="anchor" aria-label="anchor" href="#get-ids"></a></h2>
+
+      <div class="section-desc"><p>Functions to extract ids for runs, stocks, fisheries</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="get_run_ids.html">get_run_ids()</a></code>
+
+        </dt>
+        <dd>Gets all run_ids of FRAM database</dd>
+
+        <dt>
+
+          <code><a href="get_fishery_ids.html">get_fishery_ids()</a></code>
+
+        </dt>
+        <dd>Gets all fishery_ids of FRAM database</dd>
+
+        <dt>
+
+          <code><a href="get_stock_ids.html">get_stock_ids()</a></code>
+
+        </dt>
+        <dd>Gets all stock_id of FRAM database</dd>
       </dl></div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
@@ -809,7 +961,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>

@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">framrsquared</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -41,12 +41,12 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental" class="external-link"><img src="figures/lifecycle-experimental.svg" alt="[Experimental]"></a> Copy TAMM for FRAM batch runs</h1>
-      <small class="dont-index">Source: <a href="https://github.com/FRAMverse/framrsquared/blob/main/R/copy.R" class="external-link"><code>R/copy.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/FRAMverse/framrsquared/blob/main/R/modify_db.R" class="external-link"><code>R/modify_db.R</code></a></small>
       <div class="d-none name"><code>copy_tamms.Rd</code></div>
     </div>
 
     <div class="ref-description section level2">
-    <p>Preps a folder for batch running in the 'Run Multiple Runs' screen of the FRAM automation fork (https://github.com/FRAMverse/FRAM_automation), for use with the <code>advanced</code> approach to identify multiple runs. One TAMM file will be copied multiple times in the <code>target_folder</code> with suffixes that identify each of the run_ids. The "Use folder" button on the "Run Multiple Runs" screen can then use the target folder to set up large batch runs. Typically users should use <code>make_batch_runs()</code> instead (this first copies runs and then uses <code>copy_tamms</code> to create tamms that match the new runs).</p>
+    <p>Preps a folder for batch running in the 'Run Multiple Runs' screen of the FRAM automation fork (https://github.com/FRAMverse/FRAM_automation), for use with the <code>advanced</code> approach to identify multiple runs. One TAMM file will be copied multiple times in the <code>target_folder</code> with suffixes that identify each of the run_ids. The "Use folder" button on the "Run Multiple Runs" screen can then use the target folder to set up large batch runs. Typically users should use <code><a href="make_batch_runs.html">make_batch_runs()</a></code> instead (this first copies runs and then uses <code>copy_tamms</code> to create tamms that match the new runs).</p>
     </div>
 
     <div class="section level2">
@@ -94,7 +94,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>

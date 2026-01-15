@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">framrsquared</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -44,6 +44,48 @@
       <small>Source: <a href="https://github.com/FRAMverse/framrsquared/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.8.0" id="framrsquared-080">framrsquared 0.8.0<a class="anchor" aria-label="anchor" href="#framrsquared-080"></a></h2>
+<div class="section level3">
+<h3 id="new-features-0-8-0">New Features<a class="anchor" aria-label="anchor" href="#new-features-0-8-0"></a></h3>
+<ul><li>Tracks connections made with <code><a href="../reference/connect_fram_db.html">connect_fram_db()</a></code> in <code>.fram_connections</code>, a new addition to the global environment. This allows identification of existing connections (including orphans) with <code><a href="../reference/list_extant_fram_connections.html">list_extant_fram_connections()</a></code> and disconnecting all existing connections (including orphans) with <code><a href="../reference/disconnect_all_fram_connections.html">disconnect_all_fram_connections()</a></code>.</li>
+<li>
+<code><a href="../reference/label_flags.html">label_flags()</a></code> inserts columns <code>fishery_flag_label</code> and <code>non_retention_flag_label</code> with human-readable versions of flag numbers if the corresponding flag column is present.</li>
+<li>Re-export <code><a href="https://framverse.github.io/framrosetta/reference/label_fisheries.html" class="external-link">framrosetta::label_fisheries()</a></code> and <code><a href="https://framverse.github.io/framrosetta/reference/label_stocks.html" class="external-link">framrosetta::label_stocks()</a></code> which add human-readable columns <code>$fishery_label</code> and <code>$stock_label</code> to dataframes if <code>$fishery_id</code> or <code>$stock_id</code> are present, based on LUT in framrosetta. Added <code><a href="../reference/label_stocks_db.html">label_stocks_db()</a></code> and <code><a href="../reference/label_fisheries_db.html">label_fisheries_db()</a></code> to fulfil the same prupose but using the Stock or Fishery tables of a provided FRAM connection.</li>
+<li>
+<code><a href="../reference/fetch_table.html">fetch_table()</a></code> and <code><a href="../reference/aeq_mortality.html">aeq_mortality()</a></code> now default to adding labels for fisheries, stocks, and flags. This can be turned off with <code>label = FALSE</code>. DEV NOTE: <code>fetch_table()_</code> is a non-exported alias for <code><a href="../reference/fetch_table.html">fetch_table()</a></code> with <code>label = FALSE</code>, ditto <code>aeq_mortality_()</code> for <code><a href="../reference/aeq_mortality.html">aeq_mortality()</a></code>.</li>
+<li>
+<code><a href="../reference/add_total_mortality.html">add_total_mortality()</a></code> inserts a <code>total_mortalities</code> column into a mortality database, which is the sum of the eight mortality columns. Also works on the output of <code><a href="../reference/aeq_mortality.html">aeq_mortality()</a></code>. This is now used under the hood in several framrsquared functions like <code>stock_fate_*()</code>.</li>
+<li>For developers: non-exported function <code><a href="../reference/check_demo_coverage.html">check_demo_coverage()</a></code> takes path to a NAMESPACE file and a document file (like the <code>framrsquared_test_and_demo.qmd</code> file) and checks if each of the exported files from the package are present in the document. Useful for double-checking a complete tesitng file.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="bug-fixes-and-minor-improvements-0-8-0">Bug fixes and minor improvements<a class="anchor" aria-label="anchor" href="#bug-fixes-and-minor-improvements-0-8-0"></a></h3>
+<ul><li>Minor improvements to documentation, including addition of <code>@seeAlso</code> for most functions.</li>
+<li>
+<code><a href="../reference/fetch_table.html">fetch_table()</a></code> now gives a warning if it fetches a mortality table with negative mortalities.</li>
+<li>
+<code><a href="../reference/remove_run.html">remove_run()</a></code> can now remove multiple runs.</li>
+<li>
+<code><a href="../reference/change_run_id.html">change_run_id()</a></code> no longer gives a warning when connecting tables after use.</li>
+<li>More input validation. Also more / better validation functions to streamline this process. <code>validate_flag()</code> checks for a length 1 logical; <code>validate_character()</code> checks for a length n character. <code><a href="../reference/validate_fishery_ids.html">validate_fishery_ids()</a></code> confirms the fishery ids are present in the database.</li>
+<li>Several <code>validate_*()</code> functions now have optional argument <code>n</code> – if provided, validate that the input is of length <code>n</code>.</li>
+<li>
+<code><a href="../reference/get_run_ids.html">get_run_ids()</a></code>,<code><a href="../reference/get_fishery_ids.html">get_fishery_ids()</a></code>, <code><a href="../reference/get_stock_ids.html">get_stock_ids()</a></code> added to return vector of available runs, fisheries, stocks. Primarily used for internal validation functions.</li>
+<li>added “See also” cross-referencing to many functions</li>
+<li>Revised documentation for many functions to enhance readability.</li>
+<li>improved pass-through of “species” attribute.</li>
+<li>
+<code>make_impacts_per_catch_heatmap()</code> renamed to <code><a href="../reference/plot_impacts_per_catch_heatmap.html">plot_impacts_per_catch_heatmap()</a></code>. Still a mouthfull, but aligns with naming of other plot functions.</li>
+<li>
+<code>stock_comp()</code> renamed to <code><a href="../reference/plot_stock_comp.html">plot_stock_comp()</a></code> for more consistent naming schemes.</li>
+<li>
+<code><a href="../reference/terminal_info.html">terminal_info()</a></code> updated with optional argument in anticipation of new table for stock splitting purposes. Default behavior is appropriate for the current table structure.</li>
+<li>plot_stock_mortality now skips timestep 1 for Chinook, as that timestep happens before/during the NoF process.</li>
+<li>style guide functions are now not exported. Still available for use by devs, although considering removal as they are surpassed by styling plugins.</li>
+<li>
+<code><a href="../reference/make_batch_runs.html">make_batch_runs()</a></code> exported. Primarily useful internally in sensitivity functions.</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.7.0" id="framrsquared-070">framrsquared 0.7.0<a class="anchor" aria-label="anchor" href="#framrsquared-070"></a></h2>
 <div class="section level3">
@@ -91,7 +133,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>

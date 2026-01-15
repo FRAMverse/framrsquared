@@ -1,0 +1,471 @@
+# Package index
+
+## Connecting to FRAM database
+
+Functions to connect to and disconnect from a FRAM database
+
+- [`connect_fram_db()`](https://framverse.github.io/framrsquared/reference/connect_fram_db.md)
+  : Connect to FRAM database
+- [`disconnect_fram_db()`](https://framverse.github.io/framrsquared/reference/disconnect_fram_db.md)
+  : Safely disconnect from FRAM database
+- [`list_extant_fram_connections()`](https://framverse.github.io/framrsquared/reference/list_extant_fram_connections.md)
+  : Describe existing fram connections (including orphans)
+- [`disconnect_all_fram_connections()`](https://framverse.github.io/framrsquared/reference/disconnect_all_fram_connections.md)
+  : Clear all connections
+
+## Importing FRAM tables
+
+Functions to import a FRAM database table into R
+
+- [`fetch_table()`](https://framverse.github.io/framrsquared/reference/fetch_table.md)
+  : Fetch a complete table from a FRAM database.
+- [`fetch_table_bkchin()`](https://framverse.github.io/framrsquared/reference/fetch_table_bkchin.md)
+  : Safely fetch Chinook BackwardsFRAM table
+
+## FRAM filtering
+
+Functions to filter FRAM tables by fishery
+
+- [`filter_ak()`](https://framverse.github.io/framrsquared/reference/filter_ak.md)
+  :
+
+  Filters a dataframe to Alaska fisheries. Will automatically detect
+  whether it's working with a Chinook or Coho dataset if the tables were
+  generated within this package. `.data` must have a `fishery_id` column
+  name.
+
+- [`filter_bc()`](https://framverse.github.io/framrsquared/reference/filter_bc.md)
+  :
+
+  Filters a dataframe to Canadian (BC) fisheries. Will automatically
+  detect whether it's working with a Chinook or Coho dataset if the
+  tables were generated within this package. `.data` must have a
+  `fishery_id` column name.
+
+- [`filter_ca()`](https://framverse.github.io/framrsquared/reference/filter_ca.md)
+  :
+
+  Filters a dataframe to California fisheries. Will automatically detect
+  whether it's working with a Chinook or Coho dataset if the tables were
+  generated within this package. `.data` must have a `fishery_id` column
+  name.
+
+- [`filter_coast()`](https://framverse.github.io/framrsquared/reference/filter_coast.md)
+  :
+
+  Filters a dataframe to Coastal fisheries. Will automatically detect
+  whether it's working with a Chinook or Coho dataset if the tables were
+  generated within this package. `.data` must have a `fishery_id` column
+  name.
+
+- [`filter_commercial_wa_nt()`](https://framverse.github.io/framrsquared/reference/filter_commercial_wa_nt.md)
+  :
+
+  Filters a dataframe to WA non-treaty commercial fisheries. Will
+  automatically detect whether it's working with a Chinook or Coho
+  dataset if the tables were generated within this package. `.data` must
+  have a `fishery_id` column name.
+
+- [`filter_flag()`](https://framverse.github.io/framrsquared/reference/filter_flag.md)
+  : NA's all the information in the FisheryScalers that's not being used
+  e.g Flag 1 only NS Scalers will be returned
+
+- [`filter_marine()`](https://framverse.github.io/framrsquared/reference/filter_marine.md)
+  :
+
+  Filters a dataframe to marine fisheries. Will automatically detect
+  whether it's working with a Chinook or Coho dataset if the tables were
+  generated within this package. `.data` must have a `fishery_id` column
+  name.
+
+- [`filter_net()`](https://framverse.github.io/framrsquared/reference/filter_net.md)
+  :
+
+  Filters a dataframe to net fisheries. Will automatically detect
+  whether it's working with a Chinook or Coho dataset if the tables were
+  generated within this package. `.data` must have a `fishery_id` column
+  name.
+
+- [`filter_or()`](https://framverse.github.io/framrsquared/reference/filter_or.md)
+  :
+
+  Filters a dataframe to Oregon fisheries. Will automatically detect
+  whether it's working with a Chinook or Coho dataset if the tables were
+  generated within this package. `.data` must have a `fishery_id` column
+  name.
+
+- [`filter_puget_sound()`](https://framverse.github.io/framrsquared/reference/filter_puget_sound.md)
+  :
+
+  Filters a dataframe to Puget Sound fisheries. Will automatically
+  detect whether it's working with a Chinook or Coho dataset if the
+  tables were generated within this package. `.data` must have a
+  `fishery_id` column name.
+
+- [`filter_sport()`](https://framverse.github.io/framrsquared/reference/filter_sport.md)
+  :
+
+  Filters a dataframe to sport fisheries. Will automatically detect
+  whether it's working with a Chinook or Coho dataset if the tables were
+  generated within this package. `.data` must have a `fishery_id` column
+  name.
+
+- [`filter_wa()`](https://framverse.github.io/framrsquared/reference/filter_wa.md)
+  :
+
+  Filters a dataframe to Washington State fisheries. Will automatically
+  detect whether it's working with a Chinook or Coho dataset if the
+  tables were generated within this package. `.data` must have a
+  `fishery_id` column name.
+
+## Comparing FRAM runs
+
+Functions that compare two FRAM runs within the same database
+
+- [`compare_databases()`](https://framverse.github.io/framrsquared/reference/compare_databases.md)
+  :
+
+  **\[experimental\]** Compare tables in two equivalent FRAM databases
+
+- [`compare_fishery_input_flags()`](https://framverse.github.io/framrsquared/reference/compare_fishery_input_flags.md)
+  : Compares the fishery flags of two runs
+
+- [`compare_fishery_inputs()`](https://framverse.github.io/framrsquared/reference/compare_fishery_inputs.md)
+  : Compares the fishery inputs of two runs
+
+- [`compare_inputs()`](https://framverse.github.io/framrsquared/reference/compare_inputs.md)
+  : Generates a dataframe that compares fishery scalers table for two
+  runs identified by run_id's
+
+- [`compare_inputs_chart()`](https://framverse.github.io/framrsquared/reference/compare_inputs_chart.md)
+  : Generate heat map of changed values between two run inputs.
+
+- [`compare_non_retention_input_flags()`](https://framverse.github.io/framrsquared/reference/compare_non_retention_input_flags.md)
+  : Compares the non retention flags of two runs
+
+- [`compare_non_retention_inputs()`](https://framverse.github.io/framrsquared/reference/compare_non_retention_inputs.md)
+  : Compares the non retention inputs of two runs
+
+- [`compare_recruits()`](https://framverse.github.io/framrsquared/reference/compare_recruits.md)
+  : Compares the recruit scalers of two runs
+
+- [`compare_runs()`](https://framverse.github.io/framrsquared/reference/compare_runs.md)
+  : Generates a report to the console of changes to inputs between two
+  runs
+
+- [`compare_stock_fishery_rate_scalers()`](https://framverse.github.io/framrsquared/reference/compare_stock_fishery_rate_scalers.md)
+  : Compares the stock fishery rate scalers of two runs
+
+## FRAM Screen Reports
+
+Functions that replicate FRAM UI screen reports
+
+- [`msf_encounters()`](https://framverse.github.io/framrsquared/reference/msf_encounters.md)
+  : Reproduce MSF encounters screen
+- [`msf_encounters_chinook_()`](https://framverse.github.io/framrsquared/reference/msf_encounters_chinook_.md)
+  : Replicate MSF screen report encounters for Chinook
+- [`msf_encounters_coho_()`](https://framverse.github.io/framrsquared/reference/msf_encounters_coho_.md)
+  : Replicate MSF screen report encounters for COHO
+- [`msf_landed_catch()`](https://framverse.github.io/framrsquared/reference/msf_landed_catch.md)
+  : Reproduce MSF landed catch screen
+- [`msf_landed_catch_chinook_()`](https://framverse.github.io/framrsquared/reference/msf_landed_catch_chinook_.md)
+  : Replicate MSF screen report landed catch for Chinook
+- [`msf_landed_catch_coho_()`](https://framverse.github.io/framrsquared/reference/msf_landed_catch_coho_.md)
+  : Replicate MSF screen report landed catch for COHO
+- [`msf_mortalities()`](https://framverse.github.io/framrsquared/reference/msf_mortalities.md)
+  : Reproduce MSF mortalities screen
+- [`msf_mortalities_chinook_()`](https://framverse.github.io/framrsquared/reference/msf_mortalities_chinook_.md)
+  : Replicate MSF screen report mortalities for Chinook
+- [`msf_mortalities_coho_()`](https://framverse.github.io/framrsquared/reference/msf_mortalities_coho_.md)
+  : Replicate MSF screen report mortalities for COHO
+- [`population_statistics()`](https://framverse.github.io/framrsquared/reference/population_statistics.md)
+  : Replicate Population Statistics screen
+- [`fishery_mortality()`](https://framverse.github.io/framrsquared/reference/fishery_mortality.md)
+  : Returns a tibble matching the Fishery Mortality screen.
+- [`stock_mortality()`](https://framverse.github.io/framrsquared/reference/stock_mortality.md)
+  : Replicate Stock Mortality screen
+
+## Stock impact visualizations
+
+Functions that visualize impacts of stocks in fisheries
+
+- [`plot_impacts_per_catch_heatmap()`](https://framverse.github.io/framrsquared/reference/plot_impacts_per_catch_heatmap.md)
+  : Make plots to show the amount of landed catch_per_impact
+- [`plot_stock_comp()`](https://framverse.github.io/framrsquared/reference/plot_stock_comp.md)
+  : Plot stock composition
+- [`plot_stock_mortality()`](https://framverse.github.io/framrsquared/reference/plot_stock_mortality.md)
+  : Plot total mortalities by fishery
+- [`plot_stock_mortality_time_step()`](https://framverse.github.io/framrsquared/reference/plot_stock_mortality_time_step.md)
+  : Creates an ordered bar chart with the top number of mortalities per
+  fishery and time step.
+
+## Initializing R FRAM Projects
+
+Creates a standardized workspace for fram related R projects
+
+- [`initialize_project()`](https://framverse.github.io/framrsquared/reference/initialize_project.md)
+  :
+
+  **\[experimental\]** Initializes a FRAM project
+
+- [`fetch_quarto_templates()`](https://framverse.github.io/framrsquared/reference/fetch_quarto_templates.md)
+  : Creates quarto template files
+
+## Database altering functions
+
+Functions that alter FRAM database tables, use with caution
+
+- [`copy_fishery_scalers()`](https://framverse.github.io/framrsquared/reference/copy_fishery_scalers.md)
+  : Experimental copying scaler inputs from one run to another DANGEROUS
+
+- [`copy_run()`](https://framverse.github.io/framrsquared/reference/copy_run.md)
+  :
+
+  **\[experimental\]** Copies a run a number of times
+
+- [`copy_tamms()`](https://framverse.github.io/framrsquared/reference/copy_tamms.md)
+  :
+
+  **\[experimental\]** Copy TAMM for FRAM batch runs
+
+- [`change_run_id()`](https://framverse.github.io/framrsquared/reference/change_run_id.md)
+  : Changes a run's ID number in a FRAM database
+
+- [`remove_run()`](https://framverse.github.io/framrsquared/reference/remove_run.md)
+  : Removes a run in a FRAM database
+
+- [`modify_table()`](https://framverse.github.io/framrsquared/reference/modify_table.md)
+  :
+
+  **\[experimental\]** Modify FRAM database based on match/replace
+  dataframe
+
+- [`make_batch_runs()`](https://framverse.github.io/framrsquared/reference/make_batch_runs.md)
+  : Make batch runs
+
+## Sensitivity analysis functions
+
+Functions that create new FRAM database tables to align with a
+sensitivity analysis, use with caution
+
+- [`sensitivity_custom()`](https://framverse.github.io/framrsquared/reference/sensitivity_custom.md)
+  :
+
+  **\[experimental\]** Generate sensitivity analyses runs based on a
+  list of match/replace dataframes
+
+- [`sensitivity_exact()`](https://framverse.github.io/framrsquared/reference/sensitivity_exact.md)
+  :
+
+  **\[experimental\]** Generate sensitivity analyses runs based on exact
+  values
+
+- [`sensitivity_scaled()`](https://framverse.github.io/framrsquared/reference/sensitivity_scaled.md)
+  :
+
+  **\[experimental\]** Generate sensitivity analyses runs scaled by
+  template values
+
+- [`calc_fram_scaling()`](https://framverse.github.io/framrsquared/reference/calc_fram_scaling.md)
+  :
+
+  **\[experimental\]** Calculate match/replace df based on scaling
+
+## Week calculations
+
+Functions calculate a week number
+
+- [`management_week()`](https://framverse.github.io/framrsquared/reference/management_week.md)
+  : Vectorized approach to calculating the management week, returns an
+  integer
+- [`statistical_week()`](https://framverse.github.io/framrsquared/reference/statistical_week.md)
+  : Vectorized approach to calculating the statistical week, returns an
+  integer
+
+## Validations
+
+Functions that validate FRAM data
+
+- [`validate_fishery_ids()`](https://framverse.github.io/framrsquared/reference/validate_fishery_ids.md)
+  : Convenience function to check fishery input
+- [`validate_fram_db()`](https://framverse.github.io/framrsquared/reference/validate_fram_db.md)
+  : Convenience function to check fram_db input
+- [`validate_run_id()`](https://framverse.github.io/framrsquared/reference/validate_run_id.md)
+  : Convenience function to check run_id input
+- [`validate_stock_ids()`](https://framverse.github.io/framrsquared/reference/validate_stock_ids.md)
+  : Convenience function to check fishery input
+
+## Terminal Runs
+
+Functions that unpack the TRuns table in the FRAM database
+
+- [`truns_fisheries()`](https://framverse.github.io/framrsquared/reference/truns_fisheries.md)
+  : Returns a dataframe with fisheries defined by the TRuns report
+  driver
+- [`truns_stocks()`](https://framverse.github.io/framrsquared/reference/truns_stocks.md)
+  : Returns a dataframe with stocks defined by the TRuns report driver
+
+## Post-season FRAM
+
+Functions that focus on post-season runs and backwards FRAM
+
+- [`bkfram_checks_coho()`](https://framverse.github.io/framrsquared/reference/bkfram_checks_coho.md)
+  : Performs error checks of a backwards FRAM run Returns nested tibble
+  with diagnostics
+- [`post_season_abundance()`](https://framverse.github.io/framrsquared/reference/post_season_abundance.md)
+  : Generates post-season January age 3 abundances by stock from
+  post-season databases. Used for forecasting.
+
+## Describing the FRAM Database
+
+Functions that describe the current FRAM database
+
+- [`fram_clean_tables()`](https://framverse.github.io/framrsquared/reference/fram_clean_tables.md)
+  : Cleans the names of FRAM tables and coverts to a tibble
+- [`fram_database_species()`](https://framverse.github.io/framrsquared/reference/fram_database_species.md)
+  : Identifies the FRAM database species focus - Chinook or Coho
+- [`fram_database_type()`](https://framverse.github.io/framrsquared/reference/fram_database_type.md)
+  : Identifies the FRAM database type - Full or Transfer
+- [`get_run_ids()`](https://framverse.github.io/framrsquared/reference/get_run_ids.md)
+  : Gets all run_ids of FRAM database
+- [`find_tables_by_column_()`](https://framverse.github.io/framrsquared/reference/find_tables_by_column_.md)
+  : Finds tables that contain a specific column name
+- [`provide_table_names()`](https://framverse.github.io/framrsquared/reference/provide_table_names.md)
+  : List names of FRAM table
+- [`run_info()`](https://framverse.github.io/framrsquared/reference/run_info.md)
+  : Provides a print out of Run ID information
+
+## Data checking
+
+Functions that provide checks for the current data
+
+- [`addstock_check()`](https://framverse.github.io/framrsquared/reference/addstock_check.md)
+  : Check FRAM database after adding new stock
+- [`bkfram_checks_coho()`](https://framverse.github.io/framrsquared/reference/bkfram_checks_coho.md)
+  : Performs error checks of a backwards FRAM run Returns nested tibble
+  with diagnostics
+- [`check_demo_coverage()`](https://framverse.github.io/framrsquared/reference/check_demo_coverage.md)
+  : Check if exported functions are documented in a file
+- [`stock_age_checker()`](https://framverse.github.io/framrsquared/reference/stock_age_checker.md)
+  : Helper function to check that all stock x age combinations are
+  present
+- [`stock_check_helper()`](https://framverse.github.io/framrsquared/reference/stock_check_helper.md)
+  : Helper function to check that stock id make sense
+- [`frs_stylecheck_assignment()`](https://framverse.github.io/framrsquared/reference/styleguide.md)
+  [`frs_stylecheck_snakecase()`](https://framverse.github.io/framrsquared/reference/styleguide.md)
+  : Framrsquared style guide
+
+## Stock summaries
+
+Functions that describe the fate of a stock
+
+- [`stock_fate()`](https://framverse.github.io/framrsquared/reference/stock_fate.md)
+  **\[experimental\]** :
+
+  **\[experimental\]** Summarizes the three true outcomes of a stocks
+  abundance, where it dies to fishery related mortality, natural
+  mortality, or reaches some sort of escapement. When run against the
+  coho database spawning escapement will be displayed, when run against
+  the Chinook database escapement to the river will be dislpayed along
+  with recruits to the next year 'age_up'
+
+- [`stock_fate_chinook()`](https://framverse.github.io/framrsquared/reference/stock_fate_chinook.md)
+  **\[experimental\]** :
+
+  **\[experimental\]** Chinook flavor of the stock fate function
+
+- [`stock_fate_coho()`](https://framverse.github.io/framrsquared/reference/stock_fate_coho.md)
+  **\[experimental\]** :
+
+  **\[experimental\]** Coho flavor of the stock fate function
+
+## Describing Terminal Run Information
+
+Functions that unpack the TAAETRS tables
+
+- [`terminal_fisheries()`](https://framverse.github.io/framrsquared/reference/terminal_fisheries.md)
+  :
+
+  **\[experimental\]** List terminal stock information
+
+- [`terminal_stocks()`](https://framverse.github.io/framrsquared/reference/terminal_stocks.md)
+  :
+
+  **\[experimental\]** List terminal stock information
+
+- [`terminal_info()`](https://framverse.github.io/framrsquared/reference/terminal_info.md)
+  :
+
+  **\[experimental\]** Parse TAAETRS table
+
+## Labeling
+
+Functions that add label columns based on ids or flags
+
+- [`label_fisheries_db()`](https://framverse.github.io/framrsquared/reference/label_fisheries_db.md)
+  : Label fisheries based on FRAM database
+- [`label_flags()`](https://framverse.github.io/framrsquared/reference/label_flags.md)
+  : Adds a column with a text version of flags for either non-retention
+  or fishery scalers
+- [`label_stocks_db()`](https://framverse.github.io/framrsquared/reference/label_stocks_db.md)
+  : Label stocks based on FRAM database
+
+## Misc.
+
+Miscellaneous functions
+
+- [`add_total_mortality()`](https://framverse.github.io/framrsquared/reference/add_total_mortality.md)
+  : Sum separate mortality columns into new "total_mortality" column
+
+- [`cohort_abundance()`](https://framverse.github.io/framrsquared/reference/cohort_abundance.md)
+  :
+
+  **\[experimental\]** Calculate starting cohort abundance
+
+- [`aeq_mortality()`](https://framverse.github.io/framrsquared/reference/aeq_mortality.md)
+  : Extract AEQ mortality from Chinook FRAM database. Refactored and
+  stripped down from the framr package written by Dan Auerbach.
+  https://github.com/FRAMverse/framr/
+
+- [`coho_mark_rates()`](https://framverse.github.io/framrsquared/reference/coho_mark_rates.md)
+  **\[experimental\]** :
+
+  **\[experimental\]** Returns a tibble displaying predicted
+  FRAMencounter mark rates by fishery, fishery type, and time-step.
+
+- [`input_summary_()`](https://framverse.github.io/framrsquared/reference/input_summary_.md)
+  : Generates an input summary based on a FisheryScalers dataframe.
+  Probably end up streamlining / revising this.
+
+- [`mortality_scalers()`](https://framverse.github.io/framrsquared/reference/mortality_scalers.md)
+  : Quantify the proportion of fishery mortalities associated with
+  stock(s) of interest
+
+- [`msp_mortality()`](https://framverse.github.io/framrsquared/reference/msp_mortality.md)
+  : Expand Chinook mortality table using Model-Stock Proportion
+
+- [`NR_flag_translate()`](https://framverse.github.io/framrsquared/reference/NR_flag_translate.md)
+  : Provides English translation of numeric non-retention flags
+
+- [`scalers_flag_translate()`](https://framverse.github.io/framrsquared/reference/scalers_flag_translate.md)
+  : Provides English translation of numeric scalers flags
+
+- [`stock_id_comp()`](https://framverse.github.io/framrsquared/reference/stock_id_comp.md)
+  : Helper function to check that stock id exist in the Stock database
+
+- [`provide_table_names()`](https://framverse.github.io/framrsquared/reference/provide_table_names.md)
+  : List names of FRAM table
+
+- [`welcome()`](https://framverse.github.io/framrsquared/reference/welcome.md)
+  : Welcome message, summarizing database information
+
+## Get ids
+
+Functions to extract ids for runs, stocks, fisheries
+
+- [`get_run_ids()`](https://framverse.github.io/framrsquared/reference/get_run_ids.md)
+  : Gets all run_ids of FRAM database
+- [`get_fishery_ids()`](https://framverse.github.io/framrsquared/reference/get_fishery_ids.md)
+  : Gets all fishery_ids of FRAM database
+- [`get_stock_ids()`](https://framverse.github.io/framrsquared/reference/get_stock_ids.md)
+  : Gets all stock_id of FRAM database
