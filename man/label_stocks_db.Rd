@@ -4,14 +4,12 @@
 \alias{label_stocks_db}
 \title{Label stocks based on FRAM database}
 \usage{
-label_stocks_db(.data, fram_db, stocks_col = "stock_id")
+label_stocks_db(.data, fram_db)
 }
 \arguments{
 \item{.data}{Dataframe containing `stock_id` column (or analogous column with different name specied by `stocks_col` argument)}
 
 \item{fram_db}{FRAM database connection}
-
-\item{stocks_col}{character atomic identifying the column treated as containing stock_id values Defaults to `stock_id`.}
 }
 \value{
 \code{.data} with additional column, \verb{$stock_label}

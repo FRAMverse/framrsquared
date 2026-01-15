@@ -78,23 +78,13 @@ fetch_table <- function(fram_db, table_name = NULL, label = TRUE, warn = TRUE){
     if(label){
       output_table <- output_table |>
         label_flags(warn = FALSE)
-      if("fishery_id" %in% names(output_table)){
-        if(fram_db$fram_db_type == "full"){
+      if("fishery_id" %in% names(output_table) & fram_db$fram_db_type == "full"){
         output_table <- output_table |>
           label_fisheries_db(fram_db)
-        } else if(fram_db$fram_db_type == "transfer"){
-          output_table <- output_table |>
-            framrosetta::label_fisheries()
-        }
       }
-      if("stock_id" %in% names(output_table)){
-        if(fram_db$fram_db_type == "full"){
+      if("stock_id" %in% names(output_table) & fram_db$fram_db_type == "full"){
           output_table <- output_table |>
             label_stocks_db(fram_db)
-        } else if(fram_db$fram_db_type == "transfer"){
-        output_table <- output_table |>
-          framrosetta::label_stocks()
-        }
       }
     }
 

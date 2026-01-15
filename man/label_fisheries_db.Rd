@@ -4,14 +4,12 @@
 \alias{label_fisheries_db}
 \title{Label fisheries based on FRAM database}
 \usage{
-label_fisheries_db(.data, fram_db, fisheries_col = "fishery_id")
+label_fisheries_db(.data, fram_db)
 }
 \arguments{
 \item{.data}{Dataframe containing `fishery_id` column (or analogous column with different name specied by `fisheries_col` argument)}
 
 \item{fram_db}{FRAM database connection}
-
-\item{fisheries_col}{character atomic identifying the column treated as containing fishery_id values Defaults to `fishery_id`.}
 }
 \value{
 \code{.data} with additional column, \verb{$fishery_label}

@@ -11,26 +11,33 @@
 #'
 #' @return `.data` with additional column, `$stock_label`
 #' @export
-label_stocks_db <- function(.data, fram_db, stocks_col = "stock_id"){
+label_stocks_db <- function(.data, fram_db){
   validate_data_frame(.data)
   validate_fram_db(fram_db, db_type = "full")
 
-  if(!stocks_col %in% colnames(.data)){
-    cli::cli_abort('`stocks_col` ({stocks_col}) column must be present in dataframe.')
-  }
+  ## labeling
+  run_id_luts = fetch_table_(fram_db, "RunID") |>
+    dplyr::select("run_id", "base_period_id")
+  bp_lut <- fetch_table_(fram_db, "BaseID") |>
+    dplyr::select("stock_version", "species_name", "base_period_id")
 
-  lut_use <- fetch_table_(fram_db, "Stock")
+  run_id_luts <- run_id_luts |>
+    dplyr::full_join(bp_lut, by = "base_period_id") |>
+    dplyr::filter(!is.na(.data$run_id))
 
-  label_map <- "stock_id"
-  names(label_map) = stocks_col
+  stock_lut <- fetch_table_(fram_db, "Stock")
+
+  lut_use <- run_id_luts |>
+    dplyr::left_join(stock_lut, by = c("stock_version", "species_name" = "species"),
+              relationship = "many-to-many") |>
+    dplyr::select("stock_id", "run_id", stock_label = "stock_long_name")
+
 
   res <- .data |>
-    dplyr::left_join(lut_use |>
-                       dplyr::select("stock_id",
-                                     "stock_label" = "stock_long_name"),
-                     by = label_map)|>
+    dplyr::left_join(lut_use,
+                     by = c("run_id", "stock_id"))|>
     dplyr::relocate(.data$stock_label,
-                    .after = {{stocks_col}})
+                    .after = "stock_id")
   attr(res, "species") <- fram_db$fram_db_species
   return(res)
 }
@@ -49,29 +56,37 @@ label_stocks_db <- function(.data, fram_db, stocks_col = "stock_id"){
 #'
 #' @return `.data` with additional column, `$fishery_label`
 #' @export
-label_fisheries_db <- function(.data, fram_db, fisheries_col = "fishery_id"){
+label_fisheries_db <- function(.data, fram_db){
   validate_data_frame(.data)
   validate_fram_db(fram_db, db_type = "full")
-  ## check if .dat has fisheries_col column. Error if not.
-  if(!fisheries_col %in% colnames(.data)){
-    cli::cli_abort('`fisheries_col` ({fisheries_col}) column must be present in dataframe.')
-  }
 
+  ## labeling
+  run_id_luts = fetch_table_(fram_db, "RunID") |>
+    dplyr::select("run_id", "base_period_id")
+  bp_lut <- fetch_table_(fram_db, "BaseID") |>
+    dplyr::select("fishery_version", "species_name", "base_period_id")
 
-  lut_use <- fetch_table_(fram_db, "Fishery")
+  run_id_luts <- run_id_luts |>
+    dplyr::full_join(bp_lut, by = "base_period_id") |>
+    dplyr::filter(!is.na(.data$run_id))
 
-  label_map <- "fishery_id"
-  names(label_map) = fisheries_col
+  fishery_lut <- fetch_table_(fram_db, "Fishery") |>
+    dplyr::rename(fishery_version = "version_number")
+
+  lut_use <- run_id_luts |>
+    dplyr::left_join(fishery_lut,
+                     by = c("fishery_version", "species_name" = "species"),
+              relationship = "many-to-many") |>
+    dplyr::select("fishery_id", "run_id", fishery_label = "fishery_title")
+
 
   ## use fram_rosetta join to add fishery_label column
 
   res <- .data |>
-    dplyr::left_join(lut_use |>
-                       dplyr::select("fishery_id",
-                                     "fishery_label" = "fishery_title"),
-                     by = label_map)|>
+    dplyr::left_join(lut_use,
+                     by = c("fishery_id", "run_id"))|>
     dplyr::relocate(.data$fishery_label,
-                    .after = {{fisheries_col}})
+                    .after = "fishery_id")
   attr(res, "species") <- fram_db$fram_db_species
   return(res)
 }
