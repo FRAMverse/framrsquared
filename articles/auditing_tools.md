@@ -9,7 +9,7 @@ library(framrsquared)
 #>         ,'        `.    \  /
 #>         |  O        \___/ |
 #>       ~^~^~^~^~^~^~^~^~^~^~^~^~
-#>           framrsquared 0.8.0
+#>           framrsquared 0.8.1
 #> 
 ```
 
