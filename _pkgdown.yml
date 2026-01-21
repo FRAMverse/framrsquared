@@ -137,6 +137,7 @@ reference:
       - scalers_flag_translate
       - stock_id_comp
       - provide_table_names
+      - format_strings_for_sql
       - welcome
   - title: "Get ids"
     desc: >
