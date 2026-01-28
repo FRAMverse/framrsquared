@@ -2,11 +2,15 @@
 #'
 #' Returns a cleaned tibble, with column labels that were camel case (e.g., TimeStep) converted to snake case (e.g., time_step).
 #' **WARNING**: the Chinook "BackwardsFRAM" table uses a *different* stock_id numbering system from every other table. To avoid errors when joining that with other tables, instead fetch with [fetch_table_bkchin()]
+#' `fetch_table_()` is an alias for `fetch_table()` with the optional argument `label` set to FALSE.
 #'
 #' @param fram_db FRAM database object
 #' @param table_name Atomic character of name of table to be fetched. If not given, a list of options will be printed.
 #' @param label Logical, defaults to TRUE. Add human-readable columns for flags, fisheries, stocks?
 #' @param warn Print a warning when fetching BackwardsFRAM table from a Chinook database? Logical, defaults to `TRUE`.
+#'
+#' @name fetch_table
+#'
 #' @export
 #' @examples
 #' \dontrun{
@@ -102,7 +106,8 @@ fetch_table <- function(fram_db, table_name = NULL, label = TRUE, warn = TRUE){
   }
 }
 
-## alias for fetch_table with label = FALSE
+#' @rdname fetch_table
+#'
 #' @export
 fetch_table_ <- function(fram_db, table_name = NULL, warn = TRUE){
   fetch_table(fram_db = fram_db,
