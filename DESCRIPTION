@@ -1,7 +1,7 @@
 Package: framrsquared
 Type: Package
 Title: FRAM Database Interface
-Version: 0.8.1
+Version: 0.8.1.9000
 Authors@R: c(
     person("Ty", "Garber",
            email = "tyler.garber@dfw.wa.gov", 
