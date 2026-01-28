@@ -46,6 +46,7 @@ Functions to connect to and disconnect from a FRAM database
 Functions to import a FRAM database table into R
 
 - [`fetch_table()`](https://framverse.github.io/framrsquared/reference/fetch_table.md)
+  [`fetch_table_()`](https://framverse.github.io/framrsquared/reference/fetch_table.md)
   : Fetch a complete table from a FRAM database.
 - [`fetch_table_bkchin()`](https://framverse.github.io/framrsquared/reference/fetch_table_bkchin.md)
   : Safely fetch Chinook BackwardsFRAM table

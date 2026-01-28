@@ -6,11 +6,15 @@ Chinook "BackwardsFRAM" table uses a *different* stock_id numbering
 system from every other table. To avoid errors when joining that with
 other tables, instead fetch with
 [`fetch_table_bkchin()`](https://framverse.github.io/framrsquared/reference/fetch_table_bkchin.md)
+`fetch_table_()` is an alias for `fetch_table()` with the optional
+argument `label` set to FALSE.
 
 ## Usage
 
 ``` r
 fetch_table(fram_db, table_name = NULL, label = TRUE, warn = TRUE)
+
+fetch_table_(fram_db, table_name = NULL, warn = TRUE)
 ```
 
 ## Arguments
