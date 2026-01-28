@@ -78,11 +78,11 @@ fetch_table <- function(fram_db, table_name = NULL, label = TRUE, warn = TRUE){
     if(label){
       output_table <- output_table |>
         label_flags(warn = FALSE)
-      if("fishery_id" %in% names(output_table) & fram_db$fram_db_type == "full"){
+      if(all(c("fishery_id", "run_id") %in% names(output_table)) & fram_db$fram_db_type == "full"){
         output_table <- output_table |>
           label_fisheries_db(fram_db)
       }
-      if("stock_id" %in% names(output_table) & fram_db$fram_db_type == "full"){
+      if(all(c("stock_id", "run_id") %in% names(output_table)) & fram_db$fram_db_type == "full"){
           output_table <- output_table |>
             label_stocks_db(fram_db)
       }
@@ -103,6 +103,7 @@ fetch_table <- function(fram_db, table_name = NULL, label = TRUE, warn = TRUE){
 }
 
 ## alias for fetch_table with label = FALSE
+#' @export
 fetch_table_ <- function(fram_db, table_name = NULL, warn = TRUE){
   fetch_table(fram_db = fram_db,
               table_name = table_name,
