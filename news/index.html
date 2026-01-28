@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">framrsquared</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.8.1.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -44,6 +44,10 @@
       <small>Source: <a href="https://github.com/FRAMverse/framrsquared/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="development version" id="framrsquared-development-version">framrsquared (development version)<a class="anchor" aria-label="anchor" href="#framrsquared-development-version"></a></h2>
+<ul><li>fixed bug in which <code><a href="../reference/fetch_table.html">fetch_table()</a></code> errored out when fetching the “Stock” or “Fishery” tables.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.8.1" id="framrsquared-081">framrsquared 0.8.1<a class="anchor" aria-label="anchor" href="#framrsquared-081"></a></h2>
 <ul><li>fixed bug in which <code><a href="../reference/fetch_table.html">fetch_table()</a></code> could cause row duplications if a database had more than 1 version (or species) of stock or fishery id unless labeling was turned off. This has been resolved. <code><a href="../reference/fetch_table.html">fetch_table()</a></code> no longer labels tables when working with a transfer database, as in that case the mapping of labels to stock or fishery IDs are ambigious with overhaul of framrosetta (and possibly even then).</li>

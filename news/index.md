@@ -1,5 +1,11 @@
 # Changelog
 
+## framrsquared (development version)
+
+- fixed bug in which
+  [`fetch_table()`](https://framverse.github.io/framrsquared/reference/fetch_table.md)
+  errored out when fetching the “Stock” or “Fishery” tables.
+
 ## framrsquared 0.8.1
 
 - fixed bug in which
