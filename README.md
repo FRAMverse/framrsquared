@@ -26,6 +26,11 @@ Otherwise, if you have Rtools and the `devtools` or `remotes` packages installed
 devtools::install_github("FRAMverse/framrsquared")
 
 # Alternatively 
-remotes::install_github("FRAMverse/framrsquared")
+pak::pkg_install("FRAMverse/framrsquared")
 ```
 
+To install the development version, which may include new features that have been added but may not be as thoroughly tested:
+
+```r
+pak::pkg_install("FRAMverse/framrsquared@dev")
+```
