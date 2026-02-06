@@ -2,10 +2,7 @@
 % Please edit documentation in R/filters.R
 \name{filter_commercial_wa_nt}
 \alias{filter_commercial_wa_nt}
-\title{Filters a dataframe to WA non-treaty commercial fisheries. Will
-automatically detect whether it's working with a Chinook or Coho
-dataset if the tables were generated within this package. \code{.data} must have
-a \code{fishery_id} column name.}
+\title{Filters a dataframe to WA non-treaty commercial fisheries.}
 \usage{
 filter_commercial_wa_nt(.data, species = NULL)
 }
@@ -15,8 +12,7 @@ filter_commercial_wa_nt(.data, species = NULL)
 \item{species}{Optional argument to identify species if \code{.data} doesn't already. If provided, must be "COHO" or "CHINOOK" or variations thereof. Defaults to \code{NULL}}
 }
 \description{
-Filters a dataframe to WA non-treaty commercial fisheries. Will
-automatically detect whether it's working with a Chinook or Coho
+Will automatically detect whether it's working with a Chinook or Coho
 dataset if the tables were generated within this package. \code{.data} must have
 a \code{fishery_id} column name.
 }
@@ -28,6 +24,16 @@ framrosetta::fishery_chinook_fram |> filter_commercial_wa_nt(species = "CHINOOK"
 framrosetta::fishery_coho_fram |> filter_commercial_wa_nt(species = "COHO")
 }
 \seealso{
-\code{\link[=filter_sport]{filter_sport()}}, \code{\link[=filter_net]{filter_net()}}, \code{\link[=filter_puget_sound]{filter_puget_sound()}}, \code{\link[=filter_ak]{filter_ak()}}, \code{\link[=filter_bc]{filter_bc()}}, \code{\link[=filter_wa]{filter_wa()}}, \code{\link[=filter_ca]{filter_ca()}}, \code{\link[=filter_or]{filter_or()}},
-\code{\link[=filter_coast]{filter_coast()}}, \code{\link[=filter_marine]{filter_marine()}}
+Other fishery_filters: 
+\code{\link{filter_ak}()},
+\code{\link{filter_bc}()},
+\code{\link{filter_ca}()},
+\code{\link{filter_coast}()},
+\code{\link{filter_marine}()},
+\code{\link{filter_net}()},
+\code{\link{filter_or}()},
+\code{\link{filter_puget_sound}()},
+\code{\link{filter_sport}()},
+\code{\link{filter_wa}()}
 }
+\concept{fishery_filters}

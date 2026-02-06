@@ -5,7 +5,7 @@
 #' @param .data Dataframe containing `fishery_id` column. Commonly, output from `framrsquared::fetch_table()`.
 #' @param species Optional argument to identify species if `.data` doesn't already. If provided, must be "COHO" or "CHINOOK" or variations thereof. Defaults to `NULL`
 #' @export
-#' @seealso [filter_net()], [filter_puget_sound()], [filter_wa()], [filter_bc()], [filter_ak()], [filter_ca()], [filter_or()], #' [filter_coast()], [filter_marine()], [filter_commercial_wa_nt()]
+#' @family fishery_filters
 #' @examples
 #' \dontrun{
 #' fram_dataframe |> filter_sport()
@@ -61,8 +61,7 @@ filter_sport <- function(.data, species = NULL) {
 #' @inheritParams filter_sport
 #'
 #' @export
-#' @seealso [filter_sport()], [filter_puget_sound()], [filter_wa()], [filter_bc()], [filter_ak()], [filter_ca()], [filter_or()],
-#' [filter_coast()], [filter_marine()], [filter_commercial_wa_nt()]
+#' @family fishery_filters
 #' @examples
 #' \dontrun{
 #' fram_dataframe |> filter_net()
@@ -119,8 +118,7 @@ filter_net <- function(.data, species = NULL) {
 #' a `fishery_id` column name.
 #' @inheritParams filter_sport
 #' @export
-#' @seealso [filter_sport()], [filter_net()], [filter_wa()], [filter_bc()], [filter_ak()], [filter_ca()], [filter_or()],
-#' [filter_coast()], [filter_marine()], [filter_commercial_wa_nt()]
+#' @family fishery_filters
 #' @examples
 #' \dontrun{
 #' fram_dataframe |> filter_puget_sound()
@@ -158,7 +156,7 @@ filter_puget_sound <- function(.data, species = NULL) {
 #' a `fishery_id` column name.
 #' @inheritParams filter_sport
 #' @export
-#' @seealso [filter_sport()], [filter_net()], [filter_puget_sound()], [filter_bc()], [filter_ak()], [filter_ca()], [filter_or()], #' [filter_coast()], [filter_marine()], [filter_commercial_wa_nt()]
+#' @family fishery_filters
 #' @examples
 #' \dontrun{
 #' fram_dataframe |> filter_wa()
@@ -195,8 +193,7 @@ filter_wa <- function(.data, species = NULL) {
 #' a `fishery_id` column name.
 #' @inheritParams filter_sport
 #' @export
-#' @seealso [filter_sport()], [filter_net()], [filter_puget_sound()], [filter_ak()], [filter_wa()], [filter_ca()], [filter_or()],
-#' [filter_coast()], [filter_marine()], [filter_commercial_wa_nt()]
+#' @family fishery_filters
 #' @examples
 #' \dontrun{
 #' fram_dataframe |> filter_bc()
@@ -233,8 +230,7 @@ filter_bc <- function(.data, species = NULL) {
 #' a `fishery_id` column name.
 #' @inheritParams filter_sport
 #' @export
-#' @seealso [filter_sport()], [filter_net()], [filter_puget_sound()], [filter_bc()], [filter_wa()], [filter_ca()], [filter_or()],
-#' [filter_coast()], [filter_marine()], [filter_commercial_wa_nt()]
+#' @family fishery_filters
 #' @examples
 #' \dontrun{
 #' fram_dataframe |> filter_ak()
@@ -272,8 +268,7 @@ filter_ak <- function(.data, species = NULL) {
 #' a `fishery_id` column name.
 #' @inheritParams filter_sport
 #' @export
-#' @seealso [filter_sport()], [filter_net()], [filter_puget_sound()], [filter_ak()], [filter_bc()], [filter_wa()], [filter_or()],
-#' [filter_coast()], [filter_marine()], [filter_commercial_wa_nt()]
+#' @family fishery_filters
 #' @examples
 #' \dontrun{
 #' fram_dataframe |> filter_ca()
@@ -310,8 +305,7 @@ filter_ca <- function(.data, species = NULL) {
 #' a `fishery_id` column name.
 #' @inheritParams filter_sport
 #' @export
-#' @seealso [filter_sport()], [filter_net()], [filter_puget_sound()], [filter_ak()], [filter_bc()], [filter_wa()], [filter_ca()],
-#' [filter_coast()], [filter_marine()], [filter_commercial_wa_nt()]
+#' @family fishery_filters
 #' @examples
 #' \dontrun{
 #' fram_dataframe |> filter_or()
@@ -349,8 +343,7 @@ filter_or <- function(.data, species = NULL) {
 #' a `fishery_id` column name.
 #' @inheritParams filter_sport
 #' @export
-#' @seealso [filter_sport()], [filter_net()], [filter_puget_sound()], [filter_ak()], [filter_bc()], [filter_wa()], [filter_ca()], [filter_or()],
-#' [filter_marine()], [filter_commercial_wa_nt()]
+#' @family fishery_filters
 #' @examples
 #' \dontrun{
 #' fram_dataframe |> filter_coast()
@@ -387,8 +380,7 @@ filter_coast <- function(.data, species = NULL) {
 #' a `fishery_id` column name.
 #' @inheritParams filter_sport
 #' @export
-#' @seealso [filter_sport()], [filter_net()], [filter_puget_sound()], [filter_ak()], [filter_bc()], [filter_wa()], [filter_ca()], [filter_or()],
-#' [filter_coast()], [filter_commercial_wa_nt()]
+#' @family fishery_filters
 #' @examples
 #' \dontrun{
 #' fram_dataframe |> filter_marine()
@@ -426,14 +418,14 @@ filter_marine <- function(.data, species = NULL) {
   }
 }
 
-#' Filters a dataframe to WA non-treaty commercial fisheries. Will
-#' automatically detect whether it's working with a Chinook or Coho
+#' Filters a dataframe to WA non-treaty commercial fisheries.
+#'
+#' Will automatically detect whether it's working with a Chinook or Coho
 #' dataset if the tables were generated within this package. `.data` must have
 #' a `fishery_id` column name.
 #' @inheritParams filter_sport
 #' @export
-#' @seealso [filter_sport()], [filter_net()], [filter_puget_sound()], [filter_ak()], [filter_bc()], [filter_wa()], [filter_ca()], [filter_or()],
-#' [filter_coast()], [filter_marine()]
+#' @family fishery_filters
 #' @examples
 #' \dontrun{
 #' fram_dataframe |> filter_commercial_wa_NT()
