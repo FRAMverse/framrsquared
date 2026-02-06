@@ -126,6 +126,7 @@ reference:
     desc: >
         Miscellaneous functions
     contents:
+      - filter_flag
       - add_total_mortality
       - cohort_abundance
       - aeq_mortality
