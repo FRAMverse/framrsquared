@@ -13,7 +13,7 @@ R-Universe](https://framverse.r-universe.dev/packages).
 framrsquared can be installed through R-Universe:
 
 ``` r
-install.packages("framrsquared", repos = "https://framverse.r-universe.dev")
+install.packages(c("framrsquared", "framrosetta"), repos = "https://framverse.r-universe.dev")
 ```
 
 Otherwise, if you have Rtools and the `devtools` or `remotes` packages

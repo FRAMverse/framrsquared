@@ -1,9 +1,8 @@
-# Filters a dataframe to WA non-treaty commercial fisheries. Will automatically detect whether it's working with a Chinook or Coho dataset if the tables were generated within this package. `.data` must have a `fishery_id` column name.
+# Filters a dataframe to WA non-treaty commercial fisheries.
 
-Filters a dataframe to WA non-treaty commercial fisheries. Will
-automatically detect whether it's working with a Chinook or Coho dataset
-if the tables were generated within this package. `.data` must have a
-`fishery_id` column name.
+Will automatically detect whether it's working with a Chinook or Coho
+dataset if the tables were generated within this package. `.data` must
+have a `fishery_id` column name.
 
 ## Usage
 
@@ -26,16 +25,17 @@ filter_commercial_wa_nt(.data, species = NULL)
 
 ## See also
 
-[`filter_sport()`](https://framverse.github.io/framrsquared/reference/filter_sport.md),
-[`filter_net()`](https://framverse.github.io/framrsquared/reference/filter_net.md),
-[`filter_puget_sound()`](https://framverse.github.io/framrsquared/reference/filter_puget_sound.md),
+Other fishery_filters:
 [`filter_ak()`](https://framverse.github.io/framrsquared/reference/filter_ak.md),
 [`filter_bc()`](https://framverse.github.io/framrsquared/reference/filter_bc.md),
-[`filter_wa()`](https://framverse.github.io/framrsquared/reference/filter_wa.md),
 [`filter_ca()`](https://framverse.github.io/framrsquared/reference/filter_ca.md),
-[`filter_or()`](https://framverse.github.io/framrsquared/reference/filter_or.md),
 [`filter_coast()`](https://framverse.github.io/framrsquared/reference/filter_coast.md),
-[`filter_marine()`](https://framverse.github.io/framrsquared/reference/filter_marine.md)
+[`filter_marine()`](https://framverse.github.io/framrsquared/reference/filter_marine.md),
+[`filter_net()`](https://framverse.github.io/framrsquared/reference/filter_net.md),
+[`filter_or()`](https://framverse.github.io/framrsquared/reference/filter_or.md),
+[`filter_puget_sound()`](https://framverse.github.io/framrsquared/reference/filter_puget_sound.md),
+[`filter_sport()`](https://framverse.github.io/framrsquared/reference/filter_sport.md),
+[`filter_wa()`](https://framverse.github.io/framrsquared/reference/filter_wa.md)
 
 ## Examples
 

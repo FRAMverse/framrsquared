@@ -60,16 +60,7 @@ Functions to filter FRAM tables by fishery
   name.
 
 - [`filter_commercial_wa_nt()`](https://framverse.github.io/framrsquared/reference/filter_commercial_wa_nt.md)
-  :
-
-  Filters a dataframe to WA non-treaty commercial fisheries. Will
-  automatically detect whether it's working with a Chinook or Coho
-  dataset if the tables were generated within this package. `.data` must
-  have a `fishery_id` column name.
-
-- [`filter_flag()`](https://framverse.github.io/framrsquared/reference/filter_flag.md)
-  : NA's all the information in the FisheryScalers that's not being used
-  e.g Flag 1 only NS Scalers will be returned
+  : Filters a dataframe to WA non-treaty commercial fisheries.
 
 - [`filter_marine()`](https://framverse.github.io/framrsquared/reference/filter_marine.md)
   :
@@ -414,6 +405,10 @@ Functions that add label columns based on ids or flags
 ## Misc.
 
 Miscellaneous functions
+
+- [`filter_flag()`](https://framverse.github.io/framrsquared/reference/filter_flag.md)
+  : NA's all the information in the FisheryScalers that's not being used
+  e.g Flag 1 only NS Scalers will be returned
 
 - [`add_total_mortality()`](https://framverse.github.io/framrsquared/reference/add_total_mortality.md)
   : Sum separate mortality columns into new "total_mortality" column
