@@ -2,7 +2,7 @@
 % Please edit documentation in R/soncc_calculations.R
 \name{create_soncc_pasteable}
 \alias{create_soncc_pasteable}
-\title{Calculate}
+\title{Calculate SONCC ER breakdown for STT}
 \usage{
 create_soncc_pasteable(fram_db, run_id, filename)
 }
@@ -17,7 +17,7 @@ create_soncc_pasteable(fram_db, run_id, filename)
 nothing
 }
 \description{
-Calculate
+Creates a copy-pasteable excel file with the ER breakdown needed for the SONCC calculator.
 }
 \examples{
 \dontrun{
@@ -25,4 +25,7 @@ library(here)
 fram_db <- connect_fram_db(here("2026NOF_CohoFRAMdatabase_DRAFT.mdb"))
 create_soncc_pasteable(fram_db, run_id = 152, filename = here("soncc_copy_ready.xlsx"))
 }
+}
+\seealso{
+\code{\link[=calculate_soncc]{calculate_soncc()}}, \code{\link[=format_soncc_pasteable]{format_soncc_pasteable()}}
 }

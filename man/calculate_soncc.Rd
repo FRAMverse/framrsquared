@@ -25,3 +25,6 @@ List of lists: \verb{$hatchery} and \verb{$wild} respectively represent SONCC ca
 \description{
 Calculate mortality information for STT SONCC calculations. Does so for both the currently used unmarked hatchery stocks, and the analogous wild stocks (two separate sets of results). Note that the two terminal fisheries of Oregon and California (fishery_ids of 1 and 9) are excluded from the numerator of ERs calculated in this function.
 }
+\seealso{
+\code{\link[=format_soncc_pasteable]{format_soncc_pasteable()}}, \code{\link[=create_soncc_pasteable]{create_soncc_pasteable()}}
+}

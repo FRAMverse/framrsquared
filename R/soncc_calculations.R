@@ -144,6 +144,7 @@ calculate_soncc_er_breakdown <- function(fram_db,
 #'   \item{`$stock_name`}{FRAM stock names used for this stock group}
 #' }
 #'
+#' @seealso [format_soncc_pasteable()], [create_soncc_pasteable()]
 #' @export
 #'
 calculate_soncc <- function(fram_db,
@@ -255,7 +256,9 @@ add_dummy_rows <- function(df, after_rows, dummy_row) {
 #' @return nothing
 #' @export
 #'
-format_soncc_pastable <- function(soncc_er_breakdown,
+#' @seealso [calculate_soncc()], [create_soncc_pasteable()]
+#'
+format_soncc_pasteable <- function(soncc_er_breakdown,
                                   filename) {
 
   validate_data_frame(soncc_er_breakdown)
@@ -311,6 +314,7 @@ format_soncc_pastable <- function(soncc_er_breakdown,
 #'
 #' @return nothing
 #' @export
+#' @seealso [calculate_soncc()], [format_soncc_pasteable()]
 #'
 #' @examples
 #' \dontrun{
@@ -324,5 +328,5 @@ create_soncc_pasteable <- function(fram_db, run_id, filename){
   validate_character(filename, n = 1)
 
   out <- calculate_soncc(fram_db, run_id)
-  format_soncc_pastable(out$hatchery$er_breakdown, filename)
+  format_soncc_pasteable(out$hatchery$er_breakdown, filename)
 }
