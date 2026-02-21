@@ -227,6 +227,7 @@ calculate_soncc <- function(fram_db,
 #' @param dummy_row 1-row version of df with `NA` for all values.
 #'
 #' @return dataframe with additional NA rows
+#' @keywords internal
 #'
 add_dummy_rows <- function(df, after_rows, dummy_row) {
   after_rows <- sort(after_rows)
