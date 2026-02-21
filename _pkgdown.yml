@@ -122,6 +122,13 @@ reference:
         Functions that add label columns based on ids or flags
     contents:
       - starts_with("label_")
+  - title: Calculate SONCC values for STT runs
+    desc: >
+        Functions to provide ER breakdowns of Southern Oregon / Northern California Coho to feed into the SONCC calculator.
+    contents:
+      - create_soncc_pasteable
+      - format_soncc_pasteable
+      - calculate_soncc
   - title: "Misc."
     desc: >
         Miscellaneous functions
