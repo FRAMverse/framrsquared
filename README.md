@@ -17,7 +17,7 @@ framrsquared is part of the [FRAMverse R-Universe](https://framverse.r-universe.
 framrsquared can be installed through R-Universe:
 
 ``` r
-install.packages("framrsquared", repos = "https://framverse.r-universe.dev")
+install.packages(c("framrsquared", "framrosetta"), repos = "https://framverse.r-universe.dev")
 ```
 
 Otherwise, if you have Rtools and the `devtools` or `remotes` packages installed, framrsquared can be installed from source code:
@@ -26,6 +26,11 @@ Otherwise, if you have Rtools and the `devtools` or `remotes` packages installed
 devtools::install_github("FRAMverse/framrsquared")
 
 # Alternatively 
-remotes::install_github("FRAMverse/framrsquared")
+pak::pkg_install("FRAMverse/framrsquared")
 ```
 
+To install the development version, which may include new features that have been added but may not be as thoroughly tested:
+
+```r
+pak::pkg_install("FRAMverse/framrsquared@dev")
+```
