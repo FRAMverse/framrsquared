@@ -5,6 +5,10 @@
 - fixed bug in which
   [`fetch_table()`](https://framverse.github.io/framrsquared/reference/fetch_table.md)
   errored out when fetching the `Stock` or `Fishery` tables.
+- fixed bug in which
+  [`sensitivity_scaled()`](https://framverse.github.io/framrsquared/reference/sensitivity_scaled.md)
+  errored out when applied to tables with `Comment` column (like the
+  “NonRetention” table).
 
 ## framrsquared 0.8.1
 
