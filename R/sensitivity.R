@@ -53,6 +53,11 @@ sensitivity_scaled <- function(fram_db,
                                tamm_target_folder = NULL,
                                label = "sensitivity",
                                save_log = TRUE) {
+
+  ## columns with optional text that can mess up the modify_table call
+  ignore_cols = c("Comment")
+  ignore_cols = paste0("match_", ignore_cols)
+
   ## error checking:
   validate_fram_db(fram_db)
   ## check that template_run exists in db
@@ -136,15 +141,17 @@ sensitivity_scaled <- function(fram_db,
       table_name = table_name,
       df = df
     )
+  df_replace = df_replace[, -which(names(df_replace) %in% ignore_cols)]
+
   modified <- modify_table(fram_db, table_name, df_replace)
-  cli::cli_alert_success("Successfully generated sensitivity analyses!")
-  invisible(list(scales_by_runs = scale_df, full_df = df))
   if (save_log) {
     db_path <- dirname(fram_db$fram_db_connection@info$dbname)
     log_name <- get_unique_filename(paste0(db_path, "/sensitivity_log - ", label, ".csv"))
     readr::write_csv(df, file = log_name)
     cli::cli_alert_success("Log for run: {log_name}.")
   }
+  cli::cli_alert_success("Successfully generated sensitivity analyses!")
+  return(invisible(list(scales_by_runs = scale_df, full_df = df)))
 }
 
 get_unique_filename <- function(base_name, counter = 1, pad_width = 3) {
