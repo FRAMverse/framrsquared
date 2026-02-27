@@ -120,6 +120,10 @@ modify_table <- function(fram_db, table_name, df) {
 calc_fram_scaling <- function(fram_db, table_name, df) {
   ## Complication: input and output
 
+  ## need to ignore the Comment column in output to avoid NA issues
+  ignore_cols = c("Comment")
+  ignore_cols = paste0("match_", ignore_cols)
+
   tab <- fram_db |>
     fetch_table_(table_name)
   db_names <- DBI::dbGetQuery(
@@ -186,6 +190,11 @@ calc_fram_scaling <- function(fram_db, table_name, df) {
                        .cols = dplyr::any_of(scale_names)
     )
 
+  ## remove comments col, which otherwise causes trouble
+  if(any(names(df_mod) %in% ignore_cols)){
+    df_mod = df_mod[, -which(names(df_mod) %in% ignore_cols)]
+  }
+
   ## Shoudn't end up with NAs, but if something goes wrong with joins, want it to be obvious
   na_check <- df_mod |>
     dplyr::filter(dplyr::if_any(dplyr::everything(), is.na))
@@ -193,6 +202,7 @@ calc_fram_scaling <- function(fram_db, table_name, df) {
   if (nrow(na_check) > 0) {
     cli::cli_warn("{nrow(na_check)} rows of results contain NAs. This is unexpected! Examine carefully.")
   }
+
 
   return(df_mod)
 }
@@ -251,7 +261,7 @@ remove_run <- function(fram_db, run_id){
   }
 
   run_id_tables <- tidyr::expand_grid(find_tables_by_column_(fram_db, 'RunID'),
-                               run_id)
+                                      run_id)
 
   run_id_tables|>
     dplyr::select(.data$value, .data$run_id) |>
@@ -407,7 +417,7 @@ copy_run <- function(fram_db, target_run, times = 1, label = 'copy', force_many_
 
   run_count_current = fram_db |> fetch_table_("RunID") |> nrow()
   if((run_count_current + times > 150) & verbose){
-      cli::cli_alert("Official FRAM cannot currently read databases with >150 run ids.\n  Use FRAM_Automation (https://github.com/FRAMverse/FRAM_automation)\n  or change FRAM source code declaration of vectors `RunID`, `RunIDName`, and `RunBasePeriodID` in `FVS_ModelRunSelection.vb`.")
+    cli::cli_alert("Official FRAM cannot currently read databases with >150 run ids.\n  Use FRAM_Automation (https://github.com/FRAMverse/FRAM_automation)\n  or change FRAM source code declaration of vectors `RunID`, `RunIDName`, and `RunBasePeriodID` in `FVS_ModelRunSelection.vb`.")
   }
   if(run_count_current + times > 500){
     if(force_many_runs){

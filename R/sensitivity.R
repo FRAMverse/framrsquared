@@ -55,8 +55,7 @@ sensitivity_scaled <- function(fram_db,
                                save_log = TRUE) {
 
   ## columns with optional text that can mess up the modify_table call
-  ignore_cols = c("Comment")
-  ignore_cols = paste0("match_", ignore_cols)
+
 
   ## error checking:
   validate_fram_db(fram_db)
@@ -141,7 +140,6 @@ sensitivity_scaled <- function(fram_db,
       table_name = table_name,
       df = df
     )
-  df_replace = df_replace[, -which(names(df_replace) %in% ignore_cols)]
 
   modified <- modify_table(fram_db, table_name, df_replace)
   if (save_log) {
