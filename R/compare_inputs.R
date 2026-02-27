@@ -630,7 +630,7 @@ compare_runs <- function(fram_db, run_ids, tolerance = .01){
   cli::cli_h2('Recruit Inputs')
   cli::cli_h3('Checking for changes to recruits')
 
-  recruits <- fram_db |> compare_recruits(run_ids, verbose = FALSE)
+  recruits <- fram_db |> compare_recruits(run_ids, tolerance = tolerance, verbose = FALSE)
   if(nrow(recruits) > 0){
     cli::cli_alert_info('Changes detected in recruits inputs, below is a table outlining them')
     print(recruits, n=Inf)
