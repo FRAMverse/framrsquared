@@ -1,7 +1,7 @@
 #' Make plots to show the amount of landed catch_per_impact
 #'
 #' Identify how much reduction in landed catch at each fishery that would be needed
-  #' to reduce the impacts on a focal stock by 1 fish. Does not include non-retention moralities, as those can't be improved by reducing fishing in the focal species.
+  #' to reduce the impacts on a focal stock by 1 fish. Does include CNR from other species, so numbers are not exact, but CNR is typically only a small fraction of total mortalities.
 #'
 #' @param fram_db fram database connection
 #' @param run_id run_id of interest
@@ -89,15 +89,14 @@ plot_impacts_per_catch_heatmap <- function(fram_db,
   if (fram_db$fram_db_species == "CHINOOK") {
     stock_mort = aeq_mortality_(fram_db, run_id = run_id, msp = msp) |>
       dplyr::filter(stock_id %in% .env$stock_id) |>
-      dplyr::mutate(total_mortality = .data$landed_catch + .data$shaker + .data$drop_off +
-                      .data$msf_landed_catch + .data$msf_shaker + .data$msf_drop_off) |>
+      add_total_mortality() |>
       dplyr::group_by(.data$fishery_id, .data$time_step) |>
       dplyr::summarize(mort = sum(.data$total_mortality)) |>
       dplyr::ungroup()
   } else{
     stock_mort = stock_mortality(fram_db, run_id = run_id, stock_id = stock_id) |>
       ## stock mortality combines msf and NS values.
-      dplyr::mutate(total_mortality = .data$landed_catch + .data$shaker + .data$drop_off) |>
+      dplyr::mutate(total_mortality = .data$landed_catch + .data$shaker + .data$drop_off + .data$non_retention) |>
       dplyr::filter(stock_id %in% .env$stock_id) |>
       dplyr::group_by(.data$fishery_id, .data$time_step) |>
       dplyr::summarize(mort = sum(.data$total_mortality)) |>

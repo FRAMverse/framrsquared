@@ -43,7 +43,7 @@ ggplot object
 }
 \description{
 Identify how much reduction in landed catch at each fishery that would be needed
-to reduce the impacts on a focal stock by 1 fish. Does not include non-retention moralities, as those can't be improved by reducing fishing in the focal species.
+to reduce the impacts on a focal stock by 1 fish. Does include CNR from other species, so numbers are not exact, but CNR is typically only a small fraction of total mortalities.
 }
 \examples{
 \dontrun{
