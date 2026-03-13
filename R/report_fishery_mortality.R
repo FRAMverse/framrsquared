@@ -7,9 +7,10 @@
 #' \dontrun{
 #' fram_db |> fishery_mortality(run_id = 101)
 #' }
-fishery_mortality <- function(fram_db, run_id = NULL, msp = TRUE) {
+fishery_mortality <- function(fram_db, run_id = NULL, fishery_id = NULL, msp = TRUE) {
   validate_fram_db(fram_db)
   if(!is.null(run_id)){validate_run_id(fram_db, run_id)}
+  if(!is.null(fishery_id)){validate_fishery_ids(fram_db, fishery_id)}
   validate_flag(msp)
 
   fishery_mort <- fram_db |>
@@ -18,6 +19,10 @@ fishery_mortality <- function(fram_db, run_id = NULL, msp = TRUE) {
   if(!is.null(run_id)){
     fishery_mort <- fishery_mort |>
       dplyr::filter(.data$run_id %in% .env$run_id)
+  }
+  if(!is.null(fishery_id)){
+    fishery_mort <- fishery_mort |>
+      dplyr::filter(.data$fishery_id %in% .env$fishery_id)
   }
 
   fishery_mort <- fishery_mort |>

@@ -12,11 +12,14 @@
 #'  filter(stock_id == 17, fishery_id == 36)
 #'
 #' }
-stock_mortality <- function(fram_db, run_id = NULL) {
+stock_mortality <- function(fram_db, run_id = NULL, stock_id = NULL) {
 
   validate_fram_db(fram_db)
   if(!is.null(run_id)){
     validate_run_id(fram_db, run_id)
+  }
+  if(!is.null(stock_id)){
+    validate_stock_ids(fram_db, stock_id)
   }
 
   stock_mort <- fram_db |>
@@ -26,6 +29,11 @@ stock_mortality <- function(fram_db, run_id = NULL) {
     stock_mort <- stock_mort |>
       dplyr::filter(.data$run_id %in% .env$run_id)
   }
+  if(!is.null(stock_id)){
+    stock_mort <- stock_mort |>
+      dplyr::filter(.data$stock_id %in% .env$stock_id)
+  }
+
 
   stock_mort <- stock_mort |>
     dplyr::group_by(
