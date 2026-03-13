@@ -1,25 +1,38 @@
 #' Returns a tibble matching the Fishery Mortality screen.
 #' @param fram_db FRAM database object
-#' @param run_id Run ID
+#' @param run_id atomic or vector of run_ids to filter to. Can improve speed. Optional, defaults to `NULL`.
+#' @param fishery_id atomic or vector of fishery_id to filter to. Can improve speed. Optional, defaults to `NULL`.
 #' @param msp Use Model Stock Proportion? Logical, defaults to TRUE.
 #' @export
 #' @examples
 #' \dontrun{
 #' fram_db |> fishery_mortality(run_id = 101)
 #' }
-fishery_mortality <- function(fram_db, run_id = NULL, msp = TRUE) {
+fishery_mortality <- function(fram_db, run_id = NULL, fishery_id = NULL, msp = TRUE) {
   validate_fram_db(fram_db)
-  if(!is.numeric(run_id)){validate_run_id(fram_db, run_id)}
+  if(!is.null(run_id)){validate_run_id(fram_db, run_id)}
+  if(!is.null(fishery_id)){validate_fishery_ids(fram_db, fishery_id)}
   validate_flag(msp)
 
   fishery_mort <- fram_db |>
-    fetch_table_("Mortality") |>
+    fetch_table_("Mortality")
+
+  if(!is.null(run_id)){
+    fishery_mort <- fishery_mort |>
+      dplyr::filter(.data$run_id %in% .env$run_id)
+  }
+  if(!is.null(fishery_id)){
+    fishery_mort <- fishery_mort |>
+      dplyr::filter(.data$fishery_id %in% .env$fishery_id)
+  }
+
+  fishery_mort <- fishery_mort |>
     dplyr::group_by(
-      .data$run_id,
-      .data$age,
-      .data$fishery_id,
-      .data$time_step
-    ) |>
+    .data$run_id,
+    .data$age,
+    .data$fishery_id,
+    .data$time_step
+  ) |>
     dplyr::summarize(
       dplyr::across(
         c(
@@ -48,14 +61,8 @@ fishery_mortality <- function(fram_db, run_id = NULL, msp = TRUE) {
     dplyr::arrange(.data$run_id, .data$fishery_id, .data$age, .data$time_step)
 
 
-  if (is.null(run_id)) {
-    fishery_mort |> # returns fishery mortality for all runs in db
-      `attr<-`('species', fram_db$fram_db_species)
-  } else {
-    fishery_mort |>
-      dplyr::filter(.data$run_id %in% .env$run_id) |>
-      `attr<-`('species', fram_db$fram_db_species)
-  }
+  attr(fishery_mort, 'species') <- fram_db$fram_db_species
+  return(fishery_mort)
 
 
 }
@@ -87,7 +94,8 @@ fishery_mortality <- function(fram_db, run_id = NULL, msp = TRUE) {
 #' }
 #'
 
-plot_stock_mortality <- function(fram_db, run_id, stock_id, top_n = 10, filters_list = NULL, msp = TRUE){
+plot_stock_mortality <- function(fram_db, run_id, stock_id,
+                                 top_n = 10, filters_list = NULL, msp = TRUE){
   validate_fram_db(fram_db)
   validate_run_id(fram_db, run_id)
   validate_stock_ids(fram_db, stock_id)
