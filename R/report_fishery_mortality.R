@@ -9,17 +9,24 @@
 #' }
 fishery_mortality <- function(fram_db, run_id = NULL, msp = TRUE) {
   validate_fram_db(fram_db)
-  if(!is.numeric(run_id)){validate_run_id(fram_db, run_id)}
+  if(!is.null(run_id)){validate_run_id(fram_db, run_id)}
   validate_flag(msp)
 
   fishery_mort <- fram_db |>
-    fetch_table_("Mortality") |>
+    fetch_table_("Mortality")
+
+  if(!is.null(run_id)){
+    fishery_mort <- fishery_mort |>
+      dplyr::filter(.data$run_id %in% .env$run_id)
+  }
+
+  fishery_mort <- fishery_mort |>
     dplyr::group_by(
-      .data$run_id,
-      .data$age,
-      .data$fishery_id,
-      .data$time_step
-    ) |>
+    .data$run_id,
+    .data$age,
+    .data$fishery_id,
+    .data$time_step
+  ) |>
     dplyr::summarize(
       dplyr::across(
         c(
@@ -48,14 +55,8 @@ fishery_mortality <- function(fram_db, run_id = NULL, msp = TRUE) {
     dplyr::arrange(.data$run_id, .data$fishery_id, .data$age, .data$time_step)
 
 
-  if (is.null(run_id)) {
-    fishery_mort |> # returns fishery mortality for all runs in db
-      `attr<-`('species', fram_db$fram_db_species)
-  } else {
-    fishery_mort |>
-      dplyr::filter(.data$run_id %in% .env$run_id) |>
-      `attr<-`('species', fram_db$fram_db_species)
-  }
+  attr(fishery_mort, 'species') <- fram_db$fram_db_species
+  return(fishery_mort)
 
 
 }

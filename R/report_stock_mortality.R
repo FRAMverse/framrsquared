@@ -20,7 +20,14 @@ stock_mortality <- function(fram_db, run_id = NULL) {
   }
 
   stock_mort <- fram_db |>
-    fetch_table_("Mortality") |>
+    fetch_table_("Mortality")
+
+  if(!is.null(run_id)){
+    stock_mort <- stock_mort |>
+      dplyr::filter(.data$run_id %in% .env$run_id)
+  }
+
+  stock_mort <- stock_mort |>
     dplyr::group_by(
       .data$run_id,
       .data$age,
@@ -56,14 +63,9 @@ stock_mortality <- function(fram_db, run_id = NULL) {
     ) |>
     dplyr::arrange(.data$run_id, .data$fishery_id, .data$age, .data$time_step)
 
-  if (is.null(run_id)) {
-    stock_mort |> # returns fishery mortality for all runs in db
-      `attr<-`('species', fram_db$fram_db_species)
-  } else {
-    stock_mort |>
-      dplyr::filter(.data$run_id %in% .env$run_id) |>
-      `attr<-`('species', fram_db$fram_db_species)
-  }
+  attr(stock_mort, 'species') <-  fram_db$fram_db_species
+
+  return(stock_mort)
 
 
 }

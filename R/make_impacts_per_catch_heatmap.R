@@ -22,10 +22,32 @@
 #'                                run_id = 132,
 #'                                stock_id = 5)
 #' }
-plot_impacts_per_catch_heatmap <- function(fram_db, run_id, stock_id, filters_list = list(filter_wa, filter_sport), msp = TRUE) {
+plot_impacts_per_catch_heatmap <- function(fram_db,
+                                           run_id,
+                                           stock_id,
+                                           filters_list = list(filter_wa, filter_sport),
+                                           msp = TRUE,
+                                           digits_round = 1,
+                                           outer_text_size = 18,
+                                           cell_text_size = 5,
+                                           short_title = FALSE,
+                                           per_thousand_catch = FALSE) {
   validate_fram_db(fram_db)
   validate_run_id(fram_db, run_id)
   validate_stock_ids(fram_db, stock_id)
+  validate_numeric(digits_round, n = 1)
+  validate_numeric(outer_text_size, n = 1)
+  validate_numeric(cell_text_size, n = 1)
+  validate_flag(short_title)
+  validate_flag(per_thousand_catch)
+#
+#   if(is.null(digits_round)){
+#     if(per_thousand_catch){
+#       digits_round = 5
+#     } else {
+#       digits_round = 1
+#     }
+#   }
 
   validate_stock_ids(fram_db, stock_id)
   if(length(stock_id)>1){
@@ -47,6 +69,9 @@ plot_impacts_per_catch_heatmap <- function(fram_db, run_id, stock_id, filters_li
   stock_name <- stock_table |>
     dplyr::filter(stock_id == .env$stock_id) |>
     dplyr::pull(.data$stock_name)
+  stock_title <- stock_table |>
+    dplyr::filter(stock_id == .env$stock_id) |>
+    dplyr::pull(.data$stock_long_name)
 
   if (length(stock_name) == 0) {
     cli::cli_abort(
@@ -67,22 +92,36 @@ plot_impacts_per_catch_heatmap <- function(fram_db, run_id, stock_id, filters_li
   if (fram_db$fram_db_species == "CHINOOK") {
     stock_mort = aeq_mortality_(fram_db, run_id = run_id, msp = msp) |>
       dplyr::filter(stock_id == .env$stock_id) |>
-      add_total_mortality() |>
+      dplyr::mutate(total_mortality = .data$landed_catch + .data$shaker + .data$drop_off +
+                      .data$msf_landed_catch + .data$msf_shaker + .data$msf_drop_off) |>
       dplyr::group_by(.data$fishery_id, .data$time_step) |>
       dplyr::summarize(mort = sum(.data$total_mortality)) |>
       dplyr::ungroup()
   } else{
     stock_mort = stock_mortality(fram_db, run_id = run_id) |>
-      dplyr::mutate(total_mortality = .data$landed_catch + .data$non_retention + .data$shaker + .data$drop_off) |>
+      ## stock mortality combines msf and NS values.
+      dplyr::mutate(total_mortality = .data$landed_catch + .data$shaker + .data$drop_off) |>
       dplyr::filter(stock_id == .env$stock_id) |>
       dplyr::group_by(.data$fishery_id, .data$time_step) |>
       dplyr::summarize(mort = sum(.data$total_mortality)) |>
       dplyr::ungroup()
   }
 
+  time_step_lut <- fram_db |>
+    fetch_table_(table_name = "TimeStep") |>
+    dplyr::filter(.data$species == fram_db$fram_db_species) |>
+    dplyr::select("time_step_id", "time_step_name") |>
+    dplyr::rename(time_step = "time_step_id")
+
   dat_plot <- dplyr::full_join(fishery_landed, stock_mort, by = c("fishery_id", "time_step")) |>
     dplyr::mutate(catch_per_impact = .data$landed_catch / .data$mort) |>
-    tibble::as_tibble()
+    dplyr::mutate(catch_per_impact = dplyr::if_else(
+      is.infinite(.data$catch_per_impact),
+      NA,
+      .data$catch_per_impact)) |>
+    tibble::as_tibble() |>
+    dplyr::left_join(time_step_lut, by = "time_step") |>
+    dplyr::mutate(timestep_label = glue::glue("{time_step}\n({time_step_name})"))
   attr(dat_plot, "species") <- fram_db$fram_db_species
 
 
@@ -95,29 +134,60 @@ plot_impacts_per_catch_heatmap <- function(fram_db, run_id, stock_id, filters_li
   }
   dat_plot <- dat_plot |>
     framrosetta::label_fisheries() |>
+    dplyr::mutate(fishery_label = glue::glue("{fishery_label} | (id={fishery_id})")) |>
     dplyr::filter(!is.na(.data$catch_per_impact)) |>
     dplyr::filter(.data$catch_per_impact != 0) |>
-    tidyr::complete(.data$fishery_label, .data$time_step)
+    tidyr::complete(.data$fishery_label, .data$timestep_label)
+
+  if(per_thousand_catch){
+    cli::cli_alert("Plotting in units of impacts per thousand catch.")
+
+    dat_plot$catch_per_impact = 1/dat_plot$catch_per_impact * 1000
+
+    subtitle = "Impacts per 1000 landed catch."
+    fill_label = "Impacts / 1k\n"
+
+
+    color_low = "aquamarine"
+    color_high = "goldenrod1"
+  } else {
+    cli::cli_alert("Plotting in units of landed catch per impact.")
+
+    subtitle = "Landed catch per impact."
+    fill_label = "catch per\nimpact"
+
+    color_low = "goldenrod1"
+    color_high = "aquamarine"
+  }
+  #
+  # dat_plot <- dat_plot |>
+  #   dplyr::mutate(catch_per_impact = round(catch_per_impact, digits_round))
+
+  if(short_title){
+    plot_title = glue::glue("{stock_name} (stock_id = {stock_id})")
+  } else {
+    plot_title = glue::glue("{stock_title} (stock_id = {stock_id})")
+  }
 
   ggplot2::ggplot(
     dat_plot,
     ggplot2::aes(
       x = .data$fishery_label,
-      y = .data$time_step,
+      y = .data$timestep_label,
       fill = .data$catch_per_impact,
       label = dplyr::if_else(
         is.na(.data$catch_per_impact),
         "",
-        format(round(.data$catch_per_impact, 1), big.mark = ",")
+        format(round(.data$catch_per_impact, digits_round), big.mark = ",")
       )
     )
   ) +
     ggplot2::geom_tile() +
-    ggplot2::geom_text() +
-    ggplot2::scale_y_continuous(position = "right") +
+    ggplot2::geom_text(size = cell_text_size) +
+    ggplot2::scale_y_discrete(position = "right") +
     ggplot2::scale_fill_gradient(
-      low = "goldenrod1",
-      high = "aquamarine",
+      low = color_low,
+      high = color_high,
       trans = "log",
       labels = function(x) {
         format(signif(x, 1), big.mark = ",")
@@ -126,13 +196,13 @@ plot_impacts_per_catch_heatmap <- function(fram_db, run_id, stock_id, filters_li
     ggplot2::coord_flip() +
     ggplot2::labs(
       y = "Timestep",
-      title = glue::glue("{stock_name} (stock_id = {stock_id})"),
-      subtitle = glue::glue("Landed catch per impact"),
-      fill = "catch per\nimpact",
+      title = plot_title,
+      subtitle = subtitle,
+      fill = fill_label,
       x = ""
     ) +
     ggplot2::theme(
-      text = ggplot2::element_text(size = 18),
+      text = ggplot2::element_text(size = outer_text_size),
       panel.background = ggplot2::element_blank()
     )
 }

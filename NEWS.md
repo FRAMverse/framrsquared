@@ -1,6 +1,9 @@
 # framrsquared (development version)
 
 - fixed bug in which `fetch_table()` errored out when fetching the `Stock` or `Fishery` tables.
+- added functions to handle SONCC calculations for STT.
+- updated `compare_runs()` to apply specified tolerance to recruits as well as fishery inputs
+- Overhauled `plot_impacts_per_catch_heatmap`: no longer includes non-retention, can control more aspects of the plots (rounding, font size, abbreviated or full stock name for title), fishery labels include id numbers and timestep labels include months. Can toggle between "landed catch per impacts" (default) and "impacts per thousand landed catch". 
 
 # framrsquared 0.8.1
 
@@ -16,7 +19,6 @@
 - `fetch_table()` and `aeq_mortality()` now default to adding labels for fisheries, stocks, and flags. This can be turned off with `label = FALSE`. DEV NOTE: `fetch_table()_` is a non-exported alias for `fetch_table()` with `label = FALSE`, ditto `aeq_mortality_()` for `aeq_mortality()`.
 - `add_total_mortality()` inserts a `total_mortalities` column into a mortality database, which is the sum of the eight mortality columns. Also works on the output of `aeq_mortality()`. This is now used under the hood in several framrsquared functions like `stock_fate_*()`.
 - For developers: non-exported function `check_demo_coverage()` takes path to a NAMESPACE file and a document file (like the `framrsquared_test_and_demo.qmd` file) and checks if each of the exported files from the package are present in the document. Useful for double-checking a complete tesitng file. 
-
 
 
 ## Bug fixes and minor improvements
