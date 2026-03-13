@@ -9,7 +9,12 @@ plot_impacts_per_catch_heatmap(
   run_id,
   stock_id,
   filters_list = list(filter_wa, filter_sport),
-  msp = TRUE
+  msp = TRUE,
+  digits_round = 1,
+  outer_text_size = 18,
+  cell_text_size = 5,
+  short_title = FALSE,
+  per_thousand_catch = FALSE
 )
 }
 \arguments{
@@ -17,18 +22,28 @@ plot_impacts_per_catch_heatmap(
 
 \item{run_id}{run_id of interest}
 
-\item{stock_id}{stock_id of interest}
+\item{stock_id}{stock_id of interest. Can accept multiple stock_ids, and will plot the impact on the combined stocks.}
 
 \item{filters_list}{list of framrsquared filter functions to apply before plotting. Defaults to \code{list(filter_wa, filter_sport)}, which filters to WA sport fisheries.}
 
-\item{msp}{Use Model Stock Proportion? Logical, defaults to TRUE.}
+\item{msp}{Use Model Stock Proportion? Logical, defaults to TRUE. Only relevant for Chinook databases.}
+
+\item{digits_round}{How many digits should cell values be rounded to? Numeric, defaults to 1.}
+
+\item{outer_text_size}{Controls size of plot text elements except cell text. Different plot elements scale relative to this value. Numeric defaults to 18.}
+
+\item{cell_text_size}{Controls size of text size in heatmap cells.  Numeric, defaults to 5. Different units from \code{outer_text_size}.}
+
+\item{short_title}{Should the abbreviated stock name (e.g., "M-ssdnph") be used (\code{TRUE}) or the longer name (e.g., "South Puget SOund Net Pens Marked"). Logical, defaults to \code{FALSE}; \code{TRUE} may be useful when plots must be small.}
+
+\item{per_thousand_catch}{Should plot be presented in units of Impacts per Thousand Landed Catch (TRUE) or landed catch per impact (FALSE). Logical, defaults to FALSE.}
 }
 \value{
 ggplot object
 }
 \description{
 Identify how much reduction in landed catch at each fishery that would be needed
-to reduce the impacts on a focal stock by 1 fish.
+to reduce the impacts on a focal stock by 1 fish. Does not include non-retention moralities, as those can't be improved by reducing fishing in the focal species.
 }
 \examples{
 \dontrun{

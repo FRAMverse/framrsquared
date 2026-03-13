@@ -1,7 +1,7 @@
 #' Make plots to show the amount of landed catch_per_impact
 #'
 #' Identify how much reduction in landed catch at each fishery that would be needed
-#' to reduce the impacts on a focal stock by 1 fish.
+  #' to reduce the impacts on a focal stock by 1 fish. Does not include non-retention moralities, as those can't be improved by reducing fishing in the focal species.
 #'
 #' @param fram_db fram database connection
 #' @param run_id run_id of interest
@@ -12,6 +12,7 @@
 #' @param outer_text_size Controls size of plot text elements except cell text. Different plot elements scale relative to this value. Numeric defaults to 18.
 #' @param cell_text_size Controls size of text size in heatmap cells.  Numeric, defaults to 5. Different units from `outer_text_size`.
 #' @param short_title Should the abbreviated stock name (e.g., "M-ssdnph") be used (`TRUE`) or the longer name (e.g., "South Puget SOund Net Pens Marked"). Logical, defaults to `FALSE`; `TRUE` may be useful when plots must be small.
+#' @param per_thousand_catch Should plot be presented in units of Impacts per Thousand Landed Catch (TRUE) or landed catch per impact (FALSE). Logical, defaults to FALSE.
 #' @return ggplot object
 #' @export
 #'
@@ -85,14 +86,6 @@ plot_impacts_per_catch_heatmap <- function(fram_db,
     )
   }
 
-
-  fishery_landed <- fishery_mortality(fram_db, run_id = run_id) |>
-    dplyr::group_by(.data$fishery_id, .data$time_step) |>
-    dplyr::summarize(landed_catch = sum(.data$landed_catch))
-
-
-  ## for chinook
-
   if (fram_db$fram_db_species == "CHINOOK") {
     stock_mort = aeq_mortality_(fram_db, run_id = run_id, msp = msp) |>
       dplyr::filter(stock_id %in% .env$stock_id) |>
@@ -102,7 +95,7 @@ plot_impacts_per_catch_heatmap <- function(fram_db,
       dplyr::summarize(mort = sum(.data$total_mortality)) |>
       dplyr::ungroup()
   } else{
-    stock_mort = stock_mortality(fram_db, run_id = run_id) |>
+    stock_mort = stock_mortality(fram_db, run_id = run_id, stock_id = stock_id) |>
       ## stock mortality combines msf and NS values.
       dplyr::mutate(total_mortality = .data$landed_catch + .data$shaker + .data$drop_off) |>
       dplyr::filter(stock_id %in% .env$stock_id) |>
@@ -110,6 +103,26 @@ plot_impacts_per_catch_heatmap <- function(fram_db,
       dplyr::summarize(mort = sum(.data$total_mortality)) |>
       dplyr::ungroup()
   }
+  attr(stock_mort, "species") <- fram_db$fram_db_species
+
+  if(!is.null(filters_list)){
+    ## give species for filtering
+    for(i in 1:length(filters_list)){
+      stock_mort <- stock_mort |>
+        filters_list[[i]]()
+    }
+  }
+
+
+
+  fishery_landed <- fishery_mortality(fram_db, run_id = run_id, fishery_id = unique(stock_mort$fishery_id)) |>
+    dplyr::group_by(.data$fishery_id, .data$time_step) |>
+    dplyr::summarize(landed_catch = sum(.data$landed_catch))
+
+
+  ## for chinook
+
+
 
   time_step_lut <- fram_db |>
     fetch_table_(table_name = "TimeStep") |>
@@ -129,13 +142,7 @@ plot_impacts_per_catch_heatmap <- function(fram_db,
   attr(dat_plot, "species") <- fram_db$fram_db_species
 
 
-  if(!is.null(filters_list)){
-    ## give species for filtering
-    for(i in 1:length(filters_list)){
-      dat_plot <- dat_plot |>
-        filters_list[[i]]()
-    }
-  }
+
   dat_plot <- dat_plot |>
     framrosetta::label_fisheries() |>
     dplyr::mutate(fishery_label = glue::glue("{fishery_label} | (id={fishery_id})")) |>
@@ -144,13 +151,13 @@ plot_impacts_per_catch_heatmap <- function(fram_db,
     tidyr::complete(.data$fishery_label, .data$timestep_label)
 
   fishery_label_sorted <- dat_plot |>
-    dplyr::arrange(fishery_id) |>
-    dplyr::pull(fishery_label) |>
+    dplyr::arrange(.data$fishery_id) |>
+    dplyr::pull(.data$fishery_label) |>
     unique() |>
     rev()
 
   dat_plot <-  dat_plot |>
-    dplyr::mutate(fishery_label = factor(fishery_label, levels = fishery_label_sorted))
+    dplyr::mutate(fishery_label = factor(.data$fishery_label, levels = fishery_label_sorted))
 
   if(per_thousand_catch){
     cli::cli_alert("Plotting in units of impacts per thousand catch.")

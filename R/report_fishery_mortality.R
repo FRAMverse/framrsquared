@@ -1,6 +1,7 @@
 #' Returns a tibble matching the Fishery Mortality screen.
 #' @param fram_db FRAM database object
-#' @param run_id Run ID
+#' @param run_id atomic or vector of run_ids to filter to. Can improve speed. Optional, defaults to `NULL`.
+#' @param fishery_id atomic or vector of fishery_id to filter to. Can improve speed. Optional, defaults to `NULL`.
 #' @param msp Use Model Stock Proportion? Logical, defaults to TRUE.
 #' @export
 #' @examples
@@ -93,7 +94,8 @@ fishery_mortality <- function(fram_db, run_id = NULL, fishery_id = NULL, msp = T
 #' }
 #'
 
-plot_stock_mortality <- function(fram_db, run_id, stock_id, top_n = 10, filters_list = NULL, msp = TRUE){
+plot_stock_mortality <- function(fram_db, run_id, stock_id,
+                                 top_n = 10, filters_list = NULL, msp = TRUE){
   validate_fram_db(fram_db)
   validate_run_id(fram_db, run_id)
   validate_stock_ids(fram_db, stock_id)

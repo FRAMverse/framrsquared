@@ -4,12 +4,14 @@
 \alias{fishery_mortality}
 \title{Returns a tibble matching the Fishery Mortality screen.}
 \usage{
-fishery_mortality(fram_db, run_id = NULL, msp = TRUE)
+fishery_mortality(fram_db, run_id = NULL, fishery_id = NULL, msp = TRUE)
 }
 \arguments{
 \item{fram_db}{FRAM database object}
 
-\item{run_id}{Run ID}
+\item{run_id}{atomic or vector of run_ids to filter to. Can improve speed. Optional, defaults to \code{NULL}.}
+
+\item{fishery_id}{atomic or vector of fishery_id to filter to. Can improve speed. Optional, defaults to \code{NULL}.}
 
 \item{msp}{Use Model Stock Proportion? Logical, defaults to TRUE.}
 }

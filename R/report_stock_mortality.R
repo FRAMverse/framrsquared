@@ -3,7 +3,8 @@
 #' Returns a tibble matching the Stock Mortality screen.
 #'
 #' @param fram_db FRAM database object
-#' @param run_id Run ID
+#' @param run_id atomic or vector of run_ids to filter to. Can improve speed. Optional, defaults to `NULL`.
+#' @param stock_id atomic or vector of stock_id to filter to. Can improve speed. Optional, defaults to `NULL`.
 #' @export
 #' @examples
 #' \dontrun{

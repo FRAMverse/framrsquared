@@ -4,12 +4,14 @@
 \alias{stock_mortality}
 \title{Replicate Stock Mortality screen}
 \usage{
-stock_mortality(fram_db, run_id = NULL)
+stock_mortality(fram_db, run_id = NULL, stock_id = NULL)
 }
 \arguments{
 \item{fram_db}{FRAM database object}
 
-\item{run_id}{Run ID}
+\item{run_id}{atomic or vector of run_ids to filter to. Can improve speed. Optional, defaults to \code{NULL}.}
+
+\item{stock_id}{atomic or vector of stock_id to filter to. Can improve speed. Optional, defaults to \code{NULL}.}
 }
 \description{
 Returns a tibble matching the Stock Mortality screen.

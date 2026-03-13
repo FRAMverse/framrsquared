@@ -3,7 +3,8 @@
 - fixed bug in which `fetch_table()` errored out when fetching the `Stock` or `Fishery` tables.
 - added functions to handle SONCC calculations for STT.
 - updated `compare_runs()` to apply specified tolerance to recruits as well as fishery inputs
-- Overhauled `plot_impacts_per_catch_heatmap`: no longer includes non-retention, can control more aspects of the plots (rounding, font size, abbreviated or full stock name for title), fishery labels include id numbers and timestep labels include months. Can toggle between "landed catch per impacts" (default) and "impacts per thousand landed catch". 
+- Overhauled `plot_impacts_per_catch_heatmap`: no longer includes non-retention, can control more aspects of the plots (rounding, font size, abbreviated or full stock name for title), fishery labels include id numbers and timestep labels include months. Can toggle between "landed catch per impacts" (default) and "impacts per thousand landed catch". Function can now accept multiple stock ids, making it more useful for managing to objectives that are based on a sum of FRAM stocks.
+- improved speed of `stock_mortality()` and `fishery_mortality()`. Optionally accept either `stock_id` or `fishery_id` arguments which filter the fetched `mortality` function for improved speed. 
 
 # framrsquared 0.8.1
 
