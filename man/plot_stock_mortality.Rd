@@ -10,8 +10,7 @@ plot_stock_mortality(
   stock_id,
   top_n = 10,
   filters_list = NULL,
-  msp = TRUE,
-  separate_nonretention = TRUE
+  msp = TRUE
 )
 }
 \arguments{
