@@ -1,7 +1,7 @@
 #' Make plots to show the amount of landed catch_per_impact
 #'
 #' Identify how much reduction in landed catch at each fishery that would be needed
-#' to reduce the impacts on a focal stock by 1 fish. Does include CNR from other species, so numbers are not exact, but CNR is typically only a small fraction of total mortalities.
+#' to reduce the impacts on a focal stock by 1 fish. Does *not* include CNR.
 #'
 #' @param fram_db fram database connection
 #' @param run_id run_id of interest
@@ -94,7 +94,8 @@ plot_impacts_per_catch_heatmap <- function(fram_db,
       dplyr::summarize(mort = sum(.data$total_mortality)) |>
       dplyr::ungroup()
   } else{
-    stock_mort = fetch_table_("Mortality") |>
+    stock_mort = fram_db |>
+      fetch_table_("Mortality") |>
       dplyr::filter(.data$run_id == .env$run_id,
                     .data$stock_id %in% .env$stock_id) |>
       ## stock mortality combines msf and NS values.
