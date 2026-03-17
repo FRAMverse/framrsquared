@@ -10,7 +10,8 @@ plot_stock_mortality(
   stock_id,
   top_n = 10,
   filters_list = NULL,
-  msp = TRUE
+  msp = TRUE,
+  split_cnr = FALSE
 )
 }
 \arguments{
@@ -25,6 +26,8 @@ plot_stock_mortality(
 \item{filters_list}{list of framrsquared filter functions to apply before plotting.}
 
 \item{msp}{Use Model Stock Proportion? Logical, defaults to TRUE.}
+
+\item{split_cnr}{Produce separate panels for CNR and non-CNR mortality? Logical, defaults to FALSE.}
 }
 \description{
 Creates an ordered bar chart with

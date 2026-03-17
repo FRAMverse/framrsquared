@@ -5,6 +5,8 @@
 - updated `compare_runs()` to apply specified tolerance to recruits as well as fishery inputs
 - Overhauled `plot_impacts_per_catch_heatmap`: can control more aspects of the plots (rounding, font size, abbreviated or full stock name for title), fishery labels include id numbers and timestep labels include months. Can toggle between "landed catch per impacts" (default) and "impacts per thousand landed catch". Function can now accept multiple stock ids, making it more useful for managing to objectives that are based on a sum of FRAM stocks.
 - improved speed of `stock_mortality()` and `fishery_mortality()`. Optionally accept either `stock_id` or `fishery_id` arguments which filter the fetched `mortality` function for improved speed. 
+- Updated `plot_stock_mortality()` and `plot_stock_mortality_timestep()` to account for CNR. Default behavior now
+provides the % CNR on the plot. Setting optional argument `split_cnr` to `TRUE` produces separate panels for CNR and non-CNR mortalities.
 
 # framrsquared 0.8.1
 
