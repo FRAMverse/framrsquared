@@ -11,7 +11,9 @@ plot_stock_mortality(
   top_n = 10,
   filters_list = NULL,
   msp = TRUE,
-  split_cnr = FALSE
+  split_cnr = FALSE,
+  fishery_title_short = FALSE,
+  stock_title_short = FALSE
 )
 }
 \arguments{
@@ -19,7 +21,7 @@ plot_stock_mortality(
 
 \item{run_id}{numeric, RunID}
 
-\item{stock_id}{numeric, ID of focal stock}
+\item{stock_id}{numeric, ID of focal stock. Can accept multiple ids, but this should only be used when combining FRAM stocks makes sense (e.g., combining marked and unmarked components of the same stock).}
 
 \item{top_n}{numeric, Number of fisheries to display}
 
@@ -28,6 +30,10 @@ plot_stock_mortality(
 \item{msp}{Use Model Stock Proportion? Logical, defaults to TRUE.}
 
 \item{split_cnr}{Produce separate panels for CNR and non-CNR mortality? Logical, defaults to FALSE.}
+
+\item{fishery_title_short}{Use abbreviated fishery names instead of full names? Useful if horizontal space is limited. Logical, defaults to FALSE.}
+
+\item{stock_title_short}{Use abbreviated stock name instead of full name in title? Will always use abbreviated stock name if multiple stock ids are provided.}
 }
 \description{
 Creates an ordered bar chart with
