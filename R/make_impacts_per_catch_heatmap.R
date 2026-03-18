@@ -20,12 +20,13 @@
 #'
 #' @examples
 #' \dontrun{
-#' path = "FRAM compilations - readonly/2024-Pre-Season-Chinook-DB/2024 Pre-Season Chinook DB.mdb"
-#' run_id = 132
-#' stock_id = 3
+#' path <- "FRAM compilations - readonly/2024-Pre-Season-Chinook-DB/2024 Pre-Season Chinook DB.mdb"
+#' run_id <- 132
+#' stock_id <- 3
 #' plot_impacts_per_catch_heatmap(path,
-#'                                run_id = 132,
-#'                                stock_id = 5)
+#'   run_id = 132,
+#'   stock_id = 5
+#' )
 #' }
 plot_impacts_per_catch_heatmap <- function(fram_db,
                                            run_id,
@@ -55,7 +56,7 @@ plot_impacts_per_catch_heatmap <- function(fram_db,
   #   }
 
   validate_stock_ids(fram_db, stock_id)
-  if(length(stock_id)>1){
+  if (length(stock_id) > 1) {
     cli::cli_alert_warning("Multiple stock IDs provided! Interpret combined impacts with caution!")
   }
 
@@ -87,31 +88,37 @@ plot_impacts_per_catch_heatmap <- function(fram_db,
   }
 
   if (fram_db$fram_db_species == "CHINOOK") {
-    stock_mort = aeq_mortality_(fram_db, run_id = run_id, msp = msp) |>
+    stock_mort <- aeq_mortality_(fram_db, run_id = run_id, msp = msp) |>
       dplyr::filter(stock_id %in% .env$stock_id) |>
       add_total_mortality() |>
       dplyr::group_by(.data$fishery_id, .data$time_step) |>
       dplyr::summarize(mort = sum(.data$total_mortality)) |>
       dplyr::ungroup()
-  } else{
-    stock_mort = fram_db |>
+  } else {
+    stock_mort <- fram_db |>
       fetch_table_("Mortality") |>
-      dplyr::filter(.data$run_id == .env$run_id,
-                    .data$stock_id %in% .env$stock_id) |>
+      dplyr::filter(
+        .data$run_id == .env$run_id,
+        .data$stock_id %in% .env$stock_id
+      ) |>
       ## stock mortality combines msf and NS values.
       dplyr::group_by(.data$run_id, .data$time_step, .data$fishery_id) |>
       dplyr::summarize(
-        dplyr::across(c(.data$landed_catch:.data$drop_off,
-                        .data$msf_landed_catch:.data$msf_drop_off), \(x) sum(x)),
-        .groups='drop') |>
-      dplyr::mutate(total_mortality =
-                      .data$landed_catch +
-                      .data$shaker +
-                      .data$drop_off +
-                      .data$msf_landed_catch +
-                      .data$msf_non_retention +
-                      .data$msf_shaker +
-                      .data$msf_drop_off
+        dplyr::across(c(
+          .data$landed_catch:.data$drop_off,
+          .data$msf_landed_catch:.data$msf_drop_off
+        ), \(x) sum(x)),
+        .groups = "drop"
+      ) |>
+      dplyr::mutate(
+        total_mortality =
+          .data$landed_catch +
+            .data$shaker +
+            .data$drop_off +
+            .data$msf_landed_catch +
+            .data$msf_non_retention +
+            .data$msf_shaker +
+            .data$msf_drop_off
       ) |>
       dplyr::group_by(.data$fishery_id, .data$time_step) |>
       dplyr::summarize(mort = sum(.data$total_mortality)) |>
@@ -119,9 +126,9 @@ plot_impacts_per_catch_heatmap <- function(fram_db,
   }
   attr(stock_mort, "species") <- fram_db$fram_db_species
 
-  if(!is.null(filters_list)){
+  if (!is.null(filters_list)) {
     ## give species for filtering
-    for(i in 1:length(filters_list)){
+    for (i in 1:length(filters_list)) {
       stock_mort <- stock_mort |>
         filters_list[[i]]()
     }
@@ -149,7 +156,8 @@ plot_impacts_per_catch_heatmap <- function(fram_db,
     dplyr::mutate(catch_per_impact = dplyr::if_else(
       is.infinite(.data$catch_per_impact),
       NA,
-      .data$catch_per_impact)) |>
+      .data$catch_per_impact
+    )) |>
     tibble::as_tibble() |>
     dplyr::left_join(time_step_lut, by = "time_step") |>
     dplyr::mutate(timestep_label = glue::glue("{time_step}\n({time_step_name})"))
@@ -170,53 +178,50 @@ plot_impacts_per_catch_heatmap <- function(fram_db,
     unique() |>
     rev()
 
-  dat_plot <-  dat_plot |>
+  dat_plot <- dat_plot |>
     dplyr::mutate(fishery_label = factor(.data$fishery_label, levels = fishery_label_sorted))
 
-  if(per_thousand_catch){
+  if (per_thousand_catch) {
     cli::cli_alert("Plotting in units of impacts per thousand catch.")
 
-    dat_plot$catch_per_impact = 1/dat_plot$catch_per_impact * 1000
+    dat_plot$catch_per_impact <- 1 / dat_plot$catch_per_impact * 1000
 
-    subtitle = "Impacts per 1000 landed catch."
-    fill_label = "Impacts / 1k\n"
-    legend_scale_labels = c("Lowest\nImpact", "Highest\nImpact")
-
-
-    color_low = "aquamarine"
-    color_high = "goldenrod1"
+    subtitle <- "Impacts per 1000 landed catch."
+    fill_label <- "Impacts / 1k\n"
+    legend_scale_labels <- c("Lowest\nImpact", "Highest\nImpact")
 
 
+    color_low <- "aquamarine"
+    color_high <- "goldenrod1"
   } else {
     cli::cli_alert("Plotting in units of landed catch per impact.")
 
-    subtitle = "Landed catch per impact."
-    fill_label = "catch per\nimpact"
-    legend_scale_labels = c("Highest\nImpact", "Lowest\nImpact")
+    subtitle <- "Landed catch per impact."
+    fill_label <- "catch per\nimpact"
+    legend_scale_labels <- c("Highest\nImpact", "Lowest\nImpact")
 
-    color_low = "goldenrod1"
-    color_high = "aquamarine"
+    color_low <- "goldenrod1"
+    color_high <- "aquamarine"
   }
   #
   # dat_plot <- dat_plot |>
   #   dplyr::mutate(catch_per_impact = round(catch_per_impact, digits_round))
 
 
-  if(length(stock_id)>1)
-  {
-    plot_title = glue::glue("Combined Stocks {glue::glue_collapse(stock_id, ', ')}: {glue::glue_collapse(stock_name, ', ')}")
+  if (length(stock_id) > 1) {
+    plot_title <- glue::glue("Combined Stocks {glue::glue_collapse(stock_id, ', ')}: {glue::glue_collapse(stock_name, ', ')}")
   } else {
-    if(short_title){
-      plot_title = glue::glue("{stock_name} (stock_id = {stock_id})")
+    if (short_title) {
+      plot_title <- glue::glue("{stock_name} (stock_id = {stock_id})")
     } else {
-      plot_title = glue::glue("{stock_title} (stock_id = {stock_id})")
+      plot_title <- glue::glue("{stock_title} (stock_id = {stock_id})")
     }
   }
 
   ## placement of qualitative legend scale labels
-  scale_range = range(dat_plot$catch_per_impact, na.rm = T)
+  scale_range <- range(dat_plot$catch_per_impact, na.rm = T)
   ## positioning equally on log scale
-  scale_range = exp(log(scale_range) + c(1, -1) * 0.1 * diff(log(scale_range)))
+  scale_range <- exp(log(scale_range) + c(1, -1) * 0.1 * diff(log(scale_range)))
 
 
 

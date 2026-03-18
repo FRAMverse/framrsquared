@@ -3,7 +3,7 @@
 }
 
 
-startup_message <- function(){
+startup_message <- function() {
   "
              .
             \":\"

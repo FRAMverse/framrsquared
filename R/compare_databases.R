@@ -112,17 +112,16 @@
 #'
 #' @examples
 #' \dontrun{
-#' fram_db_1 = connect_fram_db("Valid2022_Round_7_1_1_11142023_REFERENCE_fixed - fork rebuild.mdb")
-#' fram_db_2 = connect_fram_db("Valid2022_Round_7.1.1_11142023 - green river split.mdb")
-#' out = tables_compare(fram_db_1, fram_db_2)
+#' fram_db_1 <- connect_fram_db("Valid2022_Round_7_1_1_11142023_REFERENCE_fixed - fork rebuild.mdb")
+#' fram_db_2 <- connect_fram_db("Valid2022_Round_7.1.1_11142023 - green river split.mdb")
+#' out <- tables_compare(fram_db_1, fram_db_2)
 #' }
-compare_databases <-  function(fram_db_1,
-                               fram_db_2,
-                               runid_use = NULL,
-                               tables_use = NULL,
-                               slim = TRUE,
-                               quiet = TRUE) {
-
+compare_databases <- function(fram_db_1,
+                              fram_db_2,
+                              runid_use = NULL,
+                              tables_use = NULL,
+                              slim = TRUE,
+                              quiet = TRUE) {
   validate_fram_db(fram_db_1)
   validate_fram_db(fram_db_2)
   if (!is.null(runid_use) && !all(is.numeric(runid_use))) cli::cli_abort("`runid_use` must be NULL or numeric vector")
@@ -131,7 +130,7 @@ compare_databases <-  function(fram_db_1,
   if (!is.logical(quiet) || length(quiet) != 1) cli::cli_abort("`quiet` must be a single logical value")
 
   ## columns to NOT compare, and instead use as keys for for merging.
-  labs_template  <-  c(
+  labs_template <- c(
     "base_period_id",
     "stock_id",
     "run_id",
@@ -161,13 +160,19 @@ compare_databases <-  function(fram_db_1,
   )
 
   ## identify meaningful tables (dbListTables also returns Queries and internal Access tables)
-  tables_use_prod <- intersect(DBI::dbListTables(fram_db_1$fram_db_connection),
-                               provide_table_names())
-  tables_use_fork <- intersect(DBI::dbListTables(fram_db_2$fram_db_connection),
-                               provide_table_names())
+  tables_use_prod <- intersect(
+    DBI::dbListTables(fram_db_1$fram_db_connection),
+    provide_table_names()
+  )
+  tables_use_fork <- intersect(
+    DBI::dbListTables(fram_db_2$fram_db_connection),
+    provide_table_names()
+  )
   ## identify if databases have mismatching tables, give warning.
-  tables_setdiff <- setdiff(tables_use_prod,
-                            tables_use_fork)
+  tables_setdiff <- setdiff(
+    tables_use_prod,
+    tables_use_fork
+  )
   if (length(tables_setdiff) > 0) {
     cli::cli_alert_warning(
       "The provided database files contain different tables. Check that they are intended for comparison. Tables present in only one database: {tables_setdiff}"
@@ -186,28 +191,30 @@ compare_databases <-  function(fram_db_1,
         "SLRatioVerification"
       )
     )
-  if(!is.null(tables_use)){
+  if (!is.null(tables_use)) {
     tables_names <- intersect(tables_names, tables_use)
   }
   species_cur <- fram_db_1$fram_db_species
 
-  tabs_prod <- tabs_fork <-  list()
+  tabs_prod <- tabs_fork <- list()
 
   ## for the chinook case, figure out what the maximum number of stock is for backwards_fram id mapping
   stock_max <- max(c(fetch_table_(fram_db_1, "BaseID")$num_stocks, fetch_table_(fram_db_2, "BaseID")$num_stocks))
 
-  if(!quiet){cli::cli_alert_info("Fetching tables")}
+  if (!quiet) {
+    cli::cli_alert_info("Fetching tables")
+  }
   for (cur_table in tables_names) {
     tabs_prod[[cur_table]] <- fetch_table_(fram_db_1, cur_table, warn = FALSE) |>
       dplyr::distinct()
     if (!is.null(runid_use) &
-        "run_id" %in% names(tabs_prod[[cur_table]])) {
+      "run_id" %in% names(tabs_prod[[cur_table]])) {
       tabs_prod[[cur_table]] <- tabs_prod[[cur_table]] |>
         dplyr::filter(.data$run_id %in% runid_use)
     }
     tabs_fork[[cur_table]] <- fetch_table_(fram_db_2, cur_table, warn = FALSE)
     if (!is.null(runid_use) &
-        "run_id" %in% names(tabs_fork[[cur_table]])) {
+      "run_id" %in% names(tabs_fork[[cur_table]])) {
       tabs_fork[[cur_table]] <- tabs_fork[[cur_table]] |>
         dplyr::filter(.data$run_id %in% runid_use)
     }
@@ -217,16 +224,20 @@ compare_databases <-  function(fram_db_1,
       tabs_prod[[cur_table]] <- tabs_prod[[cur_table]] |>
         dplyr::rename(bk_stock_id = .data$stock_id) |>
         dplyr::left_join(framrosetta::bk_lookupfun_chin(stock_max) |> dplyr::select("bk_stock_id", "stock_id"),
-                         by = "bk_stock_id") |>
+          by = "bk_stock_id"
+        ) |>
         dplyr::filter(!is.na(.data$stock_id))
       tabs_fork[[cur_table]] <- tabs_fork[[cur_table]] |>
         dplyr::rename(bk_stock_id = .data$stock_id) |>
         dplyr::left_join(framrosetta::bk_lookupfun_chin(stock_max) |> dplyr::select("bk_stock_id", "stock_id"),
-                         by = "bk_stock_id") |>
+          by = "bk_stock_id"
+        ) |>
         dplyr::filter(!is.na(.data$stock_id))
     }
   }
-  if(!quiet){cli::cli_alert_success("Tables fetched")}
+  if (!quiet) {
+    cli::cli_alert_success("Tables fetched")
+  }
 
 
   tabs_comp <- list()
@@ -234,14 +245,18 @@ compare_databases <-  function(fram_db_1,
   ratio_comp <- NULL ## for storing ratios of new to old
   ratio_list <- list()
 
-  if(!quiet){cli::cli_alert_info("Handling off-by-fish bkFRAM calculations")}
+  if (!quiet) {
+    cli::cli_alert_info("Handling off-by-fish bkFRAM calculations")
+  }
 
   ## If backwardsFRAM is among the tables, identify differences before looking at other tables,
   ## so that those differences can be linked to other tables.
   if ("BackwardsFRAM" %in% names(tabs_prod)) {
     cur_table <- "BackwardsFRAM"
-    labs_used <- intersect(names(tabs_prod[[cur_table]]),
-                           labs_template)
+    labs_used <- intersect(
+      names(tabs_prod[[cur_table]]),
+      labs_template
+    )
 
     df_orig <- tabs_prod[[cur_table]] |>
       dplyr::select(!dplyr::any_of(c("primary_key"))) |>
@@ -256,7 +271,7 @@ compare_databases <-  function(fram_db_1,
       dplyr::select(!dplyr::any_of(c("primary_key"))) |>
       dplyr::filter(!is.na(.data$stock_id)) |>
       tidyr::pivot_longer(dplyr::starts_with("target_esc_age")) |>
-      dplyr::mutate(age = as.numeric(gsub("target_esc_age", "",.data$name))) |>
+      dplyr::mutate(age = as.numeric(gsub("target_esc_age", "", .data$name))) |>
       dplyr::rename(target_esc = .data$value) |>
       dplyr::select(-dplyr::any_of(c("name", "comment", "bk_stock_id", "target_flag")))
 
@@ -264,7 +279,7 @@ compare_databases <-  function(fram_db_1,
       df_orig,
       df_fork,
       by = c("run_id", "stock_id", "age"),
-      suffix = c('_original', '_new')
+      suffix = c("_original", "_new")
     )
     ## resort names
     vec_comp <- c(grep("_original", names(df_comp)), grep("_new", names(df_comp)))
@@ -275,16 +290,20 @@ compare_databases <-  function(fram_db_1,
         bkfram_off_by_prop = .data$bkfram_off_by_fish / .data$target_esc_original
       )
     bkfram_context <- df_comp
-  } else{
+  } else {
     ## Make NA version so that later stuff works well
     bkfram_context <- NULL
   }
 
   cli::cli_progress_bar("Comparing tables", total = length(tabs_prod))
   for (cur_table in names(tabs_prod)) {
-    if(!quiet){cli::cli_alert_info("Diffing {cur_table}.")}
-    labs_used <- intersect(names(tabs_prod[[cur_table]]),
-                           labs_template)
+    if (!quiet) {
+      cli::cli_alert_info("Diffing {cur_table}.")
+    }
+    labs_used <- intersect(
+      names(tabs_prod[[cur_table]]),
+      labs_template
+    )
 
     df_comp <- tabs_prod[[cur_table]] |>
       dplyr::select(!dplyr::any_of(c("primary_key"))) |>
@@ -292,13 +311,13 @@ compare_databases <-  function(fram_db_1,
         tabs_fork[[cur_table]] |>
           dplyr::select(!dplyr::any_of(c("primary_key"))),
         by = c(labs_used),
-        suffix = c('_original', '_new')
+        suffix = c("_original", "_new")
       )
     ## resort names
     vec_comp <- c(grep("_original", names(df_comp)), grep("_new", names(df_comp)))
     df_comp <- df_comp[, c(names(df_comp)[-vec_comp], sort(names(df_comp)[vec_comp]))]
 
-    ##store, but only if table isn't empty.
+    ## store, but only if table isn't empty.
     if (nrow(df_comp) > 0) {
       tabs_comp[[cur_table]] <- df_comp
       res_cur <- NULL ## stores df of ratios for this table, goes into ratio.list.
@@ -321,13 +340,16 @@ compare_databases <-  function(fram_db_1,
           if (all(c("stock_id", "run_id", "age") %in% names(temp)) & !is.null(bkfram_context)) {
             temp <- temp |>
               dplyr::left_join(bkfram_context |> dplyr::select(-dplyr::starts_with("target_esc")),
-                               by = c("stock_id", "run_id", "age"))
-          } else{
+                by = c("stock_id", "run_id", "age")
+              )
+          } else {
             temp <- temp |>
-              dplyr::mutate(bkfram_off_by_fish = NA,
-                            bkfram_off_by_prop = NA)
+              dplyr::mutate(
+                bkfram_off_by_fish = NA,
+                bkfram_off_by_prop = NA
+              )
           }
-          ##adding in columns with NAs if needed, supporting flat df w/info for `ratios`. See https://stackoverflow.com/questions/45857787/adding-column-if-it-does-not-exist
+          ## adding in columns with NAs if needed, supporting flat df w/info for `ratios`. See https://stackoverflow.com/questions/45857787/adding-column-if-it-does-not-exist
           temp <- tibble::add_column(temp, !!!cols[setdiff(names(cols), names(temp))])
 
 
@@ -372,11 +394,10 @@ compare_databases <-  function(fram_db_1,
     ratios = ratio_comp,
     nrow_tracker = nrow_tracker
   )
-  if(!slim){
-    res$ratios_detailed = ratio_list
-    res$tabs_file1 = tabs_prod
-    res$tabs_file2 = tabs_fork
+  if (!slim) {
+    res$ratios_detailed <- ratio_list
+    res$tabs_file1 <- tabs_prod
+    res$tabs_file2 <- tabs_fork
   }
   return(res)
-
 }

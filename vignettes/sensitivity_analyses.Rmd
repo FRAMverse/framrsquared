@@ -36,10 +36,11 @@ We could specify those changes with the following match/replace dataframe
 
 ```{r}
 ## make the match/replace dataframe for a single run
-mr_df = data.frame(match_FisheryID = c(36, 36, 36), 
-                   match_TimeStep = c(1,3,4),
-                   replace_MinimumSize = c(600, 450, 600)
-                   )
+mr_df <- data.frame(
+  match_FisheryID = c(36, 36, 36),
+  match_TimeStep = c(1, 3, 4),
+  replace_MinimumSize = c(600, 450, 600)
+)
 ```
 
 Before worrying about the run ids, our match/replace dataframe looks like this:
@@ -51,7 +52,7 @@ mr_df
 If we used this as it is, as in `modify_table(fram_db, "SizeLimits", mr_df)`, `modify_table()` would find all entries with fishery 36 timestep 1 or 4 and replace the MinimumSize with 600. Similarly, i twould find all entries with fishery 36 timestep 3 and replace the MinimumSize with 450. We can constrain these changes to run ids 28 through 30 by adding a `match_RunID` column
 
 ```{r}
-mr_df = tidyr::expand_grid(match_RunID = 28:30, mr_df)
+mr_df <- tidyr::expand_grid(match_RunID = 28:30, mr_df)
 mr_df
 ```
 
@@ -105,7 +106,7 @@ Using framrosetta, I found that Elwha is part of FRAM stocks 35 and 36 (unmarked
 I decided I want to look at abundances from 5% of the template run to 2,000% (e.g., x0.05 through x20 abundances). I could do this on a linear scale, but it seemed more important to have more sensitivity runs in the 5%-100% range, somewhat fewer in the 100%-1000% range, and fewer still in the 1000%-2000% range. We could achieve something similar by sampling evenly on a log scale, but it's easy enough to just space our samples on piecewise linear scales:
 
 ```{r}
-scale_terms = c(seq(0.05, 1, by = 0.05), seq(1, 10, by = 0.1), seq(10, 20, by = 0.5))
+scale_terms <- c(seq(0.05, 1, by = 0.05), seq(1, 10, by = 0.1), seq(10, 20, by = 0.5))
 ```
 
 With all that in mind, creating the sensitivity analyses required very little work.

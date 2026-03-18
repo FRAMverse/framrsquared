@@ -5,11 +5,15 @@ test_that("standardize_species works", {
 })
 
 
-test_that("validate_species works",{
-  dat1 = data.frame(fishery_id = 1:5,
-                    let = letters[1:5])
-  dat2 = data.frame(fishery_id = 1:5,
-                    let = letters[1:5])
+test_that("validate_species works", {
+  dat1 <- data.frame(
+    fishery_id = 1:5,
+    let = letters[1:5]
+  )
+  dat2 <- data.frame(
+    fishery_id = 1:5,
+    let = letters[1:5]
+  )
   attr(dat2, "species") <- "CHINOOK"
   expect_equal(validate_species(dat1, "COHO"), "COHO")
   expect_equal(validate_species(dat2), "CHINOOK")

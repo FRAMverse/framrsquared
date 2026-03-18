@@ -27,8 +27,10 @@
 #' @export
 #' @seealso [disconnect_fram_db()], [disconnect_all_fram_connections()]
 #' @examples
-#' \dontrun{fram_db <- connect_fram_db('<path>')
-#' fram_db |> fetch_table("Mortality")}
+#' \dontrun{
+#' fram_db <- connect_fram_db("<path>")
+#' fram_db |> fetch_table("Mortality")
+#' }
 #'
 connect_fram_db <-
   function(db_path,
@@ -36,36 +38,35 @@ connect_fram_db <-
            quiet = FALSE) {
     # verify file exists
     if (!file.exists(db_path)) {
-      cli::cli_abort('Database file doesn\'t exist. Check path.')
+      cli::cli_abort("Database file doesn't exist. Check path.")
     }
 
     # more db checks
-    if (!tools::file_ext(db_path) %in% c('mdb', 'db')) {
-      cli::cli_abort('Must provide a valid .mdb access file or SQLite .db file')
+    if (!tools::file_ext(db_path) %in% c("mdb", "db")) {
+      cli::cli_abort("Must provide a valid .mdb access file or SQLite .db file")
     }
 
-    if(!is.logical(read_only) | length(read_only) != 1){
+    if (!is.logical(read_only) | length(read_only) != 1) {
       cli::cli_abort("`read_only` must be a logical of length 1")
     }
 
-    if(!is.logical(quiet) | length(quiet) != 1){
+    if (!is.logical(quiet) | length(quiet) != 1) {
       cli::cli_abort("`quiet` must be a logical of length 1")
     }
 
     # connect to database
-    if(tools::file_ext(db_path) == 'mdb'){
+    if (tools::file_ext(db_path) == "mdb") {
       con <- DBI::dbConnect(
         drv = odbc::odbc(),
-        .connection_string = paste0("Driver={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=", db_path, ";"))
-
-    } else if (tools::file_ext(db_path) == 'db') {
+        .connection_string = paste0("Driver={Microsoft Access Driver (*.mdb, *.accdb)};DBQ=", db_path, ";")
+      )
+    } else if (tools::file_ext(db_path) == "db") {
       con <- DBI::dbConnect(
         RSQLite::SQLite(),
         db_path
       )
-
     } else {
-      cli::cli_abort('Something went wrong connecting to a database')
+      cli::cli_abort("Something went wrong connecting to a database")
     }
 
 
@@ -75,9 +76,13 @@ connect_fram_db <-
 
     fram_db_species <- fram_database_species(con)
 
-    if(!quiet){cli::cli_alert_success('Successfully connected to FRAM database')}
+    if (!quiet) {
+      cli::cli_alert_success("Successfully connected to FRAM database")
+    }
 
-    if(!quiet && !tools::file_ext(db_path) == 'db'){welcome(con)}
+    if (!quiet && !tools::file_ext(db_path) == "db") {
+      welcome(con)
+    }
 
     con_id <- as.character(as.numeric(Sys.time()) * 1000000)
 
@@ -93,7 +98,6 @@ connect_fram_db <-
     .fram_connections[[con_id]] <- con_obj
 
     return(con_obj)
-
   }
 
 
@@ -103,10 +107,12 @@ connect_fram_db <-
 #' @export
 #' @seealso [connect_fram_db()]
 #' @examples
-#' \dontrun{disconnect_fram_db(fram_db)}
+#' \dontrun{
+#' disconnect_fram_db(fram_db)
+#' }
 #'
 disconnect_fram_db <- function(fram_db,
-                               quiet = TRUE){
+                               quiet = TRUE) {
   validate_fram_db(fram_db)
   validate_flag(quiet)
 
@@ -115,8 +121,8 @@ disconnect_fram_db <- function(fram_db,
 
   rm(list = fram_db$fram_db_connection_id, envir = .fram_connections)
 
-  if(!quiet){
-    cli::cli_alert_success(glue::glue('Successfully disconnected from FRAM database ({db_var_name})'))
+  if (!quiet) {
+    cli::cli_alert_success(glue::glue("Successfully disconnected from FRAM database ({db_var_name})"))
   }
 }
 
@@ -129,8 +135,8 @@ disconnect_fram_db <- function(fram_db,
 #'
 #' @examples
 #' \dontrun{
-#' fram_db = connect_fram_db("Chin2025.mdb")
-#' fram_db = connect_fram_db("Chin2025.mdb")
+#' fram_db <- connect_fram_db("Chin2025.mdb")
+#' fram_db <- connect_fram_db("Chin2025.mdb")
 #' disconnect_fram_db(fram_db)
 #'
 #' list_extant_fram_connections()
@@ -140,8 +146,8 @@ disconnect_fram_db <- function(fram_db,
 #'
 #' list_extant_fram_connections
 #' }
-disconnect_all_fram_connections <- function(){
-  total_connections = length(.fram_connections)
+disconnect_all_fram_connections <- function() {
+  total_connections <- length(.fram_connections)
   for (con_id in names(.fram_connections)) {
     con <- .fram_connections[[con_id]]
     if (DBI::dbIsValid(con$fram_db_connection)) {
@@ -159,16 +165,19 @@ disconnect_all_fram_connections <- function(){
 #'
 #' @export
 #'
-list_extant_fram_connections = function(){
+list_extant_fram_connections <- function() {
   cli::cli_alert("{length(.fram_connections)} existing connections to FRAM databases.")
 
-  if(length(.fram_connections) > 0){
+  if (length(.fram_connections) > 0) {
     objs <- names(.fram_connections)
     db_names <- purrr::map_chr(objs,
-                               .f = \(x){DBI::dbGetInfo(.fram_connections[[x]]$fram_db_connection)$dbname}) |>
+      .f = \(x){
+        DBI::dbGetInfo(.fram_connections[[x]]$fram_db_connection)$dbname
+      }
+    ) |>
       unique()
     cli::cli_alert_warning("The following databases have extant connections to them:")
-    names(db_names) = rep("*", length(db_names))
+    names(db_names) <- rep("*", length(db_names))
     cli::cli_bullets(db_names)
   }
 }

@@ -150,7 +150,6 @@ calculate_soncc_er_breakdown <- function(fram_db,
 calculate_soncc <- function(fram_db,
                             run_id,
                             verbose = FALSE) {
-
   validate_fram_db(fram_db)
   validate_run_id(fram_db, run_id)
   validate_flag(verbose)
@@ -260,8 +259,7 @@ add_dummy_rows <- function(df, after_rows, dummy_row) {
 #' @seealso [calculate_soncc()], [create_soncc_pasteable()]
 #'
 format_soncc_pasteable <- function(soncc_er_breakdown,
-                                  filename) {
-
+                                   filename) {
   validate_data_frame(soncc_er_breakdown)
   validate_character(filename, n = 1)
 
@@ -323,7 +321,7 @@ format_soncc_pasteable <- function(soncc_er_breakdown,
 #' fram_db <- connect_fram_db(here("2026NOF_CohoFRAMdatabase_DRAFT.mdb"))
 #' create_soncc_pasteable(fram_db, run_id = 152, filename = here("soncc_copy_ready.xlsx"))
 #' }
-create_soncc_pasteable <- function(fram_db, run_id, filename){
+create_soncc_pasteable <- function(fram_db, run_id, filename) {
   validate_fram_db(fram_db)
   validate_run_id(fram_db, run_id)
   validate_character(filename, n = 1)

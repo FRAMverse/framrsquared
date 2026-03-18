@@ -27,8 +27,7 @@ NULL
 #' frs_stylecheck_assignment("R/copy.R")
 #' frs_stylecheck_snakecase("R/copy.R")
 #' }
-
-frs_stylecheck_assignment = function(filepath, n = Inf){
+frs_stylecheck_assignment <- function(filepath, n = Inf) {
   cli::cli_text(cli::col_blue(paste("Checking", gsub(".*[/]", "", filepath), "for accidental uses of `=` for assignment")))
   cli::cli_text(cli::col_grey("Note that this is not perfect -- multi-line function calls which (correctly) use `=` for arguments
   will show up here, as will SQL calls and other edge cases."))
@@ -40,15 +39,15 @@ frs_stylecheck_assignment = function(filepath, n = Inf){
     dplyr::mutate(before.parens = gsub("[(].*", "", .data$line.entry)) |>
     dplyr::filter(stringr::str_detect(.data$before.parens, "[^=]=[^=]")) |>
     dplyr::select(-.data$before.parens)
-  if(nrow(df)==0){
+  if (nrow(df) == 0) {
     cli::cli_alert_success("No possible cases of accidental assignment using `=`. Good work!")
-  }else{
+  } else {
     df |> print(n = n)
   }
 }
 
 #' @rdname styleguide
-frs_stylecheck_snakecase = function(filepath, n = Inf){
+frs_stylecheck_snakecase <- function(filepath, n = Inf) {
   cli::cli_text(cli::col_blue(paste("Checking", gsub(".*[/]", "", filepath), "for variables that are not named using snake_case.")))
   cli::cli_text(cli::col_grey("Note that this will also list single-word variables, which should be fine. Make sure assignment all uses `<- ` (`frs_stylecheck_assignment()` streamlines this)"))
   df <- readr::read_lines(filepath) |>
@@ -57,12 +56,14 @@ frs_stylecheck_snakecase = function(filepath, n = Inf){
   df$linenum <- 1:nrow(df)
   df <- df |>
     dplyr::filter(stringr::str_detect(.data$line.entry, "<-")) |>
-    dplyr::mutate(variable.name = stringr::str_trim(gsub("<-.*", "", .data$line.entry)),
-           .before = .data$line.entry) |>
+    dplyr::mutate(
+      variable.name = stringr::str_trim(gsub("<-.*", "", .data$line.entry)),
+      .before = .data$line.entry
+    ) |>
     dplyr::filter(!stringr::str_detect(.data$line.entry, "_"))
-  if(nrow(df)==0){
+  if (nrow(df) == 0) {
     cli::cli_alert_success("No possible cases of variable names not in snakecase. Good work!")
-  }else{
+  } else {
     df |> print(n = n)
   }
 }

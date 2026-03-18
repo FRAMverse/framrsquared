@@ -14,15 +14,14 @@
 #' fram_db |> aeq_mortality(run_id = 132)
 #' }
 aeq_mortality <- function(fram_db, run_id = NULL, msp = TRUE, label = TRUE) {
-
-  validate_fram_db(fram_db, db_type = 'full', db_species = 'CHINOOK')
+  validate_fram_db(fram_db, db_type = "full", db_species = "CHINOOK")
   if (!is.null(run_id) && (!all(is.numeric(run_id)))) {
     cli::cli_abort("`run_id` must be NULL or a numeric")
   }
   if (is.numeric(run_id) && !is.null(run_id)) {
     validate_run_id(fram_db, run_id)
   }
-  if (!is.logical(msp) || length(msp)>1) {
+  if (!is.logical(msp) || length(msp) > 1) {
     cli::cli_abort("`msp` must be logical.")
   }
 
@@ -30,11 +29,11 @@ aeq_mortality <- function(fram_db, run_id = NULL, msp = TRUE, label = TRUE) {
     cli::cli_abort("AEQ mortality can only be used with Chinook")
   }
 
-  if(msp){
+  if (msp) {
     mortality <- fram_db |>
       msp_mortality(run_id = run_id) |>
       dplyr::select(-.data$primary_key)
-  }else{
+  } else {
     mortality <- fram_db |>
       fetch_table_("Mortality") |>
       dplyr::select(-.data$primary_key)
@@ -74,17 +73,18 @@ aeq_mortality <- function(fram_db, run_id = NULL, msp = TRUE, label = TRUE) {
       ),
       \(x) dplyr::if_else(is.na(.data$terminal_flag), x * .data$aeq, x)
     )) |>
-    dplyr::arrange(.data$run_id, .data$fishery_id,
-                   .data$time_step, .data$stock_id
+    dplyr::arrange(
+      .data$run_id, .data$fishery_id,
+      .data$time_step, .data$stock_id
     ) |>
-    `attr<-`('species', fram_db$fram_db_species)
-  if(label == TRUE){
+    `attr<-`("species", fram_db$fram_db_species)
+  if (label == TRUE) {
     aeq_m <- aeq_m |>
       framrosetta::label_fisheries() |>
       framrosetta::label_stocks()
   }
 
-  if(!is.null(run_id)) {
+  if (!is.null(run_id)) {
     aeq_m |> dplyr::filter(.data$run_id %in% .env$run_id)
   } else {
     aeq_m
@@ -93,8 +93,10 @@ aeq_mortality <- function(fram_db, run_id = NULL, msp = TRUE, label = TRUE) {
 
 ## alias with labeling set to false
 aeq_mortality_ <- function(fram_db, run_id = NULL, msp = TRUE) {
-  aeq_mortality(fram_db = fram_db,
-                run_id = run_id,
-                msp = msp,
-                label = FALSE)
+  aeq_mortality(
+    fram_db = fram_db,
+    run_id = run_id,
+    msp = msp,
+    label = FALSE
+  )
 }

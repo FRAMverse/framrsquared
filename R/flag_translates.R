@@ -2,13 +2,13 @@
 #' @param vec vector of flags
 #' @export
 #' @examples
-#' \dontrun{NR_flag_translate(sample(1:4, 10, replace = T))}
-
-NR_flag_translate = function(vec) {
-
+#' \dontrun{
+#' NR_flag_translate(sample(1:4, 10, replace = T))
+#' }
+NR_flag_translate <- function(vec) {
   validate_numeric(vec)
 
-  if(!all(vec %in% 0:4)){
+  if (!all(vec %in% 0:4)) {
     cli::cli_abort("input includes flags not matching non-retention flags")
   }
 
@@ -26,13 +26,14 @@ NR_flag_translate = function(vec) {
 #' @param vec vector of flags
 #' @export
 #' @examples
-#' \dontrun{scalers_flag_translate(sample(c(1, 2, 7, 8, 17, 18, 27, 28), 10, replace = T))}
+#' \dontrun{
+#' scalers_flag_translate(sample(c(1, 2, 7, 8, 17, 18, 27, 28), 10, replace = T))
+#' }
 #'
-scalers_flag_translate = function(vec) {
-
+scalers_flag_translate <- function(vec) {
   validate_numeric(vec)
 
-  if(!all(vec %in% c(0, 1, 2, 7, 8, 17, 18, 27, 28))){
+  if (!all(vec %in% c(0, 1, 2, 7, 8, 17, 18, 27, 28))) {
     cli::cli_abort("input includes flags not matching non-retention flags")
   }
 
@@ -56,31 +57,39 @@ scalers_flag_translate = function(vec) {
 #' @param warn Logical, defaults to TRUE. Warn if neither flag column is present in dataframe?
 #' @export
 #' @examples
-#' \dontrun{ mortality_table |> add_flag_text()}
-label_flags = function(.data,
-                         species = NULL,
-                         warn = TRUE) {
+#' \dontrun{
+#' mortality_table |> add_flag_text()
+#' }
+label_flags <- function(.data,
+                        species = NULL,
+                        warn = TRUE) {
   validate_data_frame(.data)
-  species = validate_species(.data, species)
-  if(!any(c("fishery_flag", "non_retention_flag") %in% names(.data))){
-    if(warn){
+  species <- validate_species(.data, species)
+  if (!any(c("fishery_flag", "non_retention_flag") %in% names(.data))) {
+    if (warn) {
       cli::cli_alert_warning("Missing 'fishery_flag' or 'non_retention_flag' column in data")
     }
   } else {
     if ("fishery_flag" %in% names(.data)) {
       .data <- .data |>
-        dplyr::mutate(fishery_flag_label = scalers_flag_translate(.data$fishery_flag),
-                      .after = .data$fishery_flag)
+        dplyr::mutate(
+          fishery_flag_label = scalers_flag_translate(.data$fishery_flag),
+          .after = .data$fishery_flag
+        )
     }
-    if("non_retention_flag" %in% names(.data)){
-      if(species == "CHINOOK"){
-      .data <- .data |>
-        dplyr::mutate(non_retention_flag_label = NR_flag_translate(.data$non_retention_flag),
-                      .after =.data$non_retention_flag)
+    if ("non_retention_flag" %in% names(.data)) {
+      if (species == "CHINOOK") {
+        .data <- .data |>
+          dplyr::mutate(
+            non_retention_flag_label = NR_flag_translate(.data$non_retention_flag),
+            .after = .data$non_retention_flag
+          )
       } else {
         .data <- .data |>
-          dplyr::mutate(non_retention_flag_label = "Total dead fish",
-                        .after =.data$non_retention_flag)
+          dplyr::mutate(
+            non_retention_flag_label = "Total dead fish",
+            .after = .data$non_retention_flag
+          )
       }
     }
   }
@@ -92,25 +101,28 @@ label_flags = function(.data,
 #' @param .data Fishery Scalers table
 #' @export
 #' @examples
-#' \dontrun{ fishery_scalers_table |> filter_flag()}
+#' \dontrun{
+#' fishery_scalers_table |> filter_flag()
+#' }
 #'
-filter_flag <- function(.data){
+filter_flag <- function(.data) {
   validate_data_frame(.data)
-  species = attr(.data, "species")
-  if(!all(c("fishery_scale_factor", "msf_fishery_scale_factor",
-            "quota", "msf_quota") %in% names(.data))){
+  species <- attr(.data, "species")
+  if (!all(c(
+    "fishery_scale_factor", "msf_fishery_scale_factor",
+    "quota", "msf_quota"
+  ) %in% names(.data))) {
     cli::cli_abort("Input is not a fishery scaler dataframe.")
   }
   res <- .data |>
     dplyr::group_by(.data$fishery_id, .data$time_step) |>
     dplyr::mutate(
-      fishery_scale_factor = dplyr::if_else(.data$fishery_flag %in% c(1,17,18), .data$fishery_scale_factor, NA_real_),
-      msf_fishery_scale_factor = dplyr::if_else(.data$fishery_flag %in% c(7,17,27), .data$msf_fishery_scale_factor, NA_real_),
-      quota = dplyr::if_else(.data$fishery_flag %in% c(2,27,28), .data$quota, NA_real_),
-      msf_quota = dplyr::if_else(.data$fishery_flag %in% c(8,18,28), .data$msf_quota, NA_real_)
+      fishery_scale_factor = dplyr::if_else(.data$fishery_flag %in% c(1, 17, 18), .data$fishery_scale_factor, NA_real_),
+      msf_fishery_scale_factor = dplyr::if_else(.data$fishery_flag %in% c(7, 17, 27), .data$msf_fishery_scale_factor, NA_real_),
+      quota = dplyr::if_else(.data$fishery_flag %in% c(2, 27, 28), .data$quota, NA_real_),
+      msf_quota = dplyr::if_else(.data$fishery_flag %in% c(8, 18, 28), .data$msf_quota, NA_real_)
     ) |>
     dplyr::ungroup()
   attr(res, "species") <- species
   return(res)
 }
-

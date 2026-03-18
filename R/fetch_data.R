@@ -15,26 +15,26 @@
 #' @examples
 #' \dontrun{
 #' fram_db <- connect_fram_db("validat2024.mdb")
-#' fram_db |> fetch_table('Mortality')}
+#' fram_db |> fetch_table("Mortality")
+#' }
 #'
-
-fetch_table <- function(fram_db, table_name = NULL, label = TRUE, warn = TRUE){
+fetch_table <- function(fram_db, table_name = NULL, label = TRUE, warn = TRUE) {
   ## adding input checking
   validate_fram_db(fram_db)
   validate_flag(warn)
-  if(!is.null(table_name)){
-    if(!is.character(table_name) | length(table_name)!= 1){
+  if (!is.null(table_name)) {
+    if (!is.character(table_name) | length(table_name) != 1) {
       cli::cli_abort("`table` must be a character atomic.")
     }
   }
-  all_tables = provide_table_names(is_full = TRUE)
-  limited_tables = provide_table_names(is_full = FALSE)
+  all_tables <- provide_table_names(is_full = TRUE)
+  limited_tables <- provide_table_names(is_full = FALSE)
 
 
 
   if (is.null(table_name)) {
-    if (fram_db$fram_db_type == 'full') {
-      cli::cli_alert_info('A table name must be provided, see available options:')
+    if (fram_db$fram_db_type == "full") {
+      cli::cli_alert_info("A table name must be provided, see available options:")
       fmt <- cli::ansi_columns(
         all_tables,
         fill = "rows",
@@ -47,8 +47,7 @@ fetch_table <- function(fram_db, table_name = NULL, label = TRUE, warn = TRUE){
         padding = c(0, 1, 0, 1),
         header = cli::col_cyan("FRAM tables (full database)")
       )
-    } else{
-
+    } else {
       fmt <- cli::ansi_columns(
         limited_tables,
         fill = "rows",
@@ -62,42 +61,44 @@ fetch_table <- function(fram_db, table_name = NULL, label = TRUE, warn = TRUE){
         header = cli::col_cyan("FRAM tables (transfer database)")
       )
     }
-  } else{
+  } else {
     validate_table(fram_db, table_name)
 
 
-    if(fram_db$fram_db_species == "CHINOOK" & table_name == "BackwardsFRAM"){
-      if(warn){
+    if (fram_db$fram_db_species == "CHINOOK" & table_name == "BackwardsFRAM") {
+      if (warn) {
         cli::cli_alert_danger("Chinook BackwardsFRAM tables use different numbering for stock_id!\n This can cause problems when merging with other tables!\n Recommend fetch_table_bkchin() instead.")
       }
-      label = FALSE
+      label <- FALSE
     }
 
-    output_table <- DBI::dbGetQuery(fram_db$fram_db_connection,
-                                    glue::glue('SELECT * FROM {table_name};')) |>
+    output_table <- DBI::dbGetQuery(
+      fram_db$fram_db_connection,
+      glue::glue("SELECT * FROM {table_name};")
+    ) |>
       fram_clean_tables()
 
-    attr(output_table, 'species') <- fram_db$fram_db_species
+    attr(output_table, "species") <- fram_db$fram_db_species
 
-    if(label){
+    if (label) {
       output_table <- output_table |>
         label_flags(warn = FALSE)
-      if(all(c("fishery_id", "run_id") %in% names(output_table)) & fram_db$fram_db_type == "full"){
+      if (all(c("fishery_id", "run_id") %in% names(output_table)) & fram_db$fram_db_type == "full") {
         output_table <- output_table |>
           label_fisheries_db(fram_db)
       }
-      if(all(c("stock_id", "run_id") %in% names(output_table)) & fram_db$fram_db_type == "full"){
-          output_table <- output_table |>
-            label_stocks_db(fram_db)
+      if (all(c("stock_id", "run_id") %in% names(output_table)) & fram_db$fram_db_type == "full") {
+        output_table <- output_table |>
+          label_stocks_db(fram_db)
       }
     }
 
-    if(table_name == "Mortality" & warn == TRUE){
+    if (table_name == "Mortality" & warn == TRUE) {
       neg_mort_runs <- output_table |>
         dplyr::filter(dplyr::if_any(.data$landed_catch:.data$msf_encounter, ~ . < 0)) |>
         dplyr::pull(.data$run_id) |>
         unique()
-      if(length(neg_mort_runs>0)){
+      if (length(neg_mort_runs > 0)) {
         cli::cli_alert_danger("DANGER!! Run ID(s) {neg_mort_runs} have one or more negative mortality or encounter values in the 'Mortality' table!")
       }
     }
@@ -109,11 +110,13 @@ fetch_table <- function(fram_db, table_name = NULL, label = TRUE, warn = TRUE){
 #' @rdname fetch_table
 #'
 #' @export
-fetch_table_ <- function(fram_db, table_name = NULL, warn = TRUE){
-  fetch_table(fram_db = fram_db,
-              table_name = table_name,
-              warn = warn,
-              label = FALSE)
+fetch_table_ <- function(fram_db, table_name = NULL, warn = TRUE) {
+  fetch_table(
+    fram_db = fram_db,
+    table_name = table_name,
+    warn = warn,
+    label = FALSE
+  )
 }
 
 #' Safely fetch Chinook BackwardsFRAM table
@@ -136,32 +139,32 @@ fetch_table_ <- function(fram_db, table_name = NULL, warn = TRUE){
 #' @examples
 #' #' @examples
 #' \dontrun{
-#' ##Potentially problematic stock_id won't align with other tables
-#' fram_db |> fetch_table('BackwardsFRAM')
+#' ## Potentially problematic stock_id won't align with other tables
+#' fram_db |> fetch_table("BackwardsFRAM")
 #' ## "safe" version of the table; stock_id WILL align with other tables
 #' fram_db |> fetch_table_bkchin()
 #' }
-fetch_table_bkchin <- function(fram_db){
+fetch_table_bkchin <- function(fram_db) {
   validate_fram_db(fram_db)
 
-  if(fram_db$fram_db_species != "CHINOOK"){
+  if (fram_db$fram_db_species != "CHINOOK") {
     cli::cli_abort("`fetch_table_bkchin()` only appropriate for CHINOOK databases, not {fram_db$fram_db_species} database.")
   }
 
-  output_table <- fetch_table_(fram_db, table_name = "BackwardsFRAM",
-                              warn = FALSE) |>
+  output_table <- fetch_table_(fram_db,
+    table_name = "BackwardsFRAM",
+    warn = FALSE
+  ) |>
     dplyr::rename(bk_stock_id = .data$stock_id) |>
     dplyr::left_join(framrosetta::bk_lookup_chin, by = "bk_stock_id")
 
   return(output_table)
 }
 
-fetch_table_colnames <- function(fram_db, table_name){
+fetch_table_colnames <- function(fram_db, table_name) {
   DBI::dbGetQuery(
     fram_db$fram_db_connection,
     glue::glue("SELECT * FROM {table_name} where false;")
   ) |>
     colnames()
 }
-
-

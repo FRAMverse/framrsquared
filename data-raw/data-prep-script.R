@@ -22,6 +22,7 @@ coho_stock_marlene <- readr::read_csv("data-raw/fram_coho_stocks.csv") |>
   dplyr::select(stock_id, stock_type = type)
 
 usethis::use_data(coho_stock_comp_lut,
-                  coho_stock_marlene,
-                  fishery_coho_soncc,
-                  overwrite = TRUE, internal = TRUE)
+  coho_stock_marlene,
+  fishery_coho_soncc,
+  overwrite = TRUE, internal = TRUE
+)

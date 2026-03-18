@@ -11,12 +11,12 @@
 #'
 #' @return `.data` with additional column, `$stock_label`
 #' @export
-label_stocks_db <- function(.data, fram_db){
+label_stocks_db <- function(.data, fram_db) {
   validate_data_frame(.data)
   validate_fram_db(fram_db, db_type = "full")
 
   ## labeling
-  run_id_luts = fetch_table_(fram_db, "RunID") |>
+  run_id_luts <- fetch_table_(fram_db, "RunID") |>
     dplyr::select("run_id", "base_period_id")
   bp_lut <- fetch_table_(fram_db, "BaseID") |>
     dplyr::select("stock_version", "species_name", "base_period_id")
@@ -28,16 +28,20 @@ label_stocks_db <- function(.data, fram_db){
   stock_lut <- fetch_table_(fram_db, "Stock")
 
   lut_use <- run_id_luts |>
-    dplyr::left_join(stock_lut, by = c("stock_version", "species_name" = "species"),
-              relationship = "many-to-many") |>
+    dplyr::left_join(stock_lut,
+      by = c("stock_version", "species_name" = "species"),
+      relationship = "many-to-many"
+    ) |>
     dplyr::select("stock_id", "run_id", stock_label = "stock_long_name")
 
 
   res <- .data |>
     dplyr::left_join(lut_use,
-                     by = c("run_id", "stock_id"))|>
+      by = c("run_id", "stock_id")
+    ) |>
     dplyr::relocate(.data$stock_label,
-                    .after = "stock_id")
+      .after = "stock_id"
+    )
   attr(res, "species") <- fram_db$fram_db_species
   return(res)
 }
@@ -56,12 +60,12 @@ label_stocks_db <- function(.data, fram_db){
 #'
 #' @return `.data` with additional column, `$fishery_label`
 #' @export
-label_fisheries_db <- function(.data, fram_db){
+label_fisheries_db <- function(.data, fram_db) {
   validate_data_frame(.data)
   validate_fram_db(fram_db, db_type = "full")
 
   ## labeling
-  run_id_luts = fetch_table_(fram_db, "RunID") |>
+  run_id_luts <- fetch_table_(fram_db, "RunID") |>
     dplyr::select("run_id", "base_period_id")
   bp_lut <- fetch_table_(fram_db, "BaseID") |>
     dplyr::select("fishery_version", "species_name", "base_period_id")
@@ -75,8 +79,9 @@ label_fisheries_db <- function(.data, fram_db){
 
   lut_use <- run_id_luts |>
     dplyr::left_join(fishery_lut,
-                     by = c("fishery_version", "species_name" = "species"),
-              relationship = "many-to-many") |>
+      by = c("fishery_version", "species_name" = "species"),
+      relationship = "many-to-many"
+    ) |>
     dplyr::select("fishery_id", "run_id", fishery_label = "fishery_title")
 
 
@@ -84,9 +89,11 @@ label_fisheries_db <- function(.data, fram_db){
 
   res <- .data |>
     dplyr::left_join(lut_use,
-                     by = c("fishery_id", "run_id"))|>
+      by = c("fishery_id", "run_id")
+    ) |>
     dplyr::relocate(.data$fishery_label,
-                    .after = "fishery_id")
+      .after = "fishery_id"
+    )
   attr(res, "species") <- fram_db$fram_db_species
   return(res)
 }

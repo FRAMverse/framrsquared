@@ -23,7 +23,7 @@ filter_sport <- function(.data, species = NULL, return_ids = FALSE) {
   species <- validate_species(.data, species)
 
   if (species == "CHINOOK") {
-    fishery_vec =  c(
+    fishery_vec <- c(
       3, 8, 11, 13, 14, 15,
       18, 22, 27, 29, 31, 33,
       35, 48, 60, 62, 72, 36,
@@ -31,7 +31,7 @@ filter_sport <- function(.data, species = NULL, return_ids = FALSE) {
       64, 67
     )
   } else if (species == "COHO") {
-    fishery_vec = c(
+    fishery_vec <- c(
       3, 5, 7, 15, 17, 19, 21, 23, 24,
       28, 29, 31, 33, 37, 40, 41, 45, 46,
       48, 49, 51, 54, 58, 59, 60, 61, 62,
@@ -46,14 +46,12 @@ filter_sport <- function(.data, species = NULL, return_ids = FALSE) {
     cli::cli_abort('`species` must be "COHO" or "CHINOOK", not "{species}".')
   }
 
-  if(return_ids){
+  if (return_ids) {
     return(fishery_vec)
   } else {
     return(.data |>
-             dplyr::filter(.data$fishery_id %in% fishery_vec)
-    )
+      dplyr::filter(.data$fishery_id %in% fishery_vec))
   }
-
 }
 
 #' Filters a dataframe to net fisheries. Will
@@ -80,7 +78,7 @@ filter_net <- function(.data, species = NULL, return_ids = FALSE) {
 
   # if it's not sport it must be net
   if (species == "CHINOOK") {
-    fishery_vec = c(
+    fishery_vec <- c(
       3, 8, 11, 13, 14, 15,
       18, 22, 27, 29, 31, 33,
       35, 48, 60, 62, 72, 36,
@@ -88,7 +86,7 @@ filter_net <- function(.data, species = NULL, return_ids = FALSE) {
       64, 67
     )
   } else if (species == "COHO") {
-    fishery_vec = c(
+    fishery_vec <- c(
       3, 5, 7, 15, 17, 19, 21, 23, 24,
       28, 29, 31, 33, 37, 40, 41, 45, 46,
       48, 49, 51, 54, 58, 59, 60, 61, 62,
@@ -103,14 +101,12 @@ filter_net <- function(.data, species = NULL, return_ids = FALSE) {
     cli::cli_abort('`species` must be "COHO" or "CHINOOK", not "{species}".')
   }
 
-  if(return_ids){
+  if (return_ids) {
     return(fishery_vec)
   } else {
     return(.data |>
-             dplyr::filter(.data$fishery_id %in% fishery_vec)
-    )
+      dplyr::filter(.data$fishery_id %in% fishery_vec))
   }
-
 }
 
 
@@ -137,19 +133,18 @@ filter_puget_sound <- function(.data, species = NULL, return_ids = FALSE) {
   species <- validate_species(.data, species)
 
   if (species == "CHINOOK") {
-    fishery_vec = c(36:71)
+    fishery_vec <- c(36:71)
   } else if (species == "COHO") {
-    fishery_vec = c(76:166)
+    fishery_vec <- c(76:166)
   } else {
     cli::cli_abort('`species` must be "COHO" or "CHINOOK", not "{species}".')
   }
 
-  if(return_ids){
+  if (return_ids) {
     return(fishery_vec)
   } else {
     return(.data |>
-             dplyr::filter(.data$fishery_id %in% fishery_vec)
-    )
+      dplyr::filter(.data$fishery_id %in% fishery_vec))
   }
 }
 
@@ -175,21 +170,19 @@ filter_wa <- function(.data, species = NULL, return_ids = FALSE) {
   species <- validate_species(.data, species)
 
   if (species == "CHINOOK") {
-    fishery_vec = c(16:71)
+    fishery_vec <- c(16:71)
   } else if (species == "COHO") {
-    fishery_vec = c(23:166)
+    fishery_vec <- c(23:166)
   } else {
     cli::cli_abort('`species` must be "COHO" or "CHINOOK", not "{species}".')
   }
 
-  if(return_ids){
+  if (return_ids) {
     return(fishery_vec)
   } else {
     return(.data |>
-             dplyr::filter(.data$fishery_id %in% fishery_vec)
-    )
+      dplyr::filter(.data$fishery_id %in% fishery_vec))
   }
-
 }
 
 #' Filters a dataframe to Canadian (BC) fisheries. Will
@@ -213,21 +206,19 @@ filter_bc <- function(.data, species = NULL, return_ids = FALSE) {
   species <- validate_species(.data, species)
 
   if (species == "CHINOOK") {
-    fishery_vec = c(4:15)
+    fishery_vec <- c(4:15)
   } else if (species == "COHO") {
-    fishery_vec = c(167:193)
+    fishery_vec <- c(167:193)
   } else {
     cli::cli_abort('`species` must be "COHO" or "CHINOOK", not "{species}".')
   }
 
-  if(return_ids){
+  if (return_ids) {
     return(fishery_vec)
   } else {
     return(.data |>
-             dplyr::filter(.data$fishery_id %in% fishery_vec)
-    )
+      dplyr::filter(.data$fishery_id %in% fishery_vec))
   }
-
 }
 
 #' Filters a dataframe to Alaska fisheries. Will
@@ -251,21 +242,19 @@ filter_ak <- function(.data, species = NULL, return_ids = FALSE) {
   species <- validate_species(.data, species)
 
   if (species == "CHINOOK") {
-    fishery_vec = c(1:3)
+    fishery_vec <- c(1:3)
   } else if (species == "COHO") {
-    fishery_vec = c(194:198)
+    fishery_vec <- c(194:198)
   } else {
     cli::cli_abort('`species` must be "COHO" or "CHINOOK", not "{species}".')
   }
 
-  if(return_ids){
+  if (return_ids) {
     return(fishery_vec)
   } else {
     return(.data |>
-             dplyr::filter(.data$fishery_id %in% fishery_vec)
-    )
+      dplyr::filter(.data$fishery_id %in% fishery_vec))
   }
-
 }
 
 
@@ -290,21 +279,19 @@ filter_ca <- function(.data, species = NULL, return_ids = FALSE) {
   species <- validate_species(.data, species)
 
   if (species == "CHINOOK") {
-    fishery_vec =  c(32:34)
+    fishery_vec <- c(32:34)
   } else if (species == "COHO") {
-    fishery_vec =  c(1:8)
+    fishery_vec <- c(1:8)
   } else {
     cli::cli_abort('`species` must be "COHO" or "CHINOOK", not "{species}".')
   }
 
-  if(return_ids){
+  if (return_ids) {
     return(fishery_vec)
   } else {
     return(.data |>
-             dplyr::filter(.data$fishery_id %in% fishery_vec)
-    )
+      dplyr::filter(.data$fishery_id %in% fishery_vec))
   }
-
 }
 
 #' Filters a dataframe to Oregon fisheries. Will
@@ -328,19 +315,18 @@ filter_or <- function(.data, species = NULL, return_ids = FALSE) {
   species <- validate_species(.data, species)
 
   if (species == "CHINOOK") {
-    fishery_vec =  c(28:33)
+    fishery_vec <- c(28:33)
   } else if (species == "COHO") {
-    fishery_vec = c(5:32)
+    fishery_vec <- c(5:32)
   } else {
     cli::cli_abort('`species` must be "COHO" or "CHINOOK", not "{species}".')
   }
 
-  if(return_ids){
+  if (return_ids) {
     return(fishery_vec)
   } else {
     return(.data |>
-             dplyr::filter(.data$fishery_id %in% fishery_vec)
-    )
+      dplyr::filter(.data$fishery_id %in% fishery_vec))
   }
 }
 
@@ -366,19 +352,18 @@ filter_coast <- function(.data, species = NULL, return_ids = FALSE) {
   species <- validate_species(.data, species)
 
   if (species == "CHINOOK") {
-    fishery_vec = c(1:35)
+    fishery_vec <- c(1:35)
   } else if (species == "COHO") {
-    fishery_vec =  c(1:22, 33:75)
+    fishery_vec <- c(1:22, 33:75)
   } else {
     cli::cli_abort('`species` must be "COHO" or "CHINOOK", not "{species}".')
   }
 
-  if(return_ids){
+  if (return_ids) {
     return(fishery_vec)
   } else {
     return(.data |>
-             dplyr::filter(.data$fishery_id %in% fishery_vec)
-    )
+      dplyr::filter(.data$fishery_id %in% fishery_vec))
   }
 }
 
@@ -403,9 +388,9 @@ filter_marine <- function(.data, species = NULL, return_ids = FALSE) {
   species <- validate_species(.data, species)
 
   if (species == "CHINOOK") {
-    fishery_vec = 1:71
+    fishery_vec <- 1:71
   } else if (species == "COHO") {
-    fishery_vec = c(
+    fishery_vec <- c(
       3:8, 15:22, 33:50,
       79:83, 87:88, 91:93,
       96:97, 101:102, 105:107,
@@ -417,12 +402,11 @@ filter_marine <- function(.data, species = NULL, return_ids = FALSE) {
     cli::cli_abort('`species` must be "COHO" or "CHINOOK", not "{species}".')
   }
 
-  if(return_ids){
+  if (return_ids) {
     return(fishery_vec)
   } else {
     return(.data |>
-             dplyr::filter(.data$fishery_id %in% fishery_vec)
-    )
+      dplyr::filter(.data$fishery_id %in% fishery_vec))
   }
 }
 
@@ -437,7 +421,6 @@ filter_marine <- function(.data, species = NULL, return_ids = FALSE) {
 #' @examples
 #' framrosetta::fishery_chinook_fram |> filter_commercial_wa_nt(species = "CHINOOK")
 #' framrosetta::fishery_coho_fram |> filter_commercial_wa_nt(species = "COHO")
-
 filter_commercial_wa_nt <- function(.data, species = NULL, return_ids = FALSE) {
   validate_data_frame(.data)
   validate_flag(return_ids)
@@ -449,20 +432,18 @@ filter_commercial_wa_nt <- function(.data, species = NULL, return_ids = FALSE) {
   species <- validate_species(.data, species)
 
   if (species == "CHINOOK") {
-    fishery_vec = c(58, 65, 68, 70, 37, 39, 43, 46, 49, 51)
-
+    fishery_vec <- c(58, 65, 68, 70, 37, 39, 43, 46, 49, 51)
   } else if (species == "COHO") {
-    fishery_vec =  c(80, 82, 87, 96, 101, 109, 111, 119, 121, 123, 130, 132, 137, 139, 141, 143, 145, 153, 155, 157, 159)
+    fishery_vec <- c(80, 82, 87, 96, 101, 109, 111, 119, 121, 123, 130, 132, 137, 139, 141, 143, 145, 153, 155, 157, 159)
   } else {
     cli::cli_abort('`species` must be "COHO" or "CHINOOK", not "{species}".')
   }
 
-  if(return_ids){
+  if (return_ids) {
     return(fishery_vec)
   } else {
     return(.data |>
-             dplyr::filter(.data$fishery_id %in% fishery_vec)
-    )
+      dplyr::filter(.data$fishery_id %in% fishery_vec))
   }
 }
 
@@ -477,7 +458,6 @@ filter_commercial_wa_nt <- function(.data, species = NULL, return_ids = FALSE) {
 #' @family fishery_filters
 #' @examples
 #' framrosetta::fishery_coho_fram |> filter_stt()
-
 filter_stt <- function(.data, species = NULL, return_ids = FALSE) {
   validate_data_frame(.data)
   validate_flag(return_ids)
@@ -491,21 +471,21 @@ filter_stt <- function(.data, species = NULL, return_ids = FALSE) {
   if (species == "CHINOOK") {
     cli::cli_abort("`filter_stt` not defined for Chinook")
   } else if (species == "COHO") {
-    fishery_vec = c(33, 37, 40, 41, # Ocean Sport
-                    34, 35, 38, 42, # NT Troll
-                    36, 39, 43, # Treaty Troll
-                    17, 18, 19, 29, 21, 22 # Oregon fisheries
+    fishery_vec <- c(
+      33, 37, 40, 41, # Ocean Sport
+      34, 35, 38, 42, # NT Troll
+      36, 39, 43, # Treaty Troll
+      17, 18, 19, 29, 21, 22 # Oregon fisheries
     )
   } else {
     cli::cli_abort('`species` must be "COHO" or "CHINOOK", not "{species}".')
   }
 
-  if(return_ids){
+  if (return_ids) {
     return(fishery_vec)
   } else {
     return(.data |>
-             dplyr::filter(.data$fishery_id %in% fishery_vec)
-    )
+      dplyr::filter(.data$fishery_id %in% fishery_vec))
   }
 }
 
@@ -518,7 +498,7 @@ filter_stt <- function(.data, species = NULL, return_ids = FALSE) {
 #' @family fishery_filters
 #' @examples
 #' framrosetta::fishery_coho_fram |> filter_stt_nt()
-filter_stt_nt <-  function(.data, species = NULL, return_ids = FALSE) {
+filter_stt_nt <- function(.data, species = NULL, return_ids = FALSE) {
   validate_data_frame(.data)
   validate_flag(return_ids)
 
@@ -531,20 +511,20 @@ filter_stt_nt <-  function(.data, species = NULL, return_ids = FALSE) {
   if (species == "CHINOOK") {
     cli::cli_abort("`filter_stt_nt` not defined for Chinook")
   } else if (species == "COHO") {
-    fishery_vec = c(33, 37, 40, 41, # Ocean Sport
-                    34, 35, 38, 42, # NT Troll
-                    17, 18, 19, 29, 21, 22 # Oregon fisheries
+    fishery_vec <- c(
+      33, 37, 40, 41, # Ocean Sport
+      34, 35, 38, 42, # NT Troll
+      17, 18, 19, 29, 21, 22 # Oregon fisheries
     )
   } else {
     cli::cli_abort('`species` must be "COHO" or "CHINOOK", not "{species}".')
   }
 
-  if(return_ids){
+  if (return_ids) {
     return(fishery_vec)
   } else {
     return(.data |>
-             dplyr::filter(.data$fishery_id %in% fishery_vec)
-    )
+      dplyr::filter(.data$fishery_id %in% fishery_vec))
   }
 }
 
@@ -552,8 +532,7 @@ filter_stt_nt <-  function(.data, species = NULL, return_ids = FALSE) {
 
 ## primary function for coho stock filtering
 filter_coho_stocks <- function(.data, species = NULL, return_ids = FALSE,
-                               filter_criterion){
-
+                               filter_criterion) {
   if (!"stock_id" %in% colnames(.data)) {
     cli::cli_abort("stock_id column must be present in dataframe.")
   }
@@ -563,19 +542,18 @@ filter_coho_stocks <- function(.data, species = NULL, return_ids = FALSE,
   if (species == "CHINOOK") {
     cli::cli_abort("This function not defined for Chinook")
   } else if (species == "COHO") {
-    stock_vec = coho_stock_marlene |>
+    stock_vec <- coho_stock_marlene |>
       dplyr::filter(.data$stock_type %in% filter_criterion) |>
       dplyr::pull(.data$stock_id)
   } else {
     cli::cli_abort('`species` must be "COHO" or "CHINOOK", not "{species}".')
   }
 
-  if(return_ids){
+  if (return_ids) {
     return(stock_vec)
   } else {
     return(.data |>
-             dplyr::filter(.data$stock_id %in% stock_vec)
-    )
+      dplyr::filter(.data$stock_id %in% stock_vec))
   }
 }
 
@@ -596,8 +574,10 @@ filter_hatchery <- function(.data, species = NULL, return_ids = FALSE) {
   validate_data_frame(.data)
   validate_flag(return_ids)
 
-  filter_coho_stocks(.data, species = species, return_ids = return_ids,
-                     filter_criterion = "Hatchery")
+  filter_coho_stocks(.data,
+    species = species, return_ids = return_ids,
+    filter_criterion = "Hatchery"
+  )
 }
 
 #' Filters a Coho stock dataframe to wild stocks
@@ -614,8 +594,10 @@ filter_wild <- function(.data, species = NULL, return_ids = FALSE) {
   validate_data_frame(.data)
   validate_flag(return_ids)
 
-  filter_coho_stocks(.data, species = species, return_ids = return_ids,
-                     filter_criterion = "Wild")
+  filter_coho_stocks(.data,
+    species = species, return_ids = return_ids,
+    filter_criterion = "Wild"
+  )
 }
 
 #' Filters a Coho stock dataframe to mixed stocks
@@ -632,13 +614,14 @@ filter_mixed <- function(.data, species = NULL, return_ids = FALSE) {
   validate_data_frame(.data)
   validate_flag(return_ids)
 
-  filter_coho_stocks(.data, species = species, return_ids = return_ids,
-                     filter_criterion = "Mix")
+  filter_coho_stocks(.data,
+    species = species, return_ids = return_ids,
+    filter_criterion = "Mix"
+  )
 }
 
 
 categorize_stock <- function(.data, species = NULL) {
-
   species <- validate_species(.data, species)
 
   if (!"stock_id" %in% colnames(.data)) {
@@ -650,7 +633,8 @@ categorize_stock <- function(.data, species = NULL) {
   } else if (species == "COHO") {
     .data |>
       dplyr::left_join(coho_stock_marlene,
-                       by = "stock_id")
+        by = "stock_id"
+      )
   } else {
     cli::cli_abort('`species` must be "COHO" or "CHINOOK", not "{species}".')
   }

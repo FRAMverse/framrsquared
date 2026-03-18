@@ -53,7 +53,6 @@ sensitivity_scaled <- function(fram_db,
                                tamm_target_folder = NULL,
                                label = "sensitivity",
                                save_log = TRUE) {
-
   ## columns with optional text that can mess up the modify_table call
 
 
@@ -325,24 +324,31 @@ sensitivity_exact <- function(fram_db,
 #' ## for timestep 1, or flipping those. Modifications to FisheryScalers table
 #' fram_db <- connect_fram_db(here("Valid2024_sens_test.mdb"))
 #'
-#'custom_scenarios = list(data.frame(match_FisheryID = c(1, 2),
-#'                                   match_TimeStep = c(1, 1),
-#'                                   replace_MarkReleaseRate = c(.05, .01)),
-#'                        data.frame(match_FisheryID = c(1, 2),
-#'                                   match_TimeStep = c(1, 1),
-#'                                   replace_MarkReleaseRate = c(.01, .05))
-#')
+#' custom_scenarios <- list(
+#'   data.frame(
+#'     match_FisheryID = c(1, 2),
+#'     match_TimeStep = c(1, 1),
+#'     replace_MarkReleaseRate = c(.05, .01)
+#'   ),
+#'   data.frame(
+#'     match_FisheryID = c(1, 2),
+#'     match_TimeStep = c(1, 1),
+#'     replace_MarkReleaseRate = c(.01, .05)
+#'   )
+#' )
 #'
-#'tamm_template = here("Coho2513NOF-165.xlsx")
-#'tamm_target_folder = here("sens_test_custom/")
-#'fram_db |>
-#'  sensitivity_custom(template_run = 28,
-#'                     table_name = 'FisheryScalers',
-#'                     scenario_list = custom_scenarios,
-#'                     tamm_template = tamm_template,
-#'                     tamm_target_folder = tamm_target_folder,
-#'                     label = "markrelease custom")
-#'disconnect_fram_db(fram_db)
+#' tamm_template <- here("Coho2513NOF-165.xlsx")
+#' tamm_target_folder <- here("sens_test_custom/")
+#' fram_db |>
+#'   sensitivity_custom(
+#'     template_run = 28,
+#'     table_name = "FisheryScalers",
+#'     scenario_list = custom_scenarios,
+#'     tamm_template = tamm_template,
+#'     tamm_target_folder = tamm_target_folder,
+#'     label = "markrelease custom"
+#'   )
+#' disconnect_fram_db(fram_db)
 #' }
 sensitivity_custom <- function(fram_db,
                                template_run,

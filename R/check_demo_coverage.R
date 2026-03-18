@@ -33,7 +33,6 @@
 #' results$missing
 #' }
 #'
-
 check_demo_coverage <- function(namespace_path, doc_path) {
   # Read NAMESPACE file
   if (!file.exists(namespace_path)) {

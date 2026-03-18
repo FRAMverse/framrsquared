@@ -27,35 +27,37 @@
 #' framrsquared::initialize_project()
 #' }
 initialize_project <-
-  function(folders = c(
-    'scripts',
-    'original_data',
-    'cleaned_data',
-    'figures',
-    'results',
-    'results/quarto_output'
-  ),
-  quarto = TRUE,
-  organization = c("WDFW"),
-  renv = FALSE,
-  template_overwrite = TRUE,
-  color = "coffee",
-  quiet = TRUE) {
-
+  function(
+      folders = c(
+        "scripts",
+        "original_data",
+        "cleaned_data",
+        "figures",
+        "results",
+        "results/quarto_output"
+      ),
+      quarto = TRUE,
+      organization = c("WDFW"),
+      renv = FALSE,
+      template_overwrite = TRUE,
+      color = "coffee",
+      quiet = TRUE) {
     validate_flag(quarto)
-    organization  <- rlang::arg_match(organization)
+    organization <- rlang::arg_match(organization)
     validate_flag(renv)
     validate_flag(template_overwrite)
 
-    if(!is.character(color) | length(color) != 1){
+    if (!is.character(color) | length(color) != 1) {
       cli::cli_abort("`color` must be a single character string identifying a quarto template to use.")
     }
 
     validate_flag(quiet)
 
-    purrr::walk(folders,
-                \(folder) dir.create(here::here(glue::glue("{folder}"))))
-    cli::cli_alert_success('Successfully initialized FRAM project')
+    purrr::walk(
+      folders,
+      \(folder) dir.create(here::here(glue::glue("{folder}")))
+    )
+    cli::cli_alert_success("Successfully initialized FRAM project")
 
     if (renv) {
       if (!quiet) {
@@ -63,7 +65,7 @@ initialize_project <-
           "Initializing {.pkg renv}, don't forget to run {.fn renv::snapshot} before saving project"
         )
       }
-      invisible(readline('Press [Enter] to conitue...'))
+      invisible(readline("Press [Enter] to conitue..."))
       renv::init()
     }
 
@@ -72,11 +74,12 @@ initialize_project <-
       if (!quiet) {
         cli::cli_alert_info("Copying quarto templates")
       }
-      fetch_quarto_templates(to.path = ".",
-                             organization = organization,
-                             color = color,
-                             overwrite = template_overwrite)
-
+      fetch_quarto_templates(
+        to.path = ".",
+        organization = organization,
+        color = color,
+        overwrite = template_overwrite
+      )
     }
     if (!quiet) {
       cli::cli_bullets(
@@ -88,8 +91,6 @@ initialize_project <-
         )
       )
     }
-
-
   }
 
 
@@ -107,24 +108,28 @@ initialize_project <-
 #' @return Nothing.
 #' @export
 #' @seealso [initialize_project()]
-fetch_quarto_templates = function(to.path,
-                                  organization = c("WDFW"),
-                                  color = "coffee",
-                                  overwrite = FALSE) {
+fetch_quarto_templates <- function(to.path,
+                                   organization = c("WDFW"),
+                                   color = "coffee",
+                                   overwrite = FALSE) {
   rlang::arg_match(organization, c("WDFW")) ## add more as appropriate.
   rlang::arg_match(color, c("green", "coffee"))
   validate_flag(overwrite)
   ## The associated yaml and style files should be added to the `inst` folder with a subfolder
   ## that matches the organization name
 
-  organization  <-  rlang::arg_match(organization, c("WDFW"))
-  yaml.path <-  system.file(glue::glue("{organization}/{color}_quarto.yml"), package = "framrsquared")
-  style.path <-  system.file(glue::glue("{organization}/style.css"), package = "framrsquared")
-  invisible(file.copy (
-    c(yaml.path,
-      style.path),
-    to = c(glue::glue("{to.path}/_quarto.yml"),
-           glue::glue("{to.path}/style.css")),
+  organization <- rlang::arg_match(organization, c("WDFW"))
+  yaml.path <- system.file(glue::glue("{organization}/{color}_quarto.yml"), package = "framrsquared")
+  style.path <- system.file(glue::glue("{organization}/style.css"), package = "framrsquared")
+  invisible(file.copy(
+    c(
+      yaml.path,
+      style.path
+    ),
+    to = c(
+      glue::glue("{to.path}/_quarto.yml"),
+      glue::glue("{to.path}/style.css")
+    ),
     overwrite = overwrite
   ))
 }

@@ -29,12 +29,12 @@ modify_table <- function(fram_db, table_name, df) {
     cli::cli_abort("`df` must have named columns starting with 'match_' or 'replace_'")
   }
 
-  if(fram_db$fram_read_only){
-    cli::cli_abort('This database connection is designated read-only!! If you are certain this database can be modified, create a new connection using `connect_fram_db()` with `read_only = TRUE`')
+  if (fram_db$fram_read_only) {
+    cli::cli_abort("This database connection is designated read-only!! If you are certain this database can be modified, create a new connection using `connect_fram_db()` with `read_only = TRUE`")
   }
 
   ## get column names
-  table_columns = fetch_table_colnames(fram_db, table_name)
+  table_columns <- fetch_table_colnames(fram_db, table_name)
 
   match_names <- grep("^match_", names(df), value = TRUE)
   match_names <- gsub("^match_", "", match_names)
@@ -70,7 +70,7 @@ modify_table <- function(fram_db, table_name, df) {
     dplyr::rowwise() |>
     dplyr::mutate(db_call = glue::glue(glue_statement)) |>
     dplyr::mutate(rows_affected = DBI::dbExecute(fram_db$fram_db_connection,
-                                                 statement = .data$db_call
+      statement = .data$db_call
     )) |>
     dplyr::mutate(db_call = as.list(.data$db_call))
   return(results)
@@ -121,8 +121,8 @@ calc_fram_scaling <- function(fram_db, table_name, df) {
   ## Complication: input and output
 
   ## need to ignore the Comment column in output to avoid NA issues
-  ignore_cols = c("Comment")
-  ignore_cols = paste0("match_", ignore_cols)
+  ignore_cols <- c("Comment")
+  ignore_cols <- paste0("match_", ignore_cols)
 
   tab <- fram_db |>
     fetch_table_(table_name)
@@ -158,7 +158,7 @@ calc_fram_scaling <- function(fram_db, table_name, df) {
 
   if (length(terms_included == 1)) {
     if (!all(df$scale_RecruitCohortSize ==
-             df$scale_RecruitScaleFactor)) {
+      df$scale_RecruitScaleFactor)) {
       cli::cli_abort("scale_RecruitCohortSize and scale_RecruitScaleFactor must match!")
     }
   }
@@ -184,15 +184,15 @@ calc_fram_scaling <- function(fram_db, table_name, df) {
 
   df_mod <- df_mod |>
     dplyr::rename_with(~ paste0("match_", .),
-                       .cols = !dplyr::any_of(scale_names)
+      .cols = !dplyr::any_of(scale_names)
     ) |>
     dplyr::rename_with(~ paste0("replace_", .),
-                       .cols = dplyr::any_of(scale_names)
+      .cols = dplyr::any_of(scale_names)
     )
 
   ## remove comments col, which otherwise causes trouble
-  if(any(names(df_mod) %in% ignore_cols)){
-    df_mod = df_mod[, -which(names(df_mod) %in% ignore_cols)]
+  if (any(names(df_mod) %in% ignore_cols)) {
+    df_mod <- df_mod[, -which(names(df_mod) %in% ignore_cols)]
   }
 
   ## Shoudn't end up with NAs, but if something goes wrong with joins, want it to be obvious
@@ -214,32 +214,32 @@ calc_fram_scaling <- function(fram_db, table_name, df) {
 #' @param new_run_id New FRAM run ID
 #' @export
 #' @examples
-#' \dontrun{fram_db |> change_run_id(old_run_id = 132, new_run_id = 300)}
+#' \dontrun{
+#' fram_db |> change_run_id(old_run_id = 132, new_run_id = 300)
+#' }
 #'
-change_run_id <- function(fram_db, old_run_id, new_run_id){
-
+change_run_id <- function(fram_db, old_run_id, new_run_id) {
   validate_fram_db(fram_db)
   validate_run_id(fram_db, old_run_id)
 
-  if(fram_db$fram_read_only){
-    cli::cli_abort('This database connection is designated read-only!! If you are certain this database can be modified, create a new connection using `connect_fram_db()` with `read_only = TRUE`')
+  if (fram_db$fram_read_only) {
+    cli::cli_abort("This database connection is designated read-only!! If you are certain this database can be modified, create a new connection using `connect_fram_db()` with `read_only = TRUE`")
   }
 
-  run_id_tables <- find_tables_by_column_(fram_db, 'RunID')
+  run_id_tables <- find_tables_by_column_(fram_db, "RunID")
 
   run_id_tables$value |>
     purrr::walk(.f = \(value) tryCatch(
       suppressWarnings(DBI::dbExecute(
         fram_db$fram_db_connection,
         glue::glue(
-          'UPDATE {value}
+          "UPDATE {value}
            SET RunID = {new_run_id}
-           WHERE RunID = {old_run_id};'
+           WHERE RunID = {old_run_id};"
         )
       )),
       error = function(e) {} # dead end
     ))
-
 }
 
 
@@ -250,32 +250,35 @@ change_run_id <- function(fram_db, old_run_id, new_run_id){
 #' @param run_id FRAM run ID or IDs to be deleted
 #' @export
 #' @examples
-#' \dontrun{fram_db |> delete_run(run_id = 132)}
+#' \dontrun{
+#' fram_db |> delete_run(run_id = 132)
+#' }
 #'
-remove_run <- function(fram_db, run_id){
+remove_run <- function(fram_db, run_id) {
   validate_fram_db(fram_db)
   validate_run_id(fram_db, run_id)
 
-  if(fram_db$fram_read_only){
-    cli::cli_abort('This database connection is designated read-only!! If you are certain this database can be modified, create a new connection using `connect_fram_db()` with `read_only = TRUE`')
+  if (fram_db$fram_read_only) {
+    cli::cli_abort("This database connection is designated read-only!! If you are certain this database can be modified, create a new connection using `connect_fram_db()` with `read_only = TRUE`")
   }
 
-  run_id_tables <- tidyr::expand_grid(find_tables_by_column_(fram_db, 'RunID'),
-                                      run_id)
+  run_id_tables <- tidyr::expand_grid(
+    find_tables_by_column_(fram_db, "RunID"),
+    run_id
+  )
 
-  run_id_tables|>
+  run_id_tables |>
     dplyr::select(.data$value, .data$run_id) |>
     purrr::pwalk(.f = \(value, run_id) tryCatch(
       suppressWarnings(DBI::dbSendQuery(
         fram_db$fram_db_connection,
         glue::glue(
-          'DELETE FROM {value}
-           WHERE RunID = {run_id};'
+          "DELETE FROM {value}
+           WHERE RunID = {run_id};"
         )
       )),
       error = function(e) {} # dead end
     ))
-
 }
 
 
@@ -287,31 +290,33 @@ remove_run <- function(fram_db, run_id){
 #' @param fishery_id ID or IDs for specific fishery(s) to copy inputs to/from. If not provided, interactive option to copy inputs for all fisheries.
 #' @export
 #' @examples
-#' \dontrun{framdb |> copy_fishery_scalers(132, 133, 87)}
+#' \dontrun{
+#' framdb |> copy_fishery_scalers(132, 133, 87)
+#' }
 #'
-copy_fishery_scalers <- function(fram_db, from_run, to_run, fishery_id = NULL){
+copy_fishery_scalers <- function(fram_db, from_run, to_run, fishery_id = NULL) {
   validate_fram_db(fram_db)
   validate_run_id(fram_db, c(to_run, from_run))
 
-  if(!is.null(fishery_id)){
+  if (!is.null(fishery_id)) {
     validate_fishery_ids(fram_db, fishery_id)
   }
 
 
-  if(fram_db$fram_read_only){
-    cli::cli_abort('This database connection is designated read-only!! If you are certain this database can be modified, create a new connection using `connect_fram_db()` with `read_only = TRUE`')
+  if (fram_db$fram_read_only) {
+    cli::cli_abort("This database connection is designated read-only!! If you are certain this database can be modified, create a new connection using `connect_fram_db()` with `read_only = TRUE`")
   }
 
   if (is.null(fishery_id)) {
-    cli::cli_alert_warning('A fishery ID is not set, this will copy all the fishery scalers!')
-    input <- tolower(readline(prompt = ('Continue? (y/n): ')))
-    if (input != 'y') {
-      stop('Aborting')
+    cli::cli_alert_warning("A fishery ID is not set, this will copy all the fishery scalers!")
+    input <- tolower(readline(prompt = ("Continue? (y/n): ")))
+    if (input != "y") {
+      stop("Aborting")
     }
   }
 
   copy_scalers <- fram_db |>
-    fetch_table_('FisheryScalers') |>
+    fetch_table_("FisheryScalers") |>
     dplyr::filter(.data$run_id == .env$from_run)
 
   if (!is.null(fishery_id)) {
@@ -324,7 +329,7 @@ copy_fishery_scalers <- function(fram_db, from_run, to_run, fishery_id = NULL){
     dplyr::mutate(rows_affected = DBI::dbExecute(
       fram_db$fram_db_connection,
       glue::glue(
-        'UPDATE FisheryScalers
+        "UPDATE FisheryScalers
                           SET FisheryFlag = {fishery_flag},
                               FisheryScaleFactor = {fishery_scale_factor},
                               Quota = {quota},
@@ -336,42 +341,45 @@ copy_fishery_scalers <- function(fram_db, from_run, to_run, fishery_id = NULL){
                               MarkIncidentalRate = {mark_incidental_rate}
                          WHERE RunID = {.env$to_run} AND
                                TimeStep = {time_step} AND
-                               FisheryID = {fishery_id};'
+                               FisheryID = {fishery_id};"
       )
     ))
 
   original_notes <- fram_db |>
-    fetch_table_('RunID') |>
+    fetch_table_("RunID") |>
     dplyr::filter(.data$run_id == .env$to_run) |>
     dplyr::pull(.data$run_comments)
-  update_notes <- paste0(original_notes,
-                         "\n\n FISHERY SCALERS COPIED PROGRAMMATICALLY FROM RUN ",
-                         from_run, " for ",
-                         ifelse(is.null(fishery_id),
-                                "ALL FISHERIES",
-                                paste0("FISHERIES ", paste0(fishery_id, collapse =", "))),
-                         " ON ", round(Sys.time()), "\n"
+  update_notes <- paste0(
+    original_notes,
+    "\n\n FISHERY SCALERS COPIED PROGRAMMATICALLY FROM RUN ",
+    from_run, " for ",
+    ifelse(is.null(fishery_id),
+      "ALL FISHERIES",
+      paste0("FISHERIES ", paste0(fishery_id, collapse = ", "))
+    ),
+    " ON ", round(Sys.time()), "\n"
   )
-  DBI::dbExecute(fram_db$fram_db_connection,
-                 glue::glue_sql(
-                   'UPDATE RunID
+  DBI::dbExecute(
+    fram_db$fram_db_connection,
+    glue::glue_sql(
+      "UPDATE RunID
                                 SET RunComments = {update_notes}
-                                WHERE RunID = {to_run};',
-                   .con = fram_db$fram_db_connection
-                 )
+                                WHERE RunID = {to_run};",
+      .con = fram_db$fram_db_connection
+    )
   )
   if (nrow(updated_inputs |> dplyr::filter(.data$rows_affected == 0)) > 0) {
-    cli::cli_alert_warning('Some rows were not changed.')
-    updated_inputs |> dplyr::filter(.data$rows_affected  == 0)
-  } else if (nrow(updated_inputs |> dplyr::filter(.data$rows_affected > 1 )) > 0) {
-    cli::cli_alert_danger('Multiple rows were effected by one query... DON\'T USE')
+    cli::cli_alert_warning("Some rows were not changed.")
+    updated_inputs |> dplyr::filter(.data$rows_affected == 0)
+  } else if (nrow(updated_inputs |> dplyr::filter(.data$rows_affected > 1)) > 0) {
+    cli::cli_alert_danger("Multiple rows were effected by one query... DON'T USE")
     updated_inputs |> dplyr::filter(.data$rows_affected > 1)
   } else {
-    rows <- updated_inputs |> dplyr::filter(.data$rows_affected == 1) |> nrow()
-    cli::cli_alert_success('Successfully updated {rows} row{?s}')
+    rows <- updated_inputs |>
+      dplyr::filter(.data$rows_affected == 1) |>
+      nrow()
+    cli::cli_alert_success("Successfully updated {rows} row{?s}")
   }
-
-
 }
 
 #'  `r lifecycle::badge("experimental")`
@@ -389,110 +397,129 @@ copy_fishery_scalers <- function(fram_db, from_run, to_run, fishery_id = NULL){
 #' @return Invisibly returns the run ids of the copied runs, for use in other functions.
 #' @export
 #' @examples
-#' \dontrun{framdb |> copy_run(target_run = 141, times = 1)}
+#' \dontrun{
+#' framdb |> copy_run(target_run = 141, times = 1)
+#' }
 #'
-copy_run <- function(fram_db, target_run, times = 1, label = 'copy', force_many_runs = FALSE, verbose = TRUE){
-
+copy_run <- function(fram_db, target_run, times = 1, label = "copy", force_many_runs = FALSE, verbose = TRUE) {
   validate_fram_db(fram_db)
   validate_run_id(fram_db, target_run)
-  if(!is.numeric(times) || length(times) != 1) {
+  if (!is.numeric(times) || length(times) != 1) {
     cli::cli_abort("`times` must be a single integer")
   }
 
-  if(!is.character(label) || length(label) != 1) {
+  if (!is.character(label) || length(label) != 1) {
     cli::cli_abort("`label` must be a single character string")
   }
 
-  if(!is.logical(force_many_runs) || length(force_many_runs) != 1) {
+  if (!is.logical(force_many_runs) || length(force_many_runs) != 1) {
     cli::cli_abort("`force_many_runs` must be a single logical value")
   }
 
-  if(!is.logical(verbose) || length(verbose) != 1) {
+  if (!is.logical(verbose) || length(verbose) != 1) {
     cli::cli_abort("`verbose` must be a single logical value")
   }
 
-  if(fram_db$fram_read_only){
-    cli::cli_abort('This database connection is designated read-only!! If you are certain this database can be modified, create a new connection using `connect_fram_db()` with `read_only = TRUE`')
+  if (fram_db$fram_read_only) {
+    cli::cli_abort("This database connection is designated read-only!! If you are certain this database can be modified, create a new connection using `connect_fram_db()` with `read_only = TRUE`")
   }
 
-  run_count_current = fram_db |> fetch_table_("RunID") |> nrow()
-  if((run_count_current + times > 150) & verbose){
+  run_count_current <- fram_db |>
+    fetch_table_("RunID") |>
+    nrow()
+  if ((run_count_current + times > 150) & verbose) {
     cli::cli_alert("Official FRAM cannot currently read databases with >150 run ids.\n  Use FRAM_Automation (https://github.com/FRAMverse/FRAM_automation)\n  or change FRAM source code declaration of vectors `RunID`, `RunIDName`, and `RunBasePeriodID` in `FVS_ModelRunSelection.vb`.")
   }
-  if(run_count_current + times > 500){
-    if(force_many_runs){
+  if (run_count_current + times > 500) {
+    if (force_many_runs) {
       cli::cli_alert("FRAM databases expected to exceed .mdb memory limits at ~500 runs, currently would update database to {run_count_current + times} run. `force_many_runs` is TRUE, so overriding this failsafe.")
     } else {
       cli::cli_abort("FRAM databases expected to exceed .mdb memory limits at ~500 runs, currently would update database to {run_count_current + times} run. Aborting copy; set `force_many_runs = TRUE` to override this failsafe.")
     }
   }
 
-  run_table <- DBI::dbReadTable(fram_db$fram_db_connection, 'RunID')
+  run_table <- DBI::dbReadTable(fram_db$fram_db_connection, "RunID")
 
   max_run_id <- run_table |>
     dplyr::pull(.data$RunID) |>
     max()
 
   # collect tables
-  stock_recruit <- DBI::dbGetQuery(fram_db$fram_db_connection,
-                                   glue::glue(
-                                     "SELECT * FROM StockRecruit
+  stock_recruit <- DBI::dbGetQuery(
+    fram_db$fram_db_connection,
+    glue::glue(
+      "SELECT * FROM StockRecruit
                                     WHERE RunID = {target_run}
-                                    "))
+                                    "
+    )
+  )
 
-  fishery_scalers <- DBI::dbGetQuery(fram_db$fram_db_connection,
-                                     glue::glue(
-                                       "SELECT * FROM FisheryScalers
+  fishery_scalers <- DBI::dbGetQuery(
+    fram_db$fram_db_connection,
+    glue::glue(
+      "SELECT * FROM FisheryScalers
                                     WHERE RunID = {target_run}
-                                    "))
+                                    "
+    )
+  )
 
-  sfrs <- DBI::dbGetQuery(fram_db$fram_db_connection,
-                          glue::glue(
-                            "SELECT * FROM StockFisheryRateScaler
+  sfrs <- DBI::dbGetQuery(
+    fram_db$fram_db_connection,
+    glue::glue(
+      "SELECT * FROM StockFisheryRateScaler
                                     WHERE RunID = {target_run}
-                                    "))
+                                    "
+    )
+  )
 
-  non_retention <- DBI::dbGetQuery(fram_db$fram_db_connection,
-                                   glue::glue(
-                                     "SELECT * FROM NonRetention
+  non_retention <- DBI::dbGetQuery(
+    fram_db$fram_db_connection,
+    glue::glue(
+      "SELECT * FROM NonRetention
                                     WHERE RunID = {target_run}
-                                    "))
+                                    "
+    )
+  )
 
-  if(fram_db$fram_db_species == 'CHINOOK') {
-    size_limits <- DBI::dbGetQuery(fram_db$fram_db_connection,
-                                   glue::glue(
-                                     "SELECT * FROM SizeLimits
+  if (fram_db$fram_db_species == "CHINOOK") {
+    size_limits <- DBI::dbGetQuery(
+      fram_db$fram_db_connection,
+      glue::glue(
+        "SELECT * FROM SizeLimits
                                     WHERE RunID = {target_run}
-                                    "))
+                                    "
+      )
+    )
   }
 
   run_target <- run_table |>
     dplyr::filter(.data$RunID == .env$target_run)
 
 
-  cli::cli_progress_bar(total = times,
-                        format = 'Copying run {i}/{times} | {cli::pb_bar} {cli::pb_percent} {cli::pb_eta}'
+  cli::cli_progress_bar(
+    total = times,
+    format = "Copying run {i}/{times} | {cli::pb_bar} {cli::pb_percent} {cli::pb_eta}"
   )
   # store run ids
-  run_id_vec = numeric(times)
-  for(i in seq_along(1:times)) {
-
-    run_id_vec[i] = max_run_id + i
+  run_id_vec <- numeric(times)
+  for (i in seq_along(1:times)) {
+    run_id_vec[i] <- max_run_id + i
 
     # RunID Table
     run_insert <- run_target |>
       dplyr::mutate(
         RunID = .env$max_run_id + .env$i,
-        RunName = glue::glue(.data$RunName, ' {label} {i}')
+        RunName = glue::glue(.data$RunName, " {label} {i}")
       ) |>
       dplyr::select(-.data$PrimaryKey)
 
 
     # send to db
     DBI::dbAppendTable(fram_db$fram_db_connection,
-                       name = 'RunID',
-                       value = run_insert,
-                       batch_rows = 1)
+      name = "RunID",
+      value = run_insert,
+      batch_rows = 1
+    )
 
 
     # stock recruit table
@@ -504,25 +531,27 @@ copy_run <- function(fram_db, target_run, times = 1, label = 'copy', force_many_
 
     # send to db
     DBI::dbAppendTable(fram_db$fram_db_connection,
-                       name = 'StockRecruit',
-                       value = stock_recruit_insert,
-                       batch_rows = 1)
+      name = "StockRecruit",
+      value = stock_recruit_insert,
+      batch_rows = 1
+    )
 
     # fishery scalers
     fishery_scalers_insert <- fishery_scalers |>
       dplyr::mutate(
         RunID = .env$max_run_id + .env$i
-      )|>
+      ) |>
       dplyr::select(-.data$PrimaryKey)
 
     # send to db
     DBI::dbAppendTable(fram_db$fram_db_connection,
-                       name = 'FisheryScalers',
-                       value = fishery_scalers_insert,
-                       batch_rows = 1)
+      name = "FisheryScalers",
+      value = fishery_scalers_insert,
+      batch_rows = 1
+    )
 
     # stock fishery rate scalers
-    if(nrow(sfrs) > 0){
+    if (nrow(sfrs) > 0) {
       sfrs_insert <- sfrs |>
         dplyr::mutate(
           RunID = .env$max_run_id + .env$i
@@ -530,9 +559,10 @@ copy_run <- function(fram_db, target_run, times = 1, label = 'copy', force_many_
 
       # send to db
       DBI::dbAppendTable(fram_db$fram_db_connection,
-                         name = 'StockFisheryRateScaler',
-                         value = sfrs_insert,
-                         batch_rows = 1)
+        name = "StockFisheryRateScaler",
+        value = sfrs_insert,
+        batch_rows = 1
+      )
     }
 
 
@@ -540,16 +570,17 @@ copy_run <- function(fram_db, target_run, times = 1, label = 'copy', force_many_
     non_retention_insert <- non_retention |>
       dplyr::mutate(
         RunID = .env$max_run_id + .env$i
-      )|>
+      ) |>
       dplyr::select(-.data$PrimaryKey)
 
     # send to db
     DBI::dbAppendTable(fram_db$fram_db_connection,
-                       name = 'NonRetention',
-                       value = non_retention_insert,
-                       batch_rows = 1)
+      name = "NonRetention",
+      value = non_retention_insert,
+      batch_rows = 1
+    )
 
-    if (fram_db$fram_db_species == 'CHINOOK') {
+    if (fram_db$fram_db_species == "CHINOOK") {
       size_limits_insert <- size_limits |>
         dplyr::mutate(RunID = .env$max_run_id + .env$i) |>
         dplyr::select(-.data$PrimaryKey)
@@ -558,11 +589,10 @@ copy_run <- function(fram_db, target_run, times = 1, label = 'copy', force_many_
       # send to db
       DBI::dbAppendTable(
         fram_db$fram_db_connection,
-        name = 'SizeLimits',
+        name = "SizeLimits",
         value = size_limits_insert,
         batch_rows = 1
       )
-
     }
 
 
@@ -587,25 +617,28 @@ copy_run <- function(fram_db, target_run, times = 1, label = 'copy', force_many_
 #' @export
 #'
 #' @examples
-#' \dontrun{copy_tamms(tamm_name = "C:/TAMMs/Chin2020.xlsx",
-#' target_folder = "C:/Batch_run_5", run_id_vec = 10:20)}
-
-copy_tamms <- function(tamm_name, target_folder, run_id_vec, overwrite = FALSE){
-  if(!is.numeric(run_id_vec) & all(!is.na(as.numeric(run_id_vec)))){
+#' \dontrun{
+#' copy_tamms(
+#'   tamm_name = "C:/TAMMs/Chin2020.xlsx",
+#'   target_folder = "C:/Batch_run_5", run_id_vec = 10:20
+#' )
+#' }
+copy_tamms <- function(tamm_name, target_folder, run_id_vec, overwrite = FALSE) {
+  if (!is.numeric(run_id_vec) & all(!is.na(as.numeric(run_id_vec)))) {
     cli::cli_abort("argument `run_id_vec` must be either integers or character strings of integers.")
   }
   ## does file_name exist
-  if(!file.exists(tamm_name)){
+  if (!file.exists(tamm_name)) {
     cli::cli_abort("File `tamm_name` must exist!")
   }
   ## is file_name a legal TAMM?
-  if(!tools::file_ext(tamm_name) %in% c("xlsx", "xls", "xlsm")){
+  if (!tools::file_ext(tamm_name) %in% c("xlsx", "xls", "xlsm")) {
     cli::cli_abort("`tamm_name` must be a TAMM file (ending in `.xlsx`, `.xls`, or `.xlsm`)!")
   }
   ## If dir does not exist, create.
-  if(!dir.exists(target_folder)){
+  if (!dir.exists(target_folder)) {
     creation_successful <- dir.create(target_folder)
-    if(!creation_successful){
+    if (!creation_successful) {
       cli::cli_abort("Directory `target_folder` does not exist, and `copy_tamms()` was unable to create it! Parent directory might not exist?")
     }
   }
@@ -615,10 +648,10 @@ copy_tamms <- function(tamm_name, target_folder, run_id_vec, overwrite = FALSE){
   file_name_clean <- gsub(glue::glue("{file_extension}$"), "", file_name_clean)
 
   ## copy file_name to target_path multiple times with unique suffixes -{run_id}
-  new_files = glue::glue("{target_folder}/{file_name_clean}-{run_id_vec}{file_extension}")
-  if(any(file.exists(new_files))){
+  new_files <- glue::glue("{target_folder}/{file_name_clean}-{run_id_vec}{file_extension}")
+  if (any(file.exists(new_files))) {
     cli::cli_alert("One or more of the new TAMM files already exists in target folder!")
-    if(overwrite){
+    if (overwrite) {
       cli::cli_alert("`overwrite` set to `TRUE`! Overwriting existing TAMM files in target folder as needed.")
     } else {
       cli::cli_alert("`overwrite` set to `FALSE`! Any missing TAMM files in target folder will be added, existing files will be untouched.")
@@ -648,7 +681,7 @@ copy_tamms <- function(tamm_name, target_folder, run_id_vec, overwrite = FALSE){
 #'
 #' @seealso [sensitivity_exact()], [sensitivity_scaled()], [sensitivity_custom()]
 #'
-make_batch_runs <- function(fram_db, target_run, tamm_name, target_folder, times = 1, label = 'copy',force_many_runs = FALSE, verbose = TRUE){
+make_batch_runs <- function(fram_db, target_run, tamm_name, target_folder, times = 1, label = "copy", force_many_runs = FALSE, verbose = TRUE) {
   validate_fram_db(fram_db)
   validate_run_id(fram_db, target_run)
   validate_numeric(times, 1)
