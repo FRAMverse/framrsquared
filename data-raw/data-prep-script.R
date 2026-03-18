@@ -17,6 +17,11 @@ fishery_coho_soncc <- readxl::read_excel("data-raw/SONCC_fishery_lookup.xlsx") |
   dplyr::filter(!is.na(.data$factor)) |>
   dplyr::arrange(factor)
 
+coho_stock_marlene <- readr::read_csv("data-raw/fram_coho_stocks.csv") |>
+  janitor::clean_names() |>
+  dplyr::select(stock_id, stock_type = type)
+
 usethis::use_data(coho_stock_comp_lut,
+                  coho_stock_marlene,
                   fishery_coho_soncc,
                   overwrite = TRUE, internal = TRUE)

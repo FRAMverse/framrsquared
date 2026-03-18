@@ -7,12 +7,15 @@ automatically detect whether it's working with a Chinook or Coho
 dataset if the tables were generated within this package. \code{.data} must have
 a \code{fishery_id} column name.}
 \usage{
-filter_ak(.data, species = NULL)
+filter_ak(.data, species = NULL, return_ids = FALSE)
 }
 \arguments{
 \item{.data}{Dataframe containing \code{fishery_id} column. Commonly, output from \code{framrsquared::fetch_table()}.}
 
 \item{species}{Optional argument to identify species if \code{.data} doesn't already. If provided, must be "COHO" or "CHINOOK" or variations thereof. Defaults to \code{NULL}}
+
+\item{return_ids}{Return the fishery ids used in filtering rather than a filtered dataframe?
+Logical, defaults to FALSE}
 }
 \description{
 Filters a dataframe to Alaska fisheries. Will
@@ -21,9 +24,6 @@ dataset if the tables were generated within this package. \code{.data} must have
 a \code{fishery_id} column name.
 }
 \examples{
-\dontrun{
-fram_dataframe |> filter_ak()
-}
 framrosetta::fishery_chinook_fram |> filter_ak(species = "CHINOOK")
 framrosetta::fishery_coho_fram |> filter_ak(species = "COHO")
 }
@@ -38,6 +38,8 @@ Other fishery_filters:
 \code{\link{filter_or}()},
 \code{\link{filter_puget_sound}()},
 \code{\link{filter_sport}()},
+\code{\link{filter_stt}()},
+\code{\link{filter_stt_nt}()},
 \code{\link{filter_wa}()}
 }
 \concept{fishery_filters}

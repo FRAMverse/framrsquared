@@ -1,0 +1,249 @@
+﻿Species,StockVersion,"ProductionRegion
+Number",ManagementUnitNumber,RRTerm_PR,"RRTerm
+_PR_MU",StockID,StockLongName,StockName,StkGroup,MZGroup,StkLabel,TYPE,PR_Alpha,NatManagementObj
+COHO,1,1,1,1,1,1,Nooksack River Wild UnMarked,U-nkskrw,1,1,Nooksack River Wild,Wild,A,
+COHO,1,1,2,1,1,2,Nooksack River Wild Marked,M-nkskrw,1,1,Nooksack River Wild,Wild,A,
+COHO,1,1,3,1,2,3,Kendall Creek Hatchery UnMarked,U-kendlh,2,,Kendall Creek Hatchery,Hatchery,A,
+COHO,1,1,4,1,2,4,Kendall Creek Hatchery Marked,M-kendlh,2,,Kendall Creek Hatchery,Hatchery,A,
+COHO,1,1,5,1,3,5,Skookum Creek Hatchery UnMarked,U-skokmh,3,,Skookum Creek Hatchery,Hatchery,A,
+COHO,1,1,6,1,3,6,Skookum Creek Hatchery Marked,M-skokmh,3,,Skookum Creek Hatchery,Hatchery,A,
+COHO,1,1,7,1,4,7,Lummi Ponds Hatchery UnMarked,U-lumpdh,4,,Lummi Ponds Hatchery,Hatchery,A,
+COHO,1,1,8,1,4,8,Lummi Ponds Hatchery Marked,M-lumpdh,4,,Lummi Ponds Hatchery,Hatchery,A,
+COHO,1,1,9,1,5,9,Bellingham Bay Net Pens UnMarked,U-bhambh,5,,Bellingham Bay Net Pens,Hatchery,A,
+COHO,1,1,10,1,5,10,Bellingham Bay Net Pens Marked,M-bhambh,5,,Bellingham Bay Net Pens,Hatchery,A,
+COHO,1,1,11,1,6,11,Samish River Wild UnMarked,U-samshw,6,2,Samish River Wild,Wild,A,
+COHO,1,1,12,1,6,12,Samish River Wild Marked,M-samshw,6,2,Samish River Wild,Wild,A,
+COHO,1,1,13,1,7,13,Area 7/7A Independent Wild UnMarked,U-ar77aw,7,,Area 7-7A Independent Wild,Wild,A,
+COHO,1,1,14,1,7,14,Area 7/7A Independent Wild Marked,M-ar77aw,7,,Area 7-7A Independent Wild,Wild,A,
+COHO,1,1,15,1,8,15,Whatcom Creek Hatchery UnMarked,U-whatch,8,,Whatcom Creek Hatchery,Hatchery,A,
+COHO,1,1,16,1,8,16,Whatcom Creek Hatchery Marked,M-whatch,8,,Whatcom Creek Hatchery,Hatchery,A,
+COHO,1,2,1,2,1,17,Skagit River Wild UnMarked,U-skagtw,9,3,Skagit River Wild,Wild,B,Skagit
+COHO,1,2,2,2,1,18,Skagit River Wild Marked,M-skagtw,9,3,Skagit River Wild,Wild,B,Skagit
+COHO,1,2,3,2,2,19,Skagit River Hatchery UnMarked,U-skagth,10,,Skagit River Hatchery,Hatchery,B,
+COHO,1,2,4,2,2,20,Skagit River Hatchery Marked,M-skagth,10,,Skagit River Hatchery,Hatchery,B,
+COHO,1,2,5,2,4,21,Baker (Skagit) Hatchery UnMarked,U-skgbkh,11,,Baker (Skagit) Hatchery,Hatchery,B,
+COHO,1,2,6,2,4,22,Baker (Skagit) Hatchery Marked,M-skgbkh,11,,Baker (Skagit) Hatchery,Hatchery,B,
+COHO,1,2,7,2,3,23,Baker (Skagit) Wild UnMarked,U-skgbkw,12,,Baker (Skagit) Wild,Wild,B,Skagit
+COHO,1,2,8,2,3,24,Baker (Skagit) Wild Marked,M-skgbkw,12,,Baker (Skagit) Wild,Wild,B,Skagit
+COHO,1,2,9,2,5,25,Swinomish Channel Hatchery UnMarked,U-swinch,13,,Swinomish Channel Hatchery,Hatchery,B,
+COHO,1,2,10,2,5,26,Swinomish Channel Hatchery Marked,M-swinch,13,,Swinomish Channel Hatchery,Hatchery,B,
+COHO,1,2,11,2,6,27,Oak Harbor Net Pens UnMarked,U-oakhbh,14,,Oak Harbor Net Pens,Hatchery,B,
+COHO,1,2,12,2,6,28,Oak Harbor Net Pens Marked,M-oakhbh,14,,Oak Harbor Net Pens,Hatchery,B,
+COHO,1,3,1,3,1,29,Stillaguamish River Wild UnMarked,U-stillw,15,4,Stillaguamish River Wild,Wild,C,Stillaguamish
+COHO,1,3,2,3,1,30,Stillaguamish River Wild Marked,M-stillw,15,4,Stillaguamish River Wild,Wild,C,Stillaguamish
+COHO,1,3,3,3,2,31,Stillaguamish River Hatchery UnMarked,U-stillh,16,,Stillaguamish River Hatchery,Hatchery,C,
+COHO,1,3,4,3,2,32,Stillaguamish River Hatchery Marked,M-stillh,16,,Stillaguamish River Hatchery,Hatchery,C,
+COHO,1,3,5,3,3,33,Tulalip Hatchery UnMarked,U-tuliph,17,,Tulalip Hatchery,Hatchery,C,
+COHO,1,3,6,3,3,34,Tulalip Hatchery Marked,M-tuliph,17,,Tulalip Hatchery,Hatchery,C,
+COHO,1,3,7,3,4,35,Snohomish River Wild UnMarked,U-snohow,18,5,Snohomish River Wild,Wild,C,Snohomish
+COHO,1,3,8,3,4,36,Snohomish River Wild Marked,M-snohow,18,5,Snohomish River Wild,Wild,C,Snohomish
+COHO,1,3,9,3,5,37,Snohomish River Hatchery UnMarked,U-snohoh,19,,Snohomish River Hatchery,Hatchery,C,
+COHO,1,3,10,3,5,38,Snohomish River Hatchery Marked,M-snohoh,19,,Snohomish River Hatchery,Hatchery,C,
+COHO,1,3,11,3,6,39,Area 8A Net Pens UnMarked,U-ar8anh,20,,Area 8A Net Pens,Hatchery,C,
+COHO,1,3,12,3,6,40,Area 8A Net Pens Marked,M-ar8anh,20,,Area 8A Net Pens,Hatchery,C,
+COHO,1,4,1,4,1,41,Port Gamble Net Pens UnMarked,U-ptgamh,21,,Port Gamble Net Pens,Hatchery,D,
+COHO,1,4,2,4,1,42,Port Gamble Net Pens Marked,M-ptgamh,21,,Port Gamble Net Pens,Hatchery,D,
+COHO,1,4,3,4,2,43,Port Gamble Bay Wild UnMarked,U-ptgamw,22,6,Port Gamble Bay Wild,Wild,D,
+COHO,1,4,4,4,2,44,Port Gamble Bay Wild Marked,M-ptgamw,22,6,Port Gamble Bay Wild,Wild,D,
+COHO,1,4,5,4,3,45,Area 12/12B Wild UnMarked,U-ar12bw,23,6,Area 12-12B Wild,Wild,D,Hood Canal
+COHO,1,4,6,4,3,46,Area 12/12B Wild Marked,M-ar12bw,23,6,Area 12-12B Wild,Wild,D,Hood Canal
+COHO,1,4,7,4,4,47,Quilcene Hatchery UnMarked,U-qlcnbh,24,,Quilcene Hatchery,Hatchery,D,
+COHO,1,4,8,4,4,48,Quilcene Hatchery Marked,M-qlcnbh,24,,Quilcene Hatchery,Hatchery,D,
+COHO,1,4,9,4,5,49,Quilcene Bay Net Pens UnMarked,U-qlcenh,25,,Quilcene Bay Net Pens,Hatchery,D,
+COHO,1,4,10,4,5,50,Quilcene Bay Net Pens Marked,M-qlcenh,25,,Quilcene Bay Net Pens,Hatchery,D,
+COHO,1,4,11,4,6,51,Area 12A Wild UnMarked,U-ar12aw,26,6,Area 12A Wild,Wild,D,
+COHO,1,4,12,4,6,52,Area 12A Wild Marked,M-ar12aw,26,6,Area 12A Wild,Wild,D,
+COHO,1,4,13,4,7,53,Hoodsport Hatchery UnMarked,U-hoodsh,27,,Hoodsport Hatchery,Hatchery,D,
+COHO,1,4,14,4,7,54,Hoodsport Hatchery Marked,M-hoodsh,27,,Hoodsport Hatchery,Hatchery,D,
+COHO,1,4,15,4,8,55,Area 12C/12D Wild UnMarked,U-ar12dw,28,6,Area 12C-12D Wild,Wild,D,Hood Canal
+COHO,1,4,16,4,8,56,Area 12C/12D Wild Marked,M-ar12dw,28,6,Area 12C-12D Wild,Wild,D,Hood Canal
+COHO,1,4,17,4,9,57,George Adams Hatchery UnMarked,U-gadamh,29,,George Adams Hatchery,Hatchery,D,
+COHO,1,4,18,4,9,58,George Adams Hatchery Marked,M-gadamh,29,,George Adams Hatchery,Hatchery,D,
+COHO,1,4,19,4,10,59,Skokomish River Wild UnMarked,U-skokrw,30,6,Skokomish River Wild,Wild,D,Hood Canal
+COHO,1,4,20,4,10,60,Skokomish River Wild Marked,M-skokrw,30,6,Skokomish River Wild,Wild,D,Hood Canal
+COHO,1,5,1,5,1,61,Area 13B Miscellaneous Wild UnMarked,U-ar13bw,31,7,Area 13B Miscellaneous Wild,Wild,E,
+COHO,1,5,2,5,1,62,Area 13B Miscellaneous Wild Marked,M-ar13bw,31,7,Area 13B Miscellaneous Wild,Wild,E,
+COHO,1,5,3,5,2,63,Deschutes River (WA) Wild UnMarked,U-deschw,32,8,Deschutes River (WA) Wild,Wild,E,
+COHO,1,5,4,5,2,64,Deschutes River (WA) Wild Marked,M-deschw,32,8,Deschutes River (WA) Wild,Wild,E,
+COHO,1,5,5,5,3,65,South Puget Sound Net Pens UnMarked,U-ssdnph,33,,South Puget Sound Net Pens,Hatchery,E,
+COHO,1,5,6,5,3,66,South Puget Sound Net Pens Marked,M-ssdnph,33,,South Puget Sound Net Pens,Hatchery,E,
+COHO,1,5,7,5,4,67,Nisqually River Hatchery UnMarked,U-nisqlh,34,,Nisqually River Hatchery,Hatchery,E,
+COHO,1,5,8,5,4,68,Nisqually River Hatchery Marked,M-nisqlh,34,,Nisqually River Hatchery,Hatchery,E,
+COHO,1,5,9,5,5,69,Nisqually River Wild UnMarked,U-nisqlw,35,9,Nisqually River Wild,Wild,E,
+COHO,1,5,10,5,5,70,Nisqually River Wild Marked,M-nisqlw,35,9,Nisqually River Wild,Wild,E,
+COHO,1,5,11,5,6,71,Fox Island Net Pens UnMarked,U-foxish,36,,Fox Island Net Pens,Hatchery,E,
+COHO,1,5,12,5,6,72,Fox Island Net Pens Marked,M-foxish,36,,Fox Island Net Pens,Hatchery,E,
+COHO,1,5,13,5,7,73,Minter Creek Hatchery UnMarked,U-mintch,37,,Minter Creek Hatchery,Hatchery,E,
+COHO,1,5,14,5,7,74,Minter Creek Hatchery Marked,M-mintch,37,,Minter Creek Hatchery,Hatchery,E,
+COHO,1,5,15,5,8,75,Area 13 Miscellaneous Wild UnMarked,U-ar13mw,38,7,Area 13 Miscellaneous Wild,Wild,E,
+COHO,1,5,16,5,8,76,Area 13 Miscellaneous Wild Marked,M-ar13mw,38,7,Area 13 Miscellaneous Wild,Wild,E,
+COHO,1,5,17,5,9,77,Chambers Creek Hatchery UnMarked,U-chambh,39,,Chambers Creek Hatchery,Hatchery,E,
+COHO,1,5,18,5,9,78,Chambers Creek Hatchery Marked,M-chambh,39,,Chambers Creek Hatchery,Hatchery,E,
+COHO,1,5,19,5,10,79,Area 13 Miscellaneous Hatchery UnMarked,U-ar13mh,40,,Area 13 Miscellaneous Hatchery,Hatchery,E,
+COHO,1,5,20,5,10,80,Area 13 Miscellaneous Hatchery Marked,M-ar13mh,40,,Area 13 Miscellaneous Hatchery,Hatchery,E,
+COHO,1,5,21,5,11,81,Area 13A Miscellaneous Wild UnMarked,U-ar13aw,41,7,Area 13A Miscellaneous Wild,Wild,E,
+COHO,1,5,22,5,11,82,Area 13A Miscellaneous Wild Marked,M-ar13aw,41,7,Area 13A Miscellaneous Wild,Wild,E,
+COHO,1,5,23,5,12,83,Puyallup River Hatchery UnMarked,U-puyalh,42,,Puyallup River Hatchery,Hatchery,E,
+COHO,1,5,24,5,12,84,Puyallup River Hatchery Marked,M-puyalh,42,,Puyallup River Hatchery,Hatchery,E,
+COHO,1,5,25,5,13,85,Puyallup River Wild UnMarked,U-puyalw,43,10,Puyallup River Wild,Wild,E,
+COHO,1,5,26,5,13,86,Puyallup River Wild Marked,M-puyalw,43,10,Puyallup River Wild,Wild,E,
+COHO,1,5,27,5,14,87,Area 11 Hatchery UnMarked,U-are11h,44,,Area 11 Hatchery,Hatchery,E,
+COHO,1,5,28,5,14,88,Area 11 Hatchery Marked,M-are11h,44,,Area 11 Hatchery,Hatchery,E,
+COHO,1,5,29,5,15,89,Area 11 Miscellaneous Wild UnMarked,U-ar11mw,45,13,Area 11 Miscellaneous Wild,Wild,E,
+COHO,1,5,30,5,15,90,Area 11 Miscellaneous Wild Marked,M-ar11mw,45,13,Area 11 Miscellaneous Wild,Wild,E,
+COHO,1,5,31,5,16,91,Area 10E Hatchery UnMarked,U-ar10eh,46,,Area 10E Hatchery,Hatchery,E,
+COHO,1,5,32,5,16,92,Area 10E Hatchery Marked,M-ar10eh,46,,Area 10E Hatchery,Hatchery,E,
+COHO,1,5,33,5,17,93,Area 10E Miscellaneous Wild UnMarked,U-ar10ew,47,13,Area 10E Miscellaneous Wild,Wild,E,
+COHO,1,5,34,5,17,94,Area 10E Miscellaneous Wild Marked,M-ar10ew,47,13,Area 10E Miscellaneous Wild,Wild,E,
+COHO,1,5,35,5,18,95,Green River Hatchery UnMarked,U-greenh,48,,Green River Hatchery,Hatchery,E,
+COHO,1,5,36,5,18,96,Green River Hatchery Marked,M-greenh,48,,Green River Hatchery,Hatchery,E,
+COHO,1,5,37,5,19,97,Green River Wild UnMarked,U-greenw,49,11,Green River Wild,Wild,E,
+COHO,1,5,38,5,9,98,Green River Wild Marked,M-greenw,49,11,Green River Wild,Wild,E,
+COHO,1,5,39,5,20,99,Lake Washington Hatchery UnMarked,U-lakwah,50,,Lake Washington Hatchery,Hatchery,E,
+COHO,1,5,40,5,20,100,Lake Washington Hatchery Marked,M-lakwah,50,,Lake Washington Hatchery,Hatchery,E,
+COHO,1,5,41,5,21,101,Lake Washington Wild UnMarked,U-lakwaw,51,12,Lake Washington Wild,Wild,E,
+COHO,1,5,42,5,21,102,Lake Washington Wild Marked,M-lakwaw,51,12,Lake Washington Wild,Wild,E,
+COHO,1,5,43,5,22,103,Area 10 Hatchery UnMarked,U-are10h,52,,Area 10 Hatchery,Hatchery,E,
+COHO,1,5,44,5,22,104,Area 10 Hatchery Marked,M-are10h,52,,Area 10 Hatchery,Hatchery,E,
+COHO,1,5,45,5,23,105,Area 10 Miscellaneous Wild UnMarked,U-ar10mw,53,13,Area 10 Miscellaneous Wild,Wild,E,
+COHO,1,5,46,5,23,106,Area 10 Miscellaneous Wild Marked,M-ar10mw,53,13,Area 10 Miscellaneous Wild,Wild,E,
+COHO,1,6,1,6,1,107,Dungeness River Wild UnMarked,U-dungew,54,,Dungeness River Wild,Wild,F,
+COHO,1,6,2,6,1,108,Dungeness River Wild Marked,M-dungew,54,,Dungeness River Wild,Wild,F,
+COHO,1,6,3,6,2,109,Dungeness Hatchery UnMarked,U-dungeh,55,,Dungeness Hatchery,Hatchery,F,
+COHO,1,6,4,6,2,110,Dungeness Hatchery Marked,M-dungeh,55,,Dungeness Hatchery,Hatchery,F,
+COHO,1,6,5,6,3,111,Elwha River Wild UnMarked,U-elwhaw,56,,Elwha River Wild,Wild,F,
+COHO,1,6,6,6,3,112,Elwha River Wild Marked,M-elwhaw,56,,Elwha River Wild,Wild,F,
+COHO,1,6,7,6,4,113,Elwha Hatchery UnMarked,U-elwhah,57,,Elwha Hatchery,Hatchery,F,
+COHO,1,6,8,6,4,114,Elwha Hatchery Marked,M-elwhah,57,,Elwha Hatchery,Hatchery,F,
+COHO,1,6,9,6,5,115,East JDF Miscellaneous Wild UnMarked,U-ejdfmw,58,14,East JDF Miscellaneous Wild,Wild,F,Strait of Juan de Fuca
+COHO,1,6,10,6,5,116,East JDF Miscellaneous Wild Marked,M-ejdfmw,58,14,East JDF Miscellaneous Wild,Wild,F,Strait of Juan de Fuca
+COHO,1,6,11,6,6,117,West JDF Miscellaneous Wild UnMarked,U-wjdfmw,59,14,West JDF Miscellaneous Wild,Wild,F,Strait of Juan de Fuca
+COHO,1,6,12,6,6,118,West JDF Miscellaneous Wild Marked,M-wjdfmw,59,14,West JDF Miscellaneous Wild,Wild,F,Strait of Juan de Fuca
+COHO,1,6,13,6,7,119,Port Angeles Net Pens UnMarked,U-ptangh,60,,Port Angeles Net Pens,Hatchery,F,
+COHO,1,6,14,6,7,120,Port Angeles Net Pens Marked,M-ptangh,60,,Port Angeles Net Pens,Hatchery,F,
+COHO,1,6,15,6,8,121,Area 9 Miscellaneous Wild UnMarked,U-area9w,61,,Area 9 Miscellaneous Wild,Wild,F,
+COHO,1,6,16,6,8,122,Area 9 Miscellaneous Wild Marked,M-area9w,61,,Area 9 Miscellaneous Wild,Wild,F,
+COHO,1,7,1,7,1,123,Makah Coastal Wild UnMarked,U-makahw,62,23,Makah Coastal Wild,Wild,G,
+COHO,1,7,2,7,1,124,Makah Coastal Wild Marked,M-makahw,62,23,Makah Coastal Wild,Wild,G,
+COHO,1,7,3,7,2,125,Makah Coastal Hatchery UnMarked,U-makahh,63,,Makah Coastal Hatchery,Hatchery,G,
+COHO,1,7,4,7,2,126,Makah Coastal Hatchery Marked,M-makahh,63,,Makah Coastal Hatchery,Hatchery,G,
+COHO,1,8,1,8,1,127,Quillayute River Summer Natural UnMarked,U-quilsw,64,15,Quillayute River Summer Natural,Wild,H,
+COHO,1,8,2,8,1,128,Quillayute River Summer Natural Marked,M-quilsw,64,15,Quillayute River Summer Natural,Wild,H,
+COHO,1,8,3,8,2,129,Quillayute River Summer Hatchery UnMarked,U-quilsh,65,,Quillayute River Summer Hatchery,Hatchery,H,
+COHO,1,8,4,8,2,130,Quillayute River Summer Hatchery Marked,M-quilsh,65,,Quillayute River Summer Hatchery,Hatchery,H,
+COHO,1,8,5,8,3,131,Quillayute River Fall Natural UnMarked,U-quilfw,66,15,Quillayute River Fall Natural,Wild,H,Quillayute River Fall
+COHO,1,8,6,8,3,132,Quillayute River Fall Natural Marked,M-quilfw,66,15,Quillayute River Fall Natural,Wild,H,Quillayute River Fall
+COHO,1,8,7,8,4,133,Quillayute River Fall Hatchery UnMarked,U-quilfh,67,,Quillayute River Fall Hatchery,Hatchery,H,
+COHO,1,8,8,8,4,134,Quillayute River Fall Hatchery Marked,M-quilfh,67,,Quillayute River Fall Hatchery,Hatchery,H,
+COHO,1,9,1,9,1,135,Hoh River Wild UnMarked,U-hohrvw,68,16,Hoh River Wild,Wild,I,Hoh River
+COHO,1,9,2,9,1,136,Hoh River Wild Marked,M-hohrvw,68,16,Hoh River Wild,Wild,I,Hoh River
+COHO,1,9,3,9,2,137,Hoh River Hatchery UnMarked,U-hohrvh,69,,Hoh River Hatchery,Hatchery,I,
+COHO,1,9,4,9,2,138,Hoh River Hatchery Marked,M-hohrvh,69,,Hoh River Hatchery,Hatchery,I,
+COHO,1,10,1,10,1,139,Queets River Fall Natural UnMarked,U-quetfw,70,17,Queets River Fall Natural,Wild,J,Queets River
+COHO,1,10,2,10,1,140,Queets River Fall Natural Marked,M-quetfw,70,17,Queets River Fall Natural,Wild,J,Queets River
+COHO,1,10,3,10,2,141,Queets River Fall Hatchery UnMarked,U-quetfh,71,,Queets River Fall Hatchery,Hatchery,J,
+COHO,1,10,4,10,2,142,Queets River Fall Hatchery Marked,M-quetfh,71,,Queets River Fall Hatchery,Hatchery,J,
+COHO,1,10,5,10,3,143,Queets River Suppl. Hatchery UnMarked,U-quetph,72,,Queets River Suppl. Hatchery,Hatchery,J,
+COHO,1,10,6,10,3,144,Queets River Suppl. Hatchery Marked,M-quetph,72,,Queets River Suppl. Hatchery,Hatchery,J,
+COHO,1,11,1,11,1,145,Quinault River Fall Natural UnMarked,U-quinfw,73,18,Quinault River Fall Natural,Wild,K,
+COHO,1,11,2,11,1,146,Quinault River Fall Natural Marked,M-quinfw,73,18,Quinault River Fall Natural,Wild,K,
+COHO,1,11,3,11,2,147,Quinault River Fall Hatchery UnMarked,U-quinfh,74,,Quinault River Fall Hatchery,Hatchery,K,
+COHO,1,11,4,11,2,148,Quinault River Fall Hatchery Marked,M-quinfh,74,,Quinault River Fall Hatchery,Hatchery,K,
+COHO,1,12,1,12,1,149,Chehalis River Wild UnMarked,U-chehlw,75,19,Chehalis River Wild,Wild,L,Grays Harbor
+COHO,1,12,2,12,1,150,Chehalis River Wild Marked,M-chehlw,75,19,Chehalis River Wild,Wild,L,Grays Harbor
+COHO,1,12,3,12,2,151,Chehalis River Hatchery UnMarked,U-chehlh,76,,Chehalis River Hatchery,Hatchery,L,
+COHO,1,12,4,12,2,152,Chehalis River Hatchery Marked,M-chehlh,76,,Chehalis River Hatchery,Hatchery,L,
+COHO,1,12,5,12,3,153,Humptulips River Wild UnMarked,U-humptw,77,20,Humptulips River Wild,Wild,L,Grays Harbor
+COHO,1,12,6,12,3,154,Humptulips River Wild Marked,M-humptw,77,20,Humptulips River Wild,Wild,L,Grays Harbor
+COHO,1,12,7,12,4,155,Humptulips River Hatchery UnMarked,U-humpth,78,,Humptulips River Hatchery,Hatchery,L,
+COHO,1,12,8,12,4,156,Humptulips River Hatchery Marked,M-humpth,78,,Humptulips River Hatchery,Hatchery,L,
+COHO,1,12,9,12,5,157,Grays Harbor Miscellaneous Wild UnMarked,U-gryhmw,79,,Grays Harbor Miscellaneous Wild,Wild,L,Grays Harbor
+COHO,1,12,10,12,5,158,Grays Harbor Miscellaneous Wild Marked,M-gryhmw,79,,Grays Harbor Miscellaneous Wild,Wild,L,Grays Harbor
+COHO,1,12,11,12,6,159,Grays Harbor Net Pens UnMarked,U-gryhbh,80,,Grays Harbor Net Pens,Hatchery,L,
+COHO,1,12,12,12,6,160,Grays Harbor Net Pens Marked,M-gryhbh,80,,Grays Harbor Net Pens,Hatchery,L,
+COHO,1,13,1,13,1,161,Willapa Bay Natural UnMarked,U-willaw,81,21,Willapa Bay Natural,Wild,M,Willapa Bay
+COHO,1,13,2,13,1,162,Willapa Bay Natural Marked,M-willaw,81,21,Willapa Bay Natural,Wild,M,Willapa Bay
+COHO,1,13,3,13,2,163,Willapa Bay Hatchery UnMarked,U-willah,82,,Willapa Bay Hatchery,Hatchery,M,
+COHO,1,13,4,13,2,164,Willapa Bay Hatchery Marked,M-willah,82,,Willapa Bay Hatchery,Hatchery,M,
+COHO,1,14,1,14,1,165,Columbia River Early Hatchery UnMarked,U-colreh,83,,Columbia River Early Hatchery,Hatchery,N,
+COHO,1,14,2,14,1,166,Columbia River Early Hatchery Marked,M-colreh,83,,Columbia River Early Hatchery,Hatchery,N,
+COHO,1,14,3,14,2,167,Youngs Bay Hatchery UnMarked,U-youngh,84,,Youngs Bay Hatchery,Hatchery,N,
+COHO,1,14,4,14,2,168,Youngs Bay Hatchery Marked,M-youngh,84,,Youngs Bay Hatchery,Hatchery,N,
+COHO,1,14,5,14,3,169,Lower Col R Oregon Wild UnMarked,U-crorew,85,,Lower Col R Oregon Wild,Wild,N,
+COHO,1,14,6,14,3,170,Lower Col R Oregon Wild Marked,M-crorew,85,,Lower Col R Oregon Wild,Wild,N,
+COHO,1,14,7,14,4,171,Wash Early Wild UnMarked,U-washew,86,,Wash Early Wild,Wild,N,
+COHO,1,14,8,14,4,172,Wash Early Wild Marked,M-washew,86,,Wash Early Wild,Wild,N,
+COHO,1,14,9,14,5,173,Wash Late Wild UnMarked,U-washlw,87,,Wash Late Wild,Wild,N,Lower Columbia River Natural
+COHO,1,14,10,14,5,174,Wash Late Wild Marked,M-washlw,87,,Wash Late Wild,Wild,N,Lower Columbia River Natural
+COHO,1,14,11,14,6,175,Columbia River Late Hatchery UnMarked,U-colrlh,88,,Columbia River Late Hatchery,Hatchery,N,
+COHO,1,14,12,14,6,176,Columbia River Late Hatchery Marked,M-colrlh,88,,Columbia River Late Hatchery,Hatchery,N,
+COHO,1,15,1,15,3,177,Oregon North Coast Hatchery UnMarked,U-orenoh,89,,Oregon North Coast Hatchery,Hatchery,O,
+COHO,1,15,2,15,3,178,Oregon North Coast Hatchery Marked,M-orenoh,89,,Oregon North Coast Hatchery,Hatchery,O,
+COHO,1,15,3,15,4,179,Oregon North Coast Wild UnMarked,U-orenow,90,,Oregon North Coast Wild,Wild,O,Oregon Coast Natural
+COHO,1,15,4,15,4,180,Oregon North Coast Wild Marked,M-orenow,90,,Oregon North Coast Wild,Wild,O,Oregon Coast Natural
+COHO,1,15,5,15,5,181,Oregon North-Mid Coast Hatchery UnMarked,U-orenmh,91,,Oregon North-Mid Coast Hatchery,Hatchery,O,
+COHO,1,15,6,15,5,182,Oregon North-Mid Coast Hatchery Marked,M-orenmh,91,,Oregon North-Mid Coast Hatchery,Hatchery,O,
+COHO,1,15,7,15,6,183,Oregon North-Mid Coast Wild UnMarked,U-orenmw,92,,Oregon North-Mid Coast Wild,Wild,O,Oregon Coast Natural
+COHO,1,15,8,15,6,184,Oregon North-Mid Coast Wild Marked,M-orenmw,92,,Oregon North-Mid Coast Wild,Wild,O,Oregon Coast Natural
+COHO,1,15,9,15,7,185,Oregon South-Mid Coast Hatchery UnMarked,U-oresmh,93,,Oregon South-Mid Coast Hatchery,Hatchery,O,
+COHO,1,15,10,15,7,186,Oregon South-Mid Coast Hatchery Marked,M-oresmh,93,,Oregon South-Mid Coast Hatchery,Hatchery,O,
+COHO,1,15,11,15,8,187,Oregon South-Mid Coast Wild UnMarked,U-oresmw,94,,Oregon South-Mid Coast Wild,Wild,O,Oregon Coast Natural
+COHO,1,15,12,15,8,188,Oregon South-Mid Coast Wild Marked,M-oresmw,94,,Oregon South-Mid Coast Wild,Wild,O,Oregon Coast Natural
+COHO,1,15,13,15,9,189,Oregon Anadromous Hatchery UnMarked,U-oranah,95,,Oregon Anadromous Hatchery,Hatchery,O,
+COHO,1,15,14,15,9,190,Oregon Anadromous Hatchery Marked,M-oranah,95,,Oregon Anadromous Hatchery,Hatchery,O,
+COHO,1,15,15,15,10,191,Oregon Aqua-Foods Hatchery UnMarked,U-oraqah,96,,Oregon Aqua-Foods Hatchery,Hatchery,O,
+COHO,1,15,16,15,10,192,Oregon Aqua-Foods Hatchery Marked,M-oraqah,96,,Oregon Aqua-Foods Hatchery,Hatchery,O,
+COHO,1,16,1,16,1,193,Oregon South Coast Hatchery UnMarked,U-oresoh,97,,Oregon South Coast Hatchery,Hatchery,P,
+COHO,1,16,2,16,1,194,Oregon South Coast Hatchery Marked,M-oresoh,97,,Oregon South Coast Hatchery,Hatchery,P,
+COHO,1,16,3,16,2,195,Oregon South Coast Wild UnMarked,U-oresow,98,,Oregon South Coast Wild,Wild,P,
+COHO,1,16,4,16,2,196,Oregon South Coast Wild Marked,M-oresow,98,,Oregon South Coast Wild,Wild,P,
+COHO,1,16,5,16,3,197,California North Coast Hatchery UnMarked,U-calnoh,99,,California North Coast Hatchery,Hatchery,P,
+COHO,1,16,6,16,3,198,California North Coast Hatchery Marked,M-calnoh,99,,California North Coast Hatchery,Hatchery,P,
+COHO,1,16,7,16,4,199,California North Coast Wild UnMarked,U-calnow,100,,California North Coast Wild,Wild,P,
+COHO,1,16,8,16,4,200,California North Coast Wild Marked,M-calnow,100,,California North Coast Wild,Wild,P,
+COHO,1,16,9,16,5,201,California Central Coast Hatchery UnMarked,U-calcnh,101,,California Central Coast Hatchery,Hatchery,P,
+COHO,1,16,10,16,5,202,California Central Coast Hatchery Marked,M-calcnh,101,,California Central Coast Hatchery,Hatchery,P,
+COHO,1,16,11,16,6,203,California Central Coast Wild UnMarked,U-calcnw,102,,California Central Coast Wild,Wild,P,
+COHO,1,16,12,16,6,204,California Central Coast Wild Marked,M-calcnw,102,,California Central Coast Wild,Wild,P,
+COHO,1,17,1,17,1,205,Georgia Strait Mainland Hatchery UnMarked,U-gsmndh,103,,Georgia Strait Mainland Hatchery,Hatchery,Q,
+COHO,1,17,2,17,1,206,Georgia Strait Mainland Hatchery Marked,M-gsmndh,103,,Georgia Strait Mainland Hatchery,Hatchery,Q,
+COHO,1,17,3,17,2,207,Georgia Strait Mainland Wild UnMarked,U-gsmndw,104,,Georgia Strait Mainland Wild,Wild,Q,Strait of Georgia
+COHO,1,17,4,17,2,208,Georgia Strait Mainland Wild Marked,M-gsmndw,104,,Georgia Strait Mainland Wild,Wild,Q,Strait of Georgia
+COHO,1,18,1,18,1,209,Georgia Strait Vanc. Isl. Hatchery UnMarked,U-gsvcih,105,,Georgia Strait Vanc. Isl. Hatchery,Hatchery,Q,
+COHO,1,18,2,18,1,210,Georgia Strait Vanc. Isl. Hatchery Marked,M-gsvcih,105,,Georgia Strait Vanc. Isl. Hatchery,Hatchery,Q,
+COHO,1,18,3,18,2,211,Georgia Strait Vanc. Isl. Wild UnMarked,U-gsvciw,106,22,Georgia Strait Vanc. Isl. Wild,Wild,Q,Strait of Georgia
+COHO,1,18,4,18,2,212,Georgia Strait Vanc. Isl. Wild Marked,M-gsvciw,106,22,Georgia Strait Vanc. Isl. Wild,Wild,Q,Strait of Georgia
+COHO,1,19,1,19,1,213,Johnstone Strait Hatchery UnMarked,U-jnstrh,107,,Johnstone Strait Hatchery,Hatchery,Q,
+COHO,1,19,2,19,1,214,Johnstone Strait Hatchery Marked,M-jnstrh,107,,Johnstone Strait Hatchery,Hatchery,Q,
+COHO,1,19,3,19,2,215,Johnstone Strait Wild UnMarked,U-jnstrw,108,,Johnstone Strait Wild,Wild,Q,
+COHO,1,19,4,19,2,216,Johnstone Strait Wild Marked,M-jnstrw,108,,Johnstone Strait Wild,Wild,Q,
+COHO,1,20,1,20,1,217,SW Vancouver Island Hatchery UnMarked,U-swvcih,109,,SW Vancouver Island Hatchery,Hatchery,Q,
+COHO,1,20,2,20,1,218,SW Vancouver Island Hatchery Marked,M-swvcih,109,,SW Vancouver Island Hatchery,Hatchery,Q,
+COHO,1,20,3,20,2,219,SW Vancouver Island Wild UnMarked,U-swvciw,110,,SW Vancouver Island Wild,Wild,Q,
+COHO,1,20,4,20,2,220,SW Vancouver Island Wild Marked,M-swvciw,110,,SW Vancouver Island Wild,Wild,Q,
+COHO,1,21,1,21,1,221,NW Vancouver Island Hatchery UnMarked,U-nwvcih,111,,NW Vancouver Island Hatchery,Hatchery,Q,
+COHO,1,21,2,21,1,222,NW Vancouver Island Hatchery Marked,M-nwvcih,111,,NW Vancouver Island Hatchery,Hatchery,Q,
+COHO,1,21,3,21,2,223,NW Vancouver Island Wild UnMarked,U-nwvciw,112,,NW Vancouver Island Wild,Wild,Q,
+COHO,1,21,4,21,2,224,NW Vancouver Island Wild Marked,M-nwvciw,112,,NW Vancouver Island Wild,Wild,Q,
+COHO,1,22,1,22,1,225,Lower Fraser River Hatchery UnMarked,U-frslwh,113,,Lower Fraser River Hatchery,Hatchery,Q,
+COHO,1,22,2,22,1,226,Lower Fraser River Hatchery Marked,M-frslwh,113,,Lower Fraser River Hatchery,Hatchery,Q,
+COHO,1,22,3,22,2,227,Lower Fraser River Wild UnMarked,U-frslww,114,,Lower Fraser River Wild,Wild,Q,Lower Fraser Coho
+COHO,1,22,4,22,2,228,Lower Fraser River Wild Marked,M-frslww,114,,Lower Fraser River Wild,Wild,Q,Lower Fraser Coho
+COHO,1,23,1,23,1,229,Upper Fraser River Hatchery UnMarked,U-frsuph,115,,Upper Fraser River Hatchery,Hatchery,Q,
+COHO,1,23,2,23,1,230,Upper Fraser River Hatchery Marked,M-frsuph,115,,Upper Fraser River Hatchery,Hatchery,Q,
+COHO,1,23,3,23,2,231,Upper Fraser River Wild UnMarked,U-frsupw,116,,Upper Fraser River Wild,Wild,Q,Interior Fraser Coho
+COHO,1,23,4,23,2,232,Upper Fraser River Wild Marked,M-frsupw,116,,Upper Fraser River Wild,Wild,Q,Interior Fraser Coho
+COHO,1,25,1,24,1,233,BC Central Coast Hatchery/Wild UnMarked,U-bccnhw,117,,BC Central Coast Hatchery-Wild,Mix,Q,
+COHO,1,25,2,24,1,234,BC Central Coast Hatchery/Wild Marked,M-bccnhw,117,,BC Central Coast Hatchery-Wild,Mix,Q,
+COHO,1,26,1,24,1,235,BC North Coast Hatchery/Wild UnMarked,U-bcnchw,118,,BC North Coast Hatchery-Wild,Mix,Q,
+COHO,1,26,2,24,1,236,BC North Coast Hatchery/Wild Marked,M-bcnchw,118,,BC North Coast Hatchery-Wild,Mix,Q,
+COHO,1,30,1,25,1,237,Trans Boundary Hatchery/Wild UnMarked,U-tranhw,119,,Trans Boundary Hatchery-Wild,Mix,R,
+COHO,1,30,2,26,1,238,Trans Boundary Hatchery/Wild Marked,M-tranhw,119,,Trans Boundary Hatchery-Wild,Mix,R,
+COHO,1,31,1,27,1,239,Alaska Northern Inside Hat/Wild UnMarked,U-niakhw,120,,Alaska Northern Inside Hat-Wild,Mix,R,
+COHO,1,31,2,28,1,240,Alaska Northern Inside Hat/Wild Marked,M-niakhw,120,,Alaska Northern Inside Hat-Wild,Mix,R,
+COHO,1,32,1,29,1,241,Alaska Northern Outside Hat/Wild UnMarked,U-noakhw,121,,Alaska Northern Outside Hat-Wild,Mix,R,
+COHO,1,32,2,30,1,242,Alaska Northern Outside Hat/Wild Marked,M-noakhw,121,,Alaska Northern Outside Hat-Wild,Mix,R,
+COHO,1,33,1,31,1,243,Alaska Southern Inside Hat/Wild UnMarked,U-siakhw,122,,Alaska Southern Inside Hat-Wild,Mix,R,
+COHO,1,33,2,32,1,244,Alaska Southern Inside Hat/Wild Marked,M-siakhw,122,,Alaska Southern Inside Hat-Wild,Mix,R,
+COHO,1,34,1,33,1,245,Alaska Southern Outside Hat/Wild UnMarked,U-soakhw,123,,Alaska Southern Outside Hat-Wild,Mix,R,
+COHO,1,34,2,34,1,246,Alaska Southern Outside Hat/Wild Marked,M-soakhw,123,,Alaska Southern Outside Hat-Wild,Mix,R,
