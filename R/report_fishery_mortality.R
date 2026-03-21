@@ -285,6 +285,7 @@ plot_stock_mortality <- function(fram_db, run_id, stock_id,
 label_timesteps = function(.data, fram_db){
   time_step_lut = fram_db |>
     fetch_table_("TimeStep") |>
+    dplyr::filter(species == fram_db$fram_db_species) |>
     dplyr::mutate(time_step_label = as.factor(glue::glue("{time_step_id} ({time_step_name})"))) |>
     dplyr::select(time_step = .data$time_step_id,
                   .data$time_step_label)
