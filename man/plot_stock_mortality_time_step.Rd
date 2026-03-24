@@ -15,7 +15,8 @@ plot_stock_mortality_time_step(
   msp = TRUE,
   split_cnr = FALSE,
   fishery_title_short = FALSE,
-  stock_title_short = FALSE
+  stock_title_short = FALSE,
+  warn = TRUE
 )
 }
 \arguments{
@@ -36,6 +37,8 @@ plot_stock_mortality_time_step(
 \item{fishery_title_short}{Use abbreviated fishery names instead of full names? Useful if horizontal space is limited. Logical, defaults to FALSE.}
 
 \item{stock_title_short}{Use abbreviated stock name instead of full name in title? Will always use abbreviated stock name if multiple stock ids are provided.}
+
+\item{warn}{Warn if providing multiple stocks?}
 }
 \description{
 Creates an ordered bar chart with

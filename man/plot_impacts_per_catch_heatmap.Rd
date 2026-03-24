@@ -14,7 +14,9 @@ plot_impacts_per_catch_heatmap(
   outer_text_size = 18,
   cell_text_size = 5,
   short_title = FALSE,
-  per_thousand_catch = FALSE
+  per_thousand_catch = FALSE,
+  verbose = TRUE,
+  warn = TRUE
 )
 }
 \arguments{
@@ -37,6 +39,10 @@ plot_impacts_per_catch_heatmap(
 \item{short_title}{Should the abbreviated stock name (e.g., "M-ssdnph") be used (\code{TRUE}) or the longer name (e.g., "South Puget SOund Net Pens Marked"). Logical, defaults to \code{FALSE}; \code{TRUE} may be useful when plots must be small.}
 
 \item{per_thousand_catch}{Should plot be presented in units of Impacts per Thousand Landed Catch (TRUE) or landed catch per impact (FALSE). Logical, defaults to FALSE.}
+
+\item{verbose}{Print plot info to console? Logical, defaults to \code{TRUE}.}
+
+\item{warn}{Print warning if multiple stocks are provided? Logical, defaults to \code{TRUE}.}
 }
 \value{
 ggplot object

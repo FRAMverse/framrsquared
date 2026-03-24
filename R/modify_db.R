@@ -464,6 +464,12 @@ copy_run <- function(fram_db, target_run, times = 1, label = 'copy', force_many_
                                      "SELECT * FROM SizeLimits
                                     WHERE RunID = {target_run}
                                     "))
+    sl_ratio <- DBI::dbGetQuery(fram_db$fram_db_connection,
+                                   glue::glue(
+                                     "SELECT * FROM SLRatio
+                                    WHERE RunID = {target_run}
+                                    "))
+
   }
 
   run_target <- run_table |>
@@ -562,6 +568,19 @@ copy_run <- function(fram_db, target_run, times = 1, label = 'copy', force_many_
         value = size_limits_insert,
         batch_rows = 1
       )
+
+      sl_ratio_insert <- sl_ratio |>
+        dplyr::mutate(RunID = .env$max_run_id + .env$i)
+
+
+      # send to db
+      DBI::dbAppendTable(
+        fram_db$fram_db_connection,
+        name = 'SLRatio',
+        value = sl_ratio_insert,
+        batch_rows = 1
+      )
+
 
     }
 

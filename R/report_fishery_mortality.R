@@ -86,6 +86,7 @@ fishery_mortality <- function(fram_db, run_id = NULL, fishery_id = NULL, msp = T
 #' @param split_cnr Produce separate panels for CNR and non-CNR mortality? Logical, defaults to FALSE.
 #' @param fishery_title_short Use abbreviated fishery names instead of full names? Useful if horizontal space is limited. Logical, defaults to FALSE.
 #' @param stock_title_short Use abbreviated stock name instead of full name in title? Will always use abbreviated stock name if multiple stock ids are provided.
+#' @param warn Warn if providing multiple stocks?
 #'
 #' @seealso [plot_impacts_per_catch_heatmap()], [plot_stock_mortality_time_step()]
 #'
@@ -103,7 +104,8 @@ plot_stock_mortality <- function(fram_db, run_id, stock_id,
                                  msp = TRUE,
                                  split_cnr = FALSE,
                                  fishery_title_short = FALSE,
-                                 stock_title_short = FALSE){
+                                 stock_title_short = FALSE,
+                                 warn = TRUE){
   validate_fram_db(fram_db)
   validate_run_id(fram_db, run_id)
   validate_stock_ids(fram_db, stock_id)
@@ -116,8 +118,8 @@ plot_stock_mortality <- function(fram_db, run_id, stock_id,
   }
 
   # make sure run ids are integers
-  if (length(stock_id)>1) {
-    cli::cli_alert_warning("Plot is likely meaningful when combining stock (unless combining marked and unmarked fish of the same overall stock). Consider providing a single value for stock_id.")
+  if (length(stock_id)>1 & warn) {
+    cli::cli_alert_warning("Plot may not be meaningful when combining stock (unless combined FRAM stocks have biological interpretation). Consider providing a single value for stock_id.")
   }
 
   if(!is.null(filters_list) & !is.list(filters_list)){
@@ -126,6 +128,7 @@ plot_stock_mortality <- function(fram_db, run_id, stock_id,
   if(!is.null(filters_list) & !all(purrr::map_vec(filters_list, \(x) is.function(x)))){
     cli::cli_abort("If provided, filters_list must be a list of fishery filter functions. One or more list items is not a function.")
   }
+  validate_flag(warn)
 
   # identify species used
   species_used = fetch_table_(fram_db, "RunID") |>
@@ -285,7 +288,7 @@ plot_stock_mortality <- function(fram_db, run_id, stock_id,
 label_timesteps = function(.data, fram_db){
   time_step_lut = fram_db |>
     fetch_table_("TimeStep") |>
-    dplyr::filter(species == fram_db$fram_db_species) |>
+    dplyr::filter(.data$species == fram_db$fram_db_species) |>
     dplyr::mutate(time_step_label = as.factor(glue::glue("{time_step_id} ({time_step_name})"))) |>
     dplyr::select(time_step = .data$time_step_id,
                   .data$time_step_label)
@@ -319,7 +322,8 @@ plot_stock_mortality_time_step <- function(fram_db,
                                            msp = TRUE,
                                            split_cnr = FALSE,
                                            fishery_title_short = FALSE,
-                                           stock_title_short = FALSE){
+                                           stock_title_short = FALSE,
+                                           warn = TRUE){
   validate_fram_db(fram_db)
   validate_run_id(fram_db, run_id)
   validate_stock_ids(fram_db, stock_id)
@@ -331,8 +335,8 @@ plot_stock_mortality_time_step <- function(fram_db,
   }
 
   # make sure run ids are integers
-  if (length(stock_id)>1) {
-    cli::cli_alert_warning("Plot is likely meaningful when combining stock (unless combining marked and unmarked fish of the same overall stock). Consider providing a single value for stock_id.")
+  if (length(stock_id)>1 & warn) {
+    cli::cli_alert_warning("Plot may not be meaningful when combining stock (unless combined FRAM stocks have biological interpretation). Consider providing a single value for stock_id.")
   }
 
   if(!is.null(filters_list) & !is.list(filters_list)){
