@@ -4,12 +4,14 @@
 \alias{compare_runs}
 \title{Generates a report to the console of changes to inputs between two runs}
 \usage{
-compare_runs(fram_db, run_ids, tolerance = 0.01)
+compare_runs(fram_db, run_ids, save_file = NULL, tolerance = 0.1)
 }
 \arguments{
 \item{fram_db}{FRAM database object}
 
 \item{run_ids}{Two run ids. Run names must differ; change in FRAM if necessary.}
+
+\item{save_file}{If provided, diagnostics text is sent to file instead of console. If file already exists, will overwrite. Character, defaults to NULL.}
 
 \item{tolerance}{Tolerance of detection, 1 percent default}
 }

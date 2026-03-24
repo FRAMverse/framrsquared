@@ -2,13 +2,14 @@
 
 - fixed bug in which `fetch_table()` errored out when fetching the `Stock` or `Fishery` tables.
 - added functions to handle SONCC calculations for STT.
-- updated `compare_runs()` to apply specified tolerance to recruits as well as fishery inputs
+- updated `compare_runs()` to apply specified tolerance to recruits as well as fishery inputs, compare SLRatio table (Chinook only), and add option to save output to text file instead of console, and invisibly returns list of the comparison dataframes. `compare_sl_ratio()` handles the sublegal ratio comparisons.
 - Overhauled `plot_impacts_per_catch_heatmap`: can control more aspects of the plots (rounding, font size, abbreviated or full stock name for title), fishery labels include id numbers and timestep labels include months. Can toggle between "landed catch per impacts" (default) and "impacts per thousand landed catch". Function can now accept multiple stock ids, making it more useful for managing to objectives that are based on a sum of FRAM stocks. Function no longer includes CNR in the impacts per landed catch.
 - improved speed of `stock_mortality()` and `fishery_mortality()`. Optionally accept either `stock_id` or `fishery_id` arguments which filter the fetched `mortality` function for improved speed. 
 - Updated `plot_stock_mortality()` and `plot_stock_mortality_timestep()` to account for CNR. Default behavior now
-provides the % CNR on the plot. Setting optional argument `split_cnr` to `TRUE` produces separate panels for CNR and non-CNR mortalities. Also: cosmetic changes and optional arguments to control them, support (and appropriate warnings) for taking multiple stock_id.
-- filter functions now have optional argument `return_ids` -- when set to `TRUE`, functions return the fishery (or stock) ids used to filter rather than the filtered dataframe. Useful for double-checking things and for planned future work.
-- new filter functions added: filter_stt and filter_stt_nt for STT Coho stocks; filter_hatchery, filter_wild, filter_mixed for coho stocks.
+provides the % CNR on the plot. Setting optional argument `split_cnr` to `TRUE` produces separate panels for CNR and non-CNR mortalities. Also: cosmetic changes and optional arguments to control them, support (and appropriate warnings) for taking multiple stock_id. `warn` and `verbose` arguments control printing of informative messages in the console.
+- filter functions now have optional argument `return_ids` -- when set to `TRUE`, functions return the fishery (or stock) ids used to filter rather than the filtered dataframe. Useful for double-checking things, creating "union filters" and for planned future work.
+- new filter functions added: `filter_stt()` and `filter_stt_nt()` for STT Coho stocks; `filter_hatchery()`, `filter_wild()`, `filter_mixed()` for coho stocks.
+- BUG FIX: `copy_runs()` now correctly copies entries of "SLRatio" table for Chinook. 
 
 # framrsquared 0.8.1
 

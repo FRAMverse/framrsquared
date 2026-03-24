@@ -13,6 +13,8 @@
 #' @param cell_text_size Controls size of text size in heatmap cells.  Numeric, defaults to 5. Different units from `outer_text_size`.
 #' @param short_title Should the abbreviated stock name (e.g., "M-ssdnph") be used (`TRUE`) or the longer name (e.g., "South Puget SOund Net Pens Marked"). Logical, defaults to `FALSE`; `TRUE` may be useful when plots must be small.
 #' @param per_thousand_catch Should plot be presented in units of Impacts per Thousand Landed Catch (TRUE) or landed catch per impact (FALSE). Logical, defaults to FALSE.
+#' @param verbose Print plot info to console? Logical, defaults to `TRUE`.
+#' @param warn Print warning if multiple stocks are provided? Logical, defaults to `TRUE`.
 #' @return ggplot object
 #' @export
 #'
@@ -36,7 +38,9 @@ plot_impacts_per_catch_heatmap <- function(fram_db,
                                            outer_text_size = 18,
                                            cell_text_size = 5,
                                            short_title = FALSE,
-                                           per_thousand_catch = FALSE) {
+                                           per_thousand_catch = FALSE,
+                                           verbose = TRUE,
+                                           warn = TRUE) {
   validate_fram_db(fram_db)
   validate_run_id(fram_db, run_id)
   validate_stock_ids(fram_db, stock_id)
@@ -45,6 +49,8 @@ plot_impacts_per_catch_heatmap <- function(fram_db,
   validate_numeric(cell_text_size, n = 1)
   validate_flag(short_title)
   validate_flag(per_thousand_catch)
+  validate_flag(verbose)
+  validate_flag(warn)
   #
   #   if(is.null(digits_round)){
   #     if(per_thousand_catch){
@@ -55,7 +61,7 @@ plot_impacts_per_catch_heatmap <- function(fram_db,
   #   }
 
   validate_stock_ids(fram_db, stock_id)
-  if(length(stock_id)>1){
+  if(length(stock_id)>1 & warn){
     cli::cli_alert_warning("Multiple stock IDs provided! Interpret combined impacts with caution!")
   }
 
@@ -63,12 +69,13 @@ plot_impacts_per_catch_heatmap <- function(fram_db,
 
   run_info <- fetch_table_(fram_db, "RunID") |>
     dplyr::filter(run_id == .env$run_id)
-  print(dim(run_info))
-  cli::cli_alert(
-    glue::glue(
-      "Generating plot for run '{run_info$run_title}', a {fram_db$fram_db_species} FRAM run from {as.Date(run_info$run_time_date)}"
+  if(verbose){
+    cli::cli_alert(
+      glue::glue(
+        "Generating plot for run '{run_info$run_title}', a {fram_db$fram_db_species} FRAM run from {as.Date(run_info$run_time_date)}"
+      )
     )
-  )
+  }
 
   stock_table <- fetch_table_(fram_db, "Stock")
   stock_name <- stock_table |>
@@ -174,7 +181,7 @@ plot_impacts_per_catch_heatmap <- function(fram_db,
     dplyr::mutate(fishery_label = factor(.data$fishery_label, levels = fishery_label_sorted))
 
   if(per_thousand_catch){
-    cli::cli_alert("Plotting in units of impacts per thousand catch.")
+    if(verbose) {cli::cli_alert("Plotting in units of impacts per thousand catch.")}
 
     dat_plot$catch_per_impact = 1/dat_plot$catch_per_impact * 1000
 
@@ -188,7 +195,7 @@ plot_impacts_per_catch_heatmap <- function(fram_db,
 
 
   } else {
-    cli::cli_alert("Plotting in units of landed catch per impact.")
+    if(verbose) {cli::cli_alert("Plotting in units of landed catch per impact.")}
 
     subtitle = "Landed catch per impact."
     fill_label = "catch per\nimpact"
@@ -197,10 +204,6 @@ plot_impacts_per_catch_heatmap <- function(fram_db,
     color_low = "goldenrod1"
     color_high = "aquamarine"
   }
-  #
-  # dat_plot <- dat_plot |>
-  #   dplyr::mutate(catch_per_impact = round(catch_per_impact, digits_round))
-
 
   if(length(stock_id)>1)
   {
@@ -217,9 +220,6 @@ plot_impacts_per_catch_heatmap <- function(fram_db,
   scale_range = range(dat_plot$catch_per_impact, na.rm = T)
   ## positioning equally on log scale
   scale_range = exp(log(scale_range) + c(1, -1) * 0.1 * diff(log(scale_range)))
-
-
-
 
   ggplot2::ggplot(
     dat_plot,

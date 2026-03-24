@@ -43,6 +43,59 @@ compare_inputs <- function(fram_db, run_ids){
     )
 }
 
+#' Generates a dataframe that compares sl ratiosfor two runs identified by run_id's
+#' @inheritParams compare_inputs
+#' @details
+#' Comparisons assume the first run provided is the baseline, and provide relative changes from that.
+#' This includes only absolute changes.
+#'
+#' @return Data frame of differences. `$target_ratio_diff` = change in target ratio,
+#'  `$run_encounter_rate_adjustment_diff` = change in run encounter rate adjustment (NS, MSF, NS + MSF). Columns present in the
+#'  "SLRatio" table are included, with `_original` and `_comparison`
+#'  suffixes identifying entries associated with the first and second entries of
+#'  `run_ids`, respectively.
+#'
+#' @export
+#' @examples
+#' \dontrun{fram_db |> compare_inputs(c(100,101))}
+
+compare_sl_ratio <- function(fram_db, run_ids){
+  validate_fram_db(fram_db)
+  validate_run_id(fram_db, run_ids)
+  if(fram_db$fram_db_species != "CHINOOK"){cli::cli_abort('Database must be a Chinook database.')}
+  # abort if do have two run ids
+  if(length(run_ids) != 2 | !is.numeric(run_ids)){cli::cli_abort('Two valid run ids must be provided.')}
+
+  sl_ratio <- fram_db |>
+    fetch_table("SLRatio")
+
+  original <- sl_ratio |>
+    dplyr::filter(.data$run_id == .env$run_ids[1]) |>
+    dplyr::select(.data$fishery_id, .data$age, .data$time_step,
+                  .data$target_ratio, .data$run_encounter_rate_adjustment)
+
+  comparison <- sl_ratio |>
+    dplyr::filter(.data$run_id == .env$run_ids[2]) |>
+    dplyr::select(.data$fishery_id, .data$age, .data$time_step,
+                  .data$target_ratio, .data$run_encounter_rate_adjustment)
+
+  sl_ratio_changes <- original |>
+    dplyr::full_join(comparison,
+                     by = c("fishery_id", "age", "time_step"), suffix = c('_original', '_comparison')) |>
+    dplyr::mutate(
+      target_ratio_diff = .data$target_ratio_original-.data$target_ratio_comparison,
+      run_encounter_rate_adjustment_diff = .data$run_encounter_rate_adjustment_original - .data$run_encounter_rate_adjustment_comparison,
+      na_mismatch = is.na(.data$target_ratio_original) != is.na(.data$target_ratio_comparison) |
+        is.na(.data$run_encounter_rate_adjustment_original) !=
+        is.na(.data$run_encounter_rate_adjustment_comparison)) |>
+    dplyr::filter(.data$target_ratio_diff != 0 |
+                    .data$run_encounter_rate_adjustment_diff != 0 |
+                    .data$na_mismatch
+                    ) |>
+  dplyr::select(-"na_mismatch")
+
+  return(sl_ratio_changes)
+}
 
 #' Generate heat map of changed values between two run inputs.
 #'
@@ -145,7 +198,6 @@ compare_recruits <- function(fram_db, run_ids, tolerance = .01, verbose = TRUE){
     fetch_table_('RunID') |>
     dplyr::select(.data$run_id, .data$run_name)
 
-
   base_run_name <- runs |>
     dplyr::filter(.data$run_id == run_ids[[1]]) |>
     dplyr::pull(.data$run_name) |>
@@ -155,7 +207,6 @@ compare_recruits <- function(fram_db, run_ids, tolerance = .01, verbose = TRUE){
     dplyr::filter(.data$run_id == run_ids[[2]]) |>
     dplyr::pull(.data$run_name) |>
     rlang::sym() #... don't ask, R voodoo magic
-
 
 
   recruit_scalers <- fram_db |>
@@ -554,11 +605,42 @@ compare_stock_fishery_rate_scalers <- function(fram_db, run_ids){
 #' Generates a report to the console of changes to inputs between two runs
 #' @param fram_db FRAM database object
 #' @param run_ids Two run ids. Run names must differ; change in FRAM if necessary.
+#' @param save_file If provided, diagnostics text is sent to file instead of console. If file already exists, will overwrite. Character, defaults to NULL.
 #' @param tolerance Tolerance of detection, 1 percent default
 #' @export
 #' @examples
 #' \dontrun{fram_db |> compare_runs(c(55, 56))}
-compare_runs <- function(fram_db, run_ids, tolerance = .01){
+compare_runs <- function(fram_db, run_ids, save_file = NULL, tolerance = 0.1){
+
+  if(!is.null(save_file)){
+
+    validate_character(save_file)
+    cat("", file = save_file, append = FALSE)
+    out_con <- file(save_file, open = "a")  # normal console output
+    msg_con <- file(save_file, open = "a")  # messages/warnings
+
+    # redirect console to text
+    sink(out_con, type = "output")
+    sink(msg_con, type = "message")
+
+    }
+
+  out <- compare_runs_(fram_db = fram_db,
+                run_ids = run_ids,
+                tolerance = tolerance)
+
+  on.exit({
+    sink(file = NULL, type = "output")
+    sink(file = NULL, type = "message")
+    close(out_con)
+    close(msg_con)
+  }, add = TRUE)
+  return(invisible(out))
+}
+
+
+
+compare_runs_ <- function(fram_db, run_ids, tolerance = .01){
   validate_fram_db(fram_db)
   validate_run_id(fram_db, run_ids)
   if (!is.numeric(tolerance) || length(tolerance) != 1) {
@@ -594,9 +676,25 @@ compare_runs <- function(fram_db, run_ids, tolerance = .01){
     dplyr::pull(.data$run_time_date) |>
     strftime('%Y-%m-%d %r',tz = "UTC")
 
+  bp_id <- runs |>
+    dplyr::filter(.data$run_id %in% run_ids) |>
+    dplyr::pull(.data$base_period_id)
+
+  bp_lut <- fram_db |>
+    fetch_table_("BaseID")
+  bp_names = c(
+    bp_lut[bp_lut$base_period_id == bp_id[1]]$base_period_name,
+    bp_lut[bp_lut$base_period_id == bp_id[2]]$base_period_name
+  )
+
+  if(diff(bp_id) != 0){
+    cli::cli_alert_warning(cli::col_red("These runs have different base periods ({bp_id[1]} vs {bp_id[2]}})!!!"))
+  }
+
 
   cli::cli_h1('Comparing run {base_run_name} to {new_run_name}')
-  cli::cli_alert_info('{base_run_name} was run at {base_run_time}, {new_run_name} was run at {new_run_time}')
+  cli::cli_alert_info('{base_run_name} was run at {base_run_time} using Base Period {bp_names[1]}')
+  cli::cli_alert_info('{new_run_name} was run at {new_run_time} using Base Period {bp_names[2]}')
 
   # non-retention
   cli::cli_h2('Non-Retention Inputs')
@@ -624,6 +722,21 @@ compare_runs <- function(fram_db, run_ids, tolerance = .01){
     print(retention_inputs, n=Inf)
   } else {
     cli::cli_alert_success('No changes detected in non-retention inputs')
+  }
+
+  # sl_ratios
+  if(fram_db$fram_db_species == "CHINOOK"){
+    cli::cli_h2('Sublegal Ratios')
+    cli::cli_h3('Checking for changes to SLRatio')
+
+    sl_ratio <- fram_db |>
+      compare_sl_ratio(run_ids)
+    if(nrow(sl_ratio) > 0){
+      cli::cli_alert_info('Changes detected in SL Ratios, below is a table outlining them')
+      print(sl_ratio, n=Inf)
+    } else {
+      cli::cli_alert_success('No changes detected in SL Ratios')
+    }
   }
 
   # recruit scalers
@@ -676,8 +789,20 @@ compare_runs <- function(fram_db, run_ids, tolerance = .01){
     } else {
       cli::cli_alert_success('No changes detected in fishery rate scalers')
     }
+  } else {
+    sfrs = NULL
   }
 
+  all_comparisons = list(
+    retention_flags = retention_flags,
+    retention_inputs = retention_inputs,
+    recruits = recruits,
+    fishery_flags = fishery_flags,
+    fishery_inputs = fishery_inputs,
+    sfrs = sfrs
+  )
+
+  return(invisible(all_comparisons))
 }
 
 
