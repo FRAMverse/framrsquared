@@ -623,18 +623,18 @@ compare_runs <- function(fram_db, run_ids, save_file = NULL, tolerance = 0.1){
     sink(out_con, type = "output")
     sink(msg_con, type = "message")
 
+    on.exit({
+      sink(file = NULL, type = "output")
+      sink(file = NULL, type = "message")
+      close(out_con)
+      close(msg_con)
+    }, add = TRUE)
     }
 
   out <- compare_runs_(fram_db = fram_db,
                 run_ids = run_ids,
                 tolerance = tolerance)
 
-  on.exit({
-    sink(file = NULL, type = "output")
-    sink(file = NULL, type = "message")
-    close(out_con)
-    close(msg_con)
-  }, add = TRUE)
   return(invisible(out))
 }
 
@@ -683,8 +683,8 @@ compare_runs_ <- function(fram_db, run_ids, tolerance = .01){
   bp_lut <- fram_db |>
     fetch_table_("BaseID")
   bp_names = c(
-    bp_lut[bp_lut$base_period_id == bp_id[1]]$base_period_name,
-    bp_lut[bp_lut$base_period_id == bp_id[2]]$base_period_name
+    bp_lut[bp_lut$base_period_id == bp_id[1], "base_period_name"],
+    bp_lut[bp_lut$base_period_id == bp_id[2], "base_period_name"]
   )
 
   if(diff(bp_id) != 0){
@@ -693,8 +693,8 @@ compare_runs_ <- function(fram_db, run_ids, tolerance = .01){
 
 
   cli::cli_h1('Comparing run {base_run_name} to {new_run_name}')
-  cli::cli_alert_info('{base_run_name} was run at {base_run_time} using Base Period {bp_names[1]}')
-  cli::cli_alert_info('{new_run_name} was run at {new_run_time} using Base Period {bp_names[2]}')
+  cli::cli_alert_info('{base_run_name} was run at {base_run_time} using Base Period "{bp_names[1]}"')
+  cli::cli_alert_info('{new_run_name} was run at {new_run_time} using Base Period "{bp_names[2]}"')
 
   # non-retention
   cli::cli_h2('Non-Retention Inputs')
