@@ -77,7 +77,8 @@ aeq_mortality <- function(fram_db, run_id = NULL, msp = TRUE, label = TRUE) {
     dplyr::arrange(.data$run_id, .data$fishery_id,
                    .data$time_step, .data$stock_id
     ) |>
-    `attr<-`('species', fram_db$fram_db_species)
+    `attr<-`('species', fram_db$fram_db_species) |>
+    dplyr::rename("aeq_constant" = "aeq")
   if(label == TRUE){
     aeq_m <- aeq_m |>
       framrosetta::label_fisheries() |>
