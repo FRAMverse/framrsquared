@@ -610,7 +610,7 @@ compare_stock_fishery_rate_scalers <- function(fram_db, run_ids){
 #' @export
 #' @examples
 #' \dontrun{fram_db |> compare_runs(c(55, 56))}
-compare_runs <- function(fram_db, run_ids, save_file = NULL, tolerance = 0.1){
+compare_runs <- function(fram_db, run_ids, save_file = NULL, tolerance = 0.01){
 
   if(!is.null(save_file)){
 
