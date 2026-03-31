@@ -1,5 +1,6 @@
 # framrsquared (development version)
 
+- fixe bug in which `copy_runs()` did not correctly copy entries of "SLRatio" table for Chinook. 
 - fixed bug in which `fetch_table()` errored out when fetching the `Stock` or `Fishery` tables.
 - added functions to handle SONCC calculations for STT.
 - updated `compare_runs()` to apply specified tolerance to recruits as well as fishery inputs, compare SLRatio table (Chinook only), and add option to save output to text file instead of console, and invisibly returns list of the comparison dataframes. `compare_sl_ratio()` handles the sublegal ratio comparisons.
@@ -9,7 +10,7 @@
 provides the % CNR on the plot. Setting optional argument `split_cnr` to `TRUE` produces separate panels for CNR and non-CNR mortalities. Also: cosmetic changes and optional arguments to control them, support (and appropriate warnings) for taking multiple stock_id. `warn` and `verbose` arguments control printing of informative messages in the console.
 - filter functions now have optional argument `return_ids` -- when set to `TRUE`, functions return the fishery (or stock) ids used to filter rather than the filtered dataframe. Useful for double-checking things, creating "union filters" and for planned future work.
 - new filter functions added: `filter_stt()` and `filter_stt_nt()` for STT Coho stocks; `filter_hatchery()`, `filter_wild()`, `filter_mixed()` for coho stocks.
-- BUG FIX: `copy_runs()` now correctly copies entries of "SLRatio" table for Chinook. 
+- updated 
 
 # framrsquared 0.8.1
 
