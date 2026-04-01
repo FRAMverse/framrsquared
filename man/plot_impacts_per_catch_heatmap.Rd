@@ -9,6 +9,7 @@ plot_impacts_per_catch_heatmap(
   run_id,
   stock_id,
   filters_list = list(filter_wa, filter_sport),
+  filter_out = NULL,
   msp = TRUE,
   digits_round = 1,
   outer_text_size = 18,
@@ -27,6 +28,8 @@ plot_impacts_per_catch_heatmap(
 \item{stock_id}{stock_id of interest. Can accept multiple stock_ids, and will plot the impact on the combined stocks.}
 
 \item{filters_list}{list of framrsquared filter functions to apply before plotting. Defaults to \code{list(filter_wa, filter_sport)}, which filters to WA sport fisheries.}
+
+\item{filter_out}{Numeric vector of fishery IDs to filter out. Helpful for removing individual fisheries if they aren't appropriate for the plot (e.g. only non-retention).}
 
 \item{msp}{Use Model Stock Proportion? Logical, defaults to TRUE. Only relevant for Chinook databases.}
 
