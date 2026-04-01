@@ -1,7 +1,8 @@
 # framrsquared (development version)
 
-- fixe bug in which `copy_runs()` did not correctly copy entries of "SLRatio" table for Chinook. 
+- fixed bug in which `copy_runs()` did not correctly copy entries of "SLRatio" table for Chinook. 
 - fixed bug in which `fetch_table()` errored out when fetching the `Stock` or `Fishery` tables.
+- fixed potential bug in which `aeq_mortality()` function can accept a run_id for a run that is present in the database but has not been run in FRAM, and thus has no values in the mortality table. Now provides informative error message in this case.
 - added functions to handle SONCC calculations for STT.
 - updated `compare_runs()` to apply specified tolerance to recruits as well as fishery inputs, compare SLRatio table (Chinook only), and add option to save output to text file instead of console, and invisibly returns list of the comparison dataframes. `compare_sl_ratio()` handles the sublegal ratio comparisons.
 - Overhauled `plot_impacts_per_catch_heatmap`: can control more aspects of the plots (rounding, font size, abbreviated or full stock name for title), fishery labels include id numbers and timestep labels include months. Can toggle between "landed catch per impacts" (default) and "impacts per thousand landed catch". Function can now accept multiple stock ids, making it more useful for managing to objectives that are based on a sum of FRAM stocks. Function no longer includes CNR in the impacts per landed catch.
@@ -10,7 +11,6 @@
 provides the % CNR on the plot. Setting optional argument `split_cnr` to `TRUE` produces separate panels for CNR and non-CNR mortalities. Also: cosmetic changes and optional arguments to control them, support (and appropriate warnings) for taking multiple stock_id. `warn` and `verbose` arguments control printing of informative messages in the console.
 - filter functions now have optional argument `return_ids` -- when set to `TRUE`, functions return the fishery (or stock) ids used to filter rather than the filtered dataframe. Useful for double-checking things, creating "union filters" and for planned future work.
 - new filter functions added: `filter_stt()` and `filter_stt_nt()` for STT Coho stocks; `filter_hatchery()`, `filter_wild()`, `filter_mixed()` for coho stocks.
-- updated 
 
 # framrsquared 0.8.1
 
