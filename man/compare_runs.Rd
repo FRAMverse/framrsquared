@@ -4,7 +4,7 @@
 \alias{compare_runs}
 \title{Generates a report to the console of changes to inputs between two runs}
 \usage{
-compare_runs(fram_db, run_ids, save_file = NULL, tolerance = 0.1)
+compare_runs(fram_db, run_ids, save_file = NULL, tolerance = 0.01)
 }
 \arguments{
 \item{fram_db}{FRAM database object}

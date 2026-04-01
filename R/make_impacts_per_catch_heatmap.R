@@ -7,6 +7,7 @@
 #' @param run_id run_id of interest
 #' @param stock_id stock_id of interest. Can accept multiple stock_ids, and will plot the impact on the combined stocks.
 #' @param filters_list list of framrsquared filter functions to apply before plotting. Defaults to `list(filter_wa, filter_sport)`, which filters to WA sport fisheries.
+#' @param filter_out Numeric vector of fishery IDs to filter out. Helpful for removing individual fisheries if they aren't appropriate for the plot (e.g. only non-retention).
 #' @param msp  Use Model Stock Proportion? Logical, defaults to TRUE. Only relevant for Chinook databases.
 #' @param digits_round How many digits should cell values be rounded to? Numeric, defaults to 1.
 #' @param outer_text_size Controls size of plot text elements except cell text. Different plot elements scale relative to this value. Numeric defaults to 18.
@@ -33,6 +34,7 @@ plot_impacts_per_catch_heatmap <- function(fram_db,
                                            run_id,
                                            stock_id,
                                            filters_list = list(filter_wa, filter_sport),
+                                           filter_out = NULL,
                                            msp = TRUE,
                                            digits_round = 1,
                                            outer_text_size = 18,
@@ -44,6 +46,7 @@ plot_impacts_per_catch_heatmap <- function(fram_db,
   validate_fram_db(fram_db)
   validate_run_id(fram_db, run_id)
   validate_stock_ids(fram_db, stock_id)
+  if(!is.null(filter_out)){validate_fishery_ids(fram_db, filter_out)}
   validate_numeric(digits_round, n = 1)
   validate_numeric(outer_text_size, n = 1)
   validate_numeric(cell_text_size, n = 1)
@@ -96,10 +99,19 @@ plot_impacts_per_catch_heatmap <- function(fram_db,
   if (fram_db$fram_db_species == "CHINOOK") {
     stock_mort = aeq_mortality_(fram_db, run_id = run_id, msp = msp) |>
       dplyr::filter(stock_id %in% .env$stock_id) |>
-      add_total_mortality() |>
+      dplyr::mutate(total_mortality =
+                      .data$landed_catch +
+                      .data$shaker +
+                      .data$drop_off +
+                      .data$msf_landed_catch +
+                      .data$msf_non_retention +
+                      .data$msf_shaker +
+                      .data$msf_drop_off
+      ) |>
       dplyr::group_by(.data$fishery_id, .data$time_step) |>
       dplyr::summarize(mort = sum(.data$total_mortality)) |>
-      dplyr::ungroup()
+      dplyr::ungroup() |>
+      dplyr::filter(.data$time_step != 1)
   } else{
     stock_mort = fram_db |>
       fetch_table_("Mortality") |>
@@ -124,6 +136,7 @@ plot_impacts_per_catch_heatmap <- function(fram_db,
       dplyr::summarize(mort = sum(.data$total_mortality)) |>
       dplyr::ungroup()
   }
+
   attr(stock_mort, "species") <- fram_db$fram_db_species
 
   if(!is.null(filters_list)){
@@ -134,14 +147,16 @@ plot_impacts_per_catch_heatmap <- function(fram_db,
     }
   }
 
+  if(!is.null(filter_out)){
+    stock_mort <- stock_mort |>
+      dplyr::filter(! .data$fishery_id %in% filter_out)
+  }
+
 
 
   fishery_landed <- fishery_mortality(fram_db, run_id = run_id, fishery_id = unique(stock_mort$fishery_id)) |>
     dplyr::group_by(.data$fishery_id, .data$time_step) |>
     dplyr::summarize(landed_catch = sum(.data$landed_catch))
-
-
-  ## for chinook
 
 
 
