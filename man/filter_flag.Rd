@@ -8,7 +8,7 @@ e.g Flag 1 only NS Scalers will be returned}
 filter_flag(.data)
 }
 \arguments{
-\item{.data}{Fishery Scalers table}
+\item{.data}{Dataframe of the Fishery Scalers table}
 }
 \description{
 NA's all the information in the FisheryScalers that's not being used

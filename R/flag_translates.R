@@ -58,8 +58,8 @@ scalers_flag_translate = function(vec) {
 #' @examples
 #' \dontrun{ mortality_table |> add_flag_text()}
 label_flags = function(.data,
-                         species = NULL,
-                         warn = TRUE) {
+                       species = NULL,
+                       warn = TRUE) {
   validate_data_frame(.data)
   species = validate_species(.data, species)
   if(!any(c("fishery_flag", "non_retention_flag") %in% names(.data))){
@@ -74,9 +74,9 @@ label_flags = function(.data,
     }
     if("non_retention_flag" %in% names(.data)){
       if(species == "CHINOOK"){
-      .data <- .data |>
-        dplyr::mutate(non_retention_flag_label = NR_flag_translate(.data$non_retention_flag),
-                      .after =.data$non_retention_flag)
+        .data <- .data |>
+          dplyr::mutate(non_retention_flag_label = NR_flag_translate(.data$non_retention_flag),
+                        .after =.data$non_retention_flag)
       } else {
         .data <- .data |>
           dplyr::mutate(non_retention_flag_label = "Total dead fish",
@@ -89,7 +89,7 @@ label_flags = function(.data,
 
 #' NA's all the information in the FisheryScalers that's not being used
 #' e.g Flag 1 only NS Scalers will be returned
-#' @param .data Fishery Scalers table
+#' @param .data Dataframe of the Fishery Scalers table
 #' @export
 #' @examples
 #' \dontrun{ fishery_scalers_table |> filter_flag()}
@@ -114,3 +114,50 @@ filter_flag <- function(.data){
   return(res)
 }
 
+#' NA's all the cnr_input_# columns of a non-retention table that are not being used due to the flagging.
+#' @param .data Dataframe of the Fishery Scalers table
+#' @export
+#' @examples
+#' \dontrun{ non_retention_table |> filter_nr_flag()}
+#'
+filter_nr_flag <- function(.data) {
+  validate_data_frame(.data)
+  species = attr(.data, "species")
+  if(!all(c("non_retention_flag", "cnr_input1",
+            "cnr_input2", "cnr_input3", "cnr_input4") %in% names(.data))){
+    cli::cli_abort("Input is not a non-retention dataframe.")
+  }
+
+  if(species == "COHO"){
+    res <- .data |>
+      dplyr::mutate(cnr_input2 = NA_real_,
+                    cnr_input3 = NA_real_,
+                    cnr_input4 = NA_real_)
+  } else if(species == "CHINOOK"){
+    ## CHINOOK
+    res <- .data |>
+      dplyr::mutate(
+        cnr_input1 = dplyr::if_else(.data$non_retention_flag %in% 2:4,
+                                     .data$cnr_input1,
+                                    NA),
+        cnr_input2 = dplyr::if_else(.data$non_retention_flag %in% 2:3,
+                                    .data$cnr_input2,
+                                    NA),
+        cnr_input3 = dplyr::if_else(.data$non_retention_flag %in% 1:2,
+                                    .data$cnr_input3,
+                                    NA),
+        cnr_input4 = dplyr::if_else(.data$non_retention_flag %in% 1:2,
+                                    .data$cnr_input4,
+                                    NA)
+      )
+  } else {
+    cli::cli_abort("Species must be 'COHO' or 'CHINOOK'!")
+  }
+  attr(res, "species") <- species
+  return(res)
+}
+
+# if non_retention_flag is 1, NA cnr_input_1 and cnr_input_2
+# if non_retention_flag is 2, leave everything alone
+# if non_retention_flag is 3, NA cnr_input_3 and cnr_input_4
+# if non_retetnion_flag is 4, NA cnr_input_2, cnr_input_3, and cnr_input_4
