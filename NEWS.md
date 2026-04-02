@@ -11,6 +11,8 @@
 provides the % CNR on the plot. Setting optional argument `split_cnr` to `TRUE` produces separate panels for CNR and non-CNR mortalities. Also: cosmetic changes and optional arguments to control them, support (and appropriate warnings) for taking multiple stock_id. `warn` and `verbose` arguments control printing of informative messages in the console.
 - filter functions now have optional argument `return_ids` -- when set to `TRUE`, functions return the fishery (or stock) ids used to filter rather than the filtered dataframe. Useful for double-checking things, creating "union filters" and for planned future work.
 - new filter functions added: `filter_stt()` and `filter_stt_nt()` for STT Coho stocks; `filter_hatchery()`, `filter_wild()`, `filter_mixed()` for coho stocks.
+- Added `filter_nr_flags()` to apply NAs to non-retention dataframes based on the non_retention_flag column. Analogous to `filter_flags()`
+- Added `check_bp_coverage()`, which identifies if fishery inputs or CNR inputs contain fishery x time steps that are not represented in the base period. This is now called in compare_runs()
 
 # framrsquared 0.8.1
 
