@@ -1,4 +1,4 @@
-# framrsquared 0.8.1.9000
+# framrsquared 0.8.1.9001
 
 - fixed bug in which `copy_runs()` did not correctly copy entries of "SLRatio" table for Chinook. 
 - fixed bug in which `fetch_table()` errored out when fetching the `Stock` or `Fishery` tables.
