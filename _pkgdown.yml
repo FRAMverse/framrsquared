@@ -135,6 +135,7 @@ reference:
         Miscellaneous functions
     contents:
       - filter_flag
+      - filter_nr_flag
       - add_total_mortality
       - cohort_abundance
       - aeq_mortality
