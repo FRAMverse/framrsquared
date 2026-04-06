@@ -122,10 +122,10 @@ plot_stock_mortality <- function(fram_db, run_id, stock_id,
     cli::cli_alert_warning("Plot may not be meaningful when combining stock (unless combined FRAM stocks have biological interpretation). Consider providing a single value for stock_id.")
   }
 
-  if(!is.null(filters_list) & !is.list(filters_list)){
+  if(!is.null(filters_list) && !is.list(filters_list)){
     cli::cli_abort("If provided, filters_list must be a list of fishery filter functions.")
   }
-  if(!is.null(filters_list) & !all(purrr::map_vec(filters_list, \(x) is.function(x)))){
+  if(!is.null(filters_list) && !all(purrr::map_vec(filters_list, \(x) is.function(x)))){
     cli::cli_abort("If provided, filters_list must be a list of fishery filter functions. One or more list items is not a function.")
   }
   validate_flag(warn)
@@ -339,10 +339,10 @@ plot_stock_mortality_time_step <- function(fram_db,
     cli::cli_alert_warning("Plot may not be meaningful when combining stock (unless combined FRAM stocks have biological interpretation). Consider providing a single value for stock_id.")
   }
 
-  if(!is.null(filters_list) & !is.list(filters_list)){
+  if(!is.null(filters_list) && !is.list(filters_list)){
     cli::cli_abort("If provided, filters_list must be a list of fishery filter functions.")
   }
-  if(!is.null(filters_list) & !all(purrr::map_vec(filters_list, \(x) is.function(x)))){
+  if(!is.null(filters_list) && !all(purrr::map_vec(filters_list, \(x) is.function(x)))){
     cli::cli_abort("If provided, filters_list must be a list of fishery filter functions. One or more list items is not a function.")
   }
 

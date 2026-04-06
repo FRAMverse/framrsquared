@@ -32,7 +32,7 @@ msp_mortality = function(fram_db, run_id = NULL){
     dplyr::inner_join(msp, by = 'base_period_id', relationship = 'many-to-many') |>
     dplyr::select(.data$run_id, .data$fishery_id, .data$model_stock_proportion)
 
-  if(!is.null(run_id) &
+  if(!is.null(run_id) &&
      run_id %in% msp_run_id$run_id &
      !(run_id %in% unique(mortality$run_id))){
     cli::cli_abort("Run_id must be represented in Mortality table. Has this FRAM run been run? Run IDs available: {.val {unique(mortality$run_id)}}.")
