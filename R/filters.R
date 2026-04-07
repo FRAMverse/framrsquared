@@ -175,7 +175,7 @@ filter_wa <- function(.data, species = NULL, return_ids = FALSE) {
   species <- validate_species(.data, species)
 
   if (species == "CHINOOK") {
-    fishery_vec = c(16:71)
+    fishery_vec = c(16:29, 36:71)
   } else if (species == "COHO") {
     fishery_vec = c(23:166)
   } else {
