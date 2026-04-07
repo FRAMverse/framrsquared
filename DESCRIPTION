@@ -1,6 +1,6 @@
-Package: framrsquared
+Package: framrsquared.dev
 Type: Package
-Title: FRAM Database Interface
+Title: [Development version of] FRAM Database Interface
 Version: 0.8.1.9001
 Authors@R: c(
     person("Ty", "Garber",
@@ -11,7 +11,7 @@ Authors@R: c(
            role = c("aut"),
            comment = c(ORCID = "0000-0002-4937-5159")
            ))
-Description: A convenient tool for interfacing with FRAM access databases
+Description: [Development version of] a convenient tool for interfacing with FRAM access databases
     in R environments.
 License: MIT + file LICENSE
 Encoding: UTF-8
