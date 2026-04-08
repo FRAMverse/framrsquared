@@ -36,3 +36,4 @@ To install the development version, which may include new features that have bee
 ## install.packages("pak")
 pak::pkg_install("FRAMverse/framrsquared@dev")
 ```
+The dev version can then by used with `library(framrsquared.dev)`.
