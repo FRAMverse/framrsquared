@@ -7,6 +7,6 @@
 # * https://testthat.r-lib.org/articles/special-files.html
 
 library(testthat)
-library(framrsquared)
+library(framrsquared.dev)
 
-test_check("framrsquared")
+test_check("framrsquared.dev")
