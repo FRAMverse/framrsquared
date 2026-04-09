@@ -276,6 +276,7 @@ validate_fram_db <- function(fram_db,
 #' Convenience function to check run_id input
 #' @param fram_db FRAM database object
 #' @param run_id one or more run_ids
+#' @param run_id required number of run_ids. If NULL, any number is allowed. Numeric, defaults to NULL
 #' @param call internal use: identify name of function that called this function (for informative error message)
 validate_run_id <- function(fram_db, run_id, n = NULL, call = rlang::caller_env()){
   validate_numeric(run_id, n = n)

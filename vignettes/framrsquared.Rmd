@@ -15,7 +15,7 @@ knitr::opts_chunk$set(
 ```
 
 ```{r setup}
-library(framrsquared.dev)
+library(framrsquared)
 ```
 
 The simplest use of the framrsquared package is import tables from a FRAM database into r-friendly format (tibbles), and filter to relevant fisheries or stocks. To do this, we use `connect_fram_db()` to create a connection, `fetch_table()` to pull in one or more tables, and -- if relevant -- one or more `filter_*()` to filter to the relevant subset of the table. Whenever we are done reading from a FRAM database, we use
