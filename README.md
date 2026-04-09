@@ -31,8 +31,14 @@ pak::pkg_install("FRAMverse/framrsquared")
 
 To install the development version, which may include new features that have been added but may not be as thoroughly tested:
 
+``` r
+install.packages(c("framrsquared.dev", "framrosetta"), repos = "https://framverse.r-universe.dev")
+```
+
 ```r
 ## make sure `pak` is installed:
 ## install.packages("pak")
 pak::pkg_install("FRAMverse/framrsquared@dev")
 ```
+
+The development version will be installed as `framrsquared.dev` and can be used with `library(framrsquared.dev)` or the `framrsquared.dev::` prefix.
