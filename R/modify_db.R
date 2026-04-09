@@ -30,7 +30,7 @@ modify_table <- function(fram_db, table_name, df) {
   }
 
   if(fram_db$fram_read_only){
-    cli::cli_abort('This database connection is designated read-only!! If you are certain this database can be modified, create a new connection using `connect_fram_db()` with `read_only = TRUE`')
+    cli::cli_abort('This database connection is designated read-only!! If you are certain this database can be modified, create a new connection using `connect_fram_db()` with `read_only = FALSE`')
   }
 
   ## get column names
@@ -222,7 +222,7 @@ change_run_id <- function(fram_db, old_run_id, new_run_id){
   validate_run_id(fram_db, old_run_id)
 
   if(fram_db$fram_read_only){
-    cli::cli_abort('This database connection is designated read-only!! If you are certain this database can be modified, create a new connection using `connect_fram_db()` with `read_only = TRUE`')
+    cli::cli_abort('This database connection is designated read-only!! If you are certain this database can be modified, create a new connection using `connect_fram_db()` with `read_only = FALSE`')
   }
 
   run_id_tables <- find_tables_by_column_(fram_db, 'RunID')
@@ -257,7 +257,7 @@ remove_run <- function(fram_db, run_id){
   validate_run_id(fram_db, run_id)
 
   if(fram_db$fram_read_only){
-    cli::cli_abort('This database connection is designated read-only!! If you are certain this database can be modified, create a new connection using `connect_fram_db()` with `read_only = TRUE`')
+    cli::cli_abort('This database connection is designated read-only!! If you are certain this database can be modified, create a new connection using `connect_fram_db()` with `read_only = FALSE`')
   }
 
   run_id_tables <- tidyr::expand_grid(find_tables_by_column_(fram_db, 'RunID'),
@@ -299,7 +299,7 @@ copy_fishery_scalers <- function(fram_db, from_run, to_run, fishery_id = NULL){
 
 
   if(fram_db$fram_read_only){
-    cli::cli_abort('This database connection is designated read-only!! If you are certain this database can be modified, create a new connection using `connect_fram_db()` with `read_only = TRUE`')
+    cli::cli_abort('This database connection is designated read-only!! If you are certain this database can be modified, create a new connection using `connect_fram_db()` with `read_only = FALSE`')
   }
 
   if (is.null(fishery_id)) {
@@ -412,7 +412,7 @@ copy_run <- function(fram_db, target_run, times = 1, label = 'copy', force_many_
   }
 
   if(fram_db$fram_read_only){
-    cli::cli_abort('This database connection is designated read-only!! If you are certain this database can be modified, create a new connection using `connect_fram_db()` with `read_only = TRUE`')
+    cli::cli_abort('This database connection is designated read-only!! If you are certain this database can be modified, create a new connection using `connect_fram_db()` with `read_only = FALSE`')
   }
 
   run_count_current = fram_db |> fetch_table_("RunID") |> nrow()
