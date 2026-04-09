@@ -609,7 +609,7 @@ filter_hatchery <- function(.data, species = NULL, return_ids = FALSE) {
 #' @export
 #' @family stock_filters
 #' @examples
-#' framrosetta::stock_coho_fram |> filter_hatchery()
+#' framrosetta::stock_coho_fram |> filter_wild()
 filter_wild <- function(.data, species = NULL, return_ids = FALSE) {
   validate_data_frame(.data)
   validate_flag(return_ids)
@@ -627,7 +627,7 @@ filter_wild <- function(.data, species = NULL, return_ids = FALSE) {
 #' @export
 #' @family stock_filters
 #' @examples
-#' framrosetta::stock_coho_fram |> filter_hatchery()
+#' framrosetta::stock_coho_fram |> filter_filter_mixed()
 filter_mixed <- function(.data, species = NULL, return_ids = FALSE) {
   validate_data_frame(.data)
   validate_flag(return_ids)
