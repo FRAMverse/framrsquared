@@ -156,7 +156,7 @@ calc_fram_scaling <- function(fram_db, table_name, df) {
     scale_names <- c(scale_names, terms_excluded)
   }
 
-  if (length(terms_included == 1)) {
+  if (length(terms_included) == 1) {
     if (!all(df$scale_RecruitCohortSize ==
              df$scale_RecruitScaleFactor)) {
       cli::cli_abort("scale_RecruitCohortSize and scale_RecruitScaleFactor must match!")
