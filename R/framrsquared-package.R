@@ -1,3 +1,4 @@
+#' @name framrsquared.dev-package
 #' @keywords internal
 "_PACKAGE"
 

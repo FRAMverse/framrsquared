@@ -45,7 +45,7 @@ in \code{fetch_quarto_templates()}.
 }
 \examples{
 \dontrun{
-framrsquared::initialize_project()
+framrsquared.dev::initialize_project()
 }
 }
 \seealso{

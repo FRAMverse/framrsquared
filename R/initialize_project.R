@@ -24,7 +24,7 @@
 #' @seealso [fetch_quarto_templates()]
 #' @examples
 #' \dontrun{
-#' framrsquared::initialize_project()
+#' framrsquared.dev::initialize_project()
 #' }
 initialize_project <-
   function(folders = c(
@@ -118,8 +118,8 @@ fetch_quarto_templates = function(to.path,
   ## that matches the organization name
 
   organization  <-  rlang::arg_match(organization, c("WDFW"))
-  yaml.path <-  system.file(glue::glue("{organization}/{color}_quarto.yml"), package = "framrsquared")
-  style.path <-  system.file(glue::glue("{organization}/style.css"), package = "framrsquared")
+  yaml.path <-  system.file(glue::glue("{organization}/{color}_quarto.yml"), package = "framrsquared.dev")
+  style.path <-  system.file(glue::glue("{organization}/style.css"), package = "framrsquared.dev")
   invisible(file.copy (
     c(yaml.path,
       style.path),
