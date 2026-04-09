@@ -9,7 +9,9 @@ validate_run_id(fram_db, run_id, n = NULL, call = rlang::caller_env())
 \arguments{
 \item{fram_db}{FRAM database object}
 
-\item{run_id}{required number of run_ids. If NULL, any number is allowed. Numeric, defaults to NULL}
+\item{run_id}{one or more run_ids}
+
+\item{n}{required number of run_ids. If NULL, any number is allowed. Numeric, defaults to NULL}
 
 \item{call}{internal use: identify name of function that called this function (for informative error message)}
 }
