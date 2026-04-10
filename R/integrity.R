@@ -273,6 +273,13 @@ validate_fram_db <- function(fram_db,
   }
 }
 
+validate_not_read_only <- function(fram_db, call = rlang::caller_env()){
+  if(fram_db$fram_read_only){
+    cli::cli_abort('This database connection is designated read-only!! If you are certain this database can be modified, create a new connection using `connect_fram_db()` with `read_only = FALSE`.',
+                   call = call)
+  }
+}
+
 #' Convenience function to check run_id input
 #' @param fram_db FRAM database object
 #' @param run_id one or more run_ids
@@ -496,4 +503,18 @@ provide_table_names <- function(is_full = TRUE){
       'TAAETRSList'
     )
   }
+}
+
+validate_fishery_filter_inputs <- function(.data, species, return_ids,
+                                           call = rlang::caller_env()){
+
+  validate_data_frame(.data, call = call)
+  validate_flag(return_ids, call = call)
+
+  if (!"fishery_id" %in% colnames(.data)) {
+    cli::cli_abort("fishery_id column must be present in dataframe.",
+                   call = call)
+  }
+
+
 }

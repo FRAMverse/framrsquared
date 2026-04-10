@@ -13,13 +13,7 @@
 #' framrosetta::fishery_coho_fram |> filter_sport(species = "COHO")
 #'
 filter_sport <- function(.data, species = NULL, return_ids = FALSE) {
-  validate_data_frame(.data)
-  validate_flag(return_ids)
-
-  if (!"fishery_id" %in% colnames(.data)) {
-    cli::cli_abort("fishery_id column must be present in dataframe.")
-  }
-
+  validate_fishery_filter_inputs(.data, species, return_ids)
   species <- validate_species(.data, species)
 
   if (species == "CHINOOK") {
@@ -69,13 +63,7 @@ filter_sport <- function(.data, species = NULL, return_ids = FALSE) {
 #' framrosetta::fishery_chinook_fram |> filter_net(species = "CHINOOK")
 #' framrosetta::fishery_coho_fram |> filter_net(species = "COHO")
 filter_net <- function(.data, species = NULL, return_ids = FALSE) {
-  validate_data_frame(.data)
-  validate_flag(return_ids)
-
-  if (!"fishery_id" %in% colnames(.data)) {
-    cli::cli_abort("fishery_id column must be present in dataframe.")
-  }
-
+  validate_fishery_filter_inputs(.data, species, return_ids)
   species <- validate_species(.data, species)
 
   # if it's not sport it must be net
@@ -113,9 +101,6 @@ filter_net <- function(.data, species = NULL, return_ids = FALSE) {
 
 }
 
-
-
-
 #' Filters a dataframe to Puget Sound fisheries. Will
 #' automatically detect whether it's working with a Chinook or Coho
 #' dataset if the tables were generated within this package. `.data` must have
@@ -127,13 +112,7 @@ filter_net <- function(.data, species = NULL, return_ids = FALSE) {
 #' framrosetta::fishery_chinook_fram |> filter_puget_sound(species = "CHINOOK")
 #' framrosetta::fishery_coho_fram |> filter_puget_sound(species = "COHO")
 filter_puget_sound <- function(.data, species = NULL, return_ids = FALSE) {
-  validate_data_frame(.data)
-  validate_flag(return_ids)
-
-  if (!"fishery_id" %in% colnames(.data)) {
-    cli::cli_abort("fishery_id column must be present in dataframe.")
-  }
-
+  validate_fishery_filter_inputs(.data, species, return_ids)
   species <- validate_species(.data, species)
 
   if (species == "CHINOOK") {
@@ -165,13 +144,7 @@ filter_puget_sound <- function(.data, species = NULL, return_ids = FALSE) {
 #' framrosetta::fishery_chinook_fram |> filter_wa(species = "CHINOOK")
 #' framrosetta::fishery_coho_fram |> filter_wa(species = "COHO")
 filter_wa <- function(.data, species = NULL, return_ids = FALSE) {
-  validate_data_frame(.data)
-  validate_flag(return_ids)
-
-  if (!"fishery_id" %in% colnames(.data)) {
-    cli::cli_abort("fishery_id column must be present in dataframe.")
-  }
-
+  validate_fishery_filter_inputs(.data, species, return_ids)
   species <- validate_species(.data, species)
 
   if (species == "CHINOOK") {
@@ -203,13 +176,7 @@ filter_wa <- function(.data, species = NULL, return_ids = FALSE) {
 #' framrosetta::fishery_chinook_fram |> filter_bc(species = "CHINOOK")
 #' framrosetta::fishery_coho_fram |> filter_bc(species = "COHO")
 filter_bc <- function(.data, species = NULL, return_ids = FALSE) {
-  validate_data_frame(.data)
-  validate_flag(return_ids)
-
-  if (!"fishery_id" %in% colnames(.data)) {
-    cli::cli_abort("fishery_id column must be present in dataframe.")
-  }
-
+  validate_fishery_filter_inputs(.data, species, return_ids)
   species <- validate_species(.data, species)
 
   if (species == "CHINOOK") {
@@ -241,13 +208,7 @@ filter_bc <- function(.data, species = NULL, return_ids = FALSE) {
 #' framrosetta::fishery_chinook_fram |> filter_ak(species = "CHINOOK")
 #' framrosetta::fishery_coho_fram |> filter_ak(species = "COHO")
 filter_ak <- function(.data, species = NULL, return_ids = FALSE) {
-  validate_data_frame(.data)
-  validate_flag(return_ids)
-
-  if (!"fishery_id" %in% colnames(.data)) {
-    cli::cli_abort("fishery_id column must be present in dataframe.")
-  }
-
+  validate_fishery_filter_inputs(.data, species, return_ids)
   species <- validate_species(.data, species)
 
   if (species == "CHINOOK") {
@@ -280,13 +241,7 @@ filter_ak <- function(.data, species = NULL, return_ids = FALSE) {
 #' framrosetta::fishery_chinook_fram |> filter_ca(species = "CHINOOK")
 #' framrosetta::fishery_coho_fram |> filter_ca(species = "COHO")
 filter_ca <- function(.data, species = NULL, return_ids = FALSE) {
-  validate_data_frame(.data)
-  validate_flag(return_ids)
-
-  if (!"fishery_id" %in% colnames(.data)) {
-    cli::cli_abort("fishery_id column must be present in dataframe.")
-  }
-
+  validate_fishery_filter_inputs(.data, species, return_ids)
   species <- validate_species(.data, species)
 
   if (species == "CHINOOK") {
@@ -318,13 +273,7 @@ filter_ca <- function(.data, species = NULL, return_ids = FALSE) {
 #' framrosetta::fishery_chinook_fram |> filter_or(species = "CHINOOK")
 #' framrosetta::fishery_coho_fram |> filter_or(species = "COHO")
 filter_or <- function(.data, species = NULL, return_ids = FALSE) {
-  validate_data_frame(.data)
-  validate_flag(return_ids)
-
-  if (!"fishery_id" %in% colnames(.data)) {
-    cli::cli_abort("fishery_id column must be present in dataframe.")
-  }
-
+  validate_fishery_filter_inputs(.data, species, return_ids)
   species <- validate_species(.data, species)
 
   if (species == "CHINOOK") {
@@ -356,13 +305,7 @@ filter_or <- function(.data, species = NULL, return_ids = FALSE) {
 #' framrosetta::fishery_chinook_fram |> filter_coast(species = "CHINOOK")
 #' framrosetta::fishery_coho_fram |> filter_coast(species = "COHO")
 filter_coast <- function(.data, species = NULL, return_ids = FALSE) {
-  validate_data_frame(.data)
-  validate_flag(return_ids)
-
-  if (!"fishery_id" %in% colnames(.data)) {
-    cli::cli_abort("fishery_id column must be present in dataframe.")
-  }
-
+  validate_fishery_filter_inputs(.data, species, return_ids)
   species <- validate_species(.data, species)
 
   if (species == "CHINOOK") {
@@ -393,13 +336,7 @@ filter_coast <- function(.data, species = NULL, return_ids = FALSE) {
 #' framrosetta::fishery_chinook_fram |> filter_marine(species = "CHINOOK")
 #' framrosetta::fishery_coho_fram |> filter_marine(species = "COHO")
 filter_marine <- function(.data, species = NULL, return_ids = FALSE) {
-  validate_data_frame(.data)
-  validate_flag(return_ids)
-
-  if (!"fishery_id" %in% colnames(.data)) {
-    cli::cli_abort("fishery_id column must be present in dataframe.")
-  }
-
+  validate_fishery_filter_inputs(.data, species, return_ids)
   species <- validate_species(.data, species)
 
   if (species == "CHINOOK") {
@@ -439,13 +376,7 @@ filter_marine <- function(.data, species = NULL, return_ids = FALSE) {
 #' framrosetta::fishery_coho_fram |> filter_commercial_wa_nt(species = "COHO")
 
 filter_commercial_wa_nt <- function(.data, species = NULL, return_ids = FALSE) {
-  validate_data_frame(.data)
-  validate_flag(return_ids)
-
-  if (!"fishery_id" %in% colnames(.data)) {
-    cli::cli_abort("fishery_id column must be present in dataframe.")
-  }
-
+  validate_fishery_filter_inputs(.data, species, return_ids)
   species <- validate_species(.data, species)
 
   if (species == "CHINOOK") {
@@ -479,13 +410,7 @@ filter_commercial_wa_nt <- function(.data, species = NULL, return_ids = FALSE) {
 #' framrosetta::fishery_coho_fram |> filter_stt()
 
 filter_stt <- function(.data, species = NULL, return_ids = FALSE) {
-  validate_data_frame(.data)
-  validate_flag(return_ids)
-
-  if (!"fishery_id" %in% colnames(.data)) {
-    cli::cli_abort("fishery_id column must be present in dataframe.")
-  }
-
+  validate_fishery_filter_inputs(.data, species, return_ids)
   species <- validate_species(.data, species)
 
   if (species == "CHINOOK") {
@@ -519,13 +444,7 @@ filter_stt <- function(.data, species = NULL, return_ids = FALSE) {
 #' @examples
 #' framrosetta::fishery_coho_fram |> filter_stt_nt()
 filter_stt_nt <-  function(.data, species = NULL, return_ids = FALSE) {
-  validate_data_frame(.data)
-  validate_flag(return_ids)
-
-  if (!"fishery_id" %in% colnames(.data)) {
-    cli::cli_abort("fishery_id column must be present in dataframe.")
-  }
-
+  validate_fishery_filter_inputs(.data, species, return_ids)
   species <- validate_species(.data, species)
 
   if (species == "CHINOOK") {
@@ -638,7 +557,6 @@ filter_mixed <- function(.data, species = NULL, return_ids = FALSE) {
 
 
 categorize_stock <- function(.data, species = NULL) {
-
   species <- validate_species(.data, species)
 
   if (!"stock_id" %in% colnames(.data)) {
