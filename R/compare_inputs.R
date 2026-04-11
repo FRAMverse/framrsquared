@@ -696,17 +696,17 @@ compare_runs_ <- function(fram_db, run_ids, tolerance = .01){
   cli::cli_alert_info('{base_run_name} was run at {base_run_time} using Base Period "{bp_names[1]}"')
   cli::cli_alert_info('{new_run_name} was run at {new_run_time} using Base Period "{bp_names[2]}"')
 
-  cli::cli_h2('Run Integrity')
-
-  cli::cli_h3('Checking inputs of "{base_run_name}" against base period')
-
-  fram_db |>
-    check_bp_coverage(run_ids[1])
-
-  cli::cli_h3('Checking inputs of "{new_run_name}" against base period')
-
-  fram_db |>
-    check_bp_coverage(run_ids[2])
+  # cli::cli_h2('Run Integrity')
+#
+#   cli::cli_h3('Checking inputs of "{base_run_name}" against base period')
+#
+#   fram_db |>
+#     check_bp_coverage(run_ids[1])
+#
+#   cli::cli_h3('Checking inputs of "{new_run_name}" against base period')
+#
+#   fram_db |>
+#     check_bp_coverage(run_ids[2])
 
   # non-retention
   cli::cli_h2('Non-Retention Inputs')
