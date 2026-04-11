@@ -101,6 +101,7 @@ filter_net <- function(.data, species = NULL, return_ids = FALSE) {
 
 }
 
+
 #' Filters a dataframe to Puget Sound fisheries. Will
 #' automatically detect whether it's working with a Chinook or Coho
 #' dataset if the tables were generated within this package. `.data` must have
@@ -468,7 +469,6 @@ filter_stt_nt <-  function(.data, species = NULL, return_ids = FALSE) {
 }
 
 ## Coho stocks for Marlene + Steph
-
 ## primary function for coho stock filtering
 filter_coho_stocks <- function(.data, species = NULL, return_ids = FALSE,
                                filter_criterion){
