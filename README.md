@@ -34,3 +34,10 @@ To install the development version, which may include new features that have bee
 ```r
 pak::pkg_install("FRAMverse/framrsquared@dev")
 ```
+
+
+## Contributing
+
+To support unit tests while maintaining the privacy of parts of the databases, we have set up an optional unit testing procedure. If you want to be able to run the tests during development, contact Collin Edwards to get a zip file containing databases used for testing (pre, post, and transfer databases for Chinook and Coho, as well as several "broken" databases that test framrsquared error handling). The unit tests skip unless  there is a environmental variable `FRAMRSQURED_TEST_DIR`, which should point to your local copy of this test directory (unzipped). 
+
+In addition to enabling the unit tests, setting up the test directory and associated environmental variable will enable a collection of internal `connection_*` functions (defined in `tests/testthat/helper-dir.R`) to quickly make read-only connections with fram databases for ad-hoc testing and development.
