@@ -2,7 +2,7 @@
 % Please edit documentation in R/compare_inputs.R
 \name{compare_sl_ratio}
 \alias{compare_sl_ratio}
-\title{Generates a dataframe that compares sl ratiosfor two runs identified by run_id's}
+\title{Compare Sublegal Ratio tables between two runs.}
 \usage{
 compare_sl_ratio(fram_db, run_ids)
 }
@@ -12,19 +12,24 @@ compare_sl_ratio(fram_db, run_ids)
 \item{run_ids}{Vector of two run_ids}
 }
 \value{
-Data frame of differences. \verb{$target_ratio_diff} = change in target ratio,
-\verb{$run_encounter_rate_adjustment_diff} = change in run encounter rate adjustment (NS, MSF, NS + MSF). Columns present in the
-"SLRatio" table are included, with \verb{_original} and \verb{_comparison}
-suffixes identifying entries associated with the first and second entries of
-\code{run_ids}, respectively.
+Data frame of differences. \verb{*_original} columns show the values in the first run of \code{run_ids}, while \verb{*_comparison} show the values of the second run of \code{run_ids}. \verb{*_diff} = original - comparison.
 }
 \description{
-Generates a dataframe that compares sl ratiosfor two runs identified by run_id's
-}
-\details{
-Comparisons assume the first run provided is the baseline, and provide relative changes from that.
-This includes only absolute changes.
+Provides a dataframe that compares the "SLRatio" table for two runs identified by run_ids.
+Only works for Chinook databases (Coho do not have an SLRatio table).
 }
 \examples{
-\dontrun{fram_db |> compare_inputs(c(100,101))}
+\dontrun{fram_db |> compare_sl_ratio(c(100,101))}
 }
+\seealso{
+Other comparisons: 
+\code{\link{compare_fishery_input_flags}()},
+\code{\link{compare_fishery_inputs}()},
+\code{\link{compare_inputs}()},
+\code{\link{compare_inputs_chart}()},
+\code{\link{compare_non_retention_inputs}()},
+\code{\link{compare_recruits}()},
+\code{\link{compare_runs}()},
+\code{\link{compare_stock_fishery_rate_scalers}()}
+}
+\concept{comparisons}

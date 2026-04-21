@@ -20,6 +20,9 @@ addstock_check(
 
 \item{override_db_checks}{Ignore species, database type. When \code{FALSE}, function will stop if the database is not Chinook or if it's a transfer file. Defaults to FALSE.}
 }
+\value{
+Invisibly returns either 0 (if giving the step-by-step process) or the number of errors detected (when actually running the check).
+}
 \description{
 Either provides the step by step process of adding new stock to a FRAM database, or walks through fram database run
 and checks the tables for potential errors associated with adding new stock.

@@ -76,7 +76,7 @@ label_fisheries_db <- function(.data, fram_db){
   lut_use <- run_id_luts |>
     dplyr::left_join(fishery_lut,
                      by = c("fishery_version", "species_name" = "species"),
-              relationship = "many-to-many") |>
+                     relationship = "many-to-many") |>
     dplyr::select("fishery_id", "run_id", fishery_label = "fishery_title")
 
 
@@ -90,3 +90,5 @@ label_fisheries_db <- function(.data, fram_db){
   attr(res, "species") <- fram_db$fram_db_species
   return(res)
 }
+
+

@@ -518,3 +518,35 @@ validate_fishery_filter_inputs <- function(.data, species, return_ids,
 
 
 }
+
+## checks the base periods of two or more run ids. If strict = TRUE,
+##   errors if the base periods are not the same. If strict = FALSE, does not error
+##   and invisibly returns a list with:
+##     `$same_bp` -> Is the BP identical for each run? Logical.
+##     `$same_fishery_version` -> is the Fishery version number the same? Logical.
+##     `$same_stock_version`-> is the stock version the same? Logical.
+##     `$same_time_step_version` -> is the time step version the same? Logical.
+##     `$base_periods_df` -> data frame with the run_id, run_name, joined with the info of the BaseID table
+validate_same_bp <- function(fram_db, run_ids, strict = TRUE, call = rlang::caller_env()){
+  run_info <- fetch_table(fram_db, "RunID") |>
+    dplyr::filter(run_id %in% run_ids) |>
+    dplyr::select("run_id", "run_name", "base_period_id")
+
+  if(strict & !all(run_info$base_period_id == run_info$base_period_id[1])){
+    cli::cli_abort("Runs must have the same base period! Runs {.val {run_ids}} have base periods {.val {run_info$base_period_id} }",
+                   call = call)
+  }
+
+  bp_info <- fetch_table(fram_db, "BaseID")
+
+  joint_info <- run_info |>
+    dplyr::left_join(bp_info, by = c("base_period_id"))
+
+  res <- list(same_bp = all(joint_info$base_period_id == joint_info$base_period_id[1]),
+              same_fishery_version = all(joint_info$fishery_version == joint_info$fishery_version[1]),
+              same_stock_version = all(joint_info$stock_version == joint_info$stock_version[1]),
+              same_time_step_version = all(joint_info$time_step_version == joint_info$time_step_version[1]),
+              base_periods_df = joint_info
+              )
+  return(invisible(res))
+}

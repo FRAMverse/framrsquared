@@ -9,11 +9,15 @@ compare_fishery_inputs(fram_db, run_ids, tolerance = 0.01, verbose = TRUE)
 \arguments{
 \item{fram_db}{FRAM database object}
 
-\item{run_ids}{Two run ids}
+\item{run_ids}{Vector of two run_ids}
 
-\item{tolerance}{Tolerance for detecting changes}
+\item{tolerance}{Minimum \% change needed to flag a difference. Set to 0 to flag any changes at all. Defaults to 0.01.}
 
 \item{verbose}{If \code{TRUE}, print an update to screen when there are no differences in recruits.}
+}
+\value{
+All fishery x timesteps in which the fishery inputs changed by at least (\code{tolerance} x 100) \% between the specified runs.
+\verb{$fishery_id}, \verb{$fishery_label}, and \verb{$timestep} identify the fishery x timestep, \verb{$parameter} identifies which parameter changed (.e.g, quota, msf_quota, etc.). \verb{$original} and \verb{$comparison} show the values from the first and second runs, respectively. \verb{$prop_dff} shows the proportional change from the first to second run (e.g., 0.16 = 16\% increase).
 }
 \description{
 Compares the fishery inputs of two runs
@@ -22,5 +26,14 @@ Compares the fishery inputs of two runs
 \dontrun{fram_db |> compare_fishery_inputs(c(55, 56))}
 }
 \seealso{
-\code{\link[=compare_runs]{compare_runs()}}
+Other comparisons: 
+\code{\link{compare_fishery_input_flags}()},
+\code{\link{compare_inputs}()},
+\code{\link{compare_inputs_chart}()},
+\code{\link{compare_non_retention_inputs}()},
+\code{\link{compare_recruits}()},
+\code{\link{compare_runs}()},
+\code{\link{compare_sl_ratio}()},
+\code{\link{compare_stock_fishery_rate_scalers}()}
 }
+\concept{comparisons}

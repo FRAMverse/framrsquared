@@ -12,6 +12,8 @@
 #' @importFrom stats setNames
 #' @export
 #'
+#' @return Invisibly returns either 0 (if giving the step-by-step process) or the number of errors detected (when actually running the check).
+#'
 #' @examples
 #' \dontrun{
 #' ## review process
@@ -63,7 +65,9 @@ addstock_check <-
       cli::cli_li("Then the next two rows are the unmarked and marked stock, with TargetFlag = 3.")
       cli::cli_end(ulid)
 
-    } else{
+      return(invisible(0))
+
+    } else {
 
 
       error_count = 0
@@ -352,8 +356,9 @@ addstock_check <-
       } else {
         cli::cli_alert_danger("{error_count} issues detected")
       }
-  }
     }
+    return(invisible(error_count))
+  }
 
 #' Helper function to check that stock id exist in the Stock database
 #'
@@ -362,6 +367,8 @@ addstock_check <-
 #' @param table_name Character of table name, for informative messages
 #' @param df Dataframe
 #' @param stock_ref numeric vector of all stock IDs. Should be stock_df$stock_id.
+#'
+#' @keywords internal
 #'
 #' @seealso [addstock_check()]
 #'
@@ -390,7 +397,9 @@ stock_id_comp = function(table_name, df, stock_ref) {
 #' @param min_age Minimum age modeled. Should be the min_age from the baseid_df.
 #' @param max_age Maximum age modeled. Should be  the max_age from the baseid_df.
 #'
-#' @return numeri; 0 if no warning, 1 if warning.
+#' @keywords internal
+#'
+#' @return numeric; 0 if no warning, 1 if warning.
 #'
 stock_age_checker = function(table_name,
                              NumStk,
@@ -431,6 +440,8 @@ stock_age_checker = function(table_name,
 #' @param uniques_only Do we want warnings if there are duplicats of StockIDs? Useful for tables like Stock and Growth that should have only one entry per stock. Logical, default = `FALSE`.
 #'
 #' @return Numeric, returning number of warnings detected.
+#'
+#' @keywords internal
 #'
 #' @seealso [addstock_check()]
 #'

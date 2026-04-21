@@ -2,7 +2,7 @@
 #' automatically detect whether it's working with a Chinook or Coho
 #' dataset if the tables were generated within this package. `.data` must have
 #' a `fishery_id` column name.
-#' @param .data Dataframe containing `fishery_id` column. Commonly, output from `framrsquared.dev::fetch_table()`.
+#' @param .data Dataframe containing `fishery_id` column. Commonly, output from `fetch_table()`.
 #' @param species Optional argument to identify species if `.data` doesn't already. If provided, must be "COHO" or "CHINOOK" or variations thereof. Defaults to `NULL`
 #' @param return_ids Return the fishery ids used in filtering rather than a filtered dataframe?
 #' Logical, defaults to FALSE
@@ -546,7 +546,7 @@ filter_wild <- function(.data, species = NULL, return_ids = FALSE) {
 #' @export
 #' @family stock_filters
 #' @examples
-#' framrosetta::stock_coho_fram |> filter_filter_mixed()
+#' framrosetta::stock_coho_fram |> filter_mixed()
 filter_mixed <- function(.data, species = NULL, return_ids = FALSE) {
   validate_data_frame(.data)
   validate_flag(return_ids)

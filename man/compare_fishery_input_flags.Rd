@@ -9,9 +9,12 @@ compare_fishery_input_flags(fram_db, run_ids, verbose = TRUE)
 \arguments{
 \item{fram_db}{FRAM database object}
 
-\item{run_ids}{Two run ids}
+\item{run_ids}{Vector of two run_ids}
 
 \item{verbose}{If \code{TRUE}, print an update to screen when there are no differences in recruits.}
+}
+\value{
+Tibble with all fishery x timesteps that changed fishery input flags. \verb{$fishery_id}, \verb{$fishery_label}, and \verb{$time_step}  identify the fishery x timestep combination, and \verb{$flag_original} and \verb{$flag_comparison} show the flags in the first and second runs, respectively.
 }
 \description{
 Compares the fishery flags of two runs
@@ -20,5 +23,14 @@ Compares the fishery flags of two runs
 \dontrun{fram_db |> compare_fishery_input_flags(c(55, 56))}
 }
 \seealso{
-\code{\link[=compare_runs]{compare_runs()}}
+Other comparisons: 
+\code{\link{compare_fishery_inputs}()},
+\code{\link{compare_inputs}()},
+\code{\link{compare_inputs_chart}()},
+\code{\link{compare_non_retention_inputs}()},
+\code{\link{compare_recruits}()},
+\code{\link{compare_runs}()},
+\code{\link{compare_sl_ratio}()},
+\code{\link{compare_stock_fishery_rate_scalers}()}
 }
+\concept{comparisons}

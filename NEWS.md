@@ -13,6 +13,7 @@ provides the % CNR on the plot. Setting optional argument `split_cnr` to `TRUE` 
 - new filter functions added: `filter_stt()` and `filter_stt_nt()` for STT Coho stocks; `filter_hatchery()`, `filter_wild()`, `filter_mixed()` for coho stocks.
 - Added `filter_nr_flags()` to apply NAs to non-retention dataframes based on the non_retention_flag column. Analogous to `filter_flags()`
 - Added `check_bp_coverage()`, which identifies if fishery inputs or CNR inputs contain fishery x time steps that are not represented in the base period. This is now called in compare_runs()
+- Added better testing framework, linked to external testing database directory. Only affects developers who want to run the unit tests -- see the "Contribute" section of Readme for details on setup. Convenience connection functions are included in `tests/testthat/helper-dir.R", but will only work if the testing database directory is set up. 
 
 # framrsquared 0.8.1
 

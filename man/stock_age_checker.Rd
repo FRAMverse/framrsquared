@@ -20,8 +20,9 @@ stock_age_checker(table_name, NumStk, old_stockcount, df, min_age, max_age)
 \item{max_age}{Maximum age modeled. Should be  the max_age from the baseid_df.}
 }
 \value{
-numeri; 0 if no warning, 1 if warning.
+numeric; 0 if no warning, 1 if warning.
 }
 \description{
 #' Intended for internal use, makes some assumptions about inputs.
 }
+\keyword{internal}

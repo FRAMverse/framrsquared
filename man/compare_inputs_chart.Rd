@@ -9,12 +9,24 @@ compare_inputs_chart(.data)
 \arguments{
 \item{.data}{Dataframe origination from the compare_inputs() function}
 }
+\value{
+ggplot object with heatmap of changes in inputs.
+}
 \description{
-Can be a very busy chart if not filtered down. Consider using a filter on the dataframe before piping into \code{compare_input_chart}.
+Can be a very busy chart if not filtered down. Consider using a \verb{filter_*()} function on the dataframe before piping into \code{compare_input_chart}.
 }
 \examples{
 \dontrun{fram_db |> compare_inputs(c(100, 101)) |> compare_inputs_chart()}
 }
 \seealso{
-\code{\link[=compare_inputs]{compare_inputs()}}
+Other comparisons: 
+\code{\link{compare_fishery_input_flags}()},
+\code{\link{compare_fishery_inputs}()},
+\code{\link{compare_inputs}()},
+\code{\link{compare_non_retention_inputs}()},
+\code{\link{compare_recruits}()},
+\code{\link{compare_runs}()},
+\code{\link{compare_sl_ratio}()},
+\code{\link{compare_stock_fishery_rate_scalers}()}
 }
+\concept{comparisons}

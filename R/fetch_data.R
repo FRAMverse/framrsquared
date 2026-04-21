@@ -1,36 +1,37 @@
 #' Fetch a complete table from a FRAM database.
 #'
-#' Returns a cleaned tibble, with column labels that were camel case (e.g., TimeStep) converted to snake case (e.g., time_step).
-#' **WARNING**: the Chinook "BackwardsFRAM" table uses a *different* stock_id numbering system from every other table. To avoid errors when joining that with other tables, instead fetch with [fetch_table_bkchin()]
-#' `fetch_table_()` is an alias for `fetch_table()` with the optional argument `label` set to FALSE.
+#' Fetch a FRAM database table in R-friendly form (tibble with clean names). If no `table_name` argument is given, instead list available table names.
+#'
+#' **WARNING**: the Chinook "BackwardsFRAM" table uses a *different* stock_id numbering system from every other table. To avoid errors when joining that with other tables, instead fetch with [fetch_table_bkchin()]. `fetch_table_()` is an alias for `fetch_table()` with the optional argument `label` set to FALSE.
 #'
 #' @param fram_db FRAM database object
 #' @param table_name Atomic character of name of table to be fetched. If not given, a list of options will be printed.
-#' @param label Logical, defaults to TRUE. Add human-readable columns for flags, fisheries, stocks?
+#' @param label Logical, defaults to TRUE. Add human-readable columns for flags, fisheries, stocks? Based on the Stock and Fishery tables of the current database.
 #' @param warn Print a warning when fetching BackwardsFRAM table from a Chinook database? Logical, defaults to `TRUE`.
 #'
 #' @name fetch_table
 #'
+#' @returns Tibble version of .Mdb table, with CamelCase switched to snake_case. By default, adds `fishery_label` and `stock_label` (human readable columns) to tables with `fishery_id` and `stock_id` in them, respectively. (see optional argument `label`).
+#'
 #' @export
 #' @examples
 #' \dontrun{
-#' fram_db <- connect_fram_db("validat2024.mdb")
+#' fram_db <- connect_fram_db("validate2024.mdb")
 #' fram_db |> fetch_table('Mortality')}
+#' disconnect_fram_db(fram_db)
 #'
 
 fetch_table <- function(fram_db, table_name = NULL, label = TRUE, warn = TRUE){
   ## adding input checking
   validate_fram_db(fram_db)
-  validate_flag(warn)
   if(!is.null(table_name)){
-    if(!is.character(table_name) | length(table_name)!= 1){
-      cli::cli_abort("`table` must be a character atomic.")
-    }
+    validate_character(table_name, n = 1)
   }
+  validate_flag(label)
+  validate_flag(warn)
+
   all_tables = provide_table_names(is_full = TRUE)
   limited_tables = provide_table_names(is_full = FALSE)
-
-
 
   if (is.null(table_name)) {
     if (fram_db$fram_db_type == 'full') {

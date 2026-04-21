@@ -10,11 +10,15 @@ disconnect_all_fram_connections()
 nothing
 }
 \description{
-It is relatively easy to create an orphan connection using framrsquared by assigning a connection to \code{fram_db}, and then assigning another connection to \code{fram_db} without disconnecting the first connection using \code{disconnect_fram_db()}. Orphaned connections can make it frustrating to work with database files (moving, deleting, etc) without restarting rstudio or rebooting your computer. \code{disconnect_all_fram_connections()} disconnects any existing connections made by framrsquared in this R session.
+Removes all FRAM connections in use in current R session.
+}
+\details{
+It is relatively easy to create an "orphan" connection using framrsquared by assigning a connection to \code{fram_db}, and then assigning another connection to \code{fram_db} without disconnecting the first connection using \code{disconnect_fram_db()}. Orphaned connections can make it frustrating to work with database files (moving, deleting, etc) without restarting rstudio or rebooting your computer. \code{disconnect_all_fram_connections()} disconnects any existing connections made by framrsquared in this R session.
 }
 \examples{
 \dontrun{
 fram_db = connect_fram_db("Chin2025.mdb")
+# create an orphan by overwriting fram_db with a new connection:
 fram_db = connect_fram_db("Chin2025.mdb")
 disconnect_fram_db(fram_db)
 
@@ -26,3 +30,10 @@ disconnect_all_fram_connections()
 list_extant_fram_connections
 }
 }
+\seealso{
+Other connections: 
+\code{\link{connect_fram_db}()},
+\code{\link{disconnect_fram_db}()},
+\code{\link{list_extant_fram_connections}()}
+}
+\concept{connections}

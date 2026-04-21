@@ -9,9 +9,12 @@ compare_non_retention_inputs(fram_db, run_ids, verbose = TRUE)
 \arguments{
 \item{fram_db}{FRAM database object}
 
-\item{run_ids}{Two run ids}
+\item{run_ids}{Vector of two run_ids}
 
 \item{verbose}{If \code{TRUE}, print an update to screen when there are no differences in recruits.}
+}
+\value{
+Tibble with all non-retention parameters that changed between the first and second runs. \verb{$fishery_id}, \verb{$fishery_label}, and \verb{$time_step} identify the fishery x timestep that changed, \verb{$parameter} identifies the parameter, and \verb{$original} and \verb{$comparison} present the values in the first and second runs, respectively.
 }
 \description{
 Compares the non retention inputs of two runs
@@ -20,5 +23,14 @@ Compares the non retention inputs of two runs
 \dontrun{fram_db |> compare_non_retention_inputs(c(55, 56))}
 }
 \seealso{
-\code{\link[=compare_runs]{compare_runs()}}
+Other comparisons: 
+\code{\link{compare_fishery_input_flags}()},
+\code{\link{compare_fishery_inputs}()},
+\code{\link{compare_inputs}()},
+\code{\link{compare_inputs_chart}()},
+\code{\link{compare_recruits}()},
+\code{\link{compare_runs}()},
+\code{\link{compare_sl_ratio}()},
+\code{\link{compare_stock_fishery_rate_scalers}()}
 }
+\concept{comparisons}

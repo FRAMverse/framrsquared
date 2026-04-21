@@ -2,7 +2,7 @@
 % Please edit documentation in R/compare_inputs.R
 \name{compare_inputs}
 \alias{compare_inputs}
-\title{Generates a dataframe that compares fishery scalers table for two runs identified by run_id's}
+\title{Compare FisheryScalers tables between two runs.}
 \usage{
 compare_inputs(fram_db, run_ids)
 }
@@ -12,23 +12,24 @@ compare_inputs(fram_db, run_ids)
 \item{run_ids}{Vector of two run_ids}
 }
 \value{
-Data frame of differences. \verb{$percentdiff} = change in quota (comparing the appropriate quotas based on fishery flags),
-\verb{$regulation_comparison}  = change in regulation (NS, MSF, NS + MSF). Columns present in the
-FisheriesScalers database are included, with \verb{_original} and \verb{_comparison}
-suffixes identifying entries associated with the first and second entries of
-\code{run_ids}, respectively.
+Data frame of differences. \verb{*_original} columns show the values in the first run of \code{run_ids}, while \verb{*_comparison} show the values of the second run of \code{run_ids}. Quota and MSF quota have been combined into \verb{$total_quota_*}. \verb{$prop_diff} = proportional change in quota (comparing the appropriate quotas based on fishery flags). \verb{$reg_change} = change in regulations.
 }
 \description{
-Generates a dataframe that compares fishery scalers table for two runs identified by run_id's
-}
-\details{
-Comparisons assume the first run provided is the baseline, and provide relative changes from that.
-This includes percent changes ($percent.diff)include percent changes (infinite when)
+Generates a dataframe that compares fishery scalers table for two runs identified by run_id's.
 }
 \examples{
 \dontrun{fram_db |> compare_inputs(c(100,101))}
 
 }
 \seealso{
-\code{\link[=compare_inputs_chart]{compare_inputs_chart()}}
+Other comparisons: 
+\code{\link{compare_fishery_input_flags}()},
+\code{\link{compare_fishery_inputs}()},
+\code{\link{compare_inputs_chart}()},
+\code{\link{compare_non_retention_inputs}()},
+\code{\link{compare_recruits}()},
+\code{\link{compare_runs}()},
+\code{\link{compare_sl_ratio}()},
+\code{\link{compare_stock_fishery_rate_scalers}()}
 }
+\concept{comparisons}

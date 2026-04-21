@@ -10,7 +10,7 @@
 #' @param slim Logical. Optional, defaults to TRUE. If TRUE, do not include `$tabs_file1` and `$tabs_file2` in output list.
 #' @param quiet Logical, defaults to TRUE. When TRUE, suppress messages showing individual steps.
 #'
-#' @return List of lists and tibbles containing comparison information:
+#' @returns List of lists and tibbles containing comparison information:
 #' * `$ratios` tibble comparing every entry of every relevant column of every table. See "Details" for column descriptions.
 #' * `$ratios_detailed` list of tibbles showing the contents of `$ratios` broken into tables, with additional non-compared columns present (e.g., `stock_name` in `$ratios_detailed$Stock`). Not shown if `slim` is TRUE.
 #' * `$nrow_tracker` dataframe providing the number of rows in each table of file1 (`$nrow_original`), file2 (`$nrow_new`), and the joined comparison (`$nrow_comparison`). Useful to track down cause of many-to-many join warnings that can result from duplicated table entries; unless there are duplicate entries, `$nrow_comparison` should be less than or equal to the minimum of `$nrow_original` and `$nrow_new`.

@@ -10,7 +10,7 @@ a \code{fishery_id} column name.}
 filter_sport(.data, species = NULL, return_ids = FALSE)
 }
 \arguments{
-\item{.data}{Dataframe containing \code{fishery_id} column. Commonly, output from \code{framrsquared.dev::fetch_table()}.}
+\item{.data}{Dataframe containing \code{fishery_id} column. Commonly, output from \code{fetch_table()}.}
 
 \item{species}{Optional argument to identify species if \code{.data} doesn't already. If provided, must be "COHO" or "CHINOOK" or variations thereof. Defaults to \code{NULL}}
 

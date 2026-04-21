@@ -9,11 +9,14 @@ compare_recruits(fram_db, run_ids, tolerance = 0.01, verbose = TRUE)
 \arguments{
 \item{fram_db}{FRAM database object}
 
-\item{run_ids}{Two run ids}
+\item{run_ids}{Vector of two run_ids}
 
-\item{tolerance}{Tolerance for detecting changes}
+\item{tolerance}{Minimum \% change needed to flag a difference. Set to 0 to flag any changes at all. Defaults to 0.01.}
 
 \item{verbose}{If \code{TRUE}, print an update to screen when there are no differences in recruits.}
+}
+\value{
+tibble with \verb{$stock_id}, \verb{$age}, and \verb{$stock_name} identifying stock x age combinations in which the recruit cohort sizes changed by at least \verb{tolerance x 100}\%. \code{recruit_cohort_original} and \verb{$..._comparison} give the recruit cohort for the first and second run_ids provided. These are calculated directly from "StockRecruit" column RecruitScaleFactor and the "BaseCohort" table, as the RecruitCohort column of the "StockRecruit" table can be misleading. \verb{$prop_diff} gives the proportional change from the original to comparison runs (ie 0.16  = 16\% increase).
 }
 \description{
 Compares the recruit scalers of two runs
@@ -22,5 +25,14 @@ Compares the recruit scalers of two runs
 \dontrun{fram_db |> compare_recruits()}
 }
 \seealso{
-\code{\link[=compare_runs]{compare_runs()}}
+Other comparisons: 
+\code{\link{compare_fishery_input_flags}()},
+\code{\link{compare_fishery_inputs}()},
+\code{\link{compare_inputs}()},
+\code{\link{compare_inputs_chart}()},
+\code{\link{compare_non_retention_inputs}()},
+\code{\link{compare_runs}()},
+\code{\link{compare_sl_ratio}()},
+\code{\link{compare_stock_fishery_rate_scalers}()}
 }
+\concept{comparisons}

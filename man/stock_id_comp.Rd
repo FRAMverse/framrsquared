@@ -22,3 +22,4 @@ Intended for internal use, makes some assumptions about inputs.
 \seealso{
 \code{\link[=addstock_check]{addstock_check()}}
 }
+\keyword{internal}

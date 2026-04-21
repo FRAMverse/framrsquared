@@ -6,7 +6,8 @@
 #' @param fram_db FRAM database connection
 #' @param run_id FRAM run id
 #'
-#' @return Invisibly returns a list of tables identifying the fishery x timesteps that are not in base period
+#' @returns Invisibly returns a list of tables identifying the fishery x timesteps that are not in base period
+#'
 #' @export
 #'
 #' @examples

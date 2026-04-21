@@ -26,3 +26,4 @@ Optionally, can check that each stock ID is unique.
 \seealso{
 \code{\link[=addstock_check]{addstock_check()}}
 }
+\keyword{internal}

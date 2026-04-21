@@ -8,3 +8,5 @@
 ^data-raw$
 ^doc$
 ^Meta$
+^\.positai$
+^\.claude$

@@ -12,6 +12,9 @@ input_summary_(.data, run_id)
 
 \item{run_id}{Run ID number}
 }
+\value{
+tibble with \verb{$run_id}, \verb{$fishery_id}, \verb{$fishery_flag}, \verb{$time_step}, \verb{$total_quota} (sum of quota and msf_quota), and \code{regulation} ("NS", "MSF", "NS+MSF", or NA)
+}
 \description{
 Generates an input summary based on a FisheryScalers dataframe.
 Probably end up streamlining / revising this.
@@ -19,3 +22,4 @@ Probably end up streamlining / revising this.
 \examples{
 \dontrun{fishery_scalers_dataframe |> input_summary()}
 }
+\keyword{internal}

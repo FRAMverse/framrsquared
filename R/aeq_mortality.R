@@ -1,6 +1,9 @@
-#' Extract AEQ mortality from Chinook FRAM database. Refactored and
-#' stripped down from the framr package written by Dan Auerbach.
-#' https://github.com/FRAMverse/framr/
+#' Extract AEQ mortality from Chinook FRAM database.
+#'
+#'  Calculates AEQ mortality for Chinook, translating mortalities from dead fish to
+#'  Adult EQuivalents (which are the units used to calculate ERs and management objectives). This metric accounts for the probability of a fish dying of natural causes before reaching escapement (e.g, the mortality of an age 2 fish in timestep 1 has a smaller AEQ than the mortality of an age 5 fish in timestep 5). By default, `aeq_mortality()` also expands for Model Stock Proportion (MSP), but this can be turned off by setting optional argument `msp = FALSE`.
+#'
+#'  `aeq_mortality()` returns a dataframe that superficially resembles `fetch_table("Mortality")`. However, the mortality values in `landed_catch` through `msf_drop_off` are presented in units of AEQ. Additionally, `base_period_id`, `aeq_constant`, and `terminal_flag`, which were used to calculate the AEQ values, are included is columns of this dataframe. These are left for understanding/diagnostics/debugging purposes, and can be ignored when working with the AEQ mortalities.
 #'
 #' @export
 #'
@@ -8,6 +11,8 @@
 #' @param run_id numeric, RunID(s) as ID or ID:ID
 #' @param msp Do we use MSP expansion? Logical, default true.
 #' @inheritParams fetch_table
+#'
+#' @returns Tibble resembling output of `fetch_table("Mortality")`, but with a few modifications. See Details.
 #'
 #' @examples
 #' \dontrun{

@@ -2,9 +2,7 @@
 % Please edit documentation in R/aeq_mortality.R
 \name{aeq_mortality}
 \alias{aeq_mortality}
-\title{Extract AEQ mortality from Chinook FRAM database. Refactored and
-stripped down from the framr package written by Dan Auerbach.
-https://github.com/FRAMverse/framr/}
+\title{Extract AEQ mortality from Chinook FRAM database.}
 \usage{
 aeq_mortality(fram_db, run_id = NULL, msp = TRUE, label = TRUE)
 }
@@ -15,12 +13,17 @@ aeq_mortality(fram_db, run_id = NULL, msp = TRUE, label = TRUE)
 
 \item{msp}{Do we use MSP expansion? Logical, default true.}
 
-\item{label}{Logical, defaults to TRUE. Add human-readable columns for flags, fisheries, stocks?}
+\item{label}{Logical, defaults to TRUE. Add human-readable columns for flags, fisheries, stocks? Based on the Stock and Fishery tables of the current database.}
+}
+\value{
+Tibble resembling output of \code{fetch_table("Mortality")}, but with a few modifications. See Details.
 }
 \description{
-Extract AEQ mortality from Chinook FRAM database. Refactored and
-stripped down from the framr package written by Dan Auerbach.
-https://github.com/FRAMverse/framr/
+Calculates AEQ mortality for Chinook, translating mortalities from dead fish to
+Adult EQuivalents (which are the units used to calculate ERs and management objectives). This metric accounts for the probability of a fish dying of natural causes before reaching escapement (e.g, the mortality of an age 2 fish in timestep 1 has a smaller AEQ than the mortality of an age 5 fish in timestep 5). By default, \code{aeq_mortality()} also expands for Model Stock Proportion (MSP), but this can be turned off by setting optional argument \code{msp = FALSE}.
+}
+\details{
+\code{aeq_mortality()} returns a dataframe that superficially resembles \code{fetch_table("Mortality")}. However, the mortality values in \code{landed_catch} through \code{msf_drop_off} are presented in units of AEQ. Additionally, \code{base_period_id}, \code{aeq_constant}, and \code{terminal_flag}, which were used to calculate the AEQ values, are included is columns of this dataframe. These are left for understanding/diagnostics/debugging purposes, and can be ignored when working with the AEQ mortalities.
 }
 \examples{
 \dontrun{
