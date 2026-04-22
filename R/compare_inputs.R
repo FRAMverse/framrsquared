@@ -3,7 +3,7 @@ attach_comparison_attributes <- function(.data, fram_db, run_ids){
 
   runs <- fram_db |>
     fetch_table_('RunID') |>
-    dplyr::select(.data$run_id, .data$run_name)
+    dplyr::select("run_id", "run_name")
 
   original_run_name <- runs |>
     dplyr::filter(.data$run_id == run_ids[[1]]) |>
@@ -62,7 +62,7 @@ compare_inputs <- function(fram_db, run_ids){
         .data$total_quota_comparison == 0 & .data$total_quota_original > 0 ~ paste0(.data$regulation_original, '->NR')
       )
     ) |>
-    dplyr::mutate(run_id = dplyr::coalesce(run_id_original, run_id_comparison)) |>
+    dplyr::mutate(run_id = dplyr::coalesce(.data$run_id_original, .data$run_id_comparison)) |>
     label_fisheries_db(fram_db = fram_db) |>
     dplyr::select(-"run_id") |>
     attach_comparison_attributes(fram_db = fram_db,
@@ -117,7 +117,7 @@ compare_sl_ratio <- function(fram_db, run_ids){
                     .data$run_encounter_rate_adjustment_diff != 0 |
                     .data$na_mismatch
     ) |>
-    dplyr::mutate(run_id = dplyr::coalesce(run_id_original, run_id_comparison)) |>
+    dplyr::mutate(run_id = dplyr::coalesce(.data$run_id_original, .data$run_id_comparison)) |>
     label_fisheries_db(fram_db = fram_db) |>
     dplyr::select(-"na_mismatch", -"run_id", -"run_id_original", -"run_id_comparison") |>
     attach_comparison_attributes(fram_db, run_ids = run_ids)
@@ -259,13 +259,13 @@ compare_recruits <- function(fram_db, run_ids, tolerance = .01, verbose = TRUE){
     dplyr::filter(.data$run_id %in% run_ids) |>
     label_stocks_db(fram_db = fram_db) |>
     dplyr::inner_join(runs_lut, by = "run_id") |>
-    dplyr::select(-.data$run_id) |>
+    dplyr::select(-"run_id") |>
     tidyr::pivot_wider(names_from = "run_identifier",
-                       values_from = .data$recruit_cohort_size,
+                       values_from = "recruit_cohort_size",
                        names_prefix = "recruit_cohort_",
                        values_fill = NA_real_) |>
-    dplyr::mutate(prop_diff = (dplyr::coalesce(recruit_cohort_comparison, 0) - dplyr::coalesce(recruit_cohort_original, 0)) / dplyr::coalesce(recruit_cohort_original, 0)) |>
-    dplyr::filter(abs(prop_diff) > tolerance) |>
+    dplyr::mutate(prop_diff = (dplyr::coalesce(.data$recruit_cohort_comparison, 0) - dplyr::coalesce(.data$recruit_cohort_original, 0)) / dplyr::coalesce(.data$recruit_cohort_original, 0)) |>
+    dplyr::filter(abs(.data$prop_diff) > .env$tolerance) |>
     dplyr::select("stock_id",
                   "age",
                   "stock_label",
@@ -283,7 +283,7 @@ compare_recruits <- function(fram_db, run_ids, tolerance = .01, verbose = TRUE){
 #' @inheritParams compare_recruits
 #'
 #' @returns All fishery x timesteps in which the fishery inputs changed by at least (`tolerance` x 100) % between the specified runs.
-#' `$fishery_id`, `$fishery_label`, and `$timestep` identify the fishery x timestep, `$parameter` identifies which parameter changed (.e.g, quota, msf_quota, etc.). `$original` and `$comparison` show the values from the first and second runs, respectively. `$prop_dff` shows the proportional change from the first to second run (e.g., 0.16 = 16% increase).
+#' `$fishery_id`, `$fishery_label`, and `$timestep` identify the fishery x timestep, `$parameter` identifies which parameter changed (.e.g, quota, msf_quota, etc.). `$original` and `$comparison` show the values from the first and second runs, respectively. `$prop_diff` shows the proportional change from the first to second run (e.g., 0.16 = 16% increase).
 #'
 #' @export
 #' @family comparisons
@@ -305,14 +305,14 @@ compare_fishery_inputs <- function(fram_db, run_ids, tolerance = .01, verbose = 
 
   runs <- fram_db |>
     fetch_table_('RunID') |>
-    dplyr::select(.data$run_id, .data$run_name)
+    dplyr::select("run_id", "run_name")
 
   runs_lut <- data.frame(run_id = run_ids,
                          run_label = c("original", "comparison"))
 
   fishery_scaler_compare <- fishery_scalers |>
     dplyr::filter(.data$run_id %in% run_ids) |>
-    filter_flag() |>
+    na_scalers_from_flag() |>
     dplyr::select("run_id":"time_step",
                   "fishery_scale_factor":"msf_quota")
 
@@ -327,8 +327,9 @@ compare_fishery_inputs <- function(fram_db, run_ids, tolerance = .01, verbose = 
       values_from = "value",
       values_fill = 0
     ) |>
-    dplyr::mutate(prop_diff = (dplyr::coalesce(comparison, 0) - dplyr::coalesce(original, 0)) / dplyr::coalesce(original, 0)) |>
-    dplyr::filter(abs(prop_diff) > .01) |>
+    dplyr::mutate(prop_diff = (dplyr::coalesce(.data$comparison, 0) - dplyr::coalesce(.data$original, 0)) /
+                    dplyr::coalesce(.data$original, 0)) |>
+    dplyr::filter(abs(.data$prop_diff) > .env$tolerance) |>
     dplyr::select("fishery_id",
                   "fishery_label",
                   "time_step",
@@ -381,8 +382,8 @@ compare_fishery_input_flags <- function(fram_db, run_ids, verbose = TRUE){
     tidyr::pivot_wider(names_from = "run_label", values_from = "fishery_flag",
                        values_fill = 0,
                        names_prefix = "flag_") |>
-    dplyr::filter((flag_original != flag_comparison) |
-                    xor(is.na(flag_original), is.na(flag_comparison))) |>
+    dplyr::filter((.data$flag_original != .data$flag_comparison) |
+                    xor(is.na(.data$flag_original), is.na(.data$flag_comparison))) |>
     dplyr::select(
       "fishery_id",
       "fishery_label",
@@ -433,7 +434,7 @@ compare_non_retention_inputs <- function(fram_db, run_ids, verbose = TRUE){
     tidyr::pivot_longer(dplyr::starts_with('cnr_input'),
                         names_to = "parameter") |> # re rectangle
     tidyr::pivot_wider(names_from = "run_label", values_from = "value", values_fill = 0) |>
-    dplyr::filter(original != comparison) |>
+    dplyr::filter(.data$original != .data$comparison) |>
     dplyr::select(
       "fishery_id",
       "fishery_label",
@@ -487,8 +488,8 @@ compare_non_retention_input_flags <- function(fram_db, run_ids, verbose = TRUE){
                   "run_label") |>
     tidyr::pivot_wider(names_from = "run_label", values_from = "non_retention_flag",
                        names_prefix = "flag_") |>
-    dplyr::filter((flag_original != flag_comparison) |
-                    xor(is.na(flag_original), is.na(flag_comparison))) |>
+    dplyr::filter((.data$flag_original != .data$flag_comparison) |
+                    xor(is.na(.data$flag_original), is.na(.data$flag_comparison))) |>
     dplyr::select(
       "fishery_id",
       "fishery_label",
@@ -562,8 +563,8 @@ compare_stock_fishery_rate_scalers <- function(fram_db, run_ids){
       values_from = "stock_fishery_rate_scaler",
       names_prefix = "sfrs_"
     ) |> #print(n=Inf)
-    dplyr::filter((sfrs_original != sfrs_comparison) |
-                    xor(is.na(sfrs_original), is.na(sfrs_comparison))) |>
+    dplyr::filter((.data$sfrs_original != .data$sfrs_comparison) |
+                    xor(is.na(.data$sfrs_original), is.na(.data$sfrs_comparison))) |>
     dplyr::select("stock_id",
                   "stock_label",
                   "fishery_id",
@@ -702,7 +703,7 @@ compare_runs_ <- function(fram_db, run_ids, tolerance = .01){
       tibble::deframe() |>
       unique() |>
       sort() |>
-      purrr::map_vec(function(x) paste0(x, " = ", NR_flag_translate(x)))
+      purrr::map_vec(function(x) paste0(x, " = ", translate_nr_flag(x)))
     cli::cli_text(paste0("Flags: ", paste0(flags.used, collapse = ";  ")))
   } else {
     cli::cli_alert_success('No changes detected in non-retention flagging')
@@ -760,7 +761,7 @@ compare_runs_ <- function(fram_db, run_ids, tolerance = .01){
       tibble::deframe() |>
       unique() |>
       sort() |>
-      purrr::map_vec(function(x) paste0(x, " = ", scalers_flag_translate(x)))
+      purrr::map_vec(function(x) paste0(x, " = ", translate_scalers_flag(x)))
     cli::cli_text(paste0("Flags: ", paste0(flags.used, collapse = ";  ")))
   } else {
     cli::cli_alert_success('No changes detected in fishery flag inputs')

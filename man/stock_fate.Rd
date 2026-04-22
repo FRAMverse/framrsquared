@@ -2,13 +2,7 @@
 % Please edit documentation in R/general_reporting.R
 \name{stock_fate}
 \alias{stock_fate}
-\title{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
-Summarizes the three true outcomes of a stocks abundance, where it
-dies to fishery related mortality, natural mortality, or reaches
-some sort of escapement. When run against the coho database
-spawning escapement will be displayed, when run against the
-Chinook database escapement to the river will be dislpayed
-along with recruits to the next year 'age_up'}
+\title{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}}
 \usage{
 stock_fate(fram_db, run_id = NULL, units = c("fish", "percentage"))
 }
@@ -17,15 +11,19 @@ stock_fate(fram_db, run_id = NULL, units = c("fish", "percentage"))
 
 \item{run_id}{Run ID (optional)}
 
-\item{units}{'fish' or 'percentage'. Percentage is proportion of starting adundance}
+\item{units}{Should fates be presented in 'fish' or 'percentage'? Percentage is proportion of starting abundance (so not actually a percent, but percent/100).}
+}
+\value{
+dataframe identifying run_id, stock, and age, and providing \verb{$natural_mortality}, \verb{$fishery_mortality}, and either (a) \verb{$age_up} and \verb{$escapment_to_river} (Chinook database) or (b) \verb{$escapement_spawning}
 }
 \description{
-\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
-Summarizes the three true outcomes of a stocks abundance, where it
-dies to fishery related mortality, natural mortality, or reaches
-some sort of escapement. When run against the coho database
-spawning escapement will be displayed, when run against the
-Chinook database escapement to the river will be dislpayed
+Summarize outcomes for stock
+}
+\details{
+Summarizes the three true outcomes of a stocks abundance, where it either (a)
+dies to fishery related mortality, (b) dies to natural mortality, or (c) reaches
+some sort of escapement. When run against the coho database, spawning escapement will be displayed.
+When run against theChinook database escapement to the river will be displayed
 along with recruits to the next year 'age_up'
 }
 \examples{

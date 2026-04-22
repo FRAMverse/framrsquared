@@ -5,7 +5,11 @@
 #'
 #' @param fram_db FRAM database object
 #' @param run_id Run ID
+#'
+#' @returns Tibble identifying run, stock, age, timestep. Then provides the number of fish present at each substep within a timestep: before any mortalities (`$starting_cohort`), after natural mortalities but before marine fishing mortalities `$post_pre_terminal`, the number of fish reaching maturation (`$maturation`; only relevant for Chinook), and the number of fish reaching escapement (`$escapement`)
+#'
 #' @export
+#'
 #' @examples
 #' \dontrun{fram_db |> population_statistics(run_id = 101)}
 #'
@@ -16,19 +20,19 @@ population_statistics <- function(fram_db, run_id = NULL) {
   cohort <- fram_db |>
     fetch_table_('Cohort') |>
     dplyr::select(
-      .data$run_id,
-      .data$stock_id,
-      .data$age,
-      .data$time_step,
-      starting_cohort = .data$start_cohort,
-      post_nat_mort = .data$working_cohort,
-      post_pre_terminal = .data$cohort,
-      maturation = .data$mature_cohort
+      "run_id",
+      "stock_id",
+      "age",
+      "time_step",
+      starting_cohort = "start_cohort",
+      post_nat_mort = "working_cohort",
+      post_pre_terminal = "cohort",
+      maturation = "mature_cohort"
     )
 
   escapement <- fram_db |>
     fetch_table_('Escapement') |>
-    dplyr::select(-.data$primary_key)
+    dplyr::select(-"primary_key")
 
   pop_stat <- cohort |>
     dplyr::left_join(escapement,

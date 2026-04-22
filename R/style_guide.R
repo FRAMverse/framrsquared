@@ -18,9 +18,9 @@
 #' @param filepath Path to R file to be checked
 #' @param n Number of rows to print. Default is to print all rows, but set to smaller values if output is overwhelming.
 #' @name styleguide
-NULL
-#> NULL
-
+#'
+#' @keywords internal
+#'
 #' @rdname styleguide
 #' @examples
 #' \dontrun{
@@ -39,7 +39,7 @@ frs_stylecheck_assignment = function(filepath, n = Inf){
   df <- df |>
     dplyr::mutate(before.parens = gsub("[(].*", "", .data$line.entry)) |>
     dplyr::filter(stringr::str_detect(.data$before.parens, "[^=]=[^=]")) |>
-    dplyr::select(-.data$before.parens)
+    dplyr::select(-"before.parens")
   if(nrow(df)==0){
     cli::cli_alert_success("No possible cases of accidental assignment using `=`. Good work!")
   }else{
@@ -48,6 +48,7 @@ frs_stylecheck_assignment = function(filepath, n = Inf){
 }
 
 #' @rdname styleguide
+#' @keywords internal
 frs_stylecheck_snakecase = function(filepath, n = Inf){
   cli::cli_text(cli::col_blue(paste("Checking", gsub(".*[/]", "", filepath), "for variables that are not named using snake_case.")))
   cli::cli_text(cli::col_grey("Note that this will also list single-word variables, which should be fine. Make sure assignment all uses `<- ` (`frs_stylecheck_assignment()` streamlines this)"))

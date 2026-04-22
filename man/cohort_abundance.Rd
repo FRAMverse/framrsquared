@@ -12,6 +12,9 @@ cohort_abundance(fram_db, run_id = NULL)
 
 \item{run_id}{Run ID (optional)}
 }
+\value{
+dataframe identify run_id, stock, age, and then providing the starting cohort abundance (\verb{$recruit_cohorts}).
+}
 \description{
 The starting cohort abundance listed in the database can be wrong. This function
 calculates the value by multipying the Stock Recruit Scalar by the base period abundance.

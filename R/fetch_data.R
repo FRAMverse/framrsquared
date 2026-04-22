@@ -5,8 +5,8 @@
 #' **WARNING**: the Chinook "BackwardsFRAM" table uses a *different* stock_id numbering system from every other table. To avoid errors when joining that with other tables, instead fetch with [fetch_table_bkchin()]. `fetch_table_()` is an alias for `fetch_table()` with the optional argument `label` set to FALSE.
 #'
 #' @param fram_db FRAM database object
-#' @param table_name Atomic character of name of table to be fetched. If not given, a list of options will be printed.
-#' @param label Logical, defaults to TRUE. Add human-readable columns for flags, fisheries, stocks? Based on the Stock and Fishery tables of the current database.
+#' @param table_name Atomic character of name of table to be fetched. Optional; if not provided, a list of available table names will be printed.
+#' @param label Add human-readable columns for flags, fisheries, stocks? Based on the Stock and Fishery tables of the current database. Logical, defaults to TRUE.
 #' @param warn Print a warning when fetching BackwardsFRAM table from a Chinook database? Logical, defaults to `TRUE`.
 #'
 #' @name fetch_table
@@ -17,8 +17,9 @@
 #' @examples
 #' \dontrun{
 #' fram_db <- connect_fram_db("validate2024.mdb")
-#' fram_db |> fetch_table('Mortality')}
+#' fram_db |> fetch_table('Mortality')
 #' disconnect_fram_db(fram_db)
+#' }
 #'
 
 fetch_table <- function(fram_db, table_name = NULL, label = TRUE, warn = TRUE){
@@ -134,8 +135,9 @@ fetch_table_ <- function(fram_db, table_name = NULL, warn = TRUE){
 #'
 #' @export
 #'
+#' @returns See [fetch_table()]
+#'
 #' @examples
-#' #' @examples
 #' \dontrun{
 #' ##Potentially problematic stock_id won't align with other tables
 #' fram_db |> fetch_table('BackwardsFRAM')

@@ -33,7 +33,7 @@ check_bp_coverage <- function(fram_db, run_id){
   in_fishery_scalers <- fram_db |>
     fetch_table_("FisheryScalers") |>
     dplyr::filter(.data$run_id %in% .env$run_id) |>
-    filter_flag() |>
+    na_scalers_from_flag() |>
     dplyr::mutate(dplyr::across(.data$fishery_scale_factor:.data$msf_quota, ~ dplyr::coalesce(.x, 0))) |>
     dplyr::filter(dplyr::if_any(.data$fishery_scale_factor:.data$msf_quota, ~ .x != 0)) |>
     dplyr::select("fishery_id", "time_step")
@@ -59,7 +59,7 @@ check_bp_coverage <- function(fram_db, run_id){
   in_cnr <- fram_db |>
     fetch_table_("NonRetention") |>
     dplyr::filter(.data$run_id %in% .env$run_id) |>
-    filter_nr_flag() |>
+    na_non_retention_from_flag() |>
     dplyr::mutate(dplyr::across(.data$cnr_input1:.data$cnr_input4, ~ dplyr::coalesce(.x, 0))) |>
     dplyr::filter(dplyr::if_any(.data$cnr_input1:.data$cnr_input4, ~ .x != 0)) |>
     dplyr::filter(.data$non_retention_flag != 0) |>

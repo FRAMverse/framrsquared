@@ -20,3 +20,4 @@ specific for Coho and in most cases \code{\link[=msf_mortalities]{msf_mortalitie
 \seealso{
 \code{\link[=msf_mortalities]{msf_mortalities()}}, \code{\link[=msf_encounters_coho_]{msf_encounters_coho_()}}, \code{\link[=msf_landed_catch_coho_]{msf_landed_catch_coho_()}}
 }
+\keyword{internal}

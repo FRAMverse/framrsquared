@@ -4,7 +4,13 @@
 \alias{validate_run_id}
 \title{Convenience function to check run_id input}
 \usage{
-validate_run_id(fram_db, run_id, n = NULL, call = rlang::caller_env())
+validate_run_id(
+  fram_db,
+  run_id,
+  n = NULL,
+  allow_null = FALSE,
+  call = rlang::caller_env()
+)
 }
 \arguments{
 \item{fram_db}{FRAM database object}
@@ -13,8 +19,11 @@ validate_run_id(fram_db, run_id, n = NULL, call = rlang::caller_env())
 
 \item{n}{Required number of run ids}
 
+\item{allow_null}{Should this function treat a \code{NULL} input as valid? Logical, defaults to TRUE}
+
 \item{call}{internal use: identify name of function that called this function (for informative error message)}
 }
 \description{
 Convenience function to check run_id input
 }
+\keyword{internal}

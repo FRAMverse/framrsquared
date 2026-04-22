@@ -13,7 +13,7 @@ aeq_mortality(fram_db, run_id = NULL, msp = TRUE, label = TRUE)
 
 \item{msp}{Do we use MSP expansion? Logical, default true.}
 
-\item{label}{Logical, defaults to TRUE. Add human-readable columns for flags, fisheries, stocks? Based on the Stock and Fishery tables of the current database.}
+\item{label}{Add human-readable columns for flags, fisheries, stocks? Based on the Stock and Fishery tables of the current database. Logical, defaults to TRUE.}
 }
 \value{
 Tibble resembling output of \code{fetch_table("Mortality")}, but with a few modifications. See Details.

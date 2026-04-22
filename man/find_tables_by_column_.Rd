@@ -18,3 +18,4 @@ Finds tables that contain a specific column name
 \dontrun{fram_db |> find_tables_by_column_('RunID')}
 
 }
+\keyword{internal}

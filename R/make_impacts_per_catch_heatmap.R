@@ -16,7 +16,9 @@
 #' @param per_thousand_catch Should plot be presented in units of Impacts per Thousand Landed Catch (TRUE) or landed catch per impact (FALSE). Logical, defaults to FALSE.
 #' @param verbose Print plot info to console? Logical, defaults to `TRUE`.
 #' @param warn Print warning if multiple stocks are provided? Logical, defaults to `TRUE`.
-#' @return ggplot object
+#'
+#' @returns ggplot2 object
+#'
 #' @export
 #'
 #' @seealso [plot_stock_mortality()]

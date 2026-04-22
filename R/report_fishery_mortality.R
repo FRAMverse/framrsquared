@@ -1,17 +1,25 @@
 #' Returns a tibble matching the Fishery Mortality screen.
+#'
 #' @param fram_db FRAM database object
-#' @param run_id atomic or vector of run_ids to filter to. Can improve speed. Optional, defaults to `NULL`.
-#' @param fishery_id atomic or vector of fishery_id to filter to. Can improve speed. Optional, defaults to `NULL`.
-#' @param msp Use Model Stock Proportion? Logical, defaults to TRUE.
+#' @param run_id atomic or vector of run_ids to filter to. Can improve speed. Optional, defaults to
+#'   `NULL`.
+#' @param fishery_id atomic or vector of fishery_id to filter to. Can improve speed. Optional,
+#'   defaults to `NULL`.
+#' @param msp Use Model Stock Proportion? Logical, defaults to TRUE. Only relevant for Chinook.
+#'
 #' @export
+#'
+#' @returns Tibble identifying, run, fishery, age, timestep, and providing calculations of
+#'   mortalities by type, aggregating across NS and MSF.
+#'
 #' @examples
 #' \dontrun{
 #' fram_db |> fishery_mortality(run_id = 101)
 #' }
 fishery_mortality <- function(fram_db, run_id = NULL, fishery_id = NULL, msp = TRUE) {
   validate_fram_db(fram_db)
-  if(!is.null(run_id)){validate_run_id(fram_db, run_id)}
-  if(!is.null(fishery_id)){validate_fishery_ids(fram_db, fishery_id)}
+  validate_run_id(fram_db, run_id, allow_null = TRUE)
+  validate_fishery_ids(fram_db, fishery_id, allow_null = TRUE)
   validate_flag(msp)
 
   fishery_mort <- fram_db |>
@@ -36,14 +44,14 @@ fishery_mortality <- function(fram_db, run_id = NULL, fishery_id = NULL, msp = T
     dplyr::summarize(
       dplyr::across(
         c(
-          .data$landed_catch:.data$drop_off,
-          .data$msf_landed_catch:.data$msf_drop_off
+          "landed_catch":"drop_off",
+          "msf_landed_catch":"msf_drop_off"
         ),
         \(x) sum(x)
       ),
       .groups = "drop"
     ) |>
-    tidyr::pivot_longer(.data$landed_catch:.data$msf_drop_off) |>
+    tidyr::pivot_longer("landed_catch":"msf_drop_off") |>
     dplyr::mutate(name = stringr::str_remove(.data$name, "msf_")) |>
     dplyr::group_by(
       .data$run_id,
@@ -55,8 +63,8 @@ fishery_mortality <- function(fram_db, run_id = NULL, fishery_id = NULL, msp = T
     dplyr::summarise(value = sum(.data$value), .groups = "drop") |>
     tidyr::pivot_wider() |>
     dplyr::select(
-      .data$run_id:.data$time_step, .data$landed_catch,
-      .data$non_retention, .data$shaker, .data$drop_off
+      "run_id":"time_step", "landed_catch",
+      "non_retention", "shaker", "drop_off"
     ) |>
     dplyr::arrange(.data$run_id, .data$fishery_id, .data$age, .data$time_step)
 
@@ -71,22 +79,27 @@ fishery_mortality <- function(fram_db, run_id = NULL, fishery_id = NULL, msp = T
 
 #' Plot total mortalities by fishery
 #'
-#' Creates an ordered bar chart with
-#' the top number of mortalities per
-#' fishery.
+#' Creates an ordered bar chart with the top number of mortalities per fishery.
 #'
 #' @export
 #'
 #' @param fram_db fram database object, supplied through connect_fram_db
 #' @param run_id numeric, RunID
-#' @param stock_id numeric, ID of focal stock. Can accept multiple ids, but this should only be used when combining FRAM stocks makes sense (e.g., combining marked and unmarked components of the same stock).
+#' @param stock_id numeric, ID of focal stock. Can accept multiple ids, but this should only be used
+#'   when combining FRAM stocks makes sense (e.g., combining marked and unmarked components of the
+#'   same stock).
 #' @param top_n numeric, Number of fisheries to display
 #' @param filters_list list of framrsquared filter functions to apply before plotting.
 #' @param msp Use Model Stock Proportion? Logical, defaults to TRUE.
-#' @param split_cnr Produce separate panels for CNR and non-CNR mortality? Logical, defaults to FALSE.
-#' @param fishery_title_short Use abbreviated fishery names instead of full names? Useful if horizontal space is limited. Logical, defaults to FALSE.
-#' @param stock_title_short Use abbreviated stock name instead of full name in title? Will always use abbreviated stock name if multiple stock ids are provided.
+#' @param split_cnr Produce separate panels for CNR and non-CNR mortality? Logical, defaults to
+#'   FALSE.
+#' @param fishery_title_short Use abbreviated fishery names instead of full names? Useful if
+#'   horizontal space is limited. Logical, defaults to FALSE.
+#' @param stock_title_short Use abbreviated stock name instead of full name in title? Will always
+#'   use abbreviated stock name if multiple stock ids are provided.
 #' @param warn Warn if providing multiple stocks?
+#'
+#' @returns ggplot2 object.
 #'
 #' @seealso [plot_impacts_per_catch_heatmap()], [plot_stock_mortality_time_step()]
 #'
@@ -107,15 +120,10 @@ plot_stock_mortality <- function(fram_db, run_id, stock_id,
                                  stock_title_short = FALSE,
                                  warn = TRUE){
   validate_fram_db(fram_db)
-  validate_run_id(fram_db, run_id)
+  validate_run_id(fram_db, run_id, n = 1)
   validate_stock_ids(fram_db, stock_id)
   validate_flag(msp)
   validate_flag(split_cnr)
-
-
-  if (length(run_id)>1) {
-    cli::cli_abort("Plot is not meaningful when combining multiple runs. Provide a single run in run_id.")
-  }
 
   # make sure run ids are integers
   if (length(stock_id)>1 & warn) {
@@ -128,6 +136,7 @@ plot_stock_mortality <- function(fram_db, run_id, stock_id,
   if(!is.null(filters_list) && !all(purrr::map_vec(filters_list, \(x) is.function(x)))){
     cli::cli_abort("If provided, filters_list must be a list of fishery filter functions. One or more list items is not a function.")
   }
+
   validate_flag(warn)
 
   # identify species used
@@ -139,21 +148,21 @@ plot_stock_mortality <- function(fram_db, run_id, stock_id,
   stocks <- fram_db |>
     fetch_table_('Stock') |>
     dplyr::filter(.data$species %in% fram_db$fram_db_species) |>
-    dplyr::select(.data$stock_id, .data$stock_name, .data$stock_long_name)
+    dplyr::select("stock_id", "stock_name", "stock_long_name")
 
   # lut for display of fishery
   if(fishery_title_short){
     fisheries <- fram_db |>
       fetch_table_('Fishery') |>
       dplyr::filter(.data$species == fram_db$fram_db_species) |>
-      dplyr::select(.data$fishery_id,
-                    fishery_label = .data$fishery_name)
+      dplyr::select("fishery_id",
+                    fishery_label = "fishery_name")
   } else {
     fisheries <- fram_db |>
       fetch_table_('Fishery') |>
       dplyr::filter(.data$species == fram_db$fram_db_species) |>
-      dplyr::select(.data$fishery_id,
-                    fishery_label = .data$fishery_title)
+      dplyr::select("fishery_id",
+                    fishery_label = "fishery_title")
   }
 
   fisheries <- fisheries |>
@@ -191,14 +200,14 @@ plot_stock_mortality <- function(fram_db, run_id, stock_id,
         names_to = "mortality_type",
         values_to = "total_mortality"
       )|>
-      dplyr::select(.data$run_id, .data$fishery_id, total_mort = .data$total_mortality,
-                    .data$mortality_type)
+      dplyr::select("run_id", "fishery_id", total_mort = "total_mortality",
+                    "mortality_type")
     percent_cnr = NULL ## dummy var to avoid silly error
   } else{
     total_cnr = sum(mortality$non_retention)
     mortality <- mortality |>
       add_total_mortality() |>
-      dplyr::select(.data$run_id, .data$fishery_id, total_mort = .data$total_mortality)
+      dplyr::select("run_id", "fishery_id", total_mort = "total_mortality")
     percent_cnr = round(total_cnr / sum(mortality$total_mort)*100,
                         1)
   }
@@ -285,26 +294,16 @@ plot_stock_mortality <- function(fram_db, run_id, stock_id,
 
 
 
-label_timesteps = function(.data, fram_db){
-  time_step_lut = fram_db |>
-    fetch_table_("TimeStep") |>
-    dplyr::filter(.data$species == fram_db$fram_db_species) |>
-    dplyr::mutate(time_step_label = as.factor(glue::glue("{time_step_id} ({time_step_name})"))) |>
-    dplyr::select(time_step = .data$time_step_id,
-                  .data$time_step_label)
-  .data |>
-    dplyr::left_join(time_step_lut,
-              by = "time_step")
-}
 
-
-#' Creates an ordered bar chart with
-#' the top number of mortalities per
-#' fishery and time step.
+#' Plot total mortalities by fishery and timestep
+#'
+#' Creates an ordered bar chart with the top number of mortalities per fishery and time step.
 #'
 #' @export
 #'
 #' @inheritParams plot_stock_mortality
+#'
+#' @returns ggplot2 object
 #'
 #' @seealso [plot_stock_mortality()], [plot_impacts_per_catch_heatmap()]
 #'
@@ -354,21 +353,21 @@ plot_stock_mortality_time_step <- function(fram_db,
   stocks <- fram_db |>
     fetch_table_('Stock') |>
     dplyr::filter(.data$species == fram_db$fram_db_species) |>
-    dplyr::select(.data$stock_id, .data$stock_name, .data$stock_long_name)
+    dplyr::select("stock_id", "stock_name", "stock_long_name")
 
   # lut for display of fishery
   if(fishery_title_short){
     fisheries <- fram_db |>
       fetch_table_('Fishery') |>
       dplyr::filter(.data$species == fram_db$fram_db_species) |>
-      dplyr::select(.data$fishery_id,
-                    fishery_label = .data$fishery_name)
+      dplyr::select("fishery_id",
+                    fishery_label = "fishery_name")
   } else {
     fisheries <- fram_db |>
       fetch_table_('Fishery') |>
       dplyr::filter(.data$species == fram_db$fram_db_species) |>
-      dplyr::select(.data$fishery_id,
-                    fishery_label = .data$fishery_title)
+      dplyr::select("fishery_id",
+                    fishery_label = "fishery_title")
   }
 
   fisheries <- fisheries |>
@@ -406,16 +405,16 @@ plot_stock_mortality_time_step <- function(fram_db,
         names_to = "mortality_type",
         values_to = "total_mortality"
       )|>
-      dplyr::select(.data$run_id, .data$fishery_id, total_mort = .data$total_mortality,
-                    .data$mortality_type,
-                    .data$time_step)
+      dplyr::select("run_id", "fishery_id", total_mort = "total_mortality",
+                    "mortality_type",
+                    "time_step")
     percent_cnr = NULL ## dummy var to avoid silly error
   } else{
     total_cnr = sum(mortality$non_retention)
     mortality <- mortality |>
       add_total_mortality() |>
-      dplyr::select(.data$run_id, .data$fishery_id, total_mort = .data$total_mortality,
-                    .data$time_step)
+      dplyr::select("run_id", "fishery_id", total_mort = "total_mortality",
+                    "time_step")
     percent_cnr = round(total_cnr / sum(mortality$total_mort)*100,
                         1)
   }
@@ -430,7 +429,7 @@ plot_stock_mortality_time_step <- function(fram_db,
   }
 
   mortality = mortality |>
-    label_timesteps(fram_db = fram_db)
+    label_timesteps_db(fram_db = fram_db)
 
 
   run_name <- fram_db |>

@@ -7,16 +7,22 @@
 filter_wild(.data, species = NULL, return_ids = FALSE)
 }
 \arguments{
-\item{.data}{Dataframe containing \code{fishery_id} column. Commonly, output from \code{fetch_table()}.}
+\item{.data}{Dataframe containing \code{fishery_id} column. Commonly, output from
+\code{fetch_table()}.}
 
-\item{species}{Optional argument to identify species if \code{.data} doesn't already. If provided, must be "COHO" or "CHINOOK" or variations thereof. Defaults to \code{NULL}}
+\item{species}{Optional argument to identify species if \code{.data} doesn't
+already. If provided, must be "COHO" or "CHINOOK" or variations thereof.
+Defaults to \code{NULL}}
 
 \item{return_ids}{Return the stock ids used in filtering rather than a filtered dataframe?
 Logical, defaults to FALSE}
 }
+\value{
+A dataframe filtered based on a \code{stock_id} column. If \code{return_ids = TRUE}, instead
+returns numeric vector of the fishery IDs used to filter.
+}
 \description{
-Currently only works on Coho datasets. \code{.data} must have
-a \code{stock_id} column name.
+Currently only works on Coho datasets. \code{.data} must have a \code{stock_id} column name.
 }
 \examples{
 framrosetta::stock_coho_fram |> filter_wild()

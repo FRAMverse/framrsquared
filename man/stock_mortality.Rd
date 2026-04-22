@@ -13,6 +13,9 @@ stock_mortality(fram_db, run_id = NULL, stock_id = NULL)
 
 \item{stock_id}{atomic or vector of stock_id to filter to. Can improve speed. Optional, defaults to \code{NULL}.}
 }
+\value{
+Tibble matching the "Stock Mortality" screen of the FRAM interface.
+}
 \description{
 Returns a tibble matching the Stock Mortality screen.
 }

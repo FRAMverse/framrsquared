@@ -11,6 +11,9 @@ population_statistics(fram_db, run_id = NULL)
 
 \item{run_id}{Run ID}
 }
+\value{
+Tibble identifying run, stock, age, timestep. Then provides the number of fish present at each substep within a timestep: before any mortalities (\verb{$starting_cohort}), after natural mortalities but before marine fishing mortalities \verb{$post_pre_terminal}, the number of fish reaching maturation (\verb{$maturation}; only relevant for Chinook), and the number of fish reaching escapement (\verb{$escapement})
+}
 \description{
 Returns a tibble matching the Population Statistics screen.
 }

@@ -20,6 +20,9 @@
 #' @param template_overwrite Boolean. Overwrite _quarto.yml and style.css files if they already exist? Defaults to TRUE
 #' @param color Character string, defaults to "coffee". Specifies quarto template to use; organizations may have several.
 #' @param quiet Boolean, defaults to FALSE. If TRUE, suppresses informational messages.
+#'
+#' @returns nothing
+#'
 #' @export
 #' @seealso [fetch_quarto_templates()]
 #' @examples
@@ -104,7 +107,8 @@ initialize_project <-
 #' @param overwrite Boolean. Overwrite _quarto.yml and style.css files if they already exist? Defaults to FALSE.
 #' @inheritParams initialize_project
 #'
-#' @return Nothing.
+#' @returns Nothing.
+#'
 #' @export
 #' @seealso [initialize_project()]
 fetch_quarto_templates = function(to.path,

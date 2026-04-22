@@ -38,16 +38,16 @@ aeq_mortality <- function(fram_db, run_id = NULL, msp = TRUE, label = TRUE) {
   if(msp){
     mortality <- fram_db |>
       msp_mortality(run_id = run_id) |>
-      dplyr::select(-.data$primary_key)
+      dplyr::select(-"primary_key")
   }else{
     mortality <- fram_db |>
       fetch_table_("Mortality") |>
-      dplyr::select(-.data$primary_key)
+      dplyr::select(-"primary_key")
   }
 
   runid <- fram_db |>
     fetch_table_("RunID") |>
-    dplyr::select(.data$run_id, .data$base_period_id)
+    dplyr::select("run_id", "base_period_id")
 
   aeq <- fram_db |>
     fetch_table_("AEQ")

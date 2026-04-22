@@ -13,6 +13,9 @@ change_run_id(fram_db, old_run_id, new_run_id)
 
 \item{new_run_id}{New FRAM run ID}
 }
+\value{
+nothing
+}
 \description{
 Changes a run's ID number in a FRAM database
 }

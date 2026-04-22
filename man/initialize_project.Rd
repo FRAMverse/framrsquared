@@ -31,6 +31,9 @@ initialize_project(
 
 \item{quiet}{Boolean, defaults to FALSE. If TRUE, suppresses informational messages.}
 }
+\value{
+nothing
+}
 \description{
 By default, creates suggested folder structure from \href{https://framverse.github.io/coding-practices/}{best coding practices}, and
 adds WDFW-style yaml and style.css files to give quarto files consistent appearance. If you

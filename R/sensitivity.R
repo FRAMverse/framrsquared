@@ -16,12 +16,12 @@
 #' @param tamm_target_folder Folder to copy TAMMs into. Will create if it does not exist.
 #' @param save_log Should a log .csv of the specifics used (row ids, match criterion, scaling or replacement values) be saved in the same folder as the FRAM database? Logical, defaults to TRUE.
 #'
-#' @return Invisibly returns a list of dataframes.
+#' @returns Invisibly returns a list of dataframes.
 #'   $scales_by_runs contains a row for each sensitivity run and maps the scaling factors to run ids.
 #'   $full_df is the full match/scale factor used by calc_fram_scaling, and shows the match conditions and scaling used for each run.
 #' @export
 #'
-#' @seealso [sensitivity_exact()], [sensitivity_custom()]
+#' @family Sensitivity
 #'
 #' @examples
 #' \dontrun{
@@ -115,7 +115,7 @@ sensitivity_scaled <- function(fram_db,
   ## if appropriate, copy TAMMs
   if (!is.null(tamm_template) & !is.null(tamm_target_folder)) {
     cli::cli_alert("Making copies of {tamm_template} into {tamm_target_folder}.")
-    copy_tamms(
+    copy_tamm(
       tamm_name = tamm_template,
       target_folder = tamm_target_folder,
       run_id_vec = run_ids
@@ -176,11 +176,13 @@ get_unique_filename <- function(base_name, counter = 1, pad_width = 3) {
 #' @inheritParams sensitivity_scaled
 #' @param exact_values numeric vector of values to exact values to use for sensitivity analyses.
 #'
-#' @return Invisibly returns a list of dataframes.
+#' @returns Invisibly returns a list of dataframes.
 #'   $values_by_run contains a row for each sensitivity run and maps the values used to run ids.
 #'   $full_df is the full match/scale factor used by calc_fram_scaling, and shows the match conditions and scaling used for each run.
 #'   If `cols_to_vary` has length 1, the two dataframes will contain the same information.
 #' @export
+#'
+#' @family Sensitivity
 #'
 #' @examples
 #' \dontrun{
@@ -268,7 +270,7 @@ sensitivity_exact <- function(fram_db,
   ## if appropriate, copy TAMMs
   if (!is.null(tamm_template) & !is.null(tamm_target_folder)) {
     cli::cli_alert("Making copies of {tamm_template} into {tamm_target_folder}.")
-    copy_tamms(
+    copy_tamm(
       tamm_name = tamm_template,
       target_folder = tamm_target_folder,
       run_id_vec = run_ids
@@ -313,10 +315,10 @@ sensitivity_exact <- function(fram_db,
 #' @param scenario_list List of match/replace dataframes as described in documentation of `modify_table()`. If present, list item names are assumed to identify the table to be changed.
 #' @param table_name Name of FRAM table that will be modified for the sensitivity analyses. For list items that are named, be ignored in favor of item name.
 #'
-#' @return Invisibly returns object `scenario_list`, but with list items named with the corresponding RunID.
+#' @returns Invisibly returns object `scenario_list`, but with list items named with the corresponding RunID.
 #' @export
 #'
-#' @seealso [sensitivity_scaled()], [sensitivity_exact()]
+#' @family sensitivity
 #'
 #' @examples
 #' \dontrun{
@@ -390,7 +392,7 @@ sensitivity_custom <- function(fram_db,
   ## if appropriate, copy TAMMs
   if (!is.null(tamm_template) & !is.null(tamm_target_folder)) {
     cli::cli_alert("Making copies of {tamm_template} into {tamm_target_folder}.")
-    copy_tamms(
+    copy_tamm(
       tamm_name = tamm_template,
       target_folder = tamm_target_folder,
       run_id_vec = run_ids

@@ -12,17 +12,10 @@ stock_fate_coho(fram_db, run_id = NULL, units = c("fish", "percentage"))
 
 \item{run_id}{Run ID (optional)}
 
-\item{units}{'fish' or 'percentage'. Percentage is proportion of starting adbundace}
+\item{units}{Should fates be presented in 'fish' or 'percentage'? Percentage is proportion of starting abundance (so not actually a percent, but percent/100).}
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
 Coho flavor of the stock fate function
 }
-\examples{
-\dontrun{
-fram_db |> stock_fate_coho(run_id = 145)
-}
-}
-\seealso{
-\code{\link[=stock_fate]{stock_fate()}}
-}
+\keyword{internal}

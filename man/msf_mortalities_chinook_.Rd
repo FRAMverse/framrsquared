@@ -9,6 +9,9 @@ msf_mortalities_chinook_(fram_db)
 \arguments{
 \item{fram_db}{FRAM database object}
 }
+\value{
+Tibble
+}
 \description{
 Returns a tibble matching the MSF screen report mortalities for Chinook. This is
 specific for Chinook and in most cases \code{\link[=msf_mortalities]{msf_mortalities()}} is preferable.
@@ -20,3 +23,4 @@ specific for Chinook and in most cases \code{\link[=msf_mortalities]{msf_mortali
 \seealso{
 \code{\link[=msf_mortalities]{msf_mortalities()}}, \code{\link[=msf_encounters_chinook_]{msf_encounters_chinook_()}}, \code{\link[=msf_landed_catch_chinook_]{msf_landed_catch_chinook_()}}
 }
+\keyword{internal}

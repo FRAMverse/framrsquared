@@ -9,12 +9,12 @@ validate_species(.data, species = NULL)
 \arguments{
 \item{.data}{Dataframe}
 
-\item{species}{Optional, either "COHO" or "CHINOOK".}
+\item{species}{Optional, either "COHO" or "CHINOOK". Character vector, defaults to NULL}
 }
 \value{
 Character vector "species"
 }
 \description{
-Convenience function to condense code. \verb{filter_*} either uses the "species" attr, or the optional \code{species} argument, and must provide informative errors when both are missing or both are present and mismatch.
+Convenience function to condense code. \verb{filter_*} either uses the "species" attr, or the optional \code{species} argument, and must provide informative errors when both are missing or both are present and mismatch. Uses \code{standardize_species()} to allow multiple specifications for species (e.g., "COHO", "Coho", or "coho").
 }
 \keyword{internal}

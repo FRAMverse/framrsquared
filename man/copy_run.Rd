@@ -3,7 +3,7 @@
 \name{copy_run}
 \alias{copy_run}
 \title{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
-Copies a run a number of times}
+Copies a run any number of times}
 \usage{
 copy_run(
   fram_db,
@@ -28,12 +28,18 @@ copy_run(
 \item{verbose}{Show warning message about run count? Official FRAM is hard-coded to only handle databases with <= 150 runs in them. If \code{TRUE} (default), provides alert when updated database will exceed this.}
 }
 \value{
-Invisibly returns the run ids of the copied runs, for use in other functions.
+Invisibly returns the run ids of the new runs.
 }
 \description{
+Useful for setting up scenario modeling or sensitivity analyses. If also working with TAMMs, consider \code{\link[=make_batch_runs]{make_batch_runs()}} to combine copying run and TAMMs.
+}
+\details{
 FRAM is stored in an access database; these have hard size limits of 2GB. Chinook and Coho are expected to reach this limit with ~540 runs. This function includes a failsafe to prevent databases from exceeding 500 runs. This can be overridden with optional \code{force_many_runs} argument.
 }
 \examples{
 \dontrun{framdb |> copy_run(target_run = 141, times = 1)}
 
+}
+\seealso{
+\code{\link[=copy_tamm]{copy_tamm()}}, \code{\link[=make_batch_runs]{make_batch_runs()}}
 }

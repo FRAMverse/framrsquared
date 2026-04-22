@@ -15,10 +15,13 @@ label_stocks_db(.data, fram_db)
 \code{.data} with additional column, \verb{$stock_label}
 }
 \description{
-Like \code{\link[=label_stocks]{label_stocks()}}, but uses an active FRAM database to label stocks, rather than
-the look-up table present in the framrosetta package. Primarily used in \code{fetch_table()},
-useful if working with databases with unusual stock or fishery tables.
+Like \code{\link[framrosetta:label_stocks]{framrosetta::label_stocks()}}, but uses an active FRAM database to label stocks, rather than
+the look-up table present in the framrosetta package. Primarily used in \code{fetch_table()}, robust to changes in base period.
 }
 \seealso{
-\code{\link[=label_stocks]{label_stocks()}}, \code{\link[=label_fisheries_db]{label_fisheries_db()}}
+Other labelers: 
+\code{\link{label_fisheries_db}()},
+\code{\link{label_flags}()},
+\code{\link{label_timesteps_db}()}
 }
+\concept{labelers}

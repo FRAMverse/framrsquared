@@ -30,7 +30,7 @@ msp_mortality = function(fram_db, run_id = NULL){
 
   msp_run_id <- runid |>
     dplyr::inner_join(msp, by = 'base_period_id', relationship = 'many-to-many') |>
-    dplyr::select(.data$run_id, .data$fishery_id, .data$model_stock_proportion)
+    dplyr::select("run_id", "fishery_id", "model_stock_proportion")
 
   if(!is.null(run_id) &&
      run_id %in% msp_run_id$run_id &&
@@ -47,7 +47,7 @@ msp_mortality = function(fram_db, run_id = NULL){
         \(x) x / .data$model_stock_proportion
       )
     ) |>
-    dplyr::select(-.data$model_stock_proportion) |>
+    dplyr::select(-"model_stock_proportion") |>
     `attr<-`('species', fram_db$fram_db_species)
 
   if (is.null(run_id)) {

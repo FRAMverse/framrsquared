@@ -11,6 +11,9 @@ remove_run(fram_db, run_id)
 
 \item{run_id}{FRAM run ID or IDs to be deleted}
 }
+\value{
+Nothing.
+}
 \description{
 Removes a run in a FRAM database
 }

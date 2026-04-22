@@ -12,9 +12,9 @@ fetch_table_(fram_db, table_name = NULL, warn = TRUE)
 \arguments{
 \item{fram_db}{FRAM database object}
 
-\item{table_name}{Atomic character of name of table to be fetched. If not given, a list of options will be printed.}
+\item{table_name}{Atomic character of name of table to be fetched. Optional; if not provided, a list of available table names will be printed.}
 
-\item{label}{Logical, defaults to TRUE. Add human-readable columns for flags, fisheries, stocks? Based on the Stock and Fishery tables of the current database.}
+\item{label}{Add human-readable columns for flags, fisheries, stocks? Based on the Stock and Fishery tables of the current database. Logical, defaults to TRUE.}
 
 \item{warn}{Print a warning when fetching BackwardsFRAM table from a Chinook database? Logical, defaults to \code{TRUE}.}
 }
@@ -30,7 +30,8 @@ Fetch a FRAM database table in R-friendly form (tibble with clean names). If no 
 \examples{
 \dontrun{
 fram_db <- connect_fram_db("validate2024.mdb")
-fram_db |> fetch_table('Mortality')}
+fram_db |> fetch_table('Mortality')
 disconnect_fram_db(fram_db)
+}
 
 }

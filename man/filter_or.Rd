@@ -2,26 +2,28 @@
 % Please edit documentation in R/filters.R
 \name{filter_or}
 \alias{filter_or}
-\title{Filters a dataframe to Oregon fisheries. Will
-automatically detect whether it's working with a Chinook or Coho
-dataset if the tables were generated within this package. \code{.data} must have
-a \code{fishery_id} column name.}
+\title{Filters a dataframe to Oregon (OR) fisheries.}
 \usage{
 filter_or(.data, species = NULL, return_ids = FALSE)
 }
 \arguments{
-\item{.data}{Dataframe containing \code{fishery_id} column. Commonly, output from \code{fetch_table()}.}
+\item{.data}{Dataframe containing \code{fishery_id} column. Commonly, output from
+\code{fetch_table()}.}
 
-\item{species}{Optional argument to identify species if \code{.data} doesn't already. If provided, must be "COHO" or "CHINOOK" or variations thereof. Defaults to \code{NULL}}
+\item{species}{Optional argument to identify species if \code{.data} doesn't
+already. If provided, must be "COHO" or "CHINOOK" or variations thereof.
+Defaults to \code{NULL}}
 
-\item{return_ids}{Return the fishery ids used in filtering rather than a filtered dataframe?
-Logical, defaults to FALSE}
+\item{return_ids}{Return the fishery ids used in filtering rather than a
+filtered dataframe? Logical, defaults to FALSE}
+}
+\value{
+A dataframe filtered based on a \code{fishery_id} column. If \code{return_ids = TRUE}, instead returns numeric vector of the fishery IDs used to filter.
 }
 \description{
-Filters a dataframe to Oregon fisheries. Will
-automatically detect whether it's working with a Chinook or Coho
-dataset if the tables were generated within this package. \code{.data} must have
-a \code{fishery_id} column name.
+Will automatically detect whether it's working with a Chinook or Coho dataset
+if the tables were generated within this package. \code{.data} must have a
+\code{fishery_id} column name.
 }
 \examples{
 framrosetta::fishery_chinook_fram |> filter_or(species = "CHINOOK")

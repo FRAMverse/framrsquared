@@ -17,7 +17,7 @@ compare_fishery_inputs(fram_db, run_ids, tolerance = 0.01, verbose = TRUE)
 }
 \value{
 All fishery x timesteps in which the fishery inputs changed by at least (\code{tolerance} x 100) \% between the specified runs.
-\verb{$fishery_id}, \verb{$fishery_label}, and \verb{$timestep} identify the fishery x timestep, \verb{$parameter} identifies which parameter changed (.e.g, quota, msf_quota, etc.). \verb{$original} and \verb{$comparison} show the values from the first and second runs, respectively. \verb{$prop_dff} shows the proportional change from the first to second run (e.g., 0.16 = 16\% increase).
+\verb{$fishery_id}, \verb{$fishery_label}, and \verb{$timestep} identify the fishery x timestep, \verb{$parameter} identifies which parameter changed (.e.g, quota, msf_quota, etc.). \verb{$original} and \verb{$comparison} show the values from the first and second runs, respectively. \verb{$prop_diff} shows the proportional change from the first to second run (e.g., 0.16 = 16\% increase).
 }
 \description{
 Compares the fishery inputs of two runs

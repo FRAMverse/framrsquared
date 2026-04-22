@@ -2,21 +2,23 @@
 % Please edit documentation in R/parse_terminal.R
 \name{terminal_stocks}
 \alias{terminal_stocks}
-\title{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
-List terminal stock information}
+\title{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} List terminal stock information}
 \usage{
 terminal_stocks(fram_db, species = NULL)
 }
 \arguments{
 \item{fram_db}{Fram database object}
 
-\item{species}{"COHO" or "CHINOOK". Optional, defaults to the database species. Provide this only if fram_db connects to a database with both Chinook and Coho information. And try to avoid that -- those databases are sketchy to work with.}
+\item{species}{"COHO" or "CHINOOK". Optional, defaults to the database species. Provide this only
+if fram_db connects to a database with both Chinook and Coho information. And try to avoid that
+-- those databases are sketchy to work with.}
 }
 \value{
-taa of taa stocks and timesteps
+Tibble of taa stocks and timesteps
 }
 \description{
-For each TAA, lists the associated FRAM stocks and timesteps.
+For each TAA group, lists the associated FRAM stocks and timesteps. Intended to support working
+with bios for QAQC.
 }
 \examples{
 \dontrun{fram_db |> terminal_stocks()}

@@ -18,12 +18,18 @@ plot_stock_comp(fram_db, run_id, fishery_id, time_step, group_threshold = 0.01)
 \item{group_threshold}{numeric, Stock percentages below this
 number will be grouped. Default is 1\%, setting to zero will turn grouping off}
 }
+\value{
+ggplot object
+}
 \description{
-Produces a stock composition chart, low frequency stocks are
+Produces a stock composition chart. Low frequency stocks are
 grouped into geographic area.
 }
 \examples{
 \dontrun{
 fram_db |> stock_comp(run_id = 132)
 }
+}
+\seealso{
+\code{\link[=calculate_stock_comp]{calculate_stock_comp()}}
 }

@@ -9,6 +9,9 @@ msf_landed_catch_chinook_(fram_db)
 \arguments{
 \item{fram_db}{FRAM database object}
 }
+\value{
+tibble
+}
 \description{
 Returns a tibble matching the MSF screen report landed catch for Chinook.
 This is specific for Chinook and in most cases \code{\link[=msf_landed_catch]{msf_landed_catch()}} is preferable.
@@ -20,3 +23,4 @@ This is specific for Chinook and in most cases \code{\link[=msf_landed_catch]{ms
 \seealso{
 \code{\link[=msf_landed_catch]{msf_landed_catch()}}, \code{\link[=msf_mortalities_chinook_]{msf_mortalities_chinook_()}}, \code{\link[=msf_encounters_chinook_]{msf_encounters_chinook_()}}
 }
+\keyword{internal}

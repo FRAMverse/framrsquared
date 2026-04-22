@@ -38,3 +38,4 @@ frs_stylecheck_assignment("R/copy.R")
 frs_stylecheck_snakecase("R/copy.R")
 }
 }
+\keyword{internal}

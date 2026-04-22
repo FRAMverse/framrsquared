@@ -16,3 +16,4 @@ Identifies the FRAM database type - Full or Transfer
 \dontrun{fram_database_type(con)}
 
 }
+\keyword{internal}

@@ -39,5 +39,5 @@ Intended to streamline using the multi-run fork of FRAM.
 Primarily for use internally, in the sensitivity analysis functions
 }
 \seealso{
-\code{\link[=sensitivity_exact]{sensitivity_exact()}}, \code{\link[=sensitivity_scaled]{sensitivity_scaled()}}, \code{\link[=sensitivity_custom]{sensitivity_custom()}}
+\code{\link[=copy_tamm]{copy_tamm()}}, \code{\link[=copy_run]{copy_run()}}
 }

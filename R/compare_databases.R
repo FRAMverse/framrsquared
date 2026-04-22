@@ -215,12 +215,12 @@ compare_databases <-  function(fram_db_1,
     ## Also removing the "joint" bkfram stocks, as their inclusion makes it messy to look at anything else.
     if (cur_table == "BackwardsFRAM" & species_cur == "CHINOOK") {
       tabs_prod[[cur_table]] <- tabs_prod[[cur_table]] |>
-        dplyr::rename(bk_stock_id = .data$stock_id) |>
+        dplyr::rename(bk_stock_id = "stock_id") |>
         dplyr::left_join(framrosetta::bk_lookupfun_chin(stock_max) |> dplyr::select("bk_stock_id", "stock_id"),
                          by = "bk_stock_id") |>
         dplyr::filter(!is.na(.data$stock_id))
       tabs_fork[[cur_table]] <- tabs_fork[[cur_table]] |>
-        dplyr::rename(bk_stock_id = .data$stock_id) |>
+        dplyr::rename(bk_stock_id = "stock_id") |>
         dplyr::left_join(framrosetta::bk_lookupfun_chin(stock_max) |> dplyr::select("bk_stock_id", "stock_id"),
                          by = "bk_stock_id") |>
         dplyr::filter(!is.na(.data$stock_id))
@@ -248,7 +248,7 @@ compare_databases <-  function(fram_db_1,
       dplyr::filter(!is.na(.data$stock_id)) |>
       tidyr::pivot_longer(dplyr::starts_with("target_esc_age")) |>
       dplyr::mutate(age = as.numeric(gsub("target_esc_age", "", .data$name))) |>
-      dplyr::rename(target_esc = .data$value) |>
+      dplyr::rename(target_esc = "value") |>
       dplyr::select(-dplyr::any_of(c("name", "comment", "bk_stock_id", "target_flag")))
 
 
@@ -257,7 +257,7 @@ compare_databases <-  function(fram_db_1,
       dplyr::filter(!is.na(.data$stock_id)) |>
       tidyr::pivot_longer(dplyr::starts_with("target_esc_age")) |>
       dplyr::mutate(age = as.numeric(gsub("target_esc_age", "",.data$name))) |>
-      dplyr::rename(target_esc = .data$value) |>
+      dplyr::rename(target_esc = "value") |>
       dplyr::select(-dplyr::any_of(c("name", "comment", "bk_stock_id", "target_flag")))
 
     df_comp <- dplyr::full_join(

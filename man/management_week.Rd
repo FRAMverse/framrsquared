@@ -2,19 +2,21 @@
 % Please edit documentation in R/management_week.R
 \name{management_week}
 \alias{management_week}
-\title{Vectorized approach to calculating the management week, returns
-an integer}
+\title{Vectorized approach to calculating the management week}
 \usage{
 management_week(date)
 }
 \arguments{
-\item{date}{A column with dates}
+\item{date}{An atomic or vector of dates}
+}
+\value{
+a numeric vector with same length as argument \code{date}
 }
 \description{
-Vectorized approach to calculating the management week, returns
-an integer
+Vectorized approach to calculating the management week
 }
 \examples{
+management_week(as.Date(Sys.Date()))
 \dontrun{
 data_fram |>
   mutate(mngmt_week = management_week(date_field))

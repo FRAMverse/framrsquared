@@ -14,6 +14,12 @@ provides the % CNR on the plot. Setting optional argument `split_cnr` to `TRUE` 
 - Added `filter_nr_flags()` to apply NAs to non-retention dataframes based on the non_retention_flag column. Analogous to `filter_flags()`
 - Added `check_bp_coverage()`, which identifies if fishery inputs or CNR inputs contain fishery x time steps that are not represented in the base period. This is now called in compare_runs()
 - Added better testing framework, linked to external testing database directory. Only affects developers who want to run the unit tests -- see the "Contribute" section of Readme for details on setup. Convenience connection functions are included in `tests/testthat/helper-dir.R", but will only work if the testing database directory is set up. 
+-`filter_flag()` renamed to `na_scalers_from_flag()` and `filter_nr_flag()` renamed to `na_non_retention_from_flag()` for clarity (they're not actually filtering, but turning unused scalers or cnr params to NAs) and to make package naming more consistent (All other `filter_*()` functions filter a dataframe based on `$fishery_id` or `$stock_id`)
+- `NR_flag_translate()` renamed to `translate_nr_flag()` for consistency (no capitalization, starts with verb).
+- `scalers_flag_translate()` renamed to `translate_scalers_flag()` for consistency (starts with verb).
+- `copy_tamms()` renamed to `copy_tamm()` to better reflect what it does and to align with `copy_run()`.
+- Overhaul of internal usage functions. Functions designed for internal use that are not exported are now listed with `@keywords internal` to enable documentation of help Rds (e.g., `validate_numeric()`. Functions that were previously intended for internal use but were exported (e.g., `provide_table_names()`) are still exported but have been given `@keywords internal`. This means they are exposed to users and will continue to function in existing scripts/packages, but aren't included in lists of functions intended for casual users.
+- `calculate_stock_comp()` -- new function that does the calculations for `plot_stock_comp()`. Splitting these makes it easier to do other work with stock compositions, like making tables.
 
 # framrsquared 0.8.1
 

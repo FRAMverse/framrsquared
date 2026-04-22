@@ -4,15 +4,26 @@
 \alias{validate_fishery_ids}
 \title{Convenience function to check fishery input}
 \usage{
-validate_fishery_ids(fram_db, fishery_id, call = rlang::caller_env())
+validate_fishery_ids(
+  fram_db,
+  fishery_id,
+  n = NULL,
+  allow_null = FALSE,
+  call = rlang::caller_env()
+)
 }
 \arguments{
 \item{fram_db}{FRAM database object}
 
 \item{fishery_id}{one or more fishery_ids}
 
+\item{n}{Required number of run ids}
+
+\item{allow_null}{Should this function treat a \code{NULL} input as valid? Logical, defaults to TRUE}
+
 \item{call}{internal use: identify name of function that called this function (for informative error message)}
 }
 \description{
 No error checking for transfer databases
 }
+\keyword{internal}

@@ -11,13 +11,22 @@ mortality_scalers(fram_db, run_id, stock_id, msp = FALSE)
 
 \item{run_id}{Run ID}
 
-\item{stock_id}{A focal stock or stocks}
+\item{stock_id}{A focal stock or stocks.}
 
-\item{msp}{Do we use MSP expansion? Logical, defaults to FALSE. Only relevant for Chinook}
+\item{msp}{Should we use MSP (Model Stock Proportion) expansion? Logical, defaults to FALSE. Only
+relevant for Chinook.}
+}
+\value{
+Tibble identify run, fishery, and timestep. \verb{$fishery_mortality} gives the total
+mortalities in each fishery x timestep, \verb{$stock_mortality} gives the total mortalities of the
+focal stock or stocks, and \verb{$stock_mortality_ratio} gives the fraction of fishery mortalities
+that can be attributed to the focal stock or stocks.
 }
 \description{
-Supports guestimating the impact of making changes to a fishery on a particular stock (or group of stocks)
-by multiplying its mortalities by the \code{stock_mortality_ratio} produced by \code{mortality_scalers()}.
+Supports guestimating the impact of making changes to a fishery on a particular stock (or group
+of stocks) by finding the ratio of mortalities in each fishery that can be attributed to the
+focal stock or stocks. Accounts for \emph{all} sources of mortality (e.g., includes non-retention,
+dropoff, etc). Chinook runs are returned in units of AEQ.
 }
 \examples{
 \dontrun{fram_db |> mortality_scalers(run_id = 101, stock_id = c(17:18))}
