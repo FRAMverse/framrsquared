@@ -22,17 +22,17 @@ aeq_mortality <- function(fram_db, run_id = NULL, msp = TRUE, label = TRUE) {
 
   validate_fram_db(fram_db, db_type = 'full', db_species = 'CHINOOK')
   if (!is.null(run_id) && (!all(is.numeric(run_id)))) {
-    cli::cli_abort("`run_id` must be NULL or a numeric")
+    fram_abort("`run_id` must be NULL or a numeric")
   }
   if (is.numeric(run_id) && !is.null(run_id)) {
     validate_run_id(fram_db, run_id)
   }
   if (!is.logical(msp) || length(msp)>1) {
-    cli::cli_abort("`msp` must be logical.")
+    fram_abort("`msp` must be logical.")
   }
 
   if (fram_db$fram_db_species != "CHINOOK") {
-    cli::cli_abort("AEQ mortality can only be used with Chinook")
+    fram_abort("AEQ mortality can only be used with Chinook")
   }
 
   if(msp){

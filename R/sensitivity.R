@@ -69,7 +69,7 @@ sensitivity_scaled <- function(fram_db,
   colnames_available <- fetch_table_colnames(fram_db, table_name)
 
   if (!all(colnames_provided %in% colnames_available)) {
-    cli::cli_abort(c("Column names of `match_df` must match columns of table `table_name`!",
+    fram_abort(c("Column names of `match_df` must match columns of table `table_name`!",
       "The following do not match: {setdiff(colnames_provided, colnames_available)}.",
       "i" = "Did you use framrsquared style naming (snake_case) instead of FRAM db style naming (CamelCase)?",
       "i" = "Did you identify the right table with `table_name`?"
@@ -77,18 +77,18 @@ sensitivity_scaled <- function(fram_db,
   }
   ## check scale_values are numeric, positive
   if (!is.numeric(scale_values)) {
-    cli::cli_abort("`scale_values` must be a numeric vector!")
+    fram_abort("`scale_values` must be a numeric vector!")
   }
   if (any(scale_values < 0)) {
-    cli::cli_abort("`scale_values` must not include negative values!")
+    fram_abort("`scale_values` must not include negative values!")
   }
   ## check that tamm_template exists
   if (!file.exists(tamm_template)) {
-    cli::cli_abort("`tamm_template` does not exist! Make sure argument includes full file path. ({{here}} package makes it easy to convert relative to absolute filepath)")
+    fram_abort("`tamm_template` does not exist! Make sure argument includes full file path. ({{here}} package makes it easy to convert relative to absolute filepath)")
   }
   ## check that both or neither TAMM object exists
   if (is.null(tamm_template) + is.null(tamm_target_folder) == 1) {
-    cli::cli_abort("TAMM copying only works if both `tamm_template` and `tamm_target_folder` are provided; only one of those arguments is defined!")
+    fram_abort("TAMM copying only works if both `tamm_template` and `tamm_target_folder` are provided; only one of those arguments is defined!")
   }
 
   validate_character(label, n = 1)
@@ -227,7 +227,7 @@ sensitivity_exact <- function(fram_db,
   colnames_available <- fetch_table_colnames(fram_db, table_name)
 
   if (!all(colnames_provided %in% colnames_available)) {
-    cli::cli_abort(c("Column names of `match_df` must match columns of table `table_name`!",
+    fram_abort(c("Column names of `match_df` must match columns of table `table_name`!",
       "The following do not match: {setdiff(colnames_provided, colnames_available)}.",
       "i" = "Did you use framrsquared style naming (snake_case) instead of FRAM db style naming (CamelCase)?",
       "i" = "Did you identify the right table with `table_name`?"
@@ -235,15 +235,15 @@ sensitivity_exact <- function(fram_db,
   }
   ## check exact_values are numeric
   if (!is.numeric(exact_values)) {
-    cli::cli_abort("`exact_values` must be a numeric vector!")
+    fram_abort("`exact_values` must be a numeric vector!")
   }
   ## check that tamm_template exists
   if (!file.exists(tamm_template)) {
-    cli::cli_abort("`tamm_template` does not exist! Make sure argument includes full file path. ({{here}} package makes it easy to convert relative to absolute filepath)")
+    fram_abort("`tamm_template` does not exist! Make sure argument includes full file path. ({{here}} package makes it easy to convert relative to absolute filepath)")
   }
   ## check that both or neither TAMM object exists
   if (is.null(tamm_template) + is.null(tamm_target_folder) == 1) {
-    cli::cli_abort("TAMM copying only works if both `tamm_template` and `tamm_target_folder` are provided; only one of those arguments is defined!")
+    fram_abort("TAMM copying only works if both `tamm_template` and `tamm_target_folder` are provided; only one of those arguments is defined!")
   }
 
 
@@ -362,16 +362,16 @@ sensitivity_custom <- function(fram_db,
   validate_table(fram_db, table_name)
   ## check that scenario_list is at least the right structure
   if (!all(purrr::map_lgl(scenario_list, is.data.frame))) {
-    cli::cli_abort("`scenario_list` must contain match/replace dataframes or tibbles!")
+    fram_abort("`scenario_list` must contain match/replace dataframes or tibbles!")
   }
 
   ## check that tamm_template exists
   if (!file.exists(tamm_template)) {
-    cli::cli_abort("`tamm_template` does not exist! Make sure argument includes full file path. ({{here}} package makes it easy to convert relative to absolute filepath)")
+    fram_abort("`tamm_template` does not exist! Make sure argument includes full file path. ({{here}} package makes it easy to convert relative to absolute filepath)")
   }
   ## check that both or neither TAMM object exists
   if (is.null(tamm_template) + is.null(tamm_target_folder) == 1) {
-    cli::cli_abort("TAMM copying only works if both `tamm_template` and `tamm_target_folder` are provided; only one of those arguments is defined!")
+    fram_abort("TAMM copying only works if both `tamm_template` and `tamm_target_folder` are provided; only one of those arguments is defined!")
   }
 
 

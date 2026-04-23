@@ -49,7 +49,7 @@ statistical_week.character <- function(date) {
 
   } else {
 
-    cli::cli_abort('Date is in an ambiguous format')
+    fram_abort('Date is in an ambiguous format')
 
   }
 

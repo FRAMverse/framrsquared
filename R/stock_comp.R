@@ -67,13 +67,13 @@ calculate_stock_comp <- function(fram_db, run_id, fishery_id, time_step, group_t
   validate_fishery_ids(fram_db, fishery_id)
   validate_numeric(time_step)
   if(! time_step %in% 1:5){
-    cli::cli_abort("`time_step` must be a valid timestep (1-4 for Chinook, 1-5 for Coho)")
+    fram_abort("`time_step` must be a valid timestep (1-4 for Chinook, 1-5 for Coho)")
   }
   validate_numeric(group_threshold, 1)
 
 
   if(!rlang::is_installed("forcats")) {
-    cli::cli_abort('Please install the {.pkg forcats} package to use this funciton.')
+    fram_abort('Please install the {.pkg forcats} package to use this funciton.')
   }
   # pull data
   mort <- fram_db |>

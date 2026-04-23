@@ -48,7 +48,7 @@ filter_sport <- function(.data, species = NULL, return_ids = FALSE) {
       189, 190, 191, 192, 193
     )
   } else {
-    cli::cli_abort('`species` must be "COHO" or "CHINOOK", not "{species}".')
+    fram_abort('`species` must be "COHO" or "CHINOOK", not "{species}".')
   }
 
   if(return_ids){
@@ -103,7 +103,7 @@ filter_net <- function(.data, species = NULL, return_ids = FALSE) {
       189, 190, 191, 192, 193
     )
   } else {
-    cli::cli_abort('`species` must be "COHO" or "CHINOOK", not "{species}".')
+    fram_abort('`species` must be "COHO" or "CHINOOK", not "{species}".')
   }
 
   if(return_ids){
@@ -143,7 +143,7 @@ filter_puget_sound <- function(.data, species = NULL, return_ids = FALSE) {
   } else if (species == "COHO") {
     fishery_vec = c(76:166)
   } else {
-    cli::cli_abort('`species` must be "COHO" or "CHINOOK", not "{species}".')
+    fram_abort('`species` must be "COHO" or "CHINOOK", not "{species}".')
   }
 
   if(return_ids){
@@ -182,7 +182,7 @@ filter_wa <- function(.data, species = NULL, return_ids = FALSE) {
   } else if (species == "COHO") {
     fishery_vec = c(23:166)
   } else {
-    cli::cli_abort('`species` must be "COHO" or "CHINOOK", not "{species}".')
+    fram_abort('`species` must be "COHO" or "CHINOOK", not "{species}".')
   }
 
   if(return_ids){
@@ -220,7 +220,7 @@ filter_bc <- function(.data, species = NULL, return_ids = FALSE) {
   } else if (species == "COHO") {
     fishery_vec = c(167:193)
   } else {
-    cli::cli_abort('`species` must be "COHO" or "CHINOOK", not "{species}".')
+    fram_abort('`species` must be "COHO" or "CHINOOK", not "{species}".')
   }
 
   if(return_ids){
@@ -259,7 +259,7 @@ filter_ak <- function(.data, species = NULL, return_ids = FALSE) {
   } else if (species == "COHO") {
     fishery_vec = c(194:198)
   } else {
-    cli::cli_abort('`species` must be "COHO" or "CHINOOK", not "{species}".')
+    fram_abort('`species` must be "COHO" or "CHINOOK", not "{species}".')
   }
 
   if(return_ids){
@@ -299,7 +299,7 @@ filter_ca <- function(.data, species = NULL, return_ids = FALSE) {
   } else if (species == "COHO") {
     fishery_vec =  c(1:8)
   } else {
-    cli::cli_abort('`species` must be "COHO" or "CHINOOK", not "{species}".')
+    fram_abort('`species` must be "COHO" or "CHINOOK", not "{species}".')
   }
 
   if(return_ids){
@@ -338,7 +338,7 @@ filter_or <- function(.data, species = NULL, return_ids = FALSE) {
   } else if (species == "COHO") {
     fishery_vec = c(5:32)
   } else {
-    cli::cli_abort('`species` must be "COHO" or "CHINOOK", not "{species}".')
+    fram_abort('`species` must be "COHO" or "CHINOOK", not "{species}".')
   }
 
   if(return_ids){
@@ -377,7 +377,7 @@ filter_coast <- function(.data, species = NULL, return_ids = FALSE) {
   } else if (species == "COHO") {
     fishery_vec =  c(1:22, 33:75)
   } else {
-    cli::cli_abort('`species` must be "COHO" or "CHINOOK", not "{species}".')
+    fram_abort('`species` must be "COHO" or "CHINOOK", not "{species}".')
   }
 
   if(return_ids){
@@ -422,7 +422,7 @@ filter_marine <- function(.data, species = NULL, return_ids = FALSE) {
       170:198
     )
   } else {
-    cli::cli_abort('`species` must be "COHO" or "CHINOOK", not "{species}".')
+    fram_abort('`species` must be "COHO" or "CHINOOK", not "{species}".')
   }
 
   if(return_ids){
@@ -461,7 +461,7 @@ filter_commercial_wa_nt <- function(.data, species = NULL, return_ids = FALSE) {
   } else if (species == "COHO") {
     fishery_vec =  c(80, 82, 87, 96, 101, 109, 111, 119, 121, 123, 130, 132, 137, 139, 141, 143, 145, 153, 155, 157, 159)
   } else {
-    cli::cli_abort('`species` must be "COHO" or "CHINOOK", not "{species}".')
+    fram_abort('`species` must be "COHO" or "CHINOOK", not "{species}".')
   }
 
   if(return_ids){
@@ -496,7 +496,7 @@ filter_stt <- function(.data, species = NULL, return_ids = FALSE) {
   species <- validate_species(.data, species)
 
   if (species == "CHINOOK") {
-    cli::cli_abort("`filter_stt` not defined for Chinook")
+    fram_abort("`filter_stt` not defined for Chinook")
   } else if (species == "COHO") {
     fishery_vec = c(33, 37, 40, 41, # Ocean Sport
                     34, 35, 38, 42, # NT Troll
@@ -504,7 +504,7 @@ filter_stt <- function(.data, species = NULL, return_ids = FALSE) {
                     17, 18, 19, 29, 21, 22 # Oregon fisheries
     )
   } else {
-    cli::cli_abort('`species` must be "COHO" or "CHINOOK", not "{species}".')
+    fram_abort('`species` must be "COHO" or "CHINOOK", not "{species}".')
   }
 
   if(return_ids){
@@ -536,14 +536,14 @@ filter_stt_nt <-  function(.data, species = NULL, return_ids = FALSE) {
   species <- validate_species(.data, species)
 
   if (species == "CHINOOK") {
-    cli::cli_abort("`filter_stt_nt` not defined for Chinook")
+    fram_abort("`filter_stt_nt` not defined for Chinook")
   } else if (species == "COHO") {
     fishery_vec = c(33, 37, 40, 41, # Ocean Sport
                     34, 35, 38, 42, # NT Troll
                     17, 18, 19, 29, 21, 22 # Oregon fisheries
     )
   } else {
-    cli::cli_abort('`species` must be "COHO" or "CHINOOK", not "{species}".')
+    fram_abort('`species` must be "COHO" or "CHINOOK", not "{species}".')
   }
 
   if(return_ids){
@@ -581,19 +581,19 @@ filter_coho_stocks <- function(.data,
                                return_ids = FALSE){
 
   if (!"stock_id" %in% colnames(.data)) {
-    cli::cli_abort("stock_id column must be present in dataframe.")
+    fram_abort("stock_id column must be present in dataframe.")
   }
 
   species <- validate_species(.data, species)
 
   if (species == "CHINOOK") {
-    cli::cli_abort("This function not defined for Chinook")
+    fram_abort("This function not defined for Chinook")
   } else if (species == "COHO") {
     stock_vec = coho_stock_marlene |>
       dplyr::filter(.data$stock_type %in% filter_criterion) |>
       dplyr::pull(.data$stock_id)
   } else {
-    cli::cli_abort('`species` must be "COHO" or "CHINOOK", not "{species}".')
+    fram_abort('`species` must be "COHO" or "CHINOOK", not "{species}".')
   }
 
   if(return_ids){

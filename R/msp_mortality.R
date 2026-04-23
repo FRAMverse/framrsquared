@@ -35,7 +35,7 @@ msp_mortality = function(fram_db, run_id = NULL){
   if(!is.null(run_id) &&
      run_id %in% msp_run_id$run_id &&
      !(run_id %in% unique(mortality$run_id))){
-    cli::cli_abort("Run_id must be represented in Mortality table. Has this FRAM run been run? Run IDs available: {.val {unique(mortality$run_id)}}.")
+    fram_abort("Run_id must be represented in Mortality table. Has this FRAM run been run? Run IDs available: {.val {unique(mortality$run_id)}}.")
   }
 
   msp_mort <- mortality |>

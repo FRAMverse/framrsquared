@@ -18,7 +18,7 @@ translate_nr_flag = function(vec) {
   validate_numeric(vec)
 
   if(!all(vec %in% 0:4)){
-    cli::cli_abort("input includes flags not matching non-retention flags")
+    fram_abort("input includes flags not matching non-retention flags")
   }
 
   dplyr::case_match(
@@ -51,7 +51,7 @@ translate_scalers_flag = function(vec) {
   validate_numeric(vec)
 
   if(!all(vec %in% c(0, 1, 2, 7, 8, 17, 18, 27, 28))){
-    cli::cli_abort("input includes flags not matching non-retention flags")
+    fram_abort("input includes flags not matching non-retention flags")
   }
 
   dplyr::case_match(
@@ -97,7 +97,7 @@ na_scalers_from_flag <- function(.data){
   species = attr(.data, "species")
   if(!all(c("fishery_scale_factor", "msf_fishery_scale_factor",
             "quota", "msf_quota") %in% names(.data))){
-    cli::cli_abort("Input is not a fishery scaler dataframe.")
+    fram_abort("Input is not a fishery scaler dataframe.")
   }
   res <- .data |>
     dplyr::mutate(
@@ -139,7 +139,7 @@ na_non_retention_from_flag <- function(.data) {
   species = attr(.data, "species")
   if(!all(c("non_retention_flag", "cnr_input1",
             "cnr_input2", "cnr_input3", "cnr_input4") %in% names(.data))){
-    cli::cli_abort("Input is not a non-retention dataframe.")
+    fram_abort("Input is not a non-retention dataframe.")
   }
 
   if(species == "COHO"){
@@ -164,7 +164,7 @@ na_non_retention_from_flag <- function(.data) {
                                     NA)
       )
   } else {
-    cli::cli_abort("Species must be 'COHO' or 'CHINOOK'!")
+    fram_abort("Species must be 'COHO' or 'CHINOOK'!")
   }
   attr(res, "species") <- species
   return(res)

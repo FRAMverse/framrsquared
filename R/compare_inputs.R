@@ -87,7 +87,7 @@ compare_sl_ratio <- function(fram_db, run_ids){
   validate_fram_db(fram_db)
   validate_run_id(fram_db, run_ids, n = 2)
   validate_same_bp(fram_db, run_ids)
-  if(fram_db$fram_db_species != "CHINOOK"){cli::cli_abort('Database must be a Chinook database.')}
+  if(fram_db$fram_db_species != "CHINOOK"){fram_abort('Database must be a Chinook database.')}
   # abort if do have two run ids
 
   sl_ratio <- fram_db |>
@@ -228,7 +228,7 @@ compare_recruits <- function(fram_db, run_ids, tolerance = .01, verbose = TRUE){
   validate_flag(verbose)
 
   if(tolerance < 0 | tolerance > 1){
-    cli::cli_abort('`tolerance` must be a numeric between 0 and 1.')
+    fram_abort('`tolerance` must be a numeric between 0 and 1.')
   }
 
   runs <- fram_db |>
@@ -296,7 +296,7 @@ compare_fishery_inputs <- function(fram_db, run_ids, tolerance = .01, verbose = 
   validate_same_bp(fram_db, run_ids)
   validate_numeric(tolerance, n = 1)
   if(tolerance < 0 | tolerance > 1){
-    cli::cli_abort('`tolerance` must be a numeric with a value from 0 to 1')
+    fram_abort('`tolerance` must be a numeric with a value from 0 to 1')
   }
   validate_flag(verbose)
 
@@ -523,7 +523,7 @@ compare_stock_fishery_rate_scalers <- function(fram_db, run_ids){
   validate_same_bp(fram_db, run_ids)
 
   if(fram_db$fram_db_species == "CHINOOK"){
-    cli::cli_abort("Fishery rate scalers are only relevant for Coho, and this is a Chinook database.")
+    fram_abort("Fishery rate scalers are only relevant for Coho, and this is a Chinook database.")
   }
 
   runs_lut <- data.frame(
@@ -541,7 +541,7 @@ compare_stock_fishery_rate_scalers <- function(fram_db, run_ids){
                   "stock_fishery_rate_scaler")
 
   if(!all(run_ids %in% sfrs$run_id)){
-    cli::cli_abort(paste0("One or more runs in `run_ids` is not defined in the StockFisheryRateScaler table. Available runs:\n",
+    fram_abort(paste0("One or more runs in `run_ids` is not defined in the StockFisheryRateScaler table. Available runs:\n",
                           paste(sort(unique(sfrs$run_id)), collapse = ", ")))
   }
 
@@ -628,7 +628,7 @@ compare_runs_ <- function(fram_db, run_ids, tolerance = .01){
   validate_same_bp(fram_db, run_ids)
   validate_numeric(tolerance, n = 1)
   if(tolerance < 0 | tolerance > 1){
-    cli::cli_abort('`tolerance` must be a numeric between 0 and 1')
+    fram_abort('`tolerance` must be a numeric between 0 and 1')
   }
 
   runs <- fram_db |>
@@ -643,7 +643,7 @@ compare_runs_ <- function(fram_db, run_ids, tolerance = .01){
     dplyr::pull(.data$run_name)
 
   if(base_run_name == new_run_name){
-    cli::cli_abort("Both runs named {new_run_name}; function will not work unless runs have different names. Recommend renaming one using {.kbd FRAM} > {.kbd FRAM Utilities} > {.kbd Edit Model Run Details}.")
+    fram_abort("Both runs named {new_run_name}; function will not work unless runs have different names. Recommend renaming one using {.kbd FRAM} > {.kbd FRAM Utilities} > {.kbd Edit Model Run Details}.")
   }
 
   base_run_time <- runs |>

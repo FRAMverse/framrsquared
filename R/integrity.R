@@ -1,9 +1,37 @@
+#' Custom wrapper for `cli::cli_abort()`, which passes the package class to the error.
+#' @keywords internal
+#'
+#' @param message Error message, handled the same as cli::cli_abort `message` argument
+#' @param internal_error Is this errror likely reflecting a problem with FRAM (TRUE) or a user input error (FALSE)? If TRUE, message will include suggestion to file an issue on github. Logical, defaults to FALSE.
+#' @param class Additional error classes to add. Character vector. Defaults to NULL
+#' @param call calling function, used to label the function that errored.
+#' @param .envir execution environment, used to populate info in error messages.
+#' @param ... arguments passed to cli::cli_abort
+fram_abort <- function(message,
+                       # arg = rlang::caller_arg(x),
+                       internal_error = FALSE,
+                       class = NULL,
+                       call = rlang::caller_env(),
+                       .envir = parent.frame(),
+                       ...){
+  if(internal_error){
+    message = c(message, i = "Unexpected error? File an issue at https://github.com/FRAMverse/framrsquared/issues")
+  }
+  cli::cli_abort(
+    message = message,
+    class = c(class, "framrsquared_error"),
+    call = call,
+    .envir = .envir,
+    ...
+  )
+}
+
 #' Identifies the FRAM database type - Full or Transfer
+#' @keywords internal
 #'
 #' @param con Connection to FRAM database
 #'
 #' @export
-#' @keywords internal
 #'
 #' @examples
 #' \dontrun{fram_database_type(con)}
@@ -71,17 +99,19 @@ fram_database_type <- function(con) {
   }
   else {
     DBI::dbDisconnect(con)
-    cli::cli_abort('This is not a valid FRAM Database')
+    fram_abort('This is not a valid FRAM Database')
   }
 }
 
 #' Identifies the FRAM database species focus - Chinook or Coho
 #' @param con Connection to FRAM database
+#' @param warn Should the user get an error message when multiple species are present?
 #' @export
 #' @keywords internal
 #' @examples
 #' \dontrun{fram_database_species(con)}
-fram_database_species <- function(con){
+fram_database_species <- function(con,
+                                  warn = FALSE){
 
   if(inherits(con, "ACCESS")){
     run_id_table <- DBI::dbGetQuery(con, 'SELECT * FROM RunID;') |>
@@ -90,10 +120,14 @@ fram_database_species <- function(con){
     run_id_table <- DBI::dbGetQuery(con$fram_db_connection, 'SELECT * FROM RunID;') |>
       fram_clean_tables()
   } else {
-    cli::cli_abort("`con` must be a connection to a fram database (either the connection itself, or the output of `connect_fram_db()`).")
+    fram_abort("`con` must be a connection to a fram database (either the connection itself, or the output of `connect_fram_db()`).")
   }
 
-  unique(run_id_table$species_name)
+  species <- sort(unique(run_id_table$species_name))
+  if(length(species > 1) & warn){
+    cli::cli_warn("More than one species ({paste(species, collapse = ', ')}) detected in this database! Procede with caution!")
+  }
+  return(species)
 }
 
 
@@ -171,7 +205,7 @@ get_stock_ids <- function(fram_db){
 #'
 find_tables_by_column_ <- function(fram_db, column_name) {
   if (!DBI::dbIsValid(fram_db$fram_db_connection)) {
-    cli::cli_abort('Connect to a FRAM database first...')
+    fram_abort('Connect to a FRAM database first...')
   }
 
 
@@ -184,7 +218,7 @@ find_tables_by_column_ <- function(fram_db, column_name) {
       .data$value,
       \(table) DBI::dbListFields(fram_db$fram_db_connection, table)
     )) |>
-    tidyr::unnest(.data$columns) |>
+    tidyr::unnest("columns") |>
     dplyr::filter(.data$columns == .env$column_name)
 }
 
@@ -204,13 +238,13 @@ find_tables_by_column_ <- function(fram_db, column_name) {
 #'
 
 run_info <- function(fram_db, run_id) {
-  if (!is.numeric (run_id)){cli::cli_abort('run_id must be numeric')}
-  if (length(run_id) > 1) {cli::cli_abort('Provide only one run ID')}
+  if (!is.numeric (run_id)){fram_abort('run_id must be numeric')}
+  if (length(run_id) > 1) {fram_abort('Provide only one run ID')}
   validate_fram_db(fram_db)
   validate_run_id(fram_db, run_id)
 
   if (! run_id %in% get_run_ids(fram_db)){
-    cli::cli_abort(paste0('run_id is not present in database. Available run ids: ',
+    fram_abort(paste0('run_id is not present in database. Available run ids: ',
                           paste0(get_run_ids(fram_db), collapse = ", ")))
   }else{
     run_info <- fram_db |>
@@ -281,19 +315,18 @@ validate_fram_db <- function(fram_db,
   # check if fram_db object is a list
   if (!rlang::is_list(fram_db) |
       !"fram_db_connection" %in% names(fram_db)) {
-    cli::cli_code('fram_db <- connect_fram_db(file_path)\nfram_db |> fetch_table(\'Mortality\')')
-    cli::cli_abort('Invalid database type, try code above', call = call)
+    fram_abort('Invalid database type! Connect to valid FRAM database with {.code connect_fram_db()}.', call = call)
   }
   # check if it's a valid connection
   if (!DBI::dbIsValid(fram_db$fram_db_connection)) {
-    cli::cli_abort("Invalid database connection", call = call)
+    fram_abort("Invalid database connection", call = call)
   }
 
   # enforcement of a certain database type
   if (!is.null(db_type)) {
     db <- rlang::arg_match(db_type, c('full', 'transfer'))
     if (fram_db$fram_db_type != db) {
-      cli::cli_abort("This function requires as {db} database, you're using a {fram_db$fram_db_type} database.",
+      fram_abort("This function requires as {db} database, you're using a {fram_db$fram_db_type} database.",
                      call = call)
     }
   }
@@ -302,7 +335,7 @@ validate_fram_db <- function(fram_db,
   if (!is.null(db_species)) {
     species <- rlang::arg_match(db_species, c('COHO', 'CHINOOK'))
     if (fram_db$fram_db_species != species) {
-      cli::cli_abort(
+      fram_abort(
         "This function is specifically for {species}, you're using a {fram_db$fram_db_species} database.", call = call
       )
     }
@@ -320,7 +353,7 @@ validate_fram_db <- function(fram_db,
 #'
 validate_not_read_only <- function(fram_db, call = rlang::caller_env()){
   if(fram_db$fram_read_only){
-    cli::cli_abort('This database connection is designated read-only!! If you are certain this database can be modified, create a new connection using `connect_fram_db()` with `read_only = FALSE`.',
+    fram_abort('This database connection is designated read-only!! If you are certain this database can be modified, create a new connection using `connect_fram_db()` with `read_only = FALSE`.',
                    call = call)
   }
 }
@@ -339,11 +372,10 @@ validate_run_id <- function(fram_db,
                             n = NULL,
                             allow_null = FALSE,
                             call = rlang::caller_env()){
-  if(allow_null && is.null(run_id)){ return(invisible(NULL)) }
-  validate_numeric(run_id, n = n)
+  validate_numeric(run_id, n = n, allow_null = allow_null)
   available_run_ids <- get_run_ids(fram_db)
   if (! all(run_id %in% available_run_ids)){
-    cli::cli_abort(paste0('run_id(s) not present in database. Available run_ids: ',
+    fram_abort(paste0('run_id(s) not present in database. Available run_ids: ',
                           paste0(available_run_ids, collapse = ", ")),
                    call = call)
   }
@@ -371,14 +403,14 @@ validate_fishery_ids <- function(fram_db,
   if(fram_db$fram_db_type == "full"){
     available_fishery_ids <- get_fishery_ids(fram_db)
     if (! all(fishery_id %in% available_fishery_ids)){
-      cli::cli_abort('fishery_id(s) not present in this {fram_db$fram_db_species} database.
+      fram_abort('fishery_id(s) not present in this {fram_db$fram_db_species} database.
                      Available fisheries: {min(available_fishery_ids)}:{max(available_fishery_ids)}',
                      call = call)
     }
   }
 }
 
-#' Convenience function to check fishery input
+#' Convenience function to check stock input
 #'
 #' No error checking for transfer databases.
 #'
@@ -399,7 +431,7 @@ validate_stock_ids <- function(fram_db,
   if(fram_db$fram_db_type == "full"){
     available_stock_ids <- get_stock_ids(fram_db)
     if (! all(stock_id %in% available_stock_ids)){
-      cli::cli_abort('stock_id(s) not present in this {fram_db$fram_db_species} database.
+      fram_abort('stock_id(s) not present in this {fram_db$fram_db_species} database.
                      Available stocks: {min(available_stock_ids)}:{max(available_stock_ids)}',
                      call = call)
     }
@@ -419,7 +451,7 @@ validate_stock_ids <- function(fram_db,
 validate_data_frame <- function(x, ..., arg = rlang::caller_arg(x), call = rlang::caller_env()) {
   # checks for data frame, stolen from the tidyr package
   if (!is.data.frame(x)) {
-    cli::cli_abort("{.arg {arg}} must be a data frame, not {.obj_type_friendly {x}}.", ..., call = call)
+    fram_abort("{.arg {arg}} must be a data frame, not {.obj_type_friendly {x}}.", call = call)
   }
 }
 
@@ -439,12 +471,12 @@ validate_numeric <- function(x,
   if(allow_null && is.null(x)){ return(invisible(NULL)) }
 
   if (!is.numeric(x)) {
-    cli::cli_abort("{.arg {arg}} must be a numeric, not {class(x)}.", ..., call = call)
+    fram_abort("{.arg {arg}} must be a numeric, not {class(x)}.", ..., call = call)
   }
 
   if(!is.null(n)){
     if(length(x) != n){
-      cli::cli_abort("{.arg {arg}} must be a numeric of length {n}.", ..., call = call)
+      fram_abort("{.arg {arg}} must be a numeric of length {n}.", ..., call = call)
     }
   }
 }
@@ -460,12 +492,15 @@ validate_character <- function(x,
                                allow_null = FALSE,
                                ...,
                                arg = rlang::caller_arg(x), call = rlang::caller_env()) {
+
+  if(allow_null && is.null(x)){ return(invisible(NULL)) }
+
   if (!is.character(x)) {
-    cli::cli_abort("{.arg {arg}} must be a character, not {class(x)}.", ..., call = call)
+    fram_abort("{.arg {arg}} must be a character, not {class(x)}.", ..., call = call)
   }
   if(!is.null(n)){
     if(length(x) != n){
-      cli::cli_abort("{.arg {arg}} must be a character of length {n}.", ..., call = call)
+      fram_abort("{.arg {arg}} must be a character of length {n}.", ..., call = call)
     }
   }
 }
@@ -478,7 +513,7 @@ validate_character <- function(x,
 #' @keywords internal
 validate_flag <- function(x, ..., arg = rlang::caller_arg(x), call = rlang::caller_env()){
   if (!is.logical(x) | length(x) != 1) {
-    cli::cli_abort("{.arg {arg}} must be a a logical of length 1.", ..., call = call)
+    fram_abort("{.arg {arg}} must be a a logical of length 1.", ..., call = call)
   }
 }
 
@@ -500,13 +535,13 @@ validate_species <- function(.data,
     if(!is.null(attr(.data, 'species'))){
       species <- attr(.data, 'species')
     } else {
-      cli::cli_abort('Table metadata missing and `species` argument missing.')
+      fram_abort('Table metadata missing and `species` argument missing.')
     }
   }
 
   if(!is.null(attr(.data, 'species')) & !is.null(species)){
     if(species != attr(.data, 'species')){
-      cli::cli_abort('`species` argument ("{species}") should not differ from species attribute of data ("{attr(.data, "species")}"). Consider dropping `species` argument.')
+      fram_abort('`species` argument ("{species}") should not differ from species attribute of data ("{attr(.data, "species")}"). Consider dropping `species` argument.')
     }
   }
   return(species)
@@ -561,7 +596,7 @@ validate_table <- function(fram_db, table_name){
 
 provide_table_names <- function(is_full = TRUE){
   if(!is.logical(is_full)){
-    cli::cli_abort("`is_full` must be TRUE or FALSE, not `{is_full}`")
+    fram_abort("`is_full` must be TRUE or FALSE, not `{is_full}`")
   }
   if(is_full){ ## list of possible table names from a full table
     c('AEQ',
@@ -633,7 +668,7 @@ validate_fishery_filter_inputs <- function(.data, species, return_ids,
   validate_flag(return_ids, call = call)
 
   if (!"fishery_id" %in% colnames(.data)) {
-    cli::cli_abort("fishery_id column must be present in dataframe.",
+    fram_abort("fishery_id column must be present in dataframe.",
                    call = call)
   }
 
@@ -669,7 +704,7 @@ validate_same_bp <- function(fram_db, run_ids, strict = TRUE, call = rlang::call
     dplyr::select("run_id", "run_name", "base_period_id")
 
   if(strict & !all(run_info$base_period_id == run_info$base_period_id[1])){
-    cli::cli_abort("Runs must have the same base period! Runs {.val {run_ids}} have base periods {.val {run_info$base_period_id} }",
+    fram_abort("Runs must have the same base period! Runs {.val {run_ids}} have base periods {.val {run_info$base_period_id} }",
                    call = call)
   }
 

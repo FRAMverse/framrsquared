@@ -2,7 +2,7 @@
 % Please edit documentation in R/integrity.R
 \name{validate_stock_ids}
 \alias{validate_stock_ids}
-\title{Convenience function to check fishery input}
+\title{Convenience function to check stock input}
 \usage{
 validate_stock_ids(
   fram_db,

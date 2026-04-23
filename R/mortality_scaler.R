@@ -55,7 +55,7 @@ add_total_mortality = function(.data){
                      "msf_landed_catch", "msf_non_retention",
                      "msf_shaker", "msf_drop_off")
   if(!all(mort_col_names %in% names(.data))){
-    cli::cli_abort("`.data` should be a mortality table or derivative! One or more key columns missing: {setdiff(mort_col_names, names(.data))}")
+    fram_abort("`.data` should be a mortality table or derivative! One or more key columns missing: {setdiff(mort_col_names, names(.data))}")
   }
 
   .data |>

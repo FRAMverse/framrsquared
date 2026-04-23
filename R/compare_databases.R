@@ -125,10 +125,10 @@ compare_databases <-  function(fram_db_1,
 
   validate_fram_db(fram_db_1)
   validate_fram_db(fram_db_2)
-  if (!is.null(runid_use) && !all(is.numeric(runid_use))) cli::cli_abort("`runid_use` must be NULL or numeric vector")
-  if (!is.null(tables_use) && !all(is.character(tables_use))) cli::cli_abort("`tables_use` must be NULL or character vector")
-  if (!is.logical(slim) || length(slim) != 1) cli::cli_abort("`slim` must be a single logical value")
-  if (!is.logical(quiet) || length(quiet) != 1) cli::cli_abort("`quiet` must be a single logical value")
+  if (!is.null(runid_use) && !all(is.numeric(runid_use))) fram_abort("`runid_use` must be NULL or numeric vector")
+  if (!is.null(tables_use) && !all(is.character(tables_use))) fram_abort("`tables_use` must be NULL or character vector")
+  if (!is.logical(slim) || length(slim) != 1) fram_abort("`slim` must be a single logical value")
+  if (!is.logical(quiet) || length(quiet) != 1) fram_abort("`quiet` must be a single logical value")
 
   ## columns to NOT compare, and instead use as keys for for merging.
   labs_template  <-  c(

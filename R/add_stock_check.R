@@ -85,7 +85,7 @@ addstock_check <-
           cli::cli_text()
 
         }else{
-          cli::cli_abort("`addstock_check()` is currently designed for Chinook, but this is a {con$fram_db_species} database. To override this error, set `override_db_checks` to `TRUE`.")
+          fram_abort("`addstock_check()` is currently designed for Chinook, but this is a {con$fram_db_species} database. To override this error, set `override_db_checks` to `TRUE`.")
         }
       }
 
@@ -95,14 +95,14 @@ addstock_check <-
           cli::cli_text()
 
         }else{
-          cli::cli_abort("`addstock_check()` is designed for full FRAM databases, but this is a {con$fram_db_type} database. To override this error, set `override_db_checks` to `TRUE`.")
+          fram_abort("`addstock_check()` is designed for full FRAM databases, but this is a {con$fram_db_type} database. To override this error, set `override_db_checks` to `TRUE`.")
         }
       }
 
 
       run_info = fetch_table_(con, "RunID")
       if (!run_id %in% run_info$run_id) {
-        cli::cli_abort(
+        fram_abort(
           paste0(
             "`run_id` value must be present in database. Available run_ids: ",
             paste0(run_info$run_id, collapse = ", "),

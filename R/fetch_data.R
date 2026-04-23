@@ -148,7 +148,7 @@ fetch_table_bkchin <- function(fram_db){
   validate_fram_db(fram_db)
 
   if(fram_db$fram_db_species != "CHINOOK"){
-    cli::cli_abort("`fetch_table_bkchin()` only appropriate for CHINOOK databases, not {fram_db$fram_db_species} database.")
+    fram_abort("`fetch_table_bkchin()` only appropriate for CHINOOK databases, not {fram_db$fram_db_species} database.")
   }
 
   output_table <- fetch_table_(fram_db, table_name = "BackwardsFRAM",
