@@ -3,8 +3,7 @@
 \name{coho_mark_rates}
 \alias{coho_mark_rates}
 \title{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
-Returns a tibble displaying predicted FRAMencounter mark rates by fishery,
-fishery type, and time-step.}
+Predict Fram encounter markrates by fisheries}
 \usage{
 coho_mark_rates(fram_db, run_id = NULL)
 }
@@ -13,10 +12,12 @@ coho_mark_rates(fram_db, run_id = NULL)
 
 \item{run_id}{Run ID (optional)}
 }
+\value{
+Dataframe identifying the run, fishery, timestep, year, and base period. Provides total marked (\verb{$AD}) and unmarked (\verb{$UM}) mortalities, and the markrate (\verb{$mark_rate}). Separate rows for NS and MSF fisheries, distinguished by \verb{$fishery_type}.
+}
 \description{
-\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
 Returns a tibble displaying predicted FRAMencounter mark rates by fishery,
-fishery type, and time-step.
+fishery type, and time-step. Only works for Coho database.
 }
 \examples{
 \dontrun{

@@ -7,12 +7,15 @@
 add_total_mortality(.data)
 }
 \arguments{
-\item{.data}{Dataframe with separate mortality columns \code{landed_catch}, \code{non_retention}, \code{shaker}, \code{drop_off}, and \code{msf_} versions of each. Typically comes from \code{fetch_table("Mortality")} or \code{\link[=aeq_mortality]{aeq_mortality()}}.}
+\item{.data}{Dataframe with separate mortality columns \code{landed_catch}, \code{non_retention}, \code{shaker},
+\code{drop_off}, and \code{msf_} versions of each. Typically comes from \code{fetch_table("Mortality")} or
+\code{\link[=aeq_mortality]{aeq_mortality()}}.}
 }
 \value{
-\code{.data} with additional \verb{$total_mortality} column just before \verb{$landed_catch}.
+\code{.data} with additional \verb{$total_mortality} column (numeric vector) just before \verb{$landed_catch}.
 }
 \description{
-Convenience function for combining the separate mortality columns of the Mortality table. Note: this does \emph{not} account for AEQ
-for Chinook.
+Convenience function for combining the separate mortality columns of the Mortality table. Note:
+this does \emph{not} account for AEQ for Chinook on its own, but can be used on the output of \code{\link[=aeq_mortality]{aeq_mortality()}}
+to give total mortalities in AEQs.
 }

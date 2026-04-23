@@ -2,8 +2,7 @@
 % Please edit documentation in R/modify_db.R
 \name{copy_fishery_scalers}
 \alias{copy_fishery_scalers}
-\title{Experimental copying scaler inputs from
-one run to another DANGEROUS}
+\title{Copying scaler inputs from one run to another}
 \usage{
 copy_fishery_scalers(fram_db, from_run, to_run, fishery_id = NULL)
 }
@@ -16,11 +15,13 @@ copy_fishery_scalers(fram_db, from_run, to_run, fishery_id = NULL)
 
 \item{fishery_id}{ID or IDs for specific fishery(s) to copy inputs to/from. If not provided, interactive option to copy inputs for all fisheries.}
 }
+\value{
+Nothing
+}
 \description{
-Experimental copying scaler inputs from
-one run to another DANGEROUS
+Experimental. DANGEROUS.
 }
 \examples{
-\dontrun{framdb |> copy_fishery_scalers(132, 133, 87)}
+\dontrun{framdb |> copy_fishery_scalers(from_run = 132, to_run = 133, fishery_id = 87)}
 
 }

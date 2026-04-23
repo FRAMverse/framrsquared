@@ -1,8 +1,14 @@
 #'  `r lifecycle::badge("experimental")`
+#' Predict Fram encounter markrates by fisheries
+#'
 #' Returns a tibble displaying predicted FRAMencounter mark rates by fishery,
-#' fishery type, and time-step.
+#' fishery type, and time-step. Only works for Coho database.
+#'
 #' @param fram_db FRAM database object
 #' @param run_id Run ID (optional)
+#'
+#' @returns Dataframe identifying the run, fishery, timestep, year, and base period. Provides total marked (`$AD`) and unmarked (`$UM`) mortalities, and the markrate (`$mark_rate`). Separate rows for NS and MSF fisheries, distinguished by `$fishery_type`.
+#'
 #' @export
 #' @examples
 #' \dontrun{
@@ -26,15 +32,15 @@ coho_mark_rates <- function(fram_db, run_id=NULL) {
   fisheries <- fram_db |>
     fetch_table_('Fishery') |>
     dplyr::filter(.data$species == fram_db$fram_db_species) |>
-    dplyr::select(.data$fishery_id, .data$fishery_name)
+    dplyr::select("fishery_id", "fishery_name")
 
   runs <- fram_db |>
     fetch_table_('RunID') |>
-    dplyr::select(.data$run_id, .data$run_year, .data$base_period_id)
+    dplyr::select("run_id", "run_year", "base_period_id")
 
   fishery_type <- fram_db |>
     fetch_table_('FisheryScalers') |>
-    dplyr::select(.data$run_id, .data$fishery_id, .data$time_step, .data$fishery_flag)
+    dplyr::select("run_id", "fishery_id", "time_step", "fishery_flag")
 
   mark_rates <- mortality |>
     dplyr::inner_join(fishery_type, by = c('run_id', 'fishery_id', 'time_step')) |>
@@ -45,18 +51,18 @@ coho_mark_rates <- function(fram_db, run_id=NULL) {
       msf_encounters = dplyr::if_else(.data$fishery_flag %in% c(7:8, 17:18, 27:28), .data$msf_encounter, 0),
       ns_encounters = dplyr::if_else(.data$fishery_flag %in% c(1:2, 17:18, 27:28), .data$encounter, 0)
     ) |>
-    dplyr::select(.data$run_id, .data$fishery_id, .data$stock_id, .data$time_step,
-                  .data$mark, .data$msf_encounters, .data$ns_encounters) |>
-    tidyr::pivot_longer(.data$msf_encounters:.data$ns_encounters) |>
-    tidyr::pivot_wider(names_from = .data$mark, values_from = .data$value) |>
+    dplyr::select("run_id", "fishery_id", "stock_id", "time_step",
+                  "mark", "msf_encounters", "ns_encounters") |>
+    tidyr::pivot_longer("msf_encounters":"ns_encounters") |>
+    tidyr::pivot_wider(names_from = "mark", values_from = "value") |>
     dplyr::group_by(.data$run_id, .data$fishery_id, .data$time_step, .data$name) |>
-    dplyr::summarize(dplyr::across(c(.data$AD, .data$UM), \(x) sum(x, na.rm = TRUE)), .groups = 'drop') |>
+    dplyr::summarize(dplyr::across(c("AD", "UM"), \(x) sum(x, na.rm = TRUE)), .groups = 'drop') |>
     dplyr::mutate(
       fishery_type = stringr::str_remove(.data$name, '_encounters'),
       mark_rate = .data$AD / (.data$AD + .data$UM)
     ) |>
-    dplyr::select(.data$run_id, .data$fishery_id, .data$AD, .data$UM,
-                  .data$time_step, .data$fishery_type, .data$mark_rate) |>
+    dplyr::select("run_id", "fishery_id", "AD", "UM",
+                  "time_step", "fishery_type", "mark_rate") |>
     dplyr::inner_join(runs, by='run_id') |>
     dplyr::inner_join(fisheries, by = 'fishery_id') |>
     label_fisheries(species = "COHO")
@@ -74,9 +80,14 @@ coho_mark_rates <- function(fram_db, run_id=NULL) {
 #'
 #' The starting cohort abundance listed in the database can be wrong. This function
 #' calculates the value by multipying the Stock Recruit Scalar by the base period abundance.
+#'
 #' @param fram_db FRAM database object
 #' @param run_id Run ID (optional)
+#'
+#' @returns dataframe identify run_id, stock, age, and then providing the starting cohort abundance (`$recruit_cohorts`).
+#'
 #' @export
+#'
 #' @examples
 #' \dontrun{
 #' fram_db |>  cohort_abundance(run_id = 145)
@@ -90,11 +101,11 @@ cohort_abundance <- function(fram_db, run_id = NULL){
   # pull run table, cross walk from stockrecruit table to bp table
   runs <- fram_db |>
     fetch_table_('RunID') |>
-    dplyr::select(.data$run_id, .data$base_period_id)
+    dplyr::select("run_id", "base_period_id")
 
   stock_recruit <- fram_db |>
     fetch_table_('StockRecruit') |>
-    dplyr::select(.data$run_id:.data$recruit_scale_factor)
+    dplyr::select("run_id":"recruit_scale_factor")
 
   base_cohort <- fram_db |>
     fetch_table_('BaseCohort')
@@ -105,10 +116,10 @@ cohort_abundance <- function(fram_db, run_id = NULL){
     dplyr::mutate(
       recruit_cohorts = .data$recruit_scale_factor * .data$base_cohort_size
     ) |>
-    dplyr::select(.data$run_id,
-                  .data$stock_id,
-                  .data$age,
-                  .data$recruit_cohorts)
+    dplyr::select("run_id",
+                  "stock_id",
+                  "age",
+                  "recruit_cohorts")
 
   if(!is.null(run_id)) {
     abundances |> dplyr::filter(.data$run_id == run_id)  |>
@@ -125,43 +136,46 @@ cohort_abundance <- function(fram_db, run_id = NULL){
 
 
 #'  `r lifecycle::badge("experimental")`
-#' Summarizes the three true outcomes of a stocks abundance, where it
-#' dies to fishery related mortality, natural mortality, or reaches
-#' some sort of escapement. When run against the coho database
-#' spawning escapement will be displayed, when run against the
-#' Chinook database escapement to the river will be dislpayed
+#'
+#'  Summarize outcomes for stock
+#'
+#' Summarizes the three true outcomes of a stocks abundance, where it either (a)
+#' dies to fishery related mortality, (b) dies to natural mortality, or (c) reaches
+#' some sort of escapement. When run against the coho database, spawning escapement will be displayed.
+#' When run against theChinook database escapement to the river will be displayed
 #' along with recruits to the next year 'age_up'
+#'
 #' @param fram_db FRAM database object
 #' @param run_id Run ID (optional)
-#' @param units 'fish' or 'percentage'. Percentage is proportion of starting adundance
+#' @param units Should fates be presented in 'fish' or 'percentage'? Percentage is proportion of starting abundance (so not actually a percent, but percent/100).
+#'
+#' @returns dataframe identifying run_id, stock, and age, and providing `$natural_mortality`, `$fishery_mortality`, and either (a) `$age_up` and `$escapment_to_river` (Chinook database) or (b) `$escapement_spawning`
+#'
 #' @export
 #' @examples
 #' \dontrun{
 #' fram_db |> stock_fate(run_id = 145)
 #' }
-stock_fate <- function(fram_db, run_id = NULL, units = c('fish', 'percentage')) {
+stock_fate <- function(fram_db, run_id = NULL, units = c("fish", "percentage")) {
   validate_fram_db(fram_db)
+  rlang::arg_match(units, values = c("fish", "percentage"))
   if(!is.null(run_id)){validate_run_id(fram_db, run_id)}
 
   switch(
     fram_db$fram_db_species,
-    'CHINOOK' = stock_fate_chinook(fram_db, run_id, units),
-    'COHO' = stock_fate_coho(fram_db, run_id, units)
+    'CHINOOK' = stock_fate_chinook(fram_db, run_id, units) |>
+      label_stocks_db(fram_db),
+    'COHO' = stock_fate_coho(fram_db, run_id, units) |>
+      label_stocks_db(fram_db)
   )
 }
 
 
 #'  `r lifecycle::badge("experimental")`
 #' Chinook flavor of the stock fate function
-#' @param fram_db FRAM database object
-#' @param run_id Run ID (optional)
-#' @param units 'fish' or 'percentage'. Percentage is proportion of starting abundance
-#' @export
-#' @seealso [stock_fate()]
-#' @examples
-#' \dontrun{
-#' fram_db |> stock_fate_chinook(run_id = 145)
-#' }
+#' @inheritParams stock_fate
+#'
+#' @keywords internal
 stock_fate_chinook <- function(fram_db, run_id = NULL, units = c('fish', 'percentage')){
   validate_fram_db(fram_db)
   if(!is.null(run_id)){validate_run_id(fram_db, run_id)}
@@ -169,7 +183,7 @@ stock_fate_chinook <- function(fram_db, run_id = NULL, units = c('fish', 'percen
 
   # pull fishery mortality
   mortality <- fram_db |> fetch_table_('Mortality') |>
-    dplyr::select(-.data$primary_key) |>
+    dplyr::select(-"primary_key") |>
     dplyr::filter(.data$time_step != 4) |>
     add_total_mortality() |>
     dplyr::group_by(.data$run_id, .data$stock_id, .data$age) |>
@@ -193,8 +207,8 @@ stock_fate_chinook <- function(fram_db, run_id = NULL, units = c('fish', 'percen
       ) |>
     dplyr::inner_join(mortality, by = c('run_id', 'stock_id', 'age')) |>
     dplyr::select(
-      .data$run_id:.data$natural_mortality,
-      .data$fishery_mortality, .data$age_up,.data$escapement_to_river,
+      "run_id":"natural_mortality",
+      "fishery_mortality", "age_up", "escapement_to_river",
 
     )
 
@@ -222,15 +236,9 @@ stock_fate_chinook <- function(fram_db, run_id = NULL, units = c('fish', 'percen
 
 #'  `r lifecycle::badge("experimental")`
 #' Coho flavor of the stock fate function
-#' @param fram_db FRAM database object
-#' @param run_id Run ID (optional)
-#' @param units 'fish' or 'percentage'. Percentage is proportion of starting adbundace
-#' @export
-#' @seealso [stock_fate()]
-#' @examples
-#' \dontrun{
-#' fram_db |> stock_fate_coho(run_id = 145)
-#' }
+#' @inheritParams stock_fate
+#'
+#' @keywords internal
 stock_fate_coho <- function(fram_db, run_id = NULL, units = c('fish', 'percentage')){
   validate_fram_db(fram_db)
   if(!is.null(run_id)){validate_run_id(fram_db, run_id)}
@@ -238,7 +246,7 @@ stock_fate_coho <- function(fram_db, run_id = NULL, units = c('fish', 'percentag
 
   # pull fishery mortality
   mortality <- fram_db |> fetch_table_('Mortality') |>
-    dplyr::select(-.data$primary_key) |>
+    dplyr::select(-"primary_key") |>
     dplyr::mutate(
       fishery_mortality = .data$landed_catch + .data$non_retention
       + .data$drop_off + .data$shaker
@@ -264,8 +272,8 @@ stock_fate_coho <- function(fram_db, run_id = NULL, units = c('fish', 'percentag
     ) |>
     dplyr::inner_join(mortality, by = c('run_id', 'stock_id', 'age')) |>
     dplyr::select(
-      .data$run_id:.data$natural_mortality,
-      .data$fishery_mortality, .data$escapement_spawning,
+      "run_id":"natural_mortality",
+      "fishery_mortality", "escapement_spawning",
 
     )
 

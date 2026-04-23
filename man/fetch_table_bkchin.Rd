@@ -9,6 +9,9 @@ fetch_table_bkchin(fram_db)
 \arguments{
 \item{fram_db}{FRAM database object}
 }
+\value{
+See \code{\link[=fetch_table]{fetch_table()}}
+}
 \description{
 The BackwardsFRAM table uses a stock_id different numbering system from all other tables, and includes
 sums of joint stocks (e.g. for a marked and unmarked pair of stocks, BackwardsFRAM will typically have an additional
@@ -23,7 +26,6 @@ and the associated bkfram stock names). This function only works for Chinook dat
 \strong{The resulting dataframe will necessarily NOT be an exact match to the BackwardsFRAM table in the FRAM database. The stock_id column will differ (containing normal stock ID values instead of bk stock ID values), and there will be two additional columns.}
 }
 \examples{
-#' @examples
 \dontrun{
 ##Potentially problematic stock_id won't align with other tables
 fram_db |> fetch_table('BackwardsFRAM')

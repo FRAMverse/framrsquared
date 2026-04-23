@@ -13,6 +13,7 @@ welcome(con)
 Welcome message, summarizing database information
 }
 \examples{
-\dontrun{welcome(con)}
+\dontrun{welcome(fram_db$fram_database_connection)}
 
 }
+\keyword{internal}

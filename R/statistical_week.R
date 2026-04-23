@@ -2,12 +2,16 @@
 #' an integer
 #'
 #' Statistical weeks start on mondays, so the first statistical week of the year starts
-#' on the first monday of the year. (Contrast with management weeks which start on Sundays).
+#' on the first Monday of the year. (Contrast with management weeks which start on Sundays).
 #'
 #' @param date A vector of dates
+#'
+#' @returns a numeric vector with same length as argument `date`
+#'
 #' @export
 #' @examples
 #' \dontrun{
+#' statistical_week(as.Date(Sys.Date()))
 #' data_fram |>
 #'   mutate(mngmt_week = statistical_week(date_field))
 #' }

@@ -26,7 +26,7 @@ The returned object of \code{connect_fram_db()} is a list of useful objects for 
 \item{\verb{$fram_db_connection_id}}{connection name in .fram_connections, used for orphan cleanup via \code{disconnect_all_fram_connections()}.}
 \item{\verb{$fram_db_type}}{"full" or "transfer", useful for validation for specific functions.}
 \item{\verb{$fram_db_species}}{"COHO" or "CHINOOK"}
-\item{\verb{$fram_db_species}}{filetype, typeically "mdb"}
+\item{\verb{$fram_db_medium}}{filetype, typeically "mdb"}
 \item{\verb{$fram_read_only}}{Optional user-specified safety measure, TRUE or FALSE. Functions that modify the fram database should error out if TRUE.}
 }
 
@@ -38,5 +38,9 @@ fram_db |> fetch_table("Mortality")}
 
 }
 \seealso{
-\code{\link[=disconnect_fram_db]{disconnect_fram_db()}}, \code{\link[=disconnect_all_fram_connections]{disconnect_all_fram_connections()}}
+Other connections: 
+\code{\link{disconnect_all_fram_connections}()},
+\code{\link{disconnect_fram_db}()},
+\code{\link{list_extant_fram_connections}()}
 }
+\concept{connections}

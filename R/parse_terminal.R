@@ -1,13 +1,20 @@
-#' `r lifecycle::badge("experimental")`
-#' Parse TAAETRS table
+#' `r lifecycle::badge("experimental")` Parse TAAETRS table
 #'
-#' Terminal run information used by FRAM is stored in the TAAETRSList and (soon) the TAAETRSListChinook tables, but stored in a way that is not very human readable. `parse_terminal_info()` translates this to human-readable form, primarily to then be used by [terminal_stocks()] and [terminal_fisheries()].
+#' Terminal run information used by FRAM is stored in the TAAETRSList and (soon) the
+#' TAAETRSListChinook tables, but stored in a way that is not very human readable.
+#' `parse_terminal_info()` translates this to human-readable form, primarily to then be used by
+#' [terminal_stocks()] and [terminal_fisheries()].
 #'
 #' @param fram_db Fram database object
-#' @param old_table_name Logical, defaults to TRUE. We intend to change the FRAM table from TAAETRSList to TAAETRSListChinook to avoid confusion. When working with a database where that hasn't been done, leave this argument to TRUE.
-#' @param species "COHO" or "CHINOOK". Optional, defaults to the database species. Provide this only if fram_db connects to a database with both Chinook and Coho information. And try to avoid that -- those databases are sketchy to work with.
+#' @param old_table_name Logical, defaults to TRUE. We intend to change the FRAM table from
+#'   TAAETRSList to TAAETRSListChinook to avoid confusion. When working with a database where that
+#'   hasn't been done, leave this argument to TRUE.
+#' @param species "COHO" or "CHINOOK". Optional, defaults to the database species. Provide this only
+#'   if fram_db connects to a database with both Chinook and Coho information. And try to avoid that
+#'   -- those databases are sketchy to work with.
 #'
-#' @return tibble of TAAETRSList or TAAETRSListChinook tables translated to long form.
+#' @returns tibble of TAAETRSList or TAAETRSListChinook tables translated to long form. `$taa_name` and `taa_num` identify the "TAA" group, `$stock_label` and `$stock_id` identify the FRAM stock, `$terminal_time_steps` and `$terminal_months` give the time periods that this stock is terminal, and `$fishery_label` and `$fishery_id` identify the fishery for which the stock is terminal.
+#'
 #' @export
 #' @seealso [terminal_stocks()], [terminal_fisheries()]
 #' @examples \dontrun{fram_db |> parse_terminal_info()}
@@ -32,11 +39,11 @@ terminal_info <- function(fram_db, old_table_name = TRUE, species = NULL){
       table_name = "TAAETRSListChinook"
     }
 
-    timesteps <-  framrosetta::timestep_chinook_fram |>
+    timesteps <-  fetch_table(fram_db, "TimeStep") |>
       dplyr::mutate(timestep_start = gsub(" - .*", "", .data$time_step_title),
                     timestep_end = gsub(".* - ", "", .data$time_step_title)
       ) |>
-      dplyr::rename(time_step = .data$time_step_id)
+      dplyr::rename(time_step = "time_step_id")
 
     tab <- fram_db |>
       fetch_table_(table_name) |> # currently, this table does not exist
@@ -47,11 +54,11 @@ terminal_info <- function(fram_db, old_table_name = TRUE, species = NULL){
 
   } else if(species == "COHO") {
 
-    timesteps <-  framrosetta::timestep_coho_fram |>
+    timesteps <-  fetch_table(fram_db, "TimeStep") |>
       dplyr::mutate(timestep_start = gsub(" - .*", "", .data$time_step_title),
                     timestep_end = gsub(".* - ", "", .data$time_step_title)
       ) |>
-      dplyr::rename(time_step = .data$time_step_id)
+      dplyr::rename(time_step = "time_step_id")
 
     tab <- fram_db |>
       fetch_table_("TAAETRSList") |>
@@ -68,17 +75,17 @@ terminal_info <- function(fram_db, old_table_name = TRUE, species = NULL){
                   taa_fish_list = stringr::str_split(.data$taa_fish_list, ",")) |>
     tidyr::unnest(.data$taa_stk_list) |>
     tidyr::unnest(.data$taa_fish_list) |>
-    dplyr::rename(stock_id = .data$taa_stk_list,
-                  fishery_id = .data$taa_fish_list) |>
+    dplyr::rename(stock_id = "taa_stk_list",
+                  fishery_id = "taa_fish_list") |>
     dplyr::mutate(stock_id = as.numeric(.data$stock_id),
                   fishery_id = as.numeric(.data$fishery_id)) |>
     dplyr::filter(.data$fishery_id != 0) |>
     dplyr::mutate(terminal_time_steps = glue::glue("{taa_time_step1}-{taa_time_step2}")) |>
     dplyr::left_join(timesteps |>
-                       dplyr::select(taa_time_step1 = .data$time_step, .data$timestep_start),
+                       dplyr::select(taa_time_step1 = "time_step", "timestep_start"),
                      by = "taa_time_step1") |>
     dplyr::left_join(timesteps |>
-                       dplyr::select(taa_time_step2 = .data$time_step, .data$timestep_end),
+                       dplyr::select(taa_time_step2 = "time_step", "timestep_end"),
                      by = "taa_time_step2") |>
     dplyr::mutate(terminal_months = glue::glue("{timestep_start}-{timestep_end}")) |>
     framrosetta::label_fisheries(species = species) |>
@@ -86,14 +93,14 @@ terminal_info <- function(fram_db, old_table_name = TRUE, species = NULL){
     dplyr::select("taa_name", "taa_num", "stock_label", "stock_id", "terminal_time_steps", "terminal_months", "fishery_label", "fishery_id")
 }
 
-#' `r lifecycle::badge("experimental")`
-#' List terminal stock information
+#' `r lifecycle::badge("experimental")` List terminal stock information
 #'
-#' For each TAA, lists the associated FRAM stocks and timesteps.
+#' For each TAA group, lists the associated FRAM stocks and timesteps. Intended to support working
+#' with bios for QAQC.
 #'
 #' @inheritParams terminal_info
 #'
-#' @return taa of taa stocks and timesteps
+#' @return Tibble of taa stocks and timesteps
 #' @export
 #'
 #' @examples \dontrun{fram_db |> terminal_stocks()}
@@ -107,11 +114,11 @@ terminal_stocks <- function(fram_db, species = NULL){
 #' `r lifecycle::badge("experimental")`
 #' List terminal stock information
 #'
-#' For each TAA, lists the associated fisheries
+#' For each TAA, lists the associated fisheries. Intended to support working with bios for QAQC.
 #'
 #' @inheritParams terminal_info
 #'
-#' @return tibble of taa fisheries
+#' @returns Tibble of taa fisheries
 #' @export
 #'
 #' @examples \dontrun{fram_db |> terminal_fisheries()}

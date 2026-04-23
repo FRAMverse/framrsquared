@@ -17,7 +17,7 @@ compare_non_retention_input_flags(fram_db, run_ids, verbose = TRUE)
 Compares the non retention flags of two runs
 }
 \examples{
-\dontrun{fram_db |> compare_non_retention_inputs(c(55, 56))}
+\dontrun{fram_db |> compare_non_retention_input_flags(c(55, 56))}
 }
 \seealso{
 \code{\link[=compare_runs]{compare_runs()}}

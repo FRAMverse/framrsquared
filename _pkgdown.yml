@@ -122,7 +122,7 @@ reference:
     desc: >
         Functions that add label columns based on ids or flags
     contents:
-      - starts_with("label_")
+      - has_concept("labelers")
   - title: Calculate SONCC values for STT runs
     desc: >
         Functions to provide ER breakdowns of Southern Oregon / Northern California Coho to feed into the SONCC calculator.
@@ -134,17 +134,18 @@ reference:
     desc: >
         Miscellaneous functions
     contents:
-      - filter_flag
-      - filter_nr_flag
+      - na_scalers_from_flag
+      - na_non_retention_from_flag
       - add_total_mortality
       - cohort_abundance
       - aeq_mortality
       - coho_mark_rates
+      - calculate_stock_comp
       - input_summary_
       - mortality_scalers
       - msp_mortality
-      - NR_flag_translate
-      - scalers_flag_translate
+      - translate_nr_flag
+      - translate_scalers_flag
       - stock_id_comp
       - provide_table_names
       - welcome

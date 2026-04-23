@@ -4,15 +4,26 @@
 \alias{validate_stock_ids}
 \title{Convenience function to check fishery input}
 \usage{
-validate_stock_ids(fram_db, stock_id, call = rlang::caller_env())
+validate_stock_ids(
+  fram_db,
+  stock_id,
+  n = NULL,
+  allow_null = FALSE,
+  call = rlang::caller_env()
+)
 }
 \arguments{
 \item{fram_db}{FRAM database object}
 
 \item{stock_id}{one or more stock_ids}
 
+\item{n}{Required number of run ids}
+
+\item{allow_null}{Should this function treat a \code{NULL} input as valid? Logical, defaults to TRUE}
+
 \item{call}{internal use: identify name of function that called this function (for informative error message)}
 }
 \description{
-No error checking for transfer databases
+No error checking for transfer databases.
 }
+\keyword{internal}

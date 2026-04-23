@@ -2,9 +2,7 @@
 % Please edit documentation in R/report_fishery_mortality.R
 \name{plot_stock_mortality_time_step}
 \alias{plot_stock_mortality_time_step}
-\title{Creates an ordered bar chart with
-the top number of mortalities per
-fishery and time step.}
+\title{Plot total mortalities by fishery and timestep}
 \usage{
 plot_stock_mortality_time_step(
   fram_db,
@@ -24,7 +22,9 @@ plot_stock_mortality_time_step(
 
 \item{run_id}{numeric, RunID}
 
-\item{stock_id}{numeric, ID of focal stock. Can accept multiple ids, but this should only be used when combining FRAM stocks makes sense (e.g., combining marked and unmarked components of the same stock).}
+\item{stock_id}{numeric, ID of focal stock. Can accept multiple ids, but this should only be used
+when combining FRAM stocks makes sense (e.g., combining marked and unmarked components of the
+same stock).}
 
 \item{top_n}{numeric, Number of fisheries to display}
 
@@ -32,18 +32,22 @@ plot_stock_mortality_time_step(
 
 \item{msp}{Use Model Stock Proportion? Logical, defaults to TRUE.}
 
-\item{split_cnr}{Produce separate panels for CNR and non-CNR mortality? Logical, defaults to FALSE.}
+\item{split_cnr}{Produce separate panels for CNR and non-CNR mortality? Logical, defaults to
+FALSE.}
 
-\item{fishery_title_short}{Use abbreviated fishery names instead of full names? Useful if horizontal space is limited. Logical, defaults to FALSE.}
+\item{fishery_title_short}{Use abbreviated fishery names instead of full names? Useful if
+horizontal space is limited. Logical, defaults to FALSE.}
 
-\item{stock_title_short}{Use abbreviated stock name instead of full name in title? Will always use abbreviated stock name if multiple stock ids are provided.}
+\item{stock_title_short}{Use abbreviated stock name instead of full name in title? Will always
+use abbreviated stock name if multiple stock ids are provided.}
 
 \item{warn}{Warn if providing multiple stocks?}
 }
+\value{
+ggplot2 object
+}
 \description{
-Creates an ordered bar chart with
-the top number of mortalities per
-fishery and time step.
+Creates an ordered bar chart with the top number of mortalities per fishery and time step.
 }
 \examples{
 \dontrun{

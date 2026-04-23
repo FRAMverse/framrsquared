@@ -10,6 +10,9 @@ truns_fisheries(fram_db)
 \arguments{
 \item{fram_db}{FRAM database object}
 }
+\value{
+Tibble with fishery ID and TRUN stock name (\code{stock_name}).
+}
 \description{
 Returns a dataframe with fisheries defined
 by the TRuns report driver

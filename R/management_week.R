@@ -1,8 +1,12 @@
-#' Vectorized approach to calculating the management week, returns
-#' an integer
-#' @param date A column with dates
+#' Vectorized approach to calculating the management week
+#'
+#' @param date An atomic or vector of dates
+#'
+#' @returns a numeric vector with same length as argument `date`
+#'
 #' @export
 #' @examples
+#' management_week(as.Date(Sys.Date()))
 #' \dontrun{
 #' data_fram |>
 #'   mutate(mngmt_week = management_week(date_field))

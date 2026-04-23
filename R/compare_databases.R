@@ -10,7 +10,7 @@
 #' @param slim Logical. Optional, defaults to TRUE. If TRUE, do not include `$tabs_file1` and `$tabs_file2` in output list.
 #' @param quiet Logical, defaults to TRUE. When TRUE, suppress messages showing individual steps.
 #'
-#' @return List of lists and tibbles containing comparison information:
+#' @returns List of lists and tibbles containing comparison information:
 #' * `$ratios` tibble comparing every entry of every relevant column of every table. See "Details" for column descriptions.
 #' * `$ratios_detailed` list of tibbles showing the contents of `$ratios` broken into tables, with additional non-compared columns present (e.g., `stock_name` in `$ratios_detailed$Stock`). Not shown if `slim` is TRUE.
 #' * `$nrow_tracker` dataframe providing the number of rows in each table of file1 (`$nrow_original`), file2 (`$nrow_new`), and the joined comparison (`$nrow_comparison`). Useful to track down cause of many-to-many join warnings that can result from duplicated table entries; unless there are duplicate entries, `$nrow_comparison` should be less than or equal to the minimum of `$nrow_original` and `$nrow_new`.
@@ -215,12 +215,12 @@ compare_databases <-  function(fram_db_1,
     ## Also removing the "joint" bkfram stocks, as their inclusion makes it messy to look at anything else.
     if (cur_table == "BackwardsFRAM" & species_cur == "CHINOOK") {
       tabs_prod[[cur_table]] <- tabs_prod[[cur_table]] |>
-        dplyr::rename(bk_stock_id = .data$stock_id) |>
+        dplyr::rename(bk_stock_id = "stock_id") |>
         dplyr::left_join(framrosetta::bk_lookupfun_chin(stock_max) |> dplyr::select("bk_stock_id", "stock_id"),
                          by = "bk_stock_id") |>
         dplyr::filter(!is.na(.data$stock_id))
       tabs_fork[[cur_table]] <- tabs_fork[[cur_table]] |>
-        dplyr::rename(bk_stock_id = .data$stock_id) |>
+        dplyr::rename(bk_stock_id = "stock_id") |>
         dplyr::left_join(framrosetta::bk_lookupfun_chin(stock_max) |> dplyr::select("bk_stock_id", "stock_id"),
                          by = "bk_stock_id") |>
         dplyr::filter(!is.na(.data$stock_id))
@@ -248,7 +248,7 @@ compare_databases <-  function(fram_db_1,
       dplyr::filter(!is.na(.data$stock_id)) |>
       tidyr::pivot_longer(dplyr::starts_with("target_esc_age")) |>
       dplyr::mutate(age = as.numeric(gsub("target_esc_age", "", .data$name))) |>
-      dplyr::rename(target_esc = .data$value) |>
+      dplyr::rename(target_esc = "value") |>
       dplyr::select(-dplyr::any_of(c("name", "comment", "bk_stock_id", "target_flag")))
 
 
@@ -257,7 +257,7 @@ compare_databases <-  function(fram_db_1,
       dplyr::filter(!is.na(.data$stock_id)) |>
       tidyr::pivot_longer(dplyr::starts_with("target_esc_age")) |>
       dplyr::mutate(age = as.numeric(gsub("target_esc_age", "",.data$name))) |>
-      dplyr::rename(target_esc = .data$value) |>
+      dplyr::rename(target_esc = "value") |>
       dplyr::select(-dplyr::any_of(c("name", "comment", "bk_stock_id", "target_flag")))
 
     df_comp <- dplyr::full_join(

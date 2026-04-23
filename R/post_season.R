@@ -1,25 +1,29 @@
 #' Generates post-season January age 3 abundances by stock from post-season databases.
-#' Used for forecasting.
+#'
+#' Used for forecasting. Only works for Coho post-season databases. Intended for use with databases that have
+#' one run per run year.
+#'
 #' @param fram_db FRAM database object
 #' @param units Default January Age 3 'ja3', optional ocean age 3 'oa3'
 #' @param run_ids Numeric vector of run_ids to use, necessary when there are multiple runs with the same run_year in the database. Optional, defaults to NULL.
+#'
+#' @returns Tibble identify stock, origin ("Hatchery" or "Wild"), and a column for abundances for each run. Abundance columns are labeled by year (if there is only one run per run year) or by run id (e.g., `run_54`) if multiple runs share the same year.
+#'
+#'
 #' @export
+#'
 #' @examples
 #' \dontrun{framdb |> post_season_abundance()}
 #'
-
 post_season_abundance <- function(fram_db, units = c('ja3', 'oa3'), run_ids = NULL){
 
   validate_fram_db(fram_db)
-
-  if(!is.null(run_ids)){
-    validate_run_id(fram_db, run_ids)
-  }
+  validate_run_id(fram_db, run_ids, allow_null = TRUE)
 
   unit <- rlang::arg_match(units)
 
   if(fram_db$fram_db_species != "COHO"){
-    cli::cli_abort('This function currently only works with coho')
+    cli::cli_abort('This function only works with Coho databases')
   }
 
   # get data
@@ -53,9 +57,9 @@ post_season_abundance <- function(fram_db, units = c('ja3', 'oa3'), run_ids = NU
 
       )
     ) |> #count(origin)
-    dplyr::select(.data$run_year, .data$run_id, .data$stock_id,  .data$stock_name,
-                  .data$recruit_scale_factor, .data$base_cohort_size,
-                  .data$recruit_cohort_size, .data$origin) |>
+    dplyr::select("run_year", "run_id", "stock_id", "stock_name",
+                  "recruit_scale_factor", "base_cohort_size",
+                  "recruit_cohort_size", "origin") |>
     dplyr::arrange(.data$run_year)
 
   if(!is.null(run_ids)){
@@ -70,7 +74,13 @@ post_season_abundance <- function(fram_db, units = c('ja3', 'oa3'), run_ids = NU
     unique()
 
   if(length(duplicated_years)>0){
-    cli::cli_abort("If `run_ids` is not provided, database must contain only one run per run year, but the following year(s) have multiple runs associated with them: {duplicated_years}. Provide vector of run_ids to use such that there is only one run id per run year, in optional `run_ids` argument.")
+    if(is.null(run_ids)){
+      cli::cli_abort("If `run_ids` is not provided, database must contain only one run per run year, but the following year(s) have multiple runs associated with them: {duplicated_years}. Provide vector of run_ids to use such that there is only one run id per run year, in optional `run_ids` argument.")
+    } else {
+      cli::cli_alert("Warning! The following year(s) have multiple runs associated with them: {duplicated_years}. `run_ids` was provided, so presumably this was intentional. Labeling abundance columns by run id instead of year.")
+      cohort_table <- cohort_table |>
+        dplyr::mutate(run_year = paste0("run_", run_id))
+    }
   }
 
 
@@ -79,30 +89,30 @@ post_season_abundance <- function(fram_db, units = c('ja3', 'oa3'), run_ids = NU
     # summary sheet
     cohort_table |>
       dplyr::select(
-        .data$stock_id,
-        .data$stock_name,
-        .data$run_year,
-        .data$recruit_cohort_size,
-        .data$origin
+        "stock_id",
+        "stock_name",
+        "run_year",
+        "recruit_cohort_size",
+        "origin"
       ) |>
-      tidyr::pivot_wider(names_from = .data$run_year,
-                         values_from = .data$recruit_cohort_size)
+      tidyr::pivot_wider(names_from = "run_year",
+                         values_from = "recruit_cohort_size")
   } else {
     cli::cli_alert_info('Abundances given in terms of ocean age 3')
     cohort_table |>
       dplyr::select(
-        .data$stock_id,
-        .data$stock_name,
-        .data$run_year,
-        .data$recruit_cohort_size,
-        .data$origin
+        "stock_id",
+        "stock_name",
+        "run_year",
+        "recruit_cohort_size",
+        "origin"
       ) |>
       # take out natural mortality if oa3
-      tidyr::pivot_wider(names_from = .data$run_year,
-                         values_from = .data$recruit_cohort_size) |>
+      tidyr::pivot_wider(names_from = "run_year",
+                         values_from = "recruit_cohort_size") |>
       dplyr::mutate(
         dplyr::across(
-          -c(.data$stock_id, .data$stock_name, .data$origin)
+          -c("stock_id", "stock_name", "origin")
           , \(x) x / 1.2317)
       )
   }
@@ -176,14 +186,14 @@ bkfram_checks_coho <-
     stocks <- fram_db |>
       fetch_table_('Stock') |>
       dplyr::filter(.data$species == 'COHO') |>
-      dplyr::select(.data$stock_id, .data$stock_name)
+      dplyr::select("stock_id", "stock_name")
     cli::cli_alert_success('Imported Stock Look-up Table')
 
     # pull out fisheries for lookups
     fisheries <- fram_db |>
       fetch_table_('Fishery') |>
       dplyr::filter(.data$species == 'COHO') |>
-      dplyr::select(.data$fishery_id, .data$fishery_name)
+      dplyr::select("fishery_id", "fishery_name")
     cli::cli_alert_success('Imported Fishery Look-up Table')
 
     # save run names to refer to them in output
@@ -244,11 +254,11 @@ bkfram_checks_coho <-
           )
       ) |>
       dplyr::select(
-        .data$fishery_id,
-        .data$time_step,
-        .data$fishery_flag,
-        .data$msf_fishery_scale_factor,
-        .data$fishery_scale_factor
+        "fishery_id",
+        "time_step",
+        "fishery_flag",
+        "msf_fishery_scale_factor",
+        "fishery_scale_factor"
       )
 
 
@@ -262,11 +272,11 @@ bkfram_checks_coho <-
           )
       ) |>
       dplyr::select(
-        .data$fishery_id,
-        .data$time_step,
-        .data$fishery_flag,
-        .data$msf_fishery_scale_factor,
-        .data$fishery_scale_factor
+        "fishery_id",
+        "time_step",
+        "fishery_flag",
+        "msf_fishery_scale_factor",
+        "fishery_scale_factor"
       )
 
     if (nrow(bk_bad_flags) == 0 & nrow(fwd_bad_flags) == 0) {
@@ -289,20 +299,20 @@ bkfram_checks_coho <-
     bk_buoy <- bk_fishery_scalers |>
       dplyr::filter(.data$fishery_id == 23, # buoy 10 sport
                     (.data$quota > 0 | .data$msf_quota > 0)) |>
-      dplyr::select(.data$run_id,
-                    .data$time_step,
-                    .data$fishery_flag,
-                    .data$quota,
-                    .data$msf_quota)
+      dplyr::select("run_id",
+                    "time_step",
+                    "fishery_flag",
+                    "quota",
+                    "msf_quota")
 
     fwd_buoy <- fwd_fishery_scalers |>
       dplyr::filter(.data$fishery_id == 23, # buoy 10 sport
                     (.data$quota > 0 | .data$msf_quota > 0)) |>
-      dplyr::select(.data$run_id,
-                    .data$time_step,
-                    .data$fishery_flag,
-                    .data$quota,
-                    .data$msf_quota)
+      dplyr::select("run_id",
+                    "time_step",
+                    "fishery_flag",
+                    "quota",
+                    "msf_quota")
 
     if (nrow(bk_buoy) > 0) {
       cli::cli_alert_danger('There are quotas in the backward run ({bk_run_name}). This likely needs to be fixed.')
@@ -359,10 +369,10 @@ bkfram_checks_coho <-
     cli::cli_h2('Checking for differences in flagging between backward and forward runs')
 
     bk_flags <- bk_fishery_scalers |>
-      dplyr::select(.data$fishery_id, .data$time_step, .data$fishery_flag)
+      dplyr::select("fishery_id", "time_step", "fishery_flag")
 
     fwd_flags <- fwd_fishery_scalers |>
-      dplyr::select(.data$fishery_id, .data$time_step, .data$fishery_flag)
+      dplyr::select("fishery_id", "time_step", "fishery_flag")
 
     mismatch_flags <- bk_flags |>
       dplyr::inner_join(
@@ -389,11 +399,11 @@ bkfram_checks_coho <-
 
     bk_flags <- bk_fishery_scalers |>
       dplyr::mutate(total_quota = .data$quota + .data$msf_quota) |>
-      dplyr::select(.data$fishery_id, .data$time_step, .data$total_quota)
+      dplyr::select("fishery_id", "time_step", "total_quota")
 
     fwd_flags <- fwd_fishery_scalers |>
       dplyr::mutate(total_quota = .data$quota + .data$msf_quota) |>
-      dplyr::select(.data$fishery_id, .data$time_step, .data$total_quota)
+      dplyr::select("fishery_id", "time_step", "total_quota")
 
     mismatch_quotas <- bk_flags |>
       dplyr::inner_join(
@@ -449,16 +459,16 @@ bkfram_checks_coho <-
     etrs_targets <- bk_target_escapement |>
       dplyr::inner_join(stocks, by = 'stock_id') |>
       dplyr::filter(.data$stock_name %in% etrs_stocks) |>
-      dplyr::select(.data$stock_id,
-                    .data$stock_name,
-                    .data$target_esc_age3,
-                    .data$target_flag)
+      dplyr::select("stock_id",
+                    "stock_name",
+                    "target_esc_age3",
+                    "target_flag")
 
     # calculate extreme terminal runsizes
     etrs_escapments <- fwd_escapement |>
       dplyr::inner_join(stocks, by = 'stock_id') |>
       dplyr::filter(.data$stock_name  %in% etrs_stocks) |>
-      dplyr::select(.data$stock_id, .data$stock_name, .data$escapement)
+      dplyr::select("stock_id", "stock_name", "escapement")
 
     # this chunk of code can be made more flexible,
     # if stocks are ever looked at with ETRS update the
@@ -513,12 +523,12 @@ bkfram_checks_coho <-
     cli::cli_h2('Checking backwards FRAM escapements vs targets')
 
     bk_esc_ck <- bk_esc <- bk_escapement |>
-      dplyr::select(.data$stock_id, bk_escapement = .data$escapement)
+      dplyr::select("stock_id", bk_escapement = "escapement")
 
     bk_esc_target_ck <- bk_target_escapement |>
-      dplyr::select(.data$stock_id,
-                    target_escapement = .data$target_esc_age3,
-                    .data$target_flag)
+      dplyr::select("stock_id",
+                    target_escapement = "target_esc_age3",
+                    "target_flag")
 
 
     cli::cli_alert_info(

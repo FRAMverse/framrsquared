@@ -16,3 +16,4 @@ Cleans the names of FRAM tables and coverts to a tibble
 \dontrun{fram_dataframe |> fram_clean_tables()}
 
 }
+\keyword{internal}

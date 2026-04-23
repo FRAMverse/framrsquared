@@ -1,6 +1,10 @@
 #' Identifies the FRAM database type - Full or Transfer
+#'
 #' @param con Connection to FRAM database
+#'
 #' @export
+#' @keywords internal
+#'
 #' @examples
 #' \dontrun{fram_database_type(con)}
 #'
@@ -74,6 +78,7 @@ fram_database_type <- function(con) {
 #' Identifies the FRAM database species focus - Chinook or Coho
 #' @param con Connection to FRAM database
 #' @export
+#' @keywords internal
 #' @examples
 #' \dontrun{fram_database_species(con)}
 fram_database_species <- function(con){
@@ -93,8 +98,12 @@ fram_database_species <- function(con){
 
 
 #' Cleans the names of FRAM tables and coverts to a tibble
+#'
 #' @param .data Dataframe
+#'
 #' @export
+#' @keywords internal
+#'
 #' @examples
 #' \dontrun{fram_dataframe |> fram_clean_tables()}
 #'
@@ -106,10 +115,15 @@ fram_clean_tables <- function(.data) {
 }
 
 #' Gets all run_ids of FRAM database
+#'
 #' @param fram_db Fram database object
+#'
 #' @export
+#' @keywords internal
+#'
 #' @examples
 #' \dontrun{fram_dataframe |> get_run_ids()}
+#'
 get_run_ids <- function(fram_db){
   fram_db |>
     fetch_table_('RunID') |>
@@ -117,10 +131,15 @@ get_run_ids <- function(fram_db){
 }
 
 #' Gets all fishery_ids of FRAM database
+#'
 #' @param fram_db Fram database object
+#'
 #' @export
+#' @keywords internal
+#'
 #' @examples
 #' \dontrun{fram_dataframe |> get_run_ids()}
+#'
 get_fishery_ids <- function(fram_db){
   fram_db |>
     fetch_table_('Fishery') |>
@@ -128,8 +147,12 @@ get_fishery_ids <- function(fram_db){
 }
 
 #' Gets all stock_id of FRAM database
+#'
 #' @param fram_db Fram database object
+#'
 #' @export
+#' @keywords internal
+#'
 #' @examples
 #' \dontrun{fram_dataframe |> get_run_ids()}
 get_stock_ids <- function(fram_db){
@@ -139,8 +162,10 @@ get_stock_ids <- function(fram_db){
 }
 
 #' Finds tables that contain a specific column name
+#'
 #' @param fram_db FRAM database object
 #' @param column_name Name of a column
+#' @keywords internal
 #' @examples
 #' \dontrun{fram_db |> find_tables_by_column_('RunID')}
 #'
@@ -168,9 +193,12 @@ find_tables_by_column_ <- function(fram_db, column_name) {
 
 
 #' Provides a print out of Run ID information
+#'
 #' @param fram_db FRAM database object
 #' @param run_id FRAM run ID
+#'
 #' @export
+#'
 #' @examples
 #' \dontrun{fram_db |> run_info(run_id = 132)}
 #'
@@ -206,9 +234,13 @@ run_info <- function(fram_db, run_id) {
 }
 
 #' Welcome message, summarizing database information
+#'
 #' @param con FRAM database connection
+#'
+#' @keywords internal
+#'
 #' @examples
-#' \dontrun{welcome(con)}
+#' \dontrun{welcome(fram_db$fram_database_connection)}
 #'
 welcome <- function(con){
   runs <- DBI::dbReadTable(con, 'RunID') |>
@@ -234,10 +266,14 @@ welcome <- function(con){
 }
 
 #' Convenience function to check fram_db input
+#'
 #' @param fram_db FRAM database object
 #' @param db_type Enforcement of a database type 'full' or 'transfer'
 #' @param db_species Enforcement of a species 'COHO' or 'CHINOOK'
 #' @param call internal use: identify name of function that called this function (for informative error message)
+#'
+#' @keywords internal
+#'
 validate_fram_db <- function(fram_db,
                              db_type = NULL,
                              db_species = NULL,
@@ -273,12 +309,37 @@ validate_fram_db <- function(fram_db,
   }
 }
 
+#' Check that a database connection isn't read only
+#'
+#' Validation in preparation for modifying a database.
+#'
+#' @param fram_db Fram database connection
+#' @param call internal use: identify name of function that called this function (for informative error message)
+#'
+#' @keywords internal
+#'
+validate_not_read_only <- function(fram_db, call = rlang::caller_env()){
+  if(fram_db$fram_read_only){
+    cli::cli_abort('This database connection is designated read-only!! If you are certain this database can be modified, create a new connection using `connect_fram_db()` with `read_only = FALSE`.',
+                   call = call)
+  }
+}
+
 #' Convenience function to check run_id input
+#'
 #' @param fram_db FRAM database object
 #' @param run_id one or more run_ids
 #' @param n Required number of run ids
+#' @param allow_null Should this function treat a `NULL` input as valid? Logical, defaults to TRUE
 #' @param call internal use: identify name of function that called this function (for informative error message)
-validate_run_id <- function(fram_db, run_id, n = NULL, call = rlang::caller_env()){
+#' @keywords internal
+#'
+validate_run_id <- function(fram_db,
+                            run_id,
+                            n = NULL,
+                            allow_null = FALSE,
+                            call = rlang::caller_env()){
+  if(allow_null && is.null(run_id)){ return(invisible(NULL)) }
   validate_numeric(run_id, n = n)
   available_run_ids <- get_run_ids(fram_db)
   if (! all(run_id %in% available_run_ids)){
@@ -292,11 +353,21 @@ validate_run_id <- function(fram_db, run_id, n = NULL, call = rlang::caller_env(
 #'
 #' No error checking for transfer databases
 #'
-#' @param fram_db FRAM database object
+#' @inheritParams validate_run_id
 #' @param fishery_id one or more fishery_ids
-#' @param call internal use: identify name of function that called this function (for informative error message)
-validate_fishery_ids <- function(fram_db, fishery_id, call = rlang::caller_env()){
-  validate_numeric(fishery_id)
+#'
+#' @keywords internal
+
+validate_fishery_ids <- function(fram_db,
+                                 fishery_id,
+                                 n = NULL,
+                                 allow_null = FALSE,
+                                 call = rlang::caller_env()){
+
+  if(allow_null && is.null(fishery_id)){ return(invisible(NULL)) }
+
+  validate_numeric(fishery_id, n = n)
+
   if(fram_db$fram_db_type == "full"){
     available_fishery_ids <- get_fishery_ids(fram_db)
     if (! all(fishery_id %in% available_fishery_ids)){
@@ -309,13 +380,22 @@ validate_fishery_ids <- function(fram_db, fishery_id, call = rlang::caller_env()
 
 #' Convenience function to check fishery input
 #'
-#' No error checking for transfer databases
+#' No error checking for transfer databases.
 #'
-#' @param fram_db FRAM database object
+#' @inheritParams validate_run_id
 #' @param stock_id one or more stock_ids
-#' @param call internal use: identify name of function that called this function (for informative error message)
-validate_stock_ids <- function(fram_db, stock_id, call = rlang::caller_env()){
-  validate_numeric(stock_id)
+#'
+#' @keywords internal
+validate_stock_ids <- function(fram_db,
+                               stock_id,
+                               n = NULL,
+                               allow_null = FALSE,
+                               call = rlang::caller_env()){
+
+  if(allow_null && is.null(stock_id)){ return(invisible(NULL)) }
+
+  validate_numeric(stock_id, n = n)
+
   if(fram_db$fram_db_type == "full"){
     available_stock_ids <- get_stock_ids(fram_db)
     if (! all(stock_id %in% available_stock_ids)){
@@ -324,9 +404,17 @@ validate_stock_ids <- function(fram_db, stock_id, call = rlang::caller_env()){
                      call = call)
     }
   }
+
 }
 
 
+#' Check that input is a dataframe
+#'
+#' @param x object that must be dataframe.
+#' @param arg caller argument name used for error message. Defaults to caller of this function
+#' @param call caller environment used for error messages. Defaults to caller environment of this function
+#'
+#' @keywords internal
 
 validate_data_frame <- function(x, ..., arg = rlang::caller_arg(x), call = rlang::caller_env()) {
   # checks for data frame, stolen from the tidyr package
@@ -335,10 +423,25 @@ validate_data_frame <- function(x, ..., arg = rlang::caller_arg(x), call = rlang
   }
 }
 
-validate_numeric <- function(x, n = NULL, ..., arg = rlang::caller_arg(x), call = rlang::caller_env()) {
+#' Check that input is a numeric atomic or vector
+#'
+#' @param x object that must be numeric atomic or vector.
+#' @param n If provided, exact x must be exactly this length
+#' @param allow_null If provided, treat a `NULL` value of x as valid. Logical, defaults to FALSE
+#' @inheritParams validate_data_frame
+#'
+#' @keywords internal
+validate_numeric <- function(x,
+                             n = NULL,
+                             allow_null = FALSE,
+                             ..., arg = rlang::caller_arg(x), call = rlang::caller_env()) {
+
+  if(allow_null && is.null(x)){ return(invisible(NULL)) }
+
   if (!is.numeric(x)) {
     cli::cli_abort("{.arg {arg}} must be a numeric, not {class(x)}.", ..., call = call)
   }
+
   if(!is.null(n)){
     if(length(x) != n){
       cli::cli_abort("{.arg {arg}} must be a numeric of length {n}.", ..., call = call)
@@ -346,7 +449,17 @@ validate_numeric <- function(x, n = NULL, ..., arg = rlang::caller_arg(x), call 
   }
 }
 
-validate_character <- function(x, n = NULL, ..., arg = rlang::caller_arg(x), call = rlang::caller_env()) {
+#' Check that input is a character atomic or vector
+#'
+#' @param x object that must be character atomic or vector.
+#' @inheritParams validate_numeric
+#'
+#' @keywords internal
+validate_character <- function(x,
+                               n = NULL,
+                               allow_null = FALSE,
+                               ...,
+                               arg = rlang::caller_arg(x), call = rlang::caller_env()) {
   if (!is.character(x)) {
     cli::cli_abort("{.arg {arg}} must be a character, not {class(x)}.", ..., call = call)
   }
@@ -357,6 +470,12 @@ validate_character <- function(x, n = NULL, ..., arg = rlang::caller_arg(x), cal
   }
 }
 
+#' Check that input is logical of length 1
+#'
+#' @param x object that must be a logical of length 1.
+#' @inheritParams validate_numeric
+#'
+#' @keywords internal
 validate_flag <- function(x, ..., arg = rlang::caller_arg(x), call = rlang::caller_env()){
   if (!is.logical(x) | length(x) != 1) {
     cli::cli_abort("{.arg {arg}} must be a a logical of length 1.", ..., call = call)
@@ -365,10 +484,10 @@ validate_flag <- function(x, ..., arg = rlang::caller_arg(x), call = rlang::call
 
 #' Handle species identification for filters
 #'
-#' Convenience function to condense code. `filter_*` either uses the "species" attr, or the optional `species` argument, and must provide informative errors when both are missing or both are present and mismatch.
+#' Convenience function to condense code. `filter_*` either uses the "species" attr, or the optional `species` argument, and must provide informative errors when both are missing or both are present and mismatch. Uses `standardize_species()` to allow multiple specifications for species (e.g., "COHO", "Coho", or "coho").
 #'
 #' @param .data Dataframe
-#' @param species Optional, either "COHO" or "CHINOOK".
+#' @param species Optional, either "COHO" or "CHINOOK". Character vector, defaults to NULL
 #'
 #' @return Character vector "species"
 #' @keywords internal
@@ -395,13 +514,14 @@ validate_species <- function(.data,
 
 
 
-#' Allow multiple species identifiers
+#' Coerce species names to standard form
 #'
 #' framrsquared functions are written around fram database species labels, "COHO" and "CHINOOK". This function translates alternate designations (lowercase, "chin" for "chinook") into those two forms.
 #'
 #' @param species Character atomic, either "COHO", "CHIN", or "CHINOOK", with any capitalization
 #'
-#' @return Character atomic, either "COHO" or "CHINOOK"
+#' @return Character atomic, either "COHO" or "CHINOOK", allcaps
+#'
 #' @keywords internal
 standardize_species <- function(species){
   species = toupper(species)
@@ -428,12 +548,13 @@ validate_table <- function(fram_db, table_name){
 
 #' List names of FRAM table
 #'
-#' Provides list of FRAm database names, typically useful for internal functions.
+#' Provides list of FRAM database names, typically useful for internal functions. Based on hard-coded table names, not a call to a database.
 #'
 #' @param is_full Logical. Provide names for a full FRAM database (TRUE) or a model transfer (FALSE)?
 #'
 #' @return Character string of the names of FRAM tables
 #' @export
+#' @keywords internal
 #'
 #' @examples
 #' provide_table_names(is_full = FALSE)
@@ -496,4 +617,72 @@ provide_table_names <- function(is_full = TRUE){
       'TAAETRSList'
     )
   }
+}
+
+#' One-stop shop for validation of filter_*() functions
+#'
+#' Wrapper function for all the input validation done by `filter_*()` functions (specifically those
+#' that filter by fishery_id).
+#'
+#' @keywords internal
+#'
+validate_fishery_filter_inputs <- function(.data, species, return_ids,
+                                           call = rlang::caller_env()){
+
+  validate_data_frame(.data, call = call)
+  validate_flag(return_ids, call = call)
+
+  if (!"fishery_id" %in% colnames(.data)) {
+    cli::cli_abort("fishery_id column must be present in dataframe.",
+                   call = call)
+  }
+
+
+}
+
+#' Compare base periods of two runs
+#'
+#' Compares the base periods of two or more run ids. If `strict = TRUE`, errors if the base periods
+#' are not the same. If `strict = FALSE`, does not error and invisibly returns a list of comparison
+#' information.
+#'
+#' @param fram_db Fram database connection
+#' @param run_ids vector of two or more run ids to check
+#' @param strict Should this function error out if the runs don't have the same base period (`TRUE`)
+#'   or just return a list with information about which aspects of the base periods do / don't match
+#'   (`FALSE`)?
+#'
+#' @returns a list with the following elements:
+#'   \describe{
+#'     \item{`same_bp`}{Is the BP identical for each run? Logical.}
+#'     \item{`same_fishery_version`}{Is the fishery version number the same? Logical.}
+#'     \item{`same_stock_version`}{Is the stock version the same? Logical.}
+#'     \item{`same_time_step_version`}{Is the time step version the same? Logical.}
+#'     \item{`base_periods_df`}{Data frame with the run_id and run_name, joined with the info from the BaseID table.}
+#'   }
+#'
+#' @keywords internal
+#'
+validate_same_bp <- function(fram_db, run_ids, strict = TRUE, call = rlang::caller_env()){
+  run_info <- fetch_table(fram_db, "RunID") |>
+    dplyr::filter(.data$run_id %in% .env$run_ids) |>
+    dplyr::select("run_id", "run_name", "base_period_id")
+
+  if(strict & !all(run_info$base_period_id == run_info$base_period_id[1])){
+    cli::cli_abort("Runs must have the same base period! Runs {.val {run_ids}} have base periods {.val {run_info$base_period_id} }",
+                   call = call)
+  }
+
+  bp_info <- fetch_table(fram_db, "BaseID")
+
+  joint_info <- run_info |>
+    dplyr::left_join(bp_info, by = c("base_period_id"))
+
+  res <- list(same_bp = all(joint_info$base_period_id == joint_info$base_period_id[1]),
+              same_fishery_version = all(joint_info$fishery_version == joint_info$fishery_version[1]),
+              same_stock_version = all(joint_info$stock_version == joint_info$stock_version[1]),
+              same_time_step_version = all(joint_info$time_step_version == joint_info$time_step_version[1]),
+              base_periods_df = joint_info
+              )
+  return(invisible(res))
 }

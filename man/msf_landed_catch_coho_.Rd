@@ -20,3 +20,4 @@ This is specific for Coho and in most cases msf_landed_catch() is preferable.
 \seealso{
 \code{\link[=msf_landed_catch]{msf_landed_catch()}}, \code{\link[=msf_encounters_coho_]{msf_encounters_coho_()}}, \code{\link[=msf_mortalities_coho_]{msf_mortalities_coho_()}}
 }
+\keyword{internal}

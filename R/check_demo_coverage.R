@@ -17,6 +17,8 @@
 #'   \item{`coverage`}{Numeric percentage of functions documented}
 #' }
 #'
+#' @keywords internal
+#'
 #' @details
 #' The function searches for function calls in the form `function_name(` to
 #' determine if a function is present in the documentation. It prints a

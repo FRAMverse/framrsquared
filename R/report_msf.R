@@ -1,4 +1,3 @@
-
 #' Reproduce MSF mortalities screen
 #'
 #' Produces the MSF screen report numbers for mortalities. Returns different
@@ -6,6 +5,9 @@
 #'
 #' @param fram_db FRAM database object
 #' @param run_id Run ID
+#'
+#' @returns Tibble identifying run, fishery, timestep. For Coho database, `$marked` and `$unmarked` columns. for Chinook database, also identifies by legal and sublegal.
+#'
 #' @export
 #'
 #' @seealso [msf_encounters()], [msf_landed_catch()]

@@ -11,12 +11,24 @@ compare_stock_fishery_rate_scalers(fram_db, run_ids)
 
 \item{run_ids}{Two run ids}
 }
+\value{
+Tibble of any stock x fishery x timesteps in which the Stock Fishery Rate Scalers (SFRS) changed. \verb{$stock_id}, \verb{$stock_label}, \verb{$fishery_id}, \verb{$fishery_label}, and \verb{$time_step} identify the stock x fishery x timestep, and \verb{$sfrs_original} and \verb{$sfrs_comparison} list the SFRS values in the first and second runs, respectively.
+}
 \description{
-Compares the stock fishery rate scalers of two runs
+Only relevant for Coho runs.
 }
 \examples{
 \dontrun{fram_db |> compare_stock_fishery_rate_scalers(c(55, 56))}
 }
 \seealso{
-\code{\link[=compare_runs]{compare_runs()}}
+Other comparisons: 
+\code{\link{compare_fishery_input_flags}()},
+\code{\link{compare_fishery_inputs}()},
+\code{\link{compare_inputs}()},
+\code{\link{compare_inputs_chart}()},
+\code{\link{compare_non_retention_inputs}()},
+\code{\link{compare_recruits}()},
+\code{\link{compare_runs}()},
+\code{\link{compare_sl_ratio}()}
 }
+\concept{comparisons}

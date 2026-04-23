@@ -2,23 +2,29 @@
 % Please edit documentation in R/parse_terminal.R
 \name{terminal_info}
 \alias{terminal_info}
-\title{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
-Parse TAAETRS table}
+\title{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} Parse TAAETRS table}
 \usage{
 terminal_info(fram_db, old_table_name = TRUE, species = NULL)
 }
 \arguments{
 \item{fram_db}{Fram database object}
 
-\item{old_table_name}{Logical, defaults to TRUE. We intend to change the FRAM table from TAAETRSList to TAAETRSListChinook to avoid confusion. When working with a database where that hasn't been done, leave this argument to TRUE.}
+\item{old_table_name}{Logical, defaults to TRUE. We intend to change the FRAM table from
+TAAETRSList to TAAETRSListChinook to avoid confusion. When working with a database where that
+hasn't been done, leave this argument to TRUE.}
 
-\item{species}{"COHO" or "CHINOOK". Optional, defaults to the database species. Provide this only if fram_db connects to a database with both Chinook and Coho information. And try to avoid that -- those databases are sketchy to work with.}
+\item{species}{"COHO" or "CHINOOK". Optional, defaults to the database species. Provide this only
+if fram_db connects to a database with both Chinook and Coho information. And try to avoid that
+-- those databases are sketchy to work with.}
 }
 \value{
-tibble of TAAETRSList or TAAETRSListChinook tables translated to long form.
+tibble of TAAETRSList or TAAETRSListChinook tables translated to long form. \verb{$taa_name} and \code{taa_num} identify the "TAA" group, \verb{$stock_label} and \verb{$stock_id} identify the FRAM stock, \verb{$terminal_time_steps} and \verb{$terminal_months} give the time periods that this stock is terminal, and \verb{$fishery_label} and \verb{$fishery_id} identify the fishery for which the stock is terminal.
 }
 \description{
-Terminal run information used by FRAM is stored in the TAAETRSList and (soon) the TAAETRSListChinook tables, but stored in a way that is not very human readable. \code{parse_terminal_info()} translates this to human-readable form, primarily to then be used by \code{\link[=terminal_stocks]{terminal_stocks()}} and \code{\link[=terminal_fisheries]{terminal_fisheries()}}.
+Terminal run information used by FRAM is stored in the TAAETRSList and (soon) the
+TAAETRSListChinook tables, but stored in a way that is not very human readable.
+\code{parse_terminal_info()} translates this to human-readable form, primarily to then be used by
+\code{\link[=terminal_stocks]{terminal_stocks()}} and \code{\link[=terminal_fisheries]{terminal_fisheries()}}.
 }
 \examples{
 \dontrun{fram_db |> parse_terminal_info()}

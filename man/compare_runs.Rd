@@ -2,7 +2,7 @@
 % Please edit documentation in R/compare_inputs.R
 \name{compare_runs}
 \alias{compare_runs}
-\title{Generates a report to the console of changes to inputs between two runs}
+\title{Compare key aspects of two FRAM runs}
 \usage{
 compare_runs(fram_db, run_ids, save_file = NULL, tolerance = 0.01)
 }
@@ -13,11 +13,26 @@ compare_runs(fram_db, run_ids, save_file = NULL, tolerance = 0.01)
 
 \item{save_file}{If provided, diagnostics text is sent to file instead of console. If file already exists, will overwrite. Character, defaults to NULL.}
 
-\item{tolerance}{Tolerance of detection, 1 percent default}
+\item{tolerance}{Minimum proportional change to flag as a "difference" for relevant comparisons (comparison of recruits, fishery inputs). Numeric, defaults to 0.01 (e.g., 1\% change).}
+}
+\value{
+invisibly returns a list of the comparison dataframes: \verb{$retention_flags}, \verb{$retention_inputs}, \verb{$sl_ratio}, \verb{$recruits}, \code{fishery_flags}, \verb{$fishery_inputs}, \verb{$sfrs}
 }
 \description{
-Generates a report to the console of changes to inputs between two runs
+Outputs summary of comparisons to the console (or optionally to a text file instead). Summary includes output of \code{compare_non_retention_flags()}, \code{compare_non_retention_inputs()}, \code{compare_sl_ratio()} (Chinook only), \code{compare_recruits()}, \code{compare_fishery_input_flags()}, \code{compare_fishery_inputs()}, and \code{compare_stock_fishery_rate_scalers()} (Coho only).
 }
 \examples{
 \dontrun{fram_db |> compare_runs(c(55, 56))}
 }
+\seealso{
+Other comparisons: 
+\code{\link{compare_fishery_input_flags}()},
+\code{\link{compare_fishery_inputs}()},
+\code{\link{compare_inputs}()},
+\code{\link{compare_inputs_chart}()},
+\code{\link{compare_non_retention_inputs}()},
+\code{\link{compare_recruits}()},
+\code{\link{compare_sl_ratio}()},
+\code{\link{compare_stock_fishery_rate_scalers}()}
+}
+\concept{comparisons}

@@ -10,6 +10,9 @@ truns_stocks(fram_db)
 \arguments{
 \item{fram_db}{FRAM database object}
 }
+\value{
+Tibble with stock ID and TRUN stock name (\code{stocck_name}).
+}
 \description{
 Returns a dataframe with stocks defined
 by the TRuns report driver

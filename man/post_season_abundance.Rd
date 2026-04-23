@@ -2,8 +2,7 @@
 % Please edit documentation in R/post_season.R
 \name{post_season_abundance}
 \alias{post_season_abundance}
-\title{Generates post-season January age 3 abundances by stock from post-season databases.
-Used for forecasting.}
+\title{Generates post-season January age 3 abundances by stock from post-season databases.}
 \usage{
 post_season_abundance(fram_db, units = c("ja3", "oa3"), run_ids = NULL)
 }
@@ -14,9 +13,12 @@ post_season_abundance(fram_db, units = c("ja3", "oa3"), run_ids = NULL)
 
 \item{run_ids}{Numeric vector of run_ids to use, necessary when there are multiple runs with the same run_year in the database. Optional, defaults to NULL.}
 }
+\value{
+Tibble identify stock, origin ("Hatchery" or "Wild"), and a column for abundances for each run. Abundance columns are labeled by year (if there is only one run per run year) or by run id (e.g., \code{run_54}) if multiple runs share the same year.
+}
 \description{
-Generates post-season January age 3 abundances by stock from post-season databases.
-Used for forecasting.
+Used for forecasting. Only works for Coho post-season databases. Intended for use with databases that have
+one run per run year.
 }
 \examples{
 \dontrun{framdb |> post_season_abundance()}

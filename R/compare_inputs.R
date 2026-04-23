@@ -1,26 +1,47 @@
-#' Generates a dataframe that compares fishery scalers table for two runs identified by run_id's
+## helper function to add attributes to comparison dataframes
+attach_comparison_attributes <- function(.data, fram_db, run_ids){
+
+  runs <- fram_db |>
+    fetch_table_('RunID') |>
+    dplyr::select("run_id", "run_name")
+
+  original_run_name <- runs |>
+    dplyr::filter(.data$run_id == run_ids[[1]]) |>
+    dplyr::pull(.data$run_name)
+
+  comparison_run_name <- runs |>
+    dplyr::filter(.data$run_id == run_ids[[2]]) |>
+    dplyr::pull(.data$run_name)
+
+  attr(.data, "original_run_id") <- run_ids[1]
+  attr(.data, "comparison_run_id") <- run_ids[2]
+  attr(.data, "original_run_name") <- original_run_name
+  attr(.data, "comparison_run_name") <- comparison_run_name
+  attr(.data, "species") <- fram_db$fram_db_species
+
+  return(.data)
+}
+
+
+#' Compare FisheryScalers tables between two runs.
+#'
+#' Generates a dataframe that compares fishery scalers table for two runs identified by run_id's.
+#'
 #' @param fram_db FRAM database object
 #' @param run_ids Vector of two run_ids
-#' @details
-#' Comparisons assume the first run provided is the baseline, and provide relative changes from that.
-#' This includes percent changes ($percent.diff)include percent changes (infinite when)
 #'
-#' @return Data frame of differences. `$percentdiff` = change in quota (comparing the appropriate quotas based on fishery flags),
-#'  `$regulation_comparison`  = change in regulation (NS, MSF, NS + MSF). Columns present in the
-#'  FisheriesScalers database are included, with `_original` and `_comparison`
-#'  suffixes identifying entries associated with the first and second entries of
-#'  `run_ids`, respectively.
+#' @returns Data frame of differences. `*_original` columns show the values in the first run of `run_ids`, while `*_comparison` show the values of the second run of `run_ids`. Quota and MSF quota have been combined into `$total_quota_*`. `$prop_diff` = proportional change in quota (comparing the appropriate quotas based on fishery flags). `$reg_change` = change in regulations.
 #'
+#' @family comparisons
 #' @export
-#' @seealso [compare_inputs_chart()]
 #' @examples
 #' \dontrun{fram_db |> compare_inputs(c(100,101))}
 #'
 compare_inputs <- function(fram_db, run_ids){
   validate_fram_db(fram_db)
-  validate_run_id(fram_db, run_ids)
-  # abort if do have two run ids
-  if(length(run_ids) != 2 | !is.numeric(run_ids)){cli::cli_abort('Two valid run ids must be provided')}
+  validate_run_id(fram_db, run_ids, n = 2)
+  validate_same_bp(fram_db, run_ids)
+
   scalers <- fram_db |>
     fetch_table_('FisheryScalers') |>
     dplyr::filter(.data$run_id %in% .env$run_ids)
@@ -40,44 +61,48 @@ compare_inputs <- function(fram_db, run_ids){
         .data$total_quota_original == 0 & .data$total_quota_comparison > 0 ~ paste0('NR->', .data$regulation_comparison),
         .data$total_quota_comparison == 0 & .data$total_quota_original > 0 ~ paste0(.data$regulation_original, '->NR')
       )
-    )
+    ) |>
+    dplyr::mutate(run_id = dplyr::coalesce(.data$run_id_original, .data$run_id_comparison)) |>
+    label_fisheries_db(fram_db = fram_db) |>
+    dplyr::select(-"run_id") |>
+    attach_comparison_attributes(fram_db = fram_db,
+                                 run_ids = run_ids)
 }
 
-#' Generates a dataframe that compares sl ratiosfor two runs identified by run_id's
+#' Compare Sublegal Ratio tables between two runs.
+#'
+#' Provides a dataframe that compares the "SLRatio" table for two runs identified by run_ids.
+#' Only works for Chinook databases (Coho do not have an SLRatio table).
+#'
 #' @inheritParams compare_inputs
-#' @details
-#' Comparisons assume the first run provided is the baseline, and provide relative changes from that.
-#' This includes only absolute changes.
 #'
-#' @return Data frame of differences. `$target_ratio_diff` = change in target ratio,
-#'  `$run_encounter_rate_adjustment_diff` = change in run encounter rate adjustment (NS, MSF, NS + MSF). Columns present in the
-#'  "SLRatio" table are included, with `_original` and `_comparison`
-#'  suffixes identifying entries associated with the first and second entries of
-#'  `run_ids`, respectively.
+#' @returns Data frame of differences. `*_original` columns show the values in the first run of `run_ids`, while `*_comparison` show the values of the second run of `run_ids`. `*_diff` = original - comparison.
 #'
+#' @family comparisons
 #' @export
 #' @examples
-#' \dontrun{fram_db |> compare_inputs(c(100,101))}
+#' \dontrun{fram_db |> compare_sl_ratio(c(100,101))}
 
 compare_sl_ratio <- function(fram_db, run_ids){
   validate_fram_db(fram_db)
-  validate_run_id(fram_db, run_ids)
+  validate_run_id(fram_db, run_ids, n = 2)
+  validate_same_bp(fram_db, run_ids)
   if(fram_db$fram_db_species != "CHINOOK"){cli::cli_abort('Database must be a Chinook database.')}
   # abort if do have two run ids
-  if(length(run_ids) != 2 | !is.numeric(run_ids)){cli::cli_abort('Two valid run ids must be provided.')}
 
   sl_ratio <- fram_db |>
-    fetch_table("SLRatio")
+    fetch_table_("SLRatio")
 
   original <- sl_ratio |>
     dplyr::filter(.data$run_id == .env$run_ids[1]) |>
-    dplyr::select(.data$fishery_id, .data$age, .data$time_step,
-                  .data$target_ratio, .data$run_encounter_rate_adjustment)
+    dplyr::select("run_id", "fishery_id", "age", "time_step",
+                  "target_ratio", "run_encounter_rate_adjustment")
+
 
   comparison <- sl_ratio |>
-    dplyr::filter(.data$run_id == .env$run_ids[2]) |>
-    dplyr::select(.data$fishery_id, .data$age, .data$time_step,
-                  .data$target_ratio, .data$run_encounter_rate_adjustment)
+    dplyr::filter(.data$run_id == .env$run_ids[2])|>
+    dplyr::select("run_id", "fishery_id", "age", "time_step",
+                  "target_ratio", "run_encounter_rate_adjustment")
 
   sl_ratio_changes <- original |>
     dplyr::full_join(comparison,
@@ -91,20 +116,26 @@ compare_sl_ratio <- function(fram_db, run_ids){
     dplyr::filter(.data$target_ratio_diff != 0 |
                     .data$run_encounter_rate_adjustment_diff != 0 |
                     .data$na_mismatch
-                    ) |>
-  dplyr::select(-"na_mismatch")
+    ) |>
+    dplyr::mutate(run_id = dplyr::coalesce(.data$run_id_original, .data$run_id_comparison)) |>
+    label_fisheries_db(fram_db = fram_db) |>
+    dplyr::select(-"na_mismatch", -"run_id", -"run_id_original", -"run_id_comparison") |>
+    attach_comparison_attributes(fram_db, run_ids = run_ids)
 
   return(sl_ratio_changes)
 }
 
+
 #' Generate heat map of changed values between two run inputs.
 #'
-#' Can be a very busy chart if not filtered down. Consider using a filter on the dataframe before piping into `compare_input_chart`.
+#' Can be a very busy chart if not filtered down. Consider using a `filter_*()` function on the dataframe before piping into `compare_input_chart`.
 #'
 #' @param .data Dataframe origination from the compare_inputs() function
 #' @export
 #'
-#' @seealso [compare_inputs()]
+#' @family comparisons
+#'
+#' @returns ggplot object with heatmap of changes in inputs.
 #'
 #' @examples
 #' \dontrun{fram_db |> compare_inputs(c(100, 101)) |> compare_inputs_chart()}
@@ -144,6 +175,8 @@ compare_inputs_chart <- function(.data){
 #' Probably end up streamlining / revising this.
 #' @param .data FisheryFishery scalers dataframe
 #' @param run_id Run ID number
+#' @keywords internal
+#' @return tibble with `$run_id`, `$fishery_id`, `$fishery_flag`, `$time_step`, `$total_quota` (sum of quota and msf_quota), and `regulation` ("NS", "MSF", "NS+MSF", or NA)
 #' @examples
 #' \dontrun{fishery_scalers_dataframe |> input_summary()}
 input_summary_ <- function(.data, run_id){
@@ -158,56 +191,52 @@ input_summary_ <- function(.data, run_id){
         .data$fishery_flag %in% c(7,8) ~ .data$msf_quota,
         .data$fishery_flag %in% c(17,18,27,28) ~ .data$quota + .data$msf_quota),
       regulation = dplyr::case_when(
+        .data$fishery_flag == 0 ~ 'none',
         .data$fishery_flag %in% c(1,2) ~ 'NS',
         .data$fishery_flag %in% c(7,8) ~ 'MSF',
         .data$fishery_flag %in% c(17,18,27,28) ~ 'NS+MSF'
       )
     ) |>
-    dplyr::select(.data$run_id,.data$fishery_id,.data$fishery_flag, .data$time_step, .data$total_quota, .data$regulation)
+    dplyr::select(
+      "run_id",
+      "fishery_id",
+      "fishery_flag",
+      "time_step",
+      "total_quota",
+      "regulation"
+    )
 }
 
-
-
 #' Compares the recruit scalers of two runs
-#' @param fram_db FRAM database object
-#' @param run_ids Two run ids
-#' @param tolerance Tolerance for detecting changes
+#'
+#' @inheritParams compare_inputs
+#' @param tolerance Minimum % change needed to flag a difference. Set to 0 to flag any changes at all. Defaults to 0.01.
 #' @param verbose If `TRUE`, print an update to screen when there are no differences in recruits.
+#'
 #' @export
-#' @seealso [compare_runs()]
+#' @family comparisons
+#'
+#' @returns tibble with `$stock_id`, `$age`, and `$stock_name` identifying stock x age combinations in which the recruit cohort sizes changed by at least `tolerance x 100`%. `recruit_cohort_original` and `$..._comparison` give the recruit cohort for the first and second run_ids provided. These are calculated directly from "StockRecruit" column RecruitScaleFactor and the "BaseCohort" table, as the RecruitCohort column of the "StockRecruit" table can be misleading. `$prop_diff` gives the proportional change from the original to comparison runs (ie 0.16  = 16% increase).
+#'
 #' @examples
 #' \dontrun{fram_db |> compare_recruits()}
 compare_recruits <- function(fram_db, run_ids, tolerance = .01, verbose = TRUE){
   validate_fram_db(fram_db)
-  validate_run_id(fram_db, run_ids)
+  validate_run_id(fram_db, run_ids, n = 2)
+  validate_same_bp(fram_db, run_ids)
+  validate_numeric(tolerance, n = 1)
+  validate_flag(verbose)
 
-  if (!is.numeric(tolerance) || length(tolerance) != 1) {
-    cli::cli_abort('`tolerance` must be a numeric of length 1')
+  if(tolerance < 0 | tolerance > 1){
+    cli::cli_abort('`tolerance` must be a numeric between 0 and 1.')
   }
-
-  if(tolerance < 0){
-    cli::cli_abort('`tolerance` must be positive')
-  }
-
-  if (!is.logical(verbose) || length(verbose) != 1) {
-    cli::cli_abort('`verbose` must be a logical of length 1')
-  }
-
 
   runs <- fram_db |>
     fetch_table_('RunID') |>
-    dplyr::select(.data$run_id, .data$run_name)
+    dplyr::select("run_id", "run_name")
 
-  base_run_name <- runs |>
-    dplyr::filter(.data$run_id == run_ids[[1]]) |>
-    dplyr::pull(.data$run_name) |>
-    rlang::sym() #... don't ask, R voodoo magic
-
-  new_run_name <- runs |>
-    dplyr::filter(.data$run_id == run_ids[[2]]) |>
-    dplyr::pull(.data$run_name) |>
-    rlang::sym() #... don't ask, R voodoo magic
-
+  runs_lut = data.frame(run_id = run_ids,
+                        run_identifier = c("original", "comparison"))
 
   recruit_scalers <- fram_db |>
     fetch_table_('StockRecruit')
@@ -215,110 +244,100 @@ compare_recruits <- function(fram_db, run_ids, tolerance = .01, verbose = TRUE){
   base_period_recruit <- fram_db |>
     fetch_table_('BaseCohort')
 
-  stocks <- fram_db |>
-    fetch_table_('Stock') |>
-    dplyr::filter(.data$species == fram_db$fram_db_species) |>
-    dplyr::select(.data$stock_id, .data$stock_name)
-
   run_base_period <- fram_db |>
     fetch_table_('RunID') |>
-    dplyr::select(.data$run_id, .data$base_period_id)
+    dplyr::select("run_id", "base_period_id")
 
   # recalc recruit cohort size
   base_recruits <- recruit_scalers |>
     dplyr::inner_join(run_base_period, by = 'run_id') |>
     dplyr::inner_join(base_period_recruit, by = c('base_period_id', 'stock_id', 'age')) |>
     dplyr::mutate(recruit_cohort_size = .data$recruit_scale_factor * .data$base_cohort_size) |>
-    dplyr::select(.data$run_id, .data$stock_id, .data$age, .data$recruit_cohort_size)
+    dplyr::select("run_id", "stock_id", "age", "recruit_cohort_size")
 
   recruit_changes <- base_recruits |>
     dplyr::filter(.data$run_id %in% run_ids) |>
-    dplyr::inner_join(stocks, by = 'stock_id') |>
-    dplyr::inner_join(runs, by = 'run_id') |>
-    dplyr::select(-.data$run_id) |>
-    tidyr::pivot_wider(names_from = .data$run_name,
-                       values_from = .data$recruit_cohort_size,
+    label_stocks_db(fram_db = fram_db) |>
+    dplyr::inner_join(runs_lut, by = "run_id") |>
+    dplyr::select(-"run_id") |>
+    tidyr::pivot_wider(names_from = "run_identifier",
+                       values_from = "recruit_cohort_size",
+                       names_prefix = "recruit_cohort_",
                        values_fill = NA_real_) |>
-    dplyr::filter(abs((!!new_run_name-!!base_run_name) / !!base_run_name) > tolerance) |>
-    dplyr::select(.data$stock_id,
-                  .data$age,
-                  .data$stock_name,
-                  !!base_run_name,
-                  !!new_run_name)
+    dplyr::mutate(prop_diff = (dplyr::coalesce(.data$recruit_cohort_comparison, 0) - dplyr::coalesce(.data$recruit_cohort_original, 0)) / dplyr::coalesce(.data$recruit_cohort_original, 0)) |>
+    dplyr::filter(abs(.data$prop_diff) > .env$tolerance) |>
+    dplyr::select("stock_id",
+                  "age",
+                  "stock_label",
+                  "recruit_cohort_original",
+                  "recruit_cohort_comparison",
+                  "prop_diff") |>
+    attach_comparison_attributes(fram_db, run_ids = run_ids)
+
   if(nrow(recruit_changes)==0 & verbose){cli::cli_text(cli::col_blue("No differences in recruits between these runs"))}
+
   return(recruit_changes)
 }
 
 #' Compares the fishery inputs of two runs
 #' @inheritParams compare_recruits
+#'
+#' @returns All fishery x timesteps in which the fishery inputs changed by at least (`tolerance` x 100) % between the specified runs.
+#' `$fishery_id`, `$fishery_label`, and `$timestep` identify the fishery x timestep, `$parameter` identifies which parameter changed (.e.g, quota, msf_quota, etc.). `$original` and `$comparison` show the values from the first and second runs, respectively. `$prop_diff` shows the proportional change from the first to second run (e.g., 0.16 = 16% increase).
+#'
 #' @export
-#' @seealso [compare_runs()]
+#' @family comparisons
+#'
 #' @examples
 #' \dontrun{fram_db |> compare_fishery_inputs(c(55, 56))}
 compare_fishery_inputs <- function(fram_db, run_ids, tolerance = .01, verbose = TRUE){
   validate_fram_db(fram_db)
-  validate_run_id(fram_db, run_ids)
-
-  if (!is.numeric(tolerance) || length(tolerance) != 1) {
-    cli::cli_abort('`tolerance` must be a numeric of length 1')
+  validate_run_id(fram_db, run_ids, n = 2)
+  validate_same_bp(fram_db, run_ids)
+  validate_numeric(tolerance, n = 1)
+  if(tolerance < 0 | tolerance > 1){
+    cli::cli_abort('`tolerance` must be a numeric with a value from 0 to 1')
   }
-
-  if(tolerance < 0){
-    cli::cli_abort('`tolerance` must be positive')
-  }
-
-  if (!is.logical(verbose) || length(verbose) != 1) {
-    cli::cli_abort('`verbose` must be a logical of length 1')
-  }
-
+  validate_flag(verbose)
 
   fishery_scalers <- fram_db |>
     fetch_table_('FisheryScalers')
 
   runs <- fram_db |>
     fetch_table_('RunID') |>
-    dplyr::select(.data$run_id, .data$run_name)
+    dplyr::select("run_id", "run_name")
 
-  fisheries <- fram_db |>
-    fetch_table_('Fishery') |>
-    dplyr::filter(.data$species == fram_db$fram_db_species) |>
-    dplyr::select(.data$fishery_id, .data$fishery_name)
-
-  base_run_name <- runs |>
-    dplyr::filter(.data$run_id == run_ids[[1]]) |>
-    dplyr::pull(.data$run_name) |>
-    rlang::sym() #... don't ask, R voodoo magic
-
-  new_run_name <- runs |>
-    dplyr::filter(.data$run_id == run_ids[[2]]) |>
-    dplyr::pull(.data$run_name) |>
-    rlang::sym() #... don't ask, R voodoo magic
-
+  runs_lut <- data.frame(run_id = run_ids,
+                         run_label = c("original", "comparison"))
 
   fishery_scaler_compare <- fishery_scalers |>
     dplyr::filter(.data$run_id %in% run_ids) |>
-    filter_flag() |>
-    dplyr::select(.data$run_id:.data$time_step,
-                  .data$fishery_scale_factor:.data$msf_quota)
+    na_scalers_from_flag() |>
+    dplyr::select("run_id":"time_step",
+                  "fishery_scale_factor":"msf_quota")
 
   fishery_changed = fishery_scaler_compare |>
-    dplyr::inner_join(runs, by = 'run_id') |>
-    dplyr::inner_join(fisheries, by = 'fishery_id') |>
-    dplyr::select(-.data$run_id) |>
-    tidyr::pivot_longer(.data$fishery_scale_factor:.data$msf_quota) |>
+    dplyr::inner_join(runs_lut, by = 'run_id') |>
+    label_fisheries_db(fram_db = fram_db) |>
+    dplyr::select(-"run_id") |>
+    tidyr::pivot_longer("fishery_scale_factor":"msf_quota",
+                        names_to = "parameter") |>
     tidyr::pivot_wider(
-      names_from = .data$run_name,
-      values_from = .data$value,
+      names_from = "run_label",
+      values_from = "value",
       values_fill = 0
     ) |>
-    dplyr::filter(abs((!!new_run_name-!!base_run_name) / !!base_run_name) > .01) |>
-    dplyr::select(.data$fishery_id,
-                  .data$fishery_name,
-                  .data$time_step,
-                  .data$name,
-                  !!base_run_name,
-                  !!new_run_name) |>
-    `attr<-`('species', fram_db$fram_db_species) # making accessible to package filters
+    dplyr::mutate(prop_diff = (dplyr::coalesce(.data$comparison, 0) - dplyr::coalesce(.data$original, 0)) /
+                    dplyr::coalesce(.data$original, 0)) |>
+    dplyr::filter(abs(.data$prop_diff) > .env$tolerance) |>
+    dplyr::select("fishery_id",
+                  "fishery_label",
+                  "time_step",
+                  "parameter",
+                  "original",
+                  "comparison",
+                  "prop_diff") |>
+    attach_comparison_attributes(fram_db, run_ids = run_ids)
   if(nrow(fishery_changed)==0 & verbose){cli::cli_text(cli::col_blue("No differences in fishery inputs between these runs"))}
   return(fishery_changed)
 
@@ -327,65 +346,53 @@ compare_fishery_inputs <- function(fram_db, run_ids, tolerance = .01, verbose = 
 
 #' Compares the fishery flags of two runs
 #' @inheritParams compare_recruits
+#'
+#' @returns Tibble with all fishery x timesteps that changed fishery input flags. `$fishery_id`, `$fishery_label`, and `$time_step`  identify the fishery x timestep combination, and `$flag_original` and `$flag_comparison` show the flags in the first and second runs, respectively.
+#'
 #' @export
-#' @seealso [compare_runs()]
+#' @family comparisons
+#'
 #' @examples
 #' \dontrun{fram_db |> compare_fishery_input_flags(c(55, 56))}
 compare_fishery_input_flags <- function(fram_db, run_ids, verbose = TRUE){
   validate_fram_db(fram_db)
-  validate_run_id(fram_db, run_ids)
-
- if (!is.logical(verbose) || length(verbose) != 1) {
-    cli::cli_abort('`verbose` must be a logical of length 1')
-  }
-
+  validate_run_id(fram_db, run_ids, n = 2)
+  validate_same_bp(fram_db, run_ids)
+  validate_flag(verbose)
 
   fishery_scalers <- fram_db |>
     fetch_table_('FisheryScalers') |>
     dplyr::filter(.data$run_id %in% run_ids)
 
-  runs <- fram_db |>
-    fetch_table_('RunID') |>
-    dplyr::select(.data$run_id, .data$run_name)
-
-  fisheries <- fram_db |>
-    fetch_table_('Fishery') |>
-    dplyr::filter(.data$species == fram_db$fram_db_species) |>
-    dplyr::select(.data$fishery_id, .data$fishery_name)
-
-
-  base_run_name <- runs |>
-    dplyr::filter(.data$run_id == run_ids[[1]]) |>
-    dplyr::pull(.data$run_name) |>
-    rlang::sym() #... don't ask, R voodoo magic
-
-  new_run_name <- runs |>
-    dplyr::filter(.data$run_id == run_ids[[2]]) |>
-    dplyr::pull(.data$run_name) |>
-    rlang::sym() #... don't ask, R voodoo magic
-
+  runs_lut <- data.frame(run_id = run_ids,
+                         run_label = c("original", "comparison"))
 
   # flag comparison in fishery scalers
   flags_changed <- fishery_scalers |>
-    dplyr::inner_join(runs, by = 'run_id') |>
-    dplyr::inner_join(fisheries, by = 'fishery_id') |>
+    dplyr::inner_join(runs_lut, by = 'run_id') |>
+    label_fisheries_db(fram_db = fram_db) |>
+    # dplyr::inner_join(fisheries, by = 'fishery_id') |>
     dplyr::select(
-      .data$fishery_id,
-      .data$time_step,
-      .data$fishery_flag,
-      .data$run_name,
-      .data$fishery_name
+      "fishery_id",
+      "time_step",
+      "fishery_flag",
+      "run_label",
+      "fishery_label"
     ) |>
-    tidyr::pivot_wider(names_from = .data$run_name, values_from = .data$fishery_flag,
-                       values_fill = 0) |>
-    dplyr::filter((!!base_run_name != !!new_run_name) |
-                    xor(is.na(!!base_run_name), is.na(!!new_run_name))) |>
+    tidyr::pivot_wider(names_from = "run_label", values_from = "fishery_flag",
+                       values_fill = 0,
+                       names_prefix = "flag_") |>
+    dplyr::filter((.data$flag_original != .data$flag_comparison) |
+                    xor(is.na(.data$flag_original), is.na(.data$flag_comparison))) |>
     dplyr::select(
-      .data$fishery_id,
-      .data$time_step,
-      .data$fishery_name,!!base_run_name,!!new_run_name
+      "fishery_id",
+      "fishery_label",
+      "time_step",
+      "flag_original",
+      "flag_comparison"
     ) |>
-    `attr<-`('species', fram_db$fram_db_species) # making accessible to package filters
+    attach_comparison_attributes(fram_db = fram_db, run_ids = run_ids)
+
   if(nrow(flags_changed)==0 & verbose){cli::cli_text(cli::col_blue("No differences in fishery flags between these runs"))}
   return(flags_changed)
 }
@@ -393,65 +400,54 @@ compare_fishery_input_flags <- function(fram_db, run_ids, verbose = TRUE){
 
 #' Compares the non retention inputs of two runs
 #' @inheritParams compare_recruits
+#'
+#' @returns Tibble with all non-retention parameters that changed between the first and second runs. `$fishery_id`, `$fishery_label`, and `$time_step` identify the fishery x timestep that changed, `$parameter` identifies the parameter, and `$original` and `$comparison` present the values in the first and second runs, respectively.
+#'
 #' @export
-#' @seealso [compare_runs()]
+#' @family comparisons
+#'
 #' @examples
 #' \dontrun{fram_db |> compare_non_retention_inputs(c(55, 56))}
 compare_non_retention_inputs <- function(fram_db, run_ids, verbose = TRUE){
   validate_fram_db(fram_db)
-  validate_run_id(fram_db, run_ids)
-  if (!is.logical(verbose) || length(verbose) != 1) {
-    cli::cli_abort('`verbose` must be a logical of length 1')
-  }
+  validate_run_id(fram_db, run_ids, n = 2)
+  validate_same_bp(fram_db, run_ids)
+  validate_flag(verbose)
 
+  runs_lut <- data.frame(
+    run_id = run_ids,
+    run_label = c("original", "comparison")
+  )
 
-  runs <- fram_db |>
-    fetch_table_('RunID') |>
-    dplyr::select(.data$run_id, .data$run_name)
-
-  fisheries <- fram_db |>
-    fetch_table_('Fishery') |>
-    dplyr::filter(.data$species == fram_db$fram_db_species) |>
-    dplyr::select(.data$fishery_id, .data$fishery_name)
-
-
-  # non retention
   non_retention <- fram_db |>
     fetch_table_('NonRetention') |>
-    dplyr::select(.data$run_id,
-                  .data$fishery_id,
-                  .data$time_step,
+    dplyr::select("run_id",
+                  "fishery_id",
+                  "time_step",
                   dplyr::starts_with('cnr_input'))
-
-  base_run_name <- runs |>
-    dplyr::filter(.data$run_id == run_ids[[1]]) |>
-    dplyr::pull(.data$run_name) |>
-    rlang::sym() #... don't ask, R voodoo magic
-
-  new_run_name <- runs |>
-    dplyr::filter(.data$run_id == run_ids[[2]]) |>
-    dplyr::pull(.data$run_name) |>
-    rlang::sym() #... don't ask, R voodoo magic
-
 
   nonretention_changed = non_retention |>
     dplyr::filter(.data$run_id %in% run_ids) |>
-    dplyr::inner_join(runs, by = 'run_id') |>
-    dplyr::inner_join(fisheries, by = 'fishery_id') |>
-    dplyr::select(-.data$run_id) |>
-    tidyr::pivot_longer(dplyr::starts_with('cnr_input')) |> # re rectangle
-    tidyr::pivot_wider(names_from = .data$run_name, values_from = .data$value, values_fill = 0) |>
-    dplyr::filter(!!base_run_name != !!new_run_name) |>
+    dplyr::inner_join(runs_lut, by = 'run_id') |>
+    label_fisheries_db(fram_db = fram_db) |>
+    dplyr::select(-"run_id") |>
+    tidyr::pivot_longer(dplyr::starts_with('cnr_input'),
+                        names_to = "parameter") |> # re rectangle
+    tidyr::pivot_wider(names_from = "run_label", values_from = "value", values_fill = 0) |>
+    dplyr::filter(.data$original != .data$comparison) |>
     dplyr::select(
-      .data$fishery_id,
-      .data$time_step,
-      .data$name,
-      .data$fishery_name,
-      !!base_run_name,
-      !!new_run_name
+      "fishery_id",
+      "fishery_label",
+      "time_step",
+      "parameter",
+      "original",
+      "comparison"
     ) |>
-    `attr<-`('species', fram_db$fram_db_species) # making accessible to package filters
+    attach_comparison_attributes(fram_db = fram_db,
+                                 run_ids = run_ids)
+
   if(nrow(nonretention_changed)==0 & verbose){cli::cli_text(cli::col_blue("No differences in non retention between these runs"))}
+
   return(nonretention_changed)
 }
 
@@ -462,152 +458,138 @@ compare_non_retention_inputs <- function(fram_db, run_ids, verbose = TRUE){
 #' @export
 #' @seealso [compare_runs()]
 #' @examples
-#' \dontrun{fram_db |> compare_non_retention_inputs(c(55, 56))}
+#' \dontrun{fram_db |> compare_non_retention_input_flags(c(55, 56))}
 compare_non_retention_input_flags <- function(fram_db, run_ids, verbose = TRUE){
   validate_fram_db(fram_db)
-  validate_run_id(fram_db, run_ids)
-  if (!is.logical(verbose) || length(verbose) != 1) {
-    cli::cli_abort('`verbose` must be a logical of length 1')
-  }
+  validate_run_id(fram_db, run_ids, n = 2)
+  validate_same_bp(fram_db, run_ids)
+  validate_flag(verbose)
 
+  runs_lut <- data.frame(
+    run_id = run_ids,
+    run_label = c("original", "comparison")
+  )
 
-  runs <- fram_db |>
-    fetch_table_('RunID') |>
-    dplyr::select(.data$run_id, .data$run_name)
-
-  fisheries <- fram_db |>
-    fetch_table_('Fishery') |>
-    dplyr::filter(.data$species == fram_db$fram_db_species) |>
-    dplyr::select(.data$fishery_id, .data$fishery_name)
-
-
-  # non retention
   non_retention <- fram_db |>
     fetch_table_('NonRetention') |>
-    dplyr::select(.data$run_id,
-                  .data$fishery_id,
-                  .data$time_step,
-                  .data$non_retention_flag)
-
-  base_run_name <- runs |>
-    dplyr::filter(.data$run_id == run_ids[[1]]) |>
-    dplyr::pull(.data$run_name) |>
-    rlang::sym() #... don't ask, R voodoo magic
-
-  new_run_name <- runs |>
-    dplyr::filter(.data$run_id == run_ids[[2]]) |>
-    dplyr::pull(.data$run_name) |>
-    rlang::sym() #... don't ask, R voodoo magic
+    dplyr::select("run_id",
+                  "fishery_id",
+                  "time_step",
+                  "non_retention_flag")
 
   nonretention_flags_changed <- non_retention |>
     dplyr::filter(.data$run_id %in% run_ids) |>
-    dplyr::inner_join(runs, by = 'run_id') |>
-    dplyr::inner_join(fisheries, by = 'fishery_id') |>
-    dplyr::select(.data$fishery_id, .data$time_step, .data$non_retention_flag , .data$run_name, .data$fishery_name) |>
-    tidyr::pivot_wider(names_from = .data$run_name, values_from = .data$non_retention_flag) |>
-    dplyr::filter((!!base_run_name != !!new_run_name) |
-                    xor(is.na(!!base_run_name), is.na(!!new_run_name))) |>
+    dplyr::inner_join(runs_lut, by = 'run_id') |>
+    label_fisheries_db(fram_db = fram_db) |>
+    dplyr::select("fishery_id",
+                  "fishery_label",
+                  "time_step",
+                  "non_retention_flag",
+                  "run_label") |>
+    tidyr::pivot_wider(names_from = "run_label", values_from = "non_retention_flag",
+                       names_prefix = "flag_") |>
+    dplyr::filter((.data$flag_original != .data$flag_comparison) |
+                    xor(is.na(.data$flag_original), is.na(.data$flag_comparison))) |>
     dplyr::select(
-      .data$fishery_id,
-      .data$time_step,
-      .data$fishery_name,
-      !!base_run_name,
-      !!new_run_name
-    ) |>
-    `attr<-`('species', fram_db$fram_db_species) # making accessible to package filters
+      "fishery_id",
+      "fishery_label",
+      "time_step",
+      "flag_original",
+      "flag_comparison"
+    )  |>
+    attach_comparison_attributes(fram_db = fram_db, run_ids = run_ids)
+
   if(nrow(nonretention_flags_changed)==0 & verbose){cli::cli_text(cli::col_blue("No differences in non retention flags between these runs"))}
   return(nonretention_flags_changed)
 }
 
 
 #' Compares the stock fishery rate scalers of two runs
+#'
+#' Only relevant for Coho runs.
+#'
 #' @param fram_db FRAM database object
 #' @param run_ids Two run ids
+#'
+#' @returns Tibble of any stock x fishery x timesteps in which the Stock Fishery Rate Scalers (SFRS) changed. `$stock_id`, `$stock_label`, `$fishery_id`, `$fishery_label`, and `$time_step` identify the stock x fishery x timestep, and `$sfrs_original` and `$sfrs_comparison` list the SFRS values in the first and second runs, respectively.
+#'
 #' @export
-#' @seealso [compare_runs()]
+#' @family comparisons
 #' @examples
 #' \dontrun{fram_db |> compare_stock_fishery_rate_scalers(c(55, 56))}
 compare_stock_fishery_rate_scalers <- function(fram_db, run_ids){
   validate_fram_db(fram_db)
-  validate_run_id(fram_db, run_ids)
+  validate_run_id(fram_db, run_ids, n = 2)
+  validate_same_bp(fram_db, run_ids)
 
   if(fram_db$fram_db_species == "CHINOOK"){
     cli::cli_abort("Fishery rate scalers are only relevant for Coho, and this is a Chinook database.")
   }
 
-  runs <- fram_db |>
-    fetch_table_('RunID') |>
-    dplyr::select(.data$run_id, .data$run_name)
-
-  stocks <- fram_db |>
-    fetch_table_('Stock') |>
-    dplyr::filter(.data$species == fram_db$fram_db_species) |>
-    dplyr::select(.data$stock_id, .data$stock_name)
-
-  fisheries <- fram_db |>
-    fetch_table_('Fishery') |>
-    dplyr::filter(.data$species == fram_db$fram_db_species) |>
-    dplyr::select(.data$fishery_id, .data$fishery_name)
-
+  runs_lut <- data.frame(
+    run_id = run_ids,
+    run_label = c("original", "comparison")
+  )
 
   # stock fishery rate scalers
   sfrs <- fram_db |>
     fetch_table_('StockFisheryRateScaler') |>
-    dplyr::select(.data$run_id,
-                  .data$stock_id,
-                  .data$fishery_id,
-                  .data$time_step,
-                  .data$stock_fishery_rate_scaler)
+    dplyr::select("run_id",
+                  "stock_id",
+                  "fishery_id",
+                  "time_step",
+                  "stock_fishery_rate_scaler")
 
   if(!all(run_ids %in% sfrs$run_id)){
     cli::cli_abort(paste0("One or more runs in `run_ids` is not defined in the StockFisheryRateScaler table. Available runs:\n",
                           paste(sort(unique(sfrs$run_id)), collapse = ", ")))
   }
 
-  base_run_name <- runs |>
-    dplyr::filter(.data$run_id == run_ids[[1]]) |>
-    dplyr::pull(.data$run_name) |>
-    rlang::sym() #... don't ask, R voodoo magic
-
-  new_run_name <- runs |>
-    dplyr::filter(.data$run_id == run_ids[[2]]) |>
-    dplyr::pull(.data$run_name) |>
-    rlang::sym() #... don't ask, R voodoo magic
-
   sfrs |>
-    dplyr::filter(.data$run_id %in% run_ids) |>
-    dplyr::inner_join(runs, by = 'run_id') |>
-    dplyr::inner_join(stocks, by = 'stock_id') |>
-    dplyr::inner_join(fisheries, by = 'fishery_id') |>
+    dplyr::inner_join(runs_lut, by = 'run_id') |>
+    label_fisheries_db(fram_db = fram_db) |>
+    label_stocks_db(fram_db = fram_db) |>
     dplyr::select(
-      .data$stock_id,
-      .data$stock_name,
-      .data$fishery_id,
-      .data$fishery_name,
-      .data$time_step,
-      .data$stock_fishery_rate_scaler,
-      .data$run_name
+      "stock_id",
+      "stock_label",
+      "fishery_id",
+      "fishery_label",
+      "time_step",
+      "stock_fishery_rate_scaler",
+      "run_label"
     ) |> #View()
     tidyr::pivot_wider(
-      names_from = .data$run_name,
-      values_from = .data$stock_fishery_rate_scaler
+      names_from = "run_label",
+      values_from = "stock_fishery_rate_scaler",
+      names_prefix = "sfrs_"
     ) |> #print(n=Inf)
-    dplyr::filter((!!base_run_name != !!new_run_name) |
-                    xor(is.na(!!base_run_name), is.na(!!new_run_name))) |>
-    dplyr::select(.data$stock_id,
-                  .data$stock_name,
-                  .data$time_step,!!base_run_name,!!new_run_name) |>
-    `attr<-`('species', fram_db$fram_db_species) # making accessible to package filters
+    dplyr::filter((.data$sfrs_original != .data$sfrs_comparison) |
+                    xor(is.na(.data$sfrs_original), is.na(.data$sfrs_comparison))) |>
+    dplyr::select("stock_id",
+                  "stock_label",
+                  "fishery_id",
+                  "fishery_label",
+                  "time_step",
+                  "sfrs_original",
+                  "sfrs_comparison")  |>
+    attach_comparison_attributes(fram_db = fram_db, run_ids = run_ids)
 
 }
 
-
-#' Generates a report to the console of changes to inputs between two runs
+#' Compare key aspects of two FRAM runs
+#'
+#' Outputs summary of comparisons to the console (or optionally to a text file instead). Summary includes output of `compare_non_retention_flags()`, `compare_non_retention_inputs()`, `compare_sl_ratio()` (Chinook only), `compare_recruits()`, `compare_fishery_input_flags()`, `compare_fishery_inputs()`, and `compare_stock_fishery_rate_scalers()` (Coho only).
+#'
 #' @param fram_db FRAM database object
 #' @param run_ids Two run ids. Run names must differ; change in FRAM if necessary.
 #' @param save_file If provided, diagnostics text is sent to file instead of console. If file already exists, will overwrite. Character, defaults to NULL.
-#' @param tolerance Tolerance of detection, 1 percent default
+#' @param tolerance Minimum proportional change to flag as a "difference" for relevant comparisons (comparison of recruits, fishery inputs). Numeric, defaults to 0.01 (e.g., 1% change).
+#'
 #' @export
+#' @family comparisons
+#'
+#' @returns invisibly returns a list of the comparison dataframes: `$retention_flags`, `$retention_inputs`, `$sl_ratio`, `$recruits`, `fishery_flags`, `$fishery_inputs`, `$sfrs`
+#'
 #' @examples
 #' \dontrun{fram_db |> compare_runs(c(55, 56))}
 compare_runs <- function(fram_db, run_ids, save_file = NULL, tolerance = 0.01){
@@ -629,27 +611,25 @@ compare_runs <- function(fram_db, run_ids, save_file = NULL, tolerance = 0.01){
       close(out_con)
       close(msg_con)
     }, add = TRUE)
-    }
+  }
 
   out <- compare_runs_(fram_db = fram_db,
-                run_ids = run_ids,
-                tolerance = tolerance)
+                       run_ids = run_ids,
+                       tolerance = tolerance)
 
   return(invisible(out))
 }
 
 
-
+# internal function for compare_runs()
 compare_runs_ <- function(fram_db, run_ids, tolerance = .01){
   validate_fram_db(fram_db)
-  validate_run_id(fram_db, run_ids)
-  if (!is.numeric(tolerance) || length(tolerance) != 1) {
-    cli::cli_abort('`tolerance` must be a positive numeric of length 1')
+  validate_run_id(fram_db, run_ids,n = 2)
+  validate_same_bp(fram_db, run_ids)
+  validate_numeric(tolerance, n = 1)
+  if(tolerance < 0 | tolerance > 1){
+    cli::cli_abort('`tolerance` must be a numeric between 0 and 1')
   }
-  if(tolerance < 0){
-    cli::cli_abort('`tolerance` must be positive')
-  }
-
 
   runs <- fram_db |>
     fetch_table_('RunID')
@@ -692,21 +672,21 @@ compare_runs_ <- function(fram_db, run_ids, tolerance = .01){
   }
 
 
-  cli::cli_h1('Comparing run {base_run_name} to {new_run_name}')
-  cli::cli_alert_info('{base_run_name} was run at {base_run_time} using Base Period "{bp_names[1]}"')
-  cli::cli_alert_info('{new_run_name} was run at {new_run_time} using Base Period "{bp_names[2]}"')
+  cli::cli_h1('Comparing run {.val {base_run_name}} (run_id = {.val {run_ids[1]}}) to {.val {new_run_name}} (run_id = {.val {run_ids[2]}})')
+  cli::cli_alert_info('{.val {base_run_name}} was run at {.val {base_run_time}} using Base Period "{.val {bp_names[1]}}"')
+  cli::cli_alert_info('{.val {new_run_name}} was run at {.val {new_run_time}} using Base Period "{.val {bp_names[2]}}"')
 
   # cli::cli_h2('Run Integrity')
-#
-#   cli::cli_h3('Checking inputs of "{base_run_name}" against base period')
-#
-#   fram_db |>
-#     check_bp_coverage(run_ids[1])
-#
-#   cli::cli_h3('Checking inputs of "{new_run_name}" against base period')
-#
-#   fram_db |>
-#     check_bp_coverage(run_ids[2])
+  #
+  #   cli::cli_h3('Checking inputs of "{base_run_name}" against base period')
+  #
+  #   fram_db |>
+  #     check_bp_coverage(run_ids[1])
+  #
+  #   cli::cli_h3('Checking inputs of "{new_run_name}" against base period')
+  #
+  #   fram_db |>
+  #     check_bp_coverage(run_ids[2])
 
   # non-retention
   cli::cli_h2('Non-Retention Inputs')
@@ -717,11 +697,13 @@ compare_runs_ <- function(fram_db, run_ids, tolerance = .01){
     cli::cli_alert_info('Changes detected in non-retention flagging, below is a table outlining them')
     print(retention_flags, n=Inf)
     flags.used <- retention_flags |>
-      dplyr::select(-.data$fishery_id, -.data$time_step, -.data$fishery_name) |>
+      dplyr::select(-"fishery_id",
+                    -"time_step",
+                    -"fishery_label") |>
       tibble::deframe() |>
       unique() |>
       sort() |>
-      purrr::map_vec(function(x) paste0(x, " = ", NR_flag_translate(x)))
+      purrr::map_vec(function(x) paste0(x, " = ", translate_nr_flag(x)))
     cli::cli_text(paste0("Flags: ", paste0(flags.used, collapse = ";  ")))
   } else {
     cli::cli_alert_success('No changes detected in non-retention flagging')
@@ -749,6 +731,8 @@ compare_runs_ <- function(fram_db, run_ids, tolerance = .01){
     } else {
       cli::cli_alert_success('No changes detected in SL Ratios')
     }
+  } else {
+    sl_ratio = NULL
   }
 
   # recruit scalers
@@ -773,11 +757,11 @@ compare_runs_ <- function(fram_db, run_ids, tolerance = .01){
     cli::cli_alert_info('Changes detected in fishery flag inputs, below is a table outlining them')
     print(fishery_flags, n=Inf)
     flags.used <- fishery_flags |>
-      dplyr::select(-.data$fishery_id, -.data$time_step, -.data$fishery_name) |>
+      dplyr::select(-"fishery_id", -"time_step", -"fishery_label") |>
       tibble::deframe() |>
       unique() |>
       sort() |>
-      purrr::map_vec(function(x) paste0(x, " = ", scalers_flag_translate(x)))
+      purrr::map_vec(function(x) paste0(x, " = ", translate_scalers_flag(x)))
     cli::cli_text(paste0("Flags: ", paste0(flags.used, collapse = ";  ")))
   } else {
     cli::cli_alert_success('No changes detected in fishery flag inputs')
@@ -808,6 +792,7 @@ compare_runs_ <- function(fram_db, run_ids, tolerance = .01){
   all_comparisons = list(
     retention_flags = retention_flags,
     retention_inputs = retention_inputs,
+    sl_ratio = sl_ratio,
     recruits = recruits,
     fishery_flags = fishery_flags,
     fishery_inputs = fishery_inputs,

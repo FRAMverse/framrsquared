@@ -1,10 +1,19 @@
 #' Provides English translation of numeric non-retention flags
-#' @param vec vector of flags
+#'
+#' Assumes the flags are for a Chinook run, as Coho only have one type of non-retention (dead fish).
+#'
+#' @param vec numeric vector of non-retention flags (possible values: 0 through 4)
+#'
+#' @returns Character vector of same length as argument `vec`.
+#'
 #' @export
+#'
 #' @examples
-#' \dontrun{NR_flag_translate(sample(1:4, 10, replace = T))}
+#' data <- data.frame(nr_flag = sample(1:4, size = 10, replace = TRUE))
+#' data$translation = translate_nr_flag(data$nr_flag)
+#' data
 
-NR_flag_translate = function(vec) {
+translate_nr_flag = function(vec) {
 
   validate_numeric(vec)
 
@@ -23,12 +32,21 @@ NR_flag_translate = function(vec) {
 }
 
 #' Provides English translation of numeric scalers flags
-#' @param vec vector of flags
-#' @export
-#' @examples
-#' \dontrun{scalers_flag_translate(sample(c(1, 2, 7, 8, 17, 18, 27, 28), 10, replace = T))}
 #'
-scalers_flag_translate = function(vec) {
+#' Works for both Chinook and Coho (they use the same flagging for scalers).
+#'
+#' @param vec vector of scaler flags (possible values: 1, 2, 7, 8, 17, 18, 27, 28).
+#'
+#' @returns Character vector of same length as argument `vec`.
+#'
+#' @export
+#'
+#' @examples
+#' data <- data.frame(scalers_flag = sample(c(1, 2, 7, 8, 17, 18, 27, 28), 10, replace = TRUE))
+#' data$translation = translate_scalers_flag(data$scalers_flag)
+#' data
+
+translate_scalers_flag = function(vec) {
 
   validate_numeric(vec)
 
@@ -50,51 +68,31 @@ scalers_flag_translate = function(vec) {
   )
 }
 
-#' Adds a column with a text version of flags for either non-retention or fishery scalers
-#' @param .data fetched FisheryScalers or NonRetentions
-#' @param species Optional, identifying species if `.data` doesn't. If provided, should be "CHINOOK" or "COHO" (or variants)
-#' @param warn Logical, defaults to TRUE. Warn if neither flag column is present in dataframe?
-#' @export
-#' @examples
-#' \dontrun{ mortality_table |> add_flag_text()}
-label_flags = function(.data,
-                       species = NULL,
-                       warn = TRUE) {
-  validate_data_frame(.data)
-  species = validate_species(.data, species)
-  if(!any(c("fishery_flag", "non_retention_flag") %in% names(.data))){
-    if(warn){
-      cli::cli_alert_warning("Missing 'fishery_flag' or 'non_retention_flag' column in data")
-    }
-  } else {
-    if ("fishery_flag" %in% names(.data)) {
-      .data <- .data |>
-        dplyr::mutate(fishery_flag_label = scalers_flag_translate(.data$fishery_flag),
-                      .after = .data$fishery_flag)
-    }
-    if("non_retention_flag" %in% names(.data)){
-      if(species == "CHINOOK"){
-        .data <- .data |>
-          dplyr::mutate(non_retention_flag_label = NR_flag_translate(.data$non_retention_flag),
-                        .after =.data$non_retention_flag)
-      } else {
-        .data <- .data |>
-          dplyr::mutate(non_retention_flag_label = "Total dead fish",
-                        .after =.data$non_retention_flag)
-      }
-    }
-  }
-  return(.data)
-}
-
-#' NA's all the information in the FisheryScalers that's not being used
-#' e.g Flag 1 only NS Scalers will be returned
+#' NA's unused scalers
+#'
+#' Turns values in scaler columns (`fishery_scale_factor`, `msf_fishery_scale_factor`, `quota`, and `msf_quota`) into NAs if the `fishery_flag` column indicates they're not being used. e.g if `fishery_flag` is 1, `fishery_scale_factor` value will be left alone, but the `msf_fishery_scale_Factor`, `quota`, and `msf_quota` values will be turned into NAs.
+#'
 #' @param .data Dataframe of the Fishery Scalers table
 #' @export
-#' @examples
-#' \dontrun{ fishery_scalers_table |> filter_flag()}
 #'
-filter_flag <- function(.data){
+#' @returns dataframe `.data` but with some values of the scaler columns replaced with NAs.
+#'
+#' @examples
+#'
+## generate example data
+#' data = data.frame(fishery_flag = c(1, 2, 7, 8, 17, 18, 27, 28),
+#'                  fishery_scale_factor = runif(8)*2,
+#'                  quota = sample(500:10000, size = 8),
+#'                  msf_fishery_scale_factor = runif(8)*2,
+#'                  msf_quota = sample(500:10000, size = 8)
+#' )
+#' ## here's what it looks like before applying the function
+#' data
+#' ## applying the function:
+#' data |>
+#'   na_scalers_from_flag()
+
+na_scalers_from_flag <- function(.data){
   validate_data_frame(.data)
   species = attr(.data, "species")
   if(!all(c("fishery_scale_factor", "msf_fishery_scale_factor",
@@ -102,25 +100,41 @@ filter_flag <- function(.data){
     cli::cli_abort("Input is not a fishery scaler dataframe.")
   }
   res <- .data |>
-    dplyr::group_by(.data$fishery_id, .data$time_step) |>
     dplyr::mutate(
       fishery_scale_factor = dplyr::if_else(.data$fishery_flag %in% c(1,17,18), .data$fishery_scale_factor, NA_real_),
       msf_fishery_scale_factor = dplyr::if_else(.data$fishery_flag %in% c(7,17,27), .data$msf_fishery_scale_factor, NA_real_),
       quota = dplyr::if_else(.data$fishery_flag %in% c(2,27,28), .data$quota, NA_real_),
       msf_quota = dplyr::if_else(.data$fishery_flag %in% c(8,18,28), .data$msf_quota, NA_real_)
-    ) |>
-    dplyr::ungroup()
+    ) #|>
   attr(res, "species") <- species
   return(res)
 }
 
-#' NA's all the cnr_input_# columns of a non-retention table that are not being used due to the flagging.
+#' NA's unused CNR input columns.
+#'
+#' Turns values in `$cnr_input_*` columns of a non-retention table into NAs if the `$non_retention_flag` column indicates they're not being used. For COHO databases, `cnr_input_1`
+#'
 #' @param .data Dataframe of the Fishery Scalers table
+#'
+#' @returns dataframe `.data`, with some values of `cnr_input1:cnr_input4` converted to NAs.
+#'
 #' @export
 #' @examples
-#' \dontrun{ non_retention_table |> filter_nr_flag()}
-#'
-filter_nr_flag <- function(.data) {
+#' data = data.frame(non_retention_flag = 0:4,
+#'                   cnr_input1 = sample(50:150, size = 5),
+#'                   cnr_input2 = sample(50:150, size = 5),
+#'                   cnr_input3 = sample(50:150, size = 5),
+#'                   cnr_input4 = sample(50:150, size = 5)
+#' )
+#' ## needs a species attribute -- this is automatically applied when using `fetch_table()`
+#' attr(data, "species") <- "CHINOOK"
+#' ## here's what it looks like before applying the function
+#' data
+#' ## applying the function:
+#' data |>
+#'   na_non_retention_from_flag()
+
+na_non_retention_from_flag <- function(.data) {
   validate_data_frame(.data)
   species = attr(.data, "species")
   if(!all(c("non_retention_flag", "cnr_input1",
@@ -134,7 +148,6 @@ filter_nr_flag <- function(.data) {
                     cnr_input3 = NA_real_,
                     cnr_input4 = NA_real_)
   } else if(species == "CHINOOK"){
-    ## CHINOOK
     res <- .data |>
       dplyr::mutate(
         cnr_input1 = dplyr::if_else(.data$non_retention_flag %in% 2:4,
@@ -156,8 +169,3 @@ filter_nr_flag <- function(.data) {
   attr(res, "species") <- species
   return(res)
 }
-
-# if non_retention_flag is 1, NA cnr_input_1 and cnr_input_2
-# if non_retention_flag is 2, leave everything alone
-# if non_retention_flag is 3, NA cnr_input_3 and cnr_input_4
-# if non_retetnion_flag is 4, NA cnr_input_2, cnr_input_3, and cnr_input_4

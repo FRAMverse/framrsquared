@@ -71,6 +71,4 @@ fram_db |>
 disconnect_fram_db(fram_db)
 }
 }
-\seealso{
-\code{\link[=sensitivity_scaled]{sensitivity_scaled()}}, \code{\link[=sensitivity_exact]{sensitivity_exact()}}
-}
+\concept{sensitivity}

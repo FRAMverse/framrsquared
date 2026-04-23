@@ -15,10 +15,14 @@ label_fisheries_db(.data, fram_db)
 \code{.data} with additional column, \verb{$fishery_label}
 }
 \description{
-Like \code{\link[=label_fisheries]{label_fisheries()}}, but uses an active FRAM database to label fisheries, rather than
-the look-up table present in the framrosetta package. Primarily used in \code{fetch_table()},
-useful if working with databases with unusual stock or fishery tables.
+Like \code{\link[framrosetta:label_fisheries]{framrosetta::label_fisheries()}}, but uses an active FRAM database to label fisheries, rather than
+the look-up table present in the framrosetta package. Primarily used in \code{fetch_table()}, robust to changes
+in base period.
 }
 \seealso{
-\code{\link[=label_fisheries]{label_fisheries()}}, \code{\link[=label_stocks_db]{label_stocks_db()}}
+Other labelers: 
+\code{\link{label_flags}()},
+\code{\link{label_stocks_db}()},
+\code{\link{label_timesteps_db}()}
 }
+\concept{labelers}

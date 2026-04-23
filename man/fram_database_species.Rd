@@ -15,3 +15,4 @@ Identifies the FRAM database species focus - Chinook or Coho
 \examples{
 \dontrun{fram_database_species(con)}
 }
+\keyword{internal}

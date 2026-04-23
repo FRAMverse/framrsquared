@@ -1,14 +1,25 @@
 #' Quantify the proportion of fishery mortalities associated with stock(s) of interest
 #'
-#' Supports guestimating the impact of making changes to a fishery on a particular stock (or group of stocks)
-#' by multiplying its mortalities by the `stock_mortality_ratio` produced by `mortality_scalers()`.
+#' Supports guestimating the impact of making changes to a fishery on a particular stock (or group
+#' of stocks) by finding the ratio of mortalities in each fishery that can be attributed to the
+#' focal stock or stocks. Accounts for *all* sources of mortality (e.g., includes non-retention,
+#' dropoff, etc). Chinook runs are returned in units of AEQ.
 #'
 #' @param fram_db FRAM database object
 #' @param run_id Run ID
-#' @param stock_id A focal stock or stocks
-#' @param msp Do we use MSP expansion? Logical, defaults to FALSE. Only relevant for Chinook
+#' @param stock_id A focal stock or stocks.
+#' @param msp Should we use MSP (Model Stock Proportion) expansion? Logical, defaults to FALSE. Only
+#'   relevant for Chinook.
+#'
+#' @returns Tibble identify run, fishery, and timestep. `$fishery_mortality` gives the total
+#'   mortalities in each fishery x timestep, `$stock_mortality` gives the total mortalities of the
+#'   focal stock or stocks, and `$stock_mortality_ratio` gives the fraction of fishery mortalities
+#'   that can be attributed to the focal stock or stocks.
+#'
 #' @export
+#'
 #' @seealso [plot_impacts_per_catch_heatmap()]
+#'
 #' @examples
 #' \dontrun{fram_db |> mortality_scalers(run_id = 101, stock_id = c(17:18))}
 mortality_scalers <- function(fram_db, run_id, stock_id, msp = FALSE) {
@@ -26,12 +37,15 @@ mortality_scalers <- function(fram_db, run_id, stock_id, msp = FALSE) {
 
 #' Sum separate mortality columns into new "total_mortality" column
 #'
-#' Convenience function for combining the separate mortality columns of the Mortality table. Note: this does *not* account for AEQ
-#' for Chinook.
+#' Convenience function for combining the separate mortality columns of the Mortality table. Note:
+#' this does *not* account for AEQ for Chinook on its own, but can be used on the output of [aeq_mortality()]
+#' to give total mortalities in AEQs.
 #'
-#' @param .data Dataframe with separate mortality columns `landed_catch`, `non_retention`, `shaker`, `drop_off`, and `msf_` versions of each. Typically comes from `fetch_table("Mortality")` or [aeq_mortality()].
+#' @param .data Dataframe with separate mortality columns `landed_catch`, `non_retention`, `shaker`,
+#'   `drop_off`, and `msf_` versions of each. Typically comes from `fetch_table("Mortality")` or
+#'   [aeq_mortality()].
 #'
-#' @return `.data` with additional `$total_mortality` column just before `$landed_catch`.
+#' @return `.data` with additional `$total_mortality` column (numeric vector) just before `$landed_catch`.
 #' @export
 #'
 add_total_mortality = function(.data){
@@ -53,6 +67,8 @@ add_total_mortality = function(.data){
     )
 }
 
+#' Coho-specific implementation for mortality scalers
+#' @keywords internal
 mortality_scalers_coho_ <- function(fram_db, run_id, stock_id) {
   scalers <- fram_db |>
     fetch_table_('Mortality') |>
@@ -72,10 +88,9 @@ mortality_scalers_coho_ <- function(fram_db, run_id, stock_id) {
 }
 
 
+#' Chinook-specific implementation for mortality scalers
+#' @keywords internal
 mortality_scalers_chinook_ <- function(fram_db, run_id, stock_id, msp) {
-  scalers <- fram_db |>
-    fetch_table_('Mortality') |>
-    dplyr::filter(run_id == .env$run_id)
 
  fram_db |>
     aeq_mortality_(run_id = run_id,

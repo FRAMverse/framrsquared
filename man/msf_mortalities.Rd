@@ -11,6 +11,9 @@ msf_mortalities(fram_db, run_id = NULL)
 
 \item{run_id}{Run ID}
 }
+\value{
+Tibble identifying run, fishery, timestep. For Coho database, \verb{$marked} and \verb{$unmarked} columns. for Chinook database, also identifies by legal and sublegal.
+}
 \description{
 Produces the MSF screen report numbers for mortalities. Returns different
 format depending database.

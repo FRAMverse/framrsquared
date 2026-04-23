@@ -3,9 +3,13 @@
 #'
 #' Uses a special match/replace dataframe to modify values in a FRAM table.
 #'
+#' @details
+#'
 #' At a high level, modifying a FRAM table requires identify which rows to change, and then replacing the values of one or more of the columns of those row with new values. We often want to make multiple changes at once, and `modify_table` is written around using a dataframe to define the matching and replacing, so that it is relatively easy to check all of the changes being made. This dataframe (hereafter the "match/replace dataframe") should have column names starting with "match_" and "replace_", and ending with the exact match of column names in the FRAM table identified with argument `table_name`. For each row of argument `df`, `modify_table()` will use columns starting with "match_" as conditions to identify rows in the FRAM database to modify, and then for those rows will replace the values of columns identified with "replace_" with the corresponding values in the `df` columns.
 #'
-#' As a simple example, imagine we want to see how modifying the size limits for Area 7 Sport (chinook fishery id 36) affect our ERs. We would probably start by using copy_run to create multiple duplicate runs, and then we can use `modify_table` to change just the `MinimumSize` values of the "SizeLimits" table for just those rows for which fishery id was 36. If our run ids were 100, 101, and 102, and we wanted to look at minimum sizes of 450, 550, and 650, our `df` argument might look like `data.frame(match_RunID = c(100, 101, 102), match_FisheryID = c(36, 36, 36), replace_MinimumSize = c(450, 550, 650))`. Notably, we might create `df` programmatically to combine different run ids with multiple changes at once or to apply some kind of randomized parameter sampling scheme. Or we could even use an excel sheet to write out the experiment in a `df` format and then read in the sheet and feed it into `modify_table`.
+#' As a simple example, imagine we want to see how modifying the size limits for Area 7 Sport (chinook fishery id 36) affect our ERs. We should  start by using copy_run to create multiple duplicate runs. Once that is done, we can use `modify_table` to change just the `MinimumSize` values of the "SizeLimits" table for just those rows for which fishery id was 36. If our run ids were 100, 101, and 102, and we wanted to look at minimum sizes of 450, 550, and 650, our `df` argument might look like `data.frame(match_RunID = c(100, 101, 102), match_FisheryID = c(36, 36, 36), replace_MinimumSize = c(450, 550, 650))`.
+#'
+#' We can create `df` programmatically to combine different run ids with multiple changes at once or to apply some kind of randomized parameter sampling scheme. Or we could even use an excel sheet to write out the experiment in a `df` format and then read in the sheet and feed it into `modify_table`.
 #'
 #' @param fram_db FRAM database
 #' @param table_name Name of FRAM table
@@ -13,13 +17,21 @@
 #'
 #' @export
 #'
+#' @seealso [calc_fram_scaling()]
+#'
 #' @examples
-#' \dontrun{
-#' df_total <- tibble(match_Age = c(3, 4, 5))
+#' ## Example: For ages 3, 4, and 5 of stock 100 in run 396,
+#' ##   in the StockRecruit scalar change the recruit scale factor
+#' ##   to have values of 1, 2, and 3 respectively, and the recruit
+#' ##   cohort size to have values of 100, 101, and 102.
+#' df_total <- data.frame(match_Age = c(3, 4, 5))
 #' df_total$match_StockID <- 100
 #' df_total$match_RunID <- 396
 #' df_total$replace_RecruitScaleFactor <- 1:3
 #' df_total$replace_RecruitCohortSize <- 100:102
+#' ## let's look at our match/replace dataframe:
+#' df_total
+#' \dontrun{
 #' fram_db |> modify_db(table_name = "StockRecruit", df = df_total)
 #' }
 modify_table <- function(fram_db, table_name, df) {
@@ -29,9 +41,7 @@ modify_table <- function(fram_db, table_name, df) {
     cli::cli_abort("`df` must have named columns starting with 'match_' or 'replace_'")
   }
 
-  if(fram_db$fram_read_only){
-    cli::cli_abort('This database connection is designated read-only!! If you are certain this database can be modified, create a new connection using `connect_fram_db()` with `read_only = TRUE`')
-  }
+  validate_not_read_only(fram_db)
 
   ## get column names
   table_columns = fetch_table_colnames(fram_db, table_name)
@@ -82,8 +92,7 @@ modify_table <- function(fram_db, table_name, df) {
 #'
 #' Uses a match/replace-style table like in `modify_table()`, but allows user to specify
 #' scaling factors for individual columns rather than absolute values, and returns
-#' the corresponding match/replace df to be used in `modify_table()`. This is intended to support
-#' sensitivity analyses structured as "carry out 100 runs, with stock recruit scalers for stock X
+#' the corresponding match/replace df to be used in `modify_table()`. This is intended to support sensitivity analyses structured as "carry out 100 runs, with stock recruit scalers for stock X
 #' running from 5% to 500% of the current value" (`calc_fram_scaling()` is only one part
 #' of the pipeline for this). See `modify_table()` for details of setting up a match/replace dataframe;
 #' the only difference here is that the columns to be scaled should start with "scale_" instead
@@ -93,7 +102,7 @@ modify_table <- function(fram_db, table_name, df) {
 #'
 #' @param fram_db FRAM database
 #' @param table_name name of FRAM table
-#' @param df As the match/replace dataframe of `modify_table`, but with "scale_" columns instead of "replace_" columns. Columns must start with either "match_" or "scale_", and should otherwise match the names of columns in `table`. Columns starting with "scale_" define the scaling factor to be applied to values in that column (for rows matched with the "match_" columns). For example, scaling the StartCohort values to 50% in the Cohort table might be achieved with columns "match_RunID", "match_StockID", "match_age", "match_TimeStep", "scale_StartCohort", with values of 0.5 in scale_Startcohort.
+#' @param df As the match/replace dataframe of `modify_table`, but with "scale_" columns instead of "replace_" columns. Columns must start with either "match_" or "scale_", and should otherwise match the names of columns in the corresponding FRAM table. Columns starting with "scale_" define the scaling factor to be applied to values in that column (for rows matched with the "match_" columns). For example, scaling the StartCohort values to 50% in the Cohort table might be achieved with columns "match_RunID", "match_StockID", "match_age", "match_TimeStep", "scale_StartCohort", with values of 0.5 in scale_Startcohort.
 #'
 #' @return A match/replace df for use in `modify_table()`, with "replace_" values
 #' generated by scaling the corresponding values in the FRAM database. Includes additional "match_"
@@ -101,12 +110,15 @@ modify_table <- function(fram_db, table_name, df) {
 #' @export
 #'
 #' @examples
-#' \dontrun{
 #' ## in run 31, decrease stock 1's recruit numbers by 50% and double 2's recruit numbers
-#' library(here)
-#' fram_db <- connect_fram_db(here("example_fram_db.mdb"))
 #'
 #' df <- data.frame(match_RunID = c(31, 31), match_StockID = 1:2, scale_RecruitScaleFactor = c(.5, 2))
+#' ## check match/scale dataframe
+#' df
+#'
+#' \dontrun{
+#' library(here)
+#' fram_db <- connect_fram_db(here("example_fram_db.mdb"))
 #'
 #' df_scaled <- calc_fram_scaling(fram_db, "StockRecruit", df)
 #' ## here's what the values become:
@@ -156,7 +168,7 @@ calc_fram_scaling <- function(fram_db, table_name, df) {
     scale_names <- c(scale_names, terms_excluded)
   }
 
-  if (length(terms_included == 1)) {
+  if (length(terms_included) == 1) {
     if (!all(df$scale_RecruitCohortSize ==
              df$scale_RecruitScaleFactor)) {
       cli::cli_abort("scale_RecruitCohortSize and scale_RecruitScaleFactor must match!")
@@ -172,7 +184,7 @@ calc_fram_scaling <- function(fram_db, table_name, df) {
 
   ## creating modified version of df; this will be our final result
   df_mod <- dplyr::left_join(df_merge, tab, by = match_names) |>
-    dplyr::select(-.data$PrimaryKey)
+    dplyr::select(-"PrimaryKey")
 
   for (cur_scale in scale_names) {
     df_mod[[cur_scale]] <- df_mod[[cur_scale]] *
@@ -209,10 +221,15 @@ calc_fram_scaling <- function(fram_db, table_name, df) {
 
 
 #' Changes a run's ID number in a FRAM database
+#'
 #' @param fram_db FRAM database object
 #' @param old_run_id FRAM run ID to be changed
 #' @param new_run_id New FRAM run ID
+#'
+#' @returns nothing
+#'
 #' @export
+#'
 #' @examples
 #' \dontrun{fram_db |> change_run_id(old_run_id = 132, new_run_id = 300)}
 #'
@@ -221,8 +238,11 @@ change_run_id <- function(fram_db, old_run_id, new_run_id){
   validate_fram_db(fram_db)
   validate_run_id(fram_db, old_run_id)
 
-  if(fram_db$fram_read_only){
-    cli::cli_abort('This database connection is designated read-only!! If you are certain this database can be modified, create a new connection using `connect_fram_db()` with `read_only = TRUE`')
+  validate_not_read_only(fram_db)
+
+  current_ids <- get_run_ids(fram_db)
+  if(new_run_id %in% current_ids){
+    cli::cli_abort("{.var new_run_id} must not already be in use! Currently used run ids: {.val {current_ids}}.")
   }
 
   run_id_tables <- find_tables_by_column_(fram_db, 'RunID')
@@ -246,9 +266,14 @@ change_run_id <- function(fram_db, old_run_id, new_run_id){
 
 
 #' Removes a run in a FRAM database
+#'
 #' @param fram_db FRAM database object
 #' @param run_id FRAM run ID or IDs to be deleted
+#'
+#' @returns Nothing.
+#'
 #' @export
+#'
 #' @examples
 #' \dontrun{fram_db |> delete_run(run_id = 132)}
 #'
@@ -256,15 +281,13 @@ remove_run <- function(fram_db, run_id){
   validate_fram_db(fram_db)
   validate_run_id(fram_db, run_id)
 
-  if(fram_db$fram_read_only){
-    cli::cli_abort('This database connection is designated read-only!! If you are certain this database can be modified, create a new connection using `connect_fram_db()` with `read_only = TRUE`')
-  }
+  validate_not_read_only(fram_db)
 
   run_id_tables <- tidyr::expand_grid(find_tables_by_column_(fram_db, 'RunID'),
                                       run_id)
 
   run_id_tables|>
-    dplyr::select(.data$value, .data$run_id) |>
+    dplyr::select("value", "run_id") |>
     purrr::pwalk(.f = \(value, run_id) tryCatch(
       suppressWarnings(DBI::dbSendQuery(
         fram_db$fram_db_connection,
@@ -279,15 +302,21 @@ remove_run <- function(fram_db, run_id){
 }
 
 
-#' Experimental copying scaler inputs from
-#' one run to another DANGEROUS
+#' Copying scaler inputs from one run to another
+#'
+#' Experimental. DANGEROUS.
+#'
 #' @param fram_db FRAM database object
 #' @param from_run Run ID to be copied from
 #' @param to_run Run ID to be copied to
 #' @param fishery_id ID or IDs for specific fishery(s) to copy inputs to/from. If not provided, interactive option to copy inputs for all fisheries.
+#'
+#' @returns Nothing
+#'
 #' @export
+#'
 #' @examples
-#' \dontrun{framdb |> copy_fishery_scalers(132, 133, 87)}
+#' \dontrun{framdb |> copy_fishery_scalers(from_run = 132, to_run = 133, fishery_id = 87)}
 #'
 copy_fishery_scalers <- function(fram_db, from_run, to_run, fishery_id = NULL){
   validate_fram_db(fram_db)
@@ -297,10 +326,7 @@ copy_fishery_scalers <- function(fram_db, from_run, to_run, fishery_id = NULL){
     validate_fishery_ids(fram_db, fishery_id)
   }
 
-
-  if(fram_db$fram_read_only){
-    cli::cli_abort('This database connection is designated read-only!! If you are certain this database can be modified, create a new connection using `connect_fram_db()` with `read_only = TRUE`')
-  }
+  validate_not_read_only(fram_db)
 
   if (is.null(fishery_id)) {
     cli::cli_alert_warning('A fishery ID is not set, this will copy all the fishery scalers!')
@@ -375,9 +401,12 @@ copy_fishery_scalers <- function(fram_db, from_run, to_run, fishery_id = NULL){
 }
 
 #'  `r lifecycle::badge("experimental")`
-#' Copies a run a number of times
+#' Copies a run any number of times
 #'
-#' FRAM is stored in an access database; these have hard size limits of 2GB. Chinook and Coho are expected to reach this limit with ~540 runs. This function includes a failsafe to prevent databases from exceeding 500 runs. This can be overridden with optional `force_many_runs` argument.
+#' Useful for setting up scenario modeling or sensitivity analyses. If also working with TAMMs, consider [make_batch_runs()] to combine copying run and TAMMs.
+#'
+#' @details
+#'  FRAM is stored in an access database; these have hard size limits of 2GB. Chinook and Coho are expected to reach this limit with ~540 runs. This function includes a failsafe to prevent databases from exceeding 500 runs. This can be overridden with optional `force_many_runs` argument.
 #'
 #' @param fram_db FRAM database object
 #' @param target_run Run ID to be copied from
@@ -386,8 +415,12 @@ copy_fishery_scalers <- function(fram_db, from_run, to_run, fishery_id = NULL){
 #' @param verbose Show warning message about run count? Official FRAM is hard-coded to only handle databases with <= 150 runs in them. If `TRUE` (default), provides alert when updated database will exceed this.
 #' @param label Label of each copy e.g. copy 1, copy 2
 #'
-#' @return Invisibly returns the run ids of the copied runs, for use in other functions.
+#' @returns Invisibly returns the run ids of the new runs.
+#'
 #' @export
+#'
+#' @seealso [copy_tamm()], [make_batch_runs()]
+#'
 #' @examples
 #' \dontrun{framdb |> copy_run(target_run = 141, times = 1)}
 #'
@@ -395,25 +428,12 @@ copy_run <- function(fram_db, target_run, times = 1, label = 'copy', force_many_
 
   validate_fram_db(fram_db)
   validate_run_id(fram_db, target_run)
-  if(!is.numeric(times) || length(times) != 1) {
-    cli::cli_abort("`times` must be a single integer")
-  }
+  validate_numeric(times, n = 1)
+  validate_character(label, n = 1)
+  validate_flag(force_many_runs)
+  validate_flag(verbose)
 
-  if(!is.character(label) || length(label) != 1) {
-    cli::cli_abort("`label` must be a single character string")
-  }
-
-  if(!is.logical(force_many_runs) || length(force_many_runs) != 1) {
-    cli::cli_abort("`force_many_runs` must be a single logical value")
-  }
-
-  if(!is.logical(verbose) || length(verbose) != 1) {
-    cli::cli_abort("`verbose` must be a single logical value")
-  }
-
-  if(fram_db$fram_read_only){
-    cli::cli_abort('This database connection is designated read-only!! If you are certain this database can be modified, create a new connection using `connect_fram_db()` with `read_only = TRUE`')
-  }
+  validate_not_read_only(fram_db)
 
   run_count_current = fram_db |> fetch_table_("RunID") |> nrow()
   if((run_count_current + times > 150) & verbose){
@@ -491,7 +511,7 @@ copy_run <- function(fram_db, target_run, times = 1, label = 'copy', force_many_
         RunID = .env$max_run_id + .env$i,
         RunName = glue::glue(.data$RunName, ' {label} {i}')
       ) |>
-      dplyr::select(-.data$PrimaryKey)
+      dplyr::select(-"PrimaryKey")
 
 
     # send to db
@@ -506,7 +526,7 @@ copy_run <- function(fram_db, target_run, times = 1, label = 'copy', force_many_
       dplyr::mutate(
         RunID = .env$max_run_id + .env$i
       ) |>
-      dplyr::select(-.data$PrimaryKey)
+      dplyr::select(-"PrimaryKey")
 
     # send to db
     DBI::dbAppendTable(fram_db$fram_db_connection,
@@ -519,7 +539,7 @@ copy_run <- function(fram_db, target_run, times = 1, label = 'copy', force_many_
       dplyr::mutate(
         RunID = .env$max_run_id + .env$i
       )|>
-      dplyr::select(-.data$PrimaryKey)
+      dplyr::select(-"PrimaryKey")
 
     # send to db
     DBI::dbAppendTable(fram_db$fram_db_connection,
@@ -547,7 +567,7 @@ copy_run <- function(fram_db, target_run, times = 1, label = 'copy', force_many_
       dplyr::mutate(
         RunID = .env$max_run_id + .env$i
       )|>
-      dplyr::select(-.data$PrimaryKey)
+      dplyr::select(-"PrimaryKey")
 
     # send to db
     DBI::dbAppendTable(fram_db$fram_db_connection,
@@ -558,7 +578,7 @@ copy_run <- function(fram_db, target_run, times = 1, label = 'copy', force_many_
     if (fram_db$fram_db_species == 'CHINOOK') {
       size_limits_insert <- size_limits |>
         dplyr::mutate(RunID = .env$max_run_id + .env$i) |>
-        dplyr::select(-.data$PrimaryKey)
+        dplyr::select(-"PrimaryKey")
 
 
       # send to db
@@ -595,21 +615,25 @@ copy_run <- function(fram_db, target_run, times = 1, label = 'copy', force_many_
 #'  `r lifecycle::badge("experimental")`
 #' Copy TAMM for FRAM batch runs
 #'
-#' Preps a folder for batch running in the 'Run Multiple Runs' screen of the FRAM automation fork (https://github.com/FRAMverse/FRAM_automation), for use with the `advanced` approach to identify multiple runs. One TAMM file will be copied multiple times in the `target_folder` with suffixes that identify each of the run_ids. The "Use folder" button on the "Run Multiple Runs" screen can then use the target folder to set up large batch runs. Typically users should use `make_batch_runs()` instead (this first copies runs and then uses `copy_tamms` to create tamms that match the new runs).
+#' Preps a folder for batch running in the 'Run Multiple Runs' screen of the FRAM automation fork (https://github.com/FRAMverse/FRAM_automation), for use with the `advanced` approach to identify multiple runs. Typically users will want to use [make_batch_runs()] instead (which copies runs and then uses `copy_tamm` to create tamms that match the new runs).
+#'
+#' One TAMM file will be copied multiple times in the `target_folder` with suffixes based on the `run_id_vec` argument. For automatic use in FRAM, those suffixes should match the run ids of the associated FRAM runs. The "Use folder" button on the "Run Multiple Runs" screen can then use the target folder to set up large batch runs.
 #'
 #' @param tamm_name TAMM file to copy, including file path. Character string
 #' @param target_folder directory to put new batch TAMM files into. Character string
 #' @param run_id_vec vector of run_ids (numeric or character), corresponding to run ids in a FRAM database.
 #' @param overwrite If one or more files already exist in `target_folder` with names matching the combination of `tamm_name` and run ids, overwrite (`TRUE`) or leave those files untouched (`FALSE`). Defaults to `FALSE` for safety; recommend setting to `TRUE` to avoid confusion when iterating on work.
 #'
-#' @return invisibly returns logical vector of `file.copy()` success.
+#' @returns invisibly returns logical vector of `file.copy()` success.
 #' @export
 #'
+#' @seealso [copy_run()], [make_batch_runs()]
+#'
 #' @examples
-#' \dontrun{copy_tamms(tamm_name = "C:/TAMMs/Chin2020.xlsx",
+#' \dontrun{copy_tamm(tamm_name = "C:/TAMMs/Chin2020.xlsx",
 #' target_folder = "C:/Batch_run_5", run_id_vec = 10:20)}
 
-copy_tamms <- function(tamm_name, target_folder, run_id_vec, overwrite = FALSE){
+copy_tamm <- function(tamm_name, target_folder, run_id_vec, overwrite = FALSE){
   if(!is.numeric(run_id_vec) & all(!is.na(as.numeric(run_id_vec)))){
     cli::cli_abort("argument `run_id_vec` must be either integers or character strings of integers.")
   }
@@ -625,7 +649,7 @@ copy_tamms <- function(tamm_name, target_folder, run_id_vec, overwrite = FALSE){
   if(!dir.exists(target_folder)){
     creation_successful <- dir.create(target_folder)
     if(!creation_successful){
-      cli::cli_abort("Directory `target_folder` does not exist, and `copy_tamms()` was unable to create it! Parent directory might not exist?")
+      cli::cli_abort("Directory `target_folder` does not exist, and `copy_tamm()` was unable to create it! Parent directory might not exist?")
     }
   }
 
@@ -665,7 +689,7 @@ copy_tamms <- function(tamm_name, target_folder, run_id_vec, overwrite = FALSE){
 #'
 #' @export
 #'
-#' @seealso [sensitivity_exact()], [sensitivity_scaled()], [sensitivity_custom()]
+#' @seealso [copy_tamm()], [copy_run()]
 #'
 make_batch_runs <- function(fram_db, target_run, tamm_name, target_folder, times = 1, label = 'copy',force_many_runs = FALSE, verbose = TRUE){
   validate_fram_db(fram_db)
@@ -678,6 +702,6 @@ make_batch_runs <- function(fram_db, target_run, tamm_name, target_folder, times
 
   new_run_ids <- fram_db |>
     copy_run(target_run = target_run, times = times, label = label, force_many_runs, verbose)
-  copy_tamms(tamm_name, target_folder, run_id_vec = new_run_ids, overwrite = TRUE)
+  copy_tamm(tamm_name, target_folder, run_id_vec = new_run_ids, overwrite = TRUE)
   cli::cli_alert_success(glue::glue("Batch runs ready! New Run Ids range from {min(new_run_ids)} to {max(new_run_ids)}.\nTAMMs are in {target_folder}."))
 }

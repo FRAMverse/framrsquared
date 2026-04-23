@@ -12,7 +12,7 @@ calc_fram_scaling(fram_db, table_name, df)
 
 \item{table_name}{name of FRAM table}
 
-\item{df}{As the match/replace dataframe of \code{modify_table}, but with "scale_" columns instead of "replace_" columns. Columns must start with either "match_" or "scale_", and should otherwise match the names of columns in \code{table}. Columns starting with "scale_" define the scaling factor to be applied to values in that column (for rows matched with the "match_" columns). For example, scaling the StartCohort values to 50\% in the Cohort table might be achieved with columns "match_RunID", "match_StockID", "match_age", "match_TimeStep", "scale_StartCohort", with values of 0.5 in scale_Startcohort.}
+\item{df}{As the match/replace dataframe of \code{modify_table}, but with "scale_" columns instead of "replace_" columns. Columns must start with either "match_" or "scale_", and should otherwise match the names of columns in the corresponding FRAM table. Columns starting with "scale_" define the scaling factor to be applied to values in that column (for rows matched with the "match_" columns). For example, scaling the StartCohort values to 50\% in the Cohort table might be achieved with columns "match_RunID", "match_StockID", "match_age", "match_TimeStep", "scale_StartCohort", with values of 0.5 in scale_Startcohort.}
 }
 \value{
 A match/replace df for use in \code{modify_table()}, with "replace_" values
@@ -22,8 +22,7 @@ columns for all columns except "PrimaryKey"
 \description{
 Uses a match/replace-style table like in \code{modify_table()}, but allows user to specify
 scaling factors for individual columns rather than absolute values, and returns
-the corresponding match/replace df to be used in \code{modify_table()}. This is intended to support
-sensitivity analyses structured as "carry out 100 runs, with stock recruit scalers for stock X
+the corresponding match/replace df to be used in \code{modify_table()}. This is intended to support sensitivity analyses structured as "carry out 100 runs, with stock recruit scalers for stock X
 running from 5\% to 500\% of the current value" (\code{calc_fram_scaling()} is only one part
 of the pipeline for this). See \code{modify_table()} for details of setting up a match/replace dataframe;
 the only difference here is that the columns to be scaled should start with "scale_" instead
@@ -33,12 +32,15 @@ of "replace_", and should contain the scalers.
 Note: In the StockRecruit table, RecruitScaleFactor and RecruitCohortSize should have a fixed relationship (scale factor = cohort size / base period size). For this reason, if applying scaling to only one of those columns, \code{calc_fram_scaling} will automatically apply the same scaling to the other. If the scaling for both is provided and they do not match, \code{calc_fram_scaling} will error out.
 }
 \examples{
-\dontrun{
 ## in run 31, decrease stock 1's recruit numbers by 50\% and double 2's recruit numbers
-library(here)
-fram_db <- connect_fram_db(here("example_fram_db.mdb"))
 
 df <- data.frame(match_RunID = c(31, 31), match_StockID = 1:2, scale_RecruitScaleFactor = c(.5, 2))
+## check match/scale dataframe
+df
+
+\dontrun{
+library(here)
+fram_db <- connect_fram_db(here("example_fram_db.mdb"))
 
 df_scaled <- calc_fram_scaling(fram_db, "StockRecruit", df)
 ## here's what the values become:

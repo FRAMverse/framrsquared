@@ -1,4 +1,5 @@
-## find the stock names, used for validation purposes
+#' find the stock names, used for validation purposes
+#' @keywords internal
 present_stocks <- function(fram_db,
                            cur_run_id,
                            cur_stock_id,
@@ -130,7 +131,7 @@ calculate_soncc_er_breakdown <- function(fram_db,
 
 #' Calculate SONCC ERs
 #'
-#' Calculate mortality information for STT SONCC calculations. Does so for both the currently used unmarked hatchery stocks, and the analogous wild stocks (two separate sets of results). Note that the two terminal fisheries of Oregon and California (fishery_ids of 1 and 9) are excluded from the numerator of ERs calculated in this function.
+#' Calculate mortality information for STT SONCC calculations; this replaces the previous TAMM-based approach which fails now that markrates are so high for the SONCC hatchery stocks. Does so for both the currently used unmarked hatchery stocks, and the analogous wild stocks (two separate sets of results). Note that the two terminal fisheries of Oregon and California (fishery_ids of 1 and 9) are excluded from the numerator of ERs calculated in this function. Consult Jon Carey about the applications of this function. Users will typically want to use [create_soncc_pasteable()] instead.
 #'
 #' @param fram_db Fram database connection
 #' @param run_id FRAM run id
@@ -144,8 +145,10 @@ calculate_soncc_er_breakdown <- function(fram_db,
 #'   \item{`$stock_name`}{FRAM stock names used for this stock group}
 #' }
 #'
-#' @seealso [format_soncc_pasteable()], [create_soncc_pasteable()]
+#' @family soncc
+#'
 #' @export
+#' @keywords internal
 #'
 calculate_soncc <- function(fram_db,
                             run_id,
@@ -242,22 +245,20 @@ add_dummy_rows <- function(df, after_rows, dummy_row) {
 }
 
 
-## takes an er breakdown dataframe and formats it for copy-pasting. Saves an
-## excel file (argument `filename` should end in ".xlsx")
-## right now we're using the hatchery version, so $hatchery$er_breakdown of
-## the output of `calculate_soncc()`.
 #' Save sonc ER breakdown in formatted excel workbook
 #'
-#' Takes the `$er_breakdown` output of [calculate_soncc()], formats into an appropriate shape (adding blank spaces, removing extraneous columns) and saves as an excel workbook. Formatting
-#' is designed for seamless copy-pasting into the SONCC calculator workbook.
+#' Takes the `$er_breakdown` output of [calculate_soncc()], formats into an appropriate shape
+#' (adding blank spaces, removing extraneous columns) and saves as an excel workbook. Formatting is
+#' designed for seamless copy-pasting into the SONCC calculator workbook. Users will typically want to use [create_soncc_pasteable()] instead.
 #'
 #' @param soncc_er_breakdown `$er_breakdown` output of [calculate_soncc()]
 #' @param filename Filename to save excel workbook to. Must end in `.xlsx`
 #'
 #' @return nothing
 #' @export
+#' @keywords internal
 #'
-#' @seealso [calculate_soncc()], [create_soncc_pasteable()]
+#' @family soncc
 #'
 format_soncc_pasteable <- function(soncc_er_breakdown,
                                   filename) {
@@ -278,7 +279,7 @@ format_soncc_pasteable <- function(soncc_er_breakdown,
   dummy_row <- data.frame(stt_label = NA, er = NA)
   soncc_er_breakdown <- soncc_er_breakdown |>
     dplyr::arrange(factor) |>
-    dplyr::select(.data$stt_label, .data$er)
+    dplyr::select("stt_label", "er")
 
   res <- add_dummy_rows(soncc_er_breakdown,
     after_rows = c(3, 3, 6, 6, 6, 11, 16),
@@ -315,7 +316,7 @@ format_soncc_pasteable <- function(soncc_er_breakdown,
 #'
 #' @return nothing
 #' @export
-#' @seealso [calculate_soncc()], [format_soncc_pasteable()]
+#' @family soncc
 #'
 #' @examples
 #' \dontrun{

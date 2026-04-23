@@ -10,12 +10,16 @@ statistical_week(date)
 \arguments{
 \item{date}{A vector of dates}
 }
+\value{
+a numeric vector with same length as argument \code{date}
+}
 \description{
 Statistical weeks start on mondays, so the first statistical week of the year starts
-on the first monday of the year. (Contrast with management weeks which start on Sundays).
+on the first Monday of the year. (Contrast with management weeks which start on Sundays).
 }
 \examples{
 \dontrun{
+statistical_week(as.Date(Sys.Date()))
 data_fram |>
   mutate(mngmt_week = statistical_week(date_field))
 }

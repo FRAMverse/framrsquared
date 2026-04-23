@@ -23,3 +23,4 @@ validate_fram_db(
 \description{
 Convenience function to check fram_db input
 }
+\keyword{internal}

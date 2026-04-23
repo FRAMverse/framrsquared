@@ -13,8 +13,9 @@ provide_table_names(is_full = TRUE)
 Character string of the names of FRAM tables
 }
 \description{
-Provides list of FRAm database names, typically useful for internal functions.
+Provides list of FRAM database names, typically useful for internal functions. Based on hard-coded table names, not a call to a database.
 }
 \examples{
 provide_table_names(is_full = FALSE)
 }
+\keyword{internal}

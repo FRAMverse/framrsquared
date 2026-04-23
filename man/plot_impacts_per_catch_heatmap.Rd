@@ -48,7 +48,7 @@ plot_impacts_per_catch_heatmap(
 \item{warn}{Print warning if multiple stocks are provided? Logical, defaults to \code{TRUE}.}
 }
 \value{
-ggplot object
+ggplot2 object
 }
 \description{
 Identify how much reduction in landed catch at each fishery that would be needed

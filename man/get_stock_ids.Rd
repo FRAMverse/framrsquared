@@ -15,3 +15,4 @@ Gets all stock_id of FRAM database
 \examples{
 \dontrun{fram_dataframe |> get_run_ids()}
 }
+\keyword{internal}

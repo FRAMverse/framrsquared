@@ -12,20 +12,26 @@ fetch_table_(fram_db, table_name = NULL, warn = TRUE)
 \arguments{
 \item{fram_db}{FRAM database object}
 
-\item{table_name}{Atomic character of name of table to be fetched. If not given, a list of options will be printed.}
+\item{table_name}{Atomic character of name of table to be fetched. Optional; if not provided, a list of available table names will be printed.}
 
-\item{label}{Logical, defaults to TRUE. Add human-readable columns for flags, fisheries, stocks?}
+\item{label}{Add human-readable columns for flags, fisheries, stocks? Based on the Stock and Fishery tables of the current database. Logical, defaults to TRUE.}
 
 \item{warn}{Print a warning when fetching BackwardsFRAM table from a Chinook database? Logical, defaults to \code{TRUE}.}
 }
+\value{
+Tibble version of .Mdb table, with CamelCase switched to snake_case. By default, adds \code{fishery_label} and \code{stock_label} (human readable columns) to tables with \code{fishery_id} and \code{stock_id} in them, respectively. (see optional argument \code{label}).
+}
 \description{
-Returns a cleaned tibble, with column labels that were camel case (e.g., TimeStep) converted to snake case (e.g., time_step).
-\strong{WARNING}: the Chinook "BackwardsFRAM" table uses a \emph{different} stock_id numbering system from every other table. To avoid errors when joining that with other tables, instead fetch with \code{\link[=fetch_table_bkchin]{fetch_table_bkchin()}}
-\code{fetch_table_()} is an alias for \code{fetch_table()} with the optional argument \code{label} set to FALSE.
+Fetch a FRAM database table in R-friendly form (tibble with clean names). If no \code{table_name} argument is given, instead list available table names.
+}
+\details{
+\strong{WARNING}: the Chinook "BackwardsFRAM" table uses a \emph{different} stock_id numbering system from every other table. To avoid errors when joining that with other tables, instead fetch with \code{\link[=fetch_table_bkchin]{fetch_table_bkchin()}}. \code{fetch_table_()} is an alias for \code{fetch_table()} with the optional argument \code{label} set to FALSE.
 }
 \examples{
 \dontrun{
-fram_db <- connect_fram_db("validat2024.mdb")
-fram_db |> fetch_table('Mortality')}
+fram_db <- connect_fram_db("validate2024.mdb")
+fram_db |> fetch_table('Mortality')
+disconnect_fram_db(fram_db)
+}
 
 }
