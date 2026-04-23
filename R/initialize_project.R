@@ -51,7 +51,7 @@ initialize_project <-
     validate_flag(template_overwrite)
 
     if(!is.character(color) | length(color) != 1){
-      cli::cli_abort("`color` must be a single character string identifying a quarto template to use.")
+      fram_abort("`color` must be a single character string identifying a quarto template to use.")
     }
 
     validate_flag(quiet)

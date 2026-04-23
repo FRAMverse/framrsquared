@@ -39,7 +39,7 @@
 check_demo_coverage <- function(namespace_path, doc_path) {
   # Read NAMESPACE file
   if (!file.exists(namespace_path)) {
-    cli::cli_abort("NAMESPACE file not found at {.path {namespace_path}}")
+    fram_abort("NAMESPACE file not found at {.path {namespace_path}}")
   }
 
   namespace_lines <- readLines(namespace_path)
@@ -55,7 +55,7 @@ check_demo_coverage <- function(namespace_path, doc_path) {
 
   # Read document
   if (!file.exists(doc_path)) {
-    cli::cli_abort("Document not found at {.path {doc_path}}")
+    fram_abort("Document not found at {.path {doc_path}}")
   }
 
   doc_content <- paste(readLines(doc_path), collapse = "\n")

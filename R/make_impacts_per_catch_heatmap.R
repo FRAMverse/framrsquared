@@ -91,7 +91,7 @@ plot_impacts_per_catch_heatmap <- function(fram_db,
     dplyr::pull(.data$stock_long_name)
 
   if (length(stock_name) == 0) {
-    cli::cli_abort(
+    fram_abort(
       glue::glue(
         "`stock_id` of {stock_id} not found in database. Available ids range from {min(stock_table$stock_id)} to {max(stock_table$stock_id)}"
       )

@@ -1,8 +1,12 @@
 # framrsquared 0.8.1.9001
 
+## Bug fixes
 - fixed bug in which `copy_runs()` did not correctly copy entries of "SLRatio" table for Chinook. 
 - fixed bug in which `fetch_table()` errored out when fetching the `Stock` or `Fishery` tables.
 - fixed potential bug in which `aeq_mortality()` function can accept a run_id for a run that is present in the database but has not been run in FRAM, and thus has no values in the mortality table. Now provides informative error message in this case.
+
+## New features and improvements
+
 - added functions to handle SONCC calculations for STT.
 - updated `compare_runs()` to apply specified tolerance to recruits as well as fishery inputs, compare SLRatio table (Chinook only), and add option to save output to text file instead of console, and invisibly returns list of the comparison dataframes. `compare_sl_ratio()` handles the sublegal ratio comparisons.
 - Overhauled `plot_impacts_per_catch_heatmap`: can control more aspects of the plots (rounding, font size, abbreviated or full stock name for title), fishery labels include id numbers and timestep labels include months. Can toggle between "landed catch per impacts" (default) and "impacts per thousand landed catch". Function can now accept multiple stock ids, making it more useful for managing to objectives that are based on a sum of FRAM stocks. Function no longer includes CNR in the impacts per landed catch.
@@ -13,13 +17,24 @@ provides the % CNR on the plot. Setting optional argument `split_cnr` to `TRUE` 
 - new filter functions added: `filter_stt()` and `filter_stt_nt()` for STT Coho stocks; `filter_hatchery()`, `filter_wild()`, `filter_mixed()` for coho stocks.
 - Added `filter_nr_flags()` to apply NAs to non-retention dataframes based on the non_retention_flag column. Analogous to `filter_flags()`
 - Added `check_bp_coverage()`, which identifies if fishery inputs or CNR inputs contain fishery x time steps that are not represented in the base period. This is now called in compare_runs()
-- Added better testing framework, linked to external testing database directory. Only affects developers who want to run the unit tests -- see the "Contribute" section of Readme for details on setup. Convenience connection functions are included in `tests/testthat/helper-dir.R", but will only work if the testing database directory is set up. 
+- `calculate_stock_comp()` -- new function that does the calculations for `plot_stock_comp()`. Splitting these makes it easier to do other work with stock compositions, like making tables.
+
+
+## Possible breaking changes
+
 -`filter_flag()` renamed to `na_scalers_from_flag()` and `filter_nr_flag()` renamed to `na_non_retention_from_flag()` for clarity (they're not actually filtering, but turning unused scalers or cnr params to NAs) and to make package naming more consistent (All other `filter_*()` functions filter a dataframe based on `$fishery_id` or `$stock_id`)
 - `NR_flag_translate()` renamed to `translate_nr_flag()` for consistency (no capitalization, starts with verb).
 - `scalers_flag_translate()` renamed to `translate_scalers_flag()` for consistency (starts with verb).
 - `copy_tamms()` renamed to `copy_tamm()` to better reflect what it does and to align with `copy_run()`.
+
+## developer-facing changes
+
+- Added better testing framework for ad-hoc and integration tests, linked to external testing database directory. Only affects developers who want to run the unit tests -- see the "Contribute" section of Readme for details on setup. Convenience connection functions are included in `tests/testthat/helper-dir.R", but will only work if the testing database directory is set up. 
+- `fram_abort()` -- wrapper for cli_abort that adds custom error class. Allows for better testthat behavior (expect_error() can confirm that the error comes from this package, not others)
 - Overhaul of internal usage functions. Functions designed for internal use that are not exported are now listed with `@keywords internal` to enable documentation of help Rds (e.g., `validate_numeric()`. Functions that were previously intended for internal use but were exported (e.g., `provide_table_names()`) are still exported but have been given `@keywords internal`. This means they are exposed to users and will continue to function in existing scripts/packages, but aren't included in lists of functions intended for casual users.
-- `calculate_stock_comp()` -- new function that does the calculations for `plot_stock_comp()`. Splitting these makes it easier to do other work with stock compositions, like making tables.
+- Unit tests and integration tests added to functions in the following files: "Integrity.R"
+
+
 
 # framrsquared 0.8.1
 

@@ -38,7 +38,7 @@ modify_table <- function(fram_db, table_name, df) {
   validate_fram_db(fram_db)
   ## check format of names:
   if (length(grep("^match_.*|^replace_.*", names(df), invert = TRUE)) > 0) {
-    cli::cli_abort("`df` must have named columns starting with 'match_' or 'replace_'")
+    fram_abort("`df` must have named columns starting with 'match_' or 'replace_'")
   }
 
   validate_not_read_only(fram_db)
@@ -55,15 +55,15 @@ modify_table <- function(fram_db, table_name, df) {
   ## error checking:
   ##  match_names and replace_names should have no overlap
   if (length(intersect(match_names, replace_names)) > 1) {
-    cli::cli_abort("'replace_' and 'match_' column types in `df` must be unique. One or more variable is assigned to both matching and replacing!")
+    fram_abort("'replace_' and 'match_' column types in `df` must be unique. One or more variable is assigned to both matching and replacing!")
   }
 
   if (length(match_names) == 0 | length(replace_names) == 0) {
-    cli::cli_abort("`df` must have both 'match_' and 'replace_' columns!")
+    fram_abort("`df` must have both 'match_' and 'replace_' columns!")
   }
 
   if (any(!c(match_names, replace_names) %in% table_columns)) {
-    cli::cli_abort("`df` points to columns that are not in in `table_name`!")
+    fram_abort("`df` points to columns that are not in in `table_name`!")
   }
 
   glue_conditions <- glue::glue("{match_names} = {{match_{match_names}}}")
@@ -171,7 +171,7 @@ calc_fram_scaling <- function(fram_db, table_name, df) {
   if (length(terms_included) == 1) {
     if (!all(df$scale_RecruitCohortSize ==
              df$scale_RecruitScaleFactor)) {
-      cli::cli_abort("scale_RecruitCohortSize and scale_RecruitScaleFactor must match!")
+      fram_abort("scale_RecruitCohortSize and scale_RecruitScaleFactor must match!")
     }
   }
 
@@ -242,7 +242,7 @@ change_run_id <- function(fram_db, old_run_id, new_run_id){
 
   current_ids <- get_run_ids(fram_db)
   if(new_run_id %in% current_ids){
-    cli::cli_abort("{.var new_run_id} must not already be in use! Currently used run ids: {.val {current_ids}}.")
+    fram_abort("{.var new_run_id} must not already be in use! Currently used run ids: {.val {current_ids}}.")
   }
 
   run_id_tables <- find_tables_by_column_(fram_db, 'RunID')
@@ -443,7 +443,7 @@ copy_run <- function(fram_db, target_run, times = 1, label = 'copy', force_many_
     if(force_many_runs){
       cli::cli_alert("FRAM databases expected to exceed .mdb memory limits at ~500 runs, currently would update database to {run_count_current + times} run. `force_many_runs` is TRUE, so overriding this failsafe.")
     } else {
-      cli::cli_abort("FRAM databases expected to exceed .mdb memory limits at ~500 runs, currently would update database to {run_count_current + times} run. Aborting copy; set `force_many_runs = TRUE` to override this failsafe.")
+      fram_abort("FRAM databases expected to exceed .mdb memory limits at ~500 runs, currently would update database to {run_count_current + times} run. Aborting copy; set `force_many_runs = TRUE` to override this failsafe.")
     }
   }
 
@@ -635,21 +635,21 @@ copy_run <- function(fram_db, target_run, times = 1, label = 'copy', force_many_
 
 copy_tamm <- function(tamm_name, target_folder, run_id_vec, overwrite = FALSE){
   if(!is.numeric(run_id_vec) & all(!is.na(as.numeric(run_id_vec)))){
-    cli::cli_abort("argument `run_id_vec` must be either integers or character strings of integers.")
+    fram_abort("argument `run_id_vec` must be either integers or character strings of integers.")
   }
   ## does file_name exist
   if(!file.exists(tamm_name)){
-    cli::cli_abort("File `tamm_name` must exist!")
+    fram_abort("File `tamm_name` must exist!")
   }
   ## is file_name a legal TAMM?
   if(!tools::file_ext(tamm_name) %in% c("xlsx", "xls", "xlsm")){
-    cli::cli_abort("`tamm_name` must be a TAMM file (ending in `.xlsx`, `.xls`, or `.xlsm`)!")
+    fram_abort("`tamm_name` must be a TAMM file (ending in `.xlsx`, `.xls`, or `.xlsm`)!")
   }
   ## If dir does not exist, create.
   if(!dir.exists(target_folder)){
     creation_successful <- dir.create(target_folder)
     if(!creation_successful){
-      cli::cli_abort("Directory `target_folder` does not exist, and `copy_tamm()` was unable to create it! Parent directory might not exist?")
+      fram_abort("Directory `target_folder` does not exist, and `copy_tamm()` was unable to create it! Parent directory might not exist?")
     }
   }
 

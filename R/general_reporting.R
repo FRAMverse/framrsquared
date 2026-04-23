@@ -21,7 +21,7 @@ coho_mark_rates <- function(fram_db, run_id=NULL) {
   if(!is.null(run_id)){validate_run_id(fram_db, run_id)}
 
   if(fram_db$fram_db_species != 'COHO') {
-    cli::cli_abort('This function currently only works with coho.')
+    fram_abort('This function currently only works with coho.')
   }
 
   cli::cli_alert_warning('Coho mark rates calculated via encounters')

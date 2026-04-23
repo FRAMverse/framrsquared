@@ -22,65 +22,57 @@ skip_if_no_test_db <- function() {
 
 ## helper functions to make it easy to do ad-hoc tests
 
-connection_coho_pre <- function(){
+connection_coho_pre <- function(quiet = FALSE){
   path <- db_test_path()
   if (is.na(path) || !file.exists(path)) {
-    cli::cli_abort("Test database not available, and/or FRAMRSQUARED_TEST_DIR environmental variable not defined.")
+    fram_abort("Test database not available, and/or FRAMRSQUARED_TEST_DIR environmental variable not defined.")
   } else {
-    return(connect_fram_db(paste0(path, "/original_databases/coho_pre.mdb"), read_only = TRUE))
+    return(connect_fram_db(paste0(path, "/original_databases/coho_pre.mdb"), quiet = quiet, read_only = TRUE))
   }
 }
 
-connection_coho_post <- function(){
+connection_coho_post <- function(quiet = FALSE){
   path <- db_test_path()
   if (is.na(path) || !file.exists(path)) {
-    cli::cli_abort("Test database not available, and/or FRAMRSQUARED_TEST_DIR environmental variable not defined.")
+    fram_abort("Test database not available, and/or FRAMRSQUARED_TEST_DIR environmental variable not defined.")
   } else {
-    return(connect_fram_db(paste0(path, "/original_databases/coho_post.mdb"), read_only = TRUE))
+    return(connect_fram_db(paste0(path, "/original_databases/coho_post.mdb"), quiet = quiet, read_only = TRUE))
   }
 }
 
-connection_coho_transfer <- function(){
+connection_coho_transfer <- function(quiet = FALSE){
   path <- db_test_path()
   if (is.na(path) || !file.exists(path)) {
-    cli::cli_abort("Test database not available, and/or FRAMRSQUARED_TEST_DIR environmental variable not defined.")
+    fram_abort("Test database not available, and/or FRAMRSQUARED_TEST_DIR environmental variable not defined.")
   } else {
-    return(connect_fram_db(paste0(path, "/original_databases/coho_transfer.mdb"), read_only = TRUE))
+    return(connect_fram_db(paste0(path, "/original_databases/coho_transfer.mdb"), quiet = quiet, read_only = TRUE))
   }
 }
 
 
-connection_chin_pre <- function(){
+connection_chin_pre <- function(quiet = FALSE){
   path <- db_test_path()
   if (is.na(path) || !file.exists(path)) {
-    cli::cli_abort("Test database not available, and/or FRAMRSQUARED_TEST_DIR environmental variable not defined.")
+    fram_abort("Test database not available, and/or FRAMRSQUARED_TEST_DIR environmental variable not defined.")
   } else {
-    return(connect_fram_db(paste0(path, "/original_databases/chin_pre.mdb"), read_only = TRUE))
+    return(connect_fram_db(paste0(path, "/original_databases/chin_pre.mdb"), quiet = quiet, read_only = TRUE))
   }
 }
 
-connection_chin_post <- function(){
+connection_chin_post <- function(quiet = FALSE){
   path <- db_test_path()
   if (is.na(path) || !file.exists(path)) {
-    cli::cli_abort("Test database not available, and/or FRAMRSQUARED_TEST_DIR environmental variable not defined.")
+    fram_abort("Test database not available, and/or FRAMRSQUARED_TEST_DIR environmental variable not defined.")
   } else {
-    return(connect_fram_db(paste0(path, "/original_databases/chin_post.mdb"), read_only = TRUE))
+    return(connect_fram_db(paste0(path, "/original_databases/chin_post.mdb"), quiet = quiet, read_only = TRUE))
   }
 }
 
-connection_chin_transfer <- function(){
+connection_chin_transfer <- function(quiet = FALSE){
   path <- db_test_path()
   if (is.na(path) || !file.exists(path)) {
-    cli::cli_abort("Test database not available, and/or FRAMRSQUARED_TEST_DIR environmental variable not defined.")
+    fram_abort("Test database not available, and/or FRAMRSQUARED_TEST_DIR environmental variable not defined.")
   } else {
-    return(connect_fram_db(paste0(path, "/original_databases/chin_transfer.mdb"), read_only = TRUE))
+    return(connect_fram_db(paste0(path, "/original_databases/chin_transfer.mdb"), quiet = quiet, read_only = TRUE))
   }
 }
-
-## for reading in partial FRAM tables used in testing. See test-integrity.R for example.
-# fetch_table_unsafe <- function(fram_db, table_name = NULL, label = TRUE, warn = TRUE){
-#   output_table <- DBI::dbGetQuery(fram_db$fram_db_connection,
-#                                   glue::glue('SELECT * FROM {table_name};')) |>
-#     fram_clean_tables()
-#   return(output_table)
-# }

@@ -48,7 +48,8 @@ Suggests:
     testthat (>= 3.0.0),
     rmarkdown,
     forcats,
-    openxlsx2
+    openxlsx2,
+    withr
 VignetteBuilder:
   knitr
 Config/testthat/edition: 3

@@ -36,20 +36,20 @@ connect_fram_db <-
            quiet = FALSE) {
     # verify file exists
     if (!file.exists(db_path)) {
-      cli::cli_abort('Database file doesn\'t exist. Check path.')
+      fram_abort('Database file doesn\'t exist. Check path.')
     }
 
     # more db checks
     if (!tools::file_ext(db_path) %in% c('mdb', 'db')) {
-      cli::cli_abort('Must provide a valid .mdb access file or SQLite .db file')
+      fram_abort('Must provide a valid .mdb access file or SQLite .db file')
     }
 
     if(!is.logical(read_only) | length(read_only) != 1){
-      cli::cli_abort("`read_only` must be a logical of length 1")
+      fram_abort("`read_only` must be a logical of length 1")
     }
 
     if(!is.logical(quiet) | length(quiet) != 1){
-      cli::cli_abort("`quiet` must be a logical of length 1")
+      fram_abort("`quiet` must be a logical of length 1")
     }
 
     # connect to database
@@ -65,7 +65,7 @@ connect_fram_db <-
       )
 
     } else {
-      cli::cli_abort('Something went wrong connecting to a database')
+      fram_abort('Something went wrong connecting to a database')
     }
 
 

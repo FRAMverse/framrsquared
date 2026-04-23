@@ -267,12 +267,12 @@ format_soncc_pasteable <- function(soncc_er_breakdown,
   validate_character(filename, n = 1)
 
   if (!grepl("\\.xlsx$", filename)) {
-    cli::cli_abort("Argument {.arg filename} must end with {.val .xlsx}")
+    fram_abort("Argument {.arg filename} must end with {.val .xlsx}")
   }
 
 
   if (!rlang::is_installed("openxlsx2")) {
-    cli::cli_abort("Package {.pkg openxlsx2} is required for this functionality.
+    fram_abort("Package {.pkg openxlsx2} is required for this functionality.
                   Install it with {.code install.packages('openxlsx2')}.")
   }
 

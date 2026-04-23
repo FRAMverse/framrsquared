@@ -23,7 +23,7 @@ post_season_abundance <- function(fram_db, units = c('ja3', 'oa3'), run_ids = NU
   unit <- rlang::arg_match(units)
 
   if(fram_db$fram_db_species != "COHO"){
-    cli::cli_abort('This function only works with Coho databases')
+    fram_abort('This function only works with Coho databases')
   }
 
   # get data
@@ -75,7 +75,7 @@ post_season_abundance <- function(fram_db, units = c('ja3', 'oa3'), run_ids = NU
 
   if(length(duplicated_years)>0){
     if(is.null(run_ids)){
-      cli::cli_abort("If `run_ids` is not provided, database must contain only one run per run year, but the following year(s) have multiple runs associated with them: {duplicated_years}. Provide vector of run_ids to use such that there is only one run id per run year, in optional `run_ids` argument.")
+      fram_abort("If `run_ids` is not provided, database must contain only one run per run year, but the following year(s) have multiple runs associated with them: {duplicated_years}. Provide vector of run_ids to use such that there is only one run id per run year, in optional `run_ids` argument.")
     } else {
       cli::cli_alert("Warning! The following year(s) have multiple runs associated with them: {duplicated_years}. `run_ids` was provided, so presumably this was intentional. Labeling abundance columns by run id instead of year.")
       cohort_table <- cohort_table |>
@@ -145,7 +145,7 @@ bkfram_checks_coho <-
 
     # check for null ids
     if (is.null(backward_run_id) | is.null(forward_run_id)) {
-      cli::cli_abort("Both a backward and forward run ids must be supplied")
+      fram_abort("Both a backward and forward run ids must be supplied")
     }
 
     validate_run_id(fram_db, backward_run_id)
