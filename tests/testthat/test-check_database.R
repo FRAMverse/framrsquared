@@ -178,7 +178,7 @@ test_that("check_bp_coverage() scalers_problem has rows when a fishery is outsid
                    regexp = "The following are represented in 'FisheryScalers' but not in the base period")
   })
 
-  suppressMessage({
+  suppressMessages({
     result <- check_bp_coverage(fram_db, run_id = 1L)
   })
 

@@ -153,7 +153,7 @@ fetch_table_bkchin <- function(fram_db){
 
   output_table <- fetch_table_(fram_db, table_name = "BackwardsFRAM",
                               warn = FALSE) |>
-    dplyr::rename(bk_stock_id = .data$stock_id) |>
+    dplyr::rename(bk_stock_id = "stock_id") |>
     dplyr::left_join(framrosetta::bk_lookup_chin, by = "bk_stock_id")
 
   return(output_table)

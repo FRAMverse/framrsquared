@@ -34,8 +34,8 @@ check_bp_coverage <- function(fram_db, run_id){
     fetch_table_("FisheryScalers") |>
     dplyr::filter(.data$run_id %in% .env$run_id) |>
     na_scalers_from_flag() |>
-    dplyr::mutate(dplyr::across(.data$fishery_scale_factor:.data$msf_quota, ~ dplyr::coalesce(.x, 0))) |>
-    dplyr::filter(dplyr::if_any(.data$fishery_scale_factor:.data$msf_quota, ~ .x != 0)) |>
+    dplyr::mutate(dplyr::across("fishery_scale_factor":"msf_quota", ~ dplyr::coalesce(.x, 0))) |>
+    dplyr::filter(dplyr::if_any("fishery_scale_factor":"msf_quota", ~ .x != 0)) |>
     dplyr::select("fishery_id", "time_step")
 
 
@@ -48,7 +48,7 @@ check_bp_coverage <- function(fram_db, run_id){
     cli::cli_alert("Issues detected! The following are represented in 'FisheryScalers' but not in the base period:")
     problem_children <- no_bp_er |>
       dplyr::summarize(ts_collapse = paste0(.data$time_step, collapse = ", "),
-                .by = .data$fishery_id) |>
+                .by = "fishery_id") |>
       dplyr::mutate(msg = glue::glue("  fishery_id {fishery_id}, time_step(s) {ts_collapse}")) |>
       dplyr::pull(.data$msg)
     purrr::walk(problem_children, cli::cli_alert_danger)
@@ -60,8 +60,8 @@ check_bp_coverage <- function(fram_db, run_id){
     fetch_table_("NonRetention") |>
     dplyr::filter(.data$run_id %in% .env$run_id) |>
     na_non_retention_from_flag() |>
-    dplyr::mutate(dplyr::across(.data$cnr_input1:.data$cnr_input4, ~ dplyr::coalesce(.x, 0))) |>
-    dplyr::filter(dplyr::if_any(.data$cnr_input1:.data$cnr_input4, ~ .x != 0)) |>
+    dplyr::mutate(dplyr::across("cnr_input1":"cnr_input4", ~ dplyr::coalesce(.x, 0))) |>
+    dplyr::filter(dplyr::if_any("cnr_input1":"cnr_input4", ~ .x != 0)) |>
     dplyr::filter(.data$non_retention_flag != 0) |>
     dplyr::select("fishery_id", "time_step")
 
@@ -74,7 +74,7 @@ check_bp_coverage <- function(fram_db, run_id){
     cli::cli_alert("Issues detected! The following are represented in 'NonRetention' but not in the base period:")
     problem_children <- no_bp_cnr |>
       dplyr::summarize(ts_collapse = paste0(.data$time_step, collapse = ", "),
-                .by = .data$fishery_id) |>
+                .by = "fishery_id") |>
       dplyr::mutate(msg = glue::glue("  fishery_id {fishery_id}, time_step(s) {ts_collapse}")) |>
       dplyr::pull(.data$msg)
     purrr::walk(problem_children, cli::cli_alert_danger)
