@@ -68,7 +68,7 @@ fetch_table <- function(fram_db, table_name = NULL, label = TRUE, warn = TRUE){
     validate_table(fram_db, table_name)
 
 
-    if(fram_db$fram_db_species == "CHINOOK" & table_name == "BackwardsFRAM"){
+    if( "CHINOOK" %in% fram_db$fram_db_species & table_name == "BackwardsFRAM"){
       if(warn){
         cli::cli_alert_danger("Chinook BackwardsFRAM tables use different numbering for stock_id!\n This can cause problems when merging with other tables!\n Recommend fetch_table_bkchin() instead.")
       }
@@ -96,7 +96,7 @@ fetch_table <- function(fram_db, table_name = NULL, label = TRUE, warn = TRUE){
 
     if(table_name == "Mortality" & warn == TRUE){
       neg_mort_runs <- output_table |>
-        dplyr::filter(dplyr::if_any(.data$landed_catch:.data$msf_encounter, ~ . < 0)) |>
+        dplyr::filter(dplyr::if_any("landed_catch":"msf_encounter", ~ . < 0)) |>
         dplyr::pull(.data$run_id) |>
         unique()
       if(length(neg_mort_runs>0)){

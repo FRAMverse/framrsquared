@@ -55,3 +55,6 @@ inst/doc
 ## local test files
 local-test/
 .positai
+
+## Snapshots
+tests/testthat/_snaps/

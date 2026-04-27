@@ -1,21 +1,5 @@
 # ── Helpers ----------------------------------------------------------
 
-# Minimal mock fram_db list (valid structure, invalid connection)
-make_mock_fram_db <- function(type = "full", species = "CHINOOK", read_only = FALSE) {
-  con <- DBI::dbConnect(RSQLite::SQLite(), ":memory:")
-  list(
-    fram_db_connection = con,
-    fram_db_connection_id = '10',
-    fram_db_type       = type,
-    fram_db_species    = species,
-    fram_db_medium = "mdb",
-    fram_read_only     = read_only
-  )
-}
-disconnect_mock_fram_db <- function(db){
-  DBI::dbDisconnect(db$fram_db_connection)
-}
-
 # UNIT TESTS -------------------------------------------------------------------
 
 ## --- validate_fram_abort() ----------------------------------------------------
@@ -438,7 +422,7 @@ test_that("validate_stock_ids() error call reflects the calling function", {
 
 test_that("get_run_ids works", {
   skip_if_no_test_db()
-  withr::defer(disconnect_all_fram_connections())
+  withr::defer(disconnect_all_fram_connections(quiet = TRUE))
 
   fram_db <- connection_coho_transfer(quiet = TRUE)
   expect_equal(sort(get_run_ids(fram_db)),
@@ -449,7 +433,7 @@ test_that("get_run_ids works", {
 
 test_that("get_fishery_id works", {
   skip_if_no_test_db()
-  withr::defer(disconnect_all_fram_connections())
+  withr::defer(disconnect_all_fram_connections(quiet = TRUE))
 
   fram_db <- connection_chin_pre(quiet = TRUE)
   expect_equal(sort(unique(get_fishery_ids(fram_db))),
@@ -464,7 +448,7 @@ test_that("get_fishery_id works", {
 
 test_that("get_stock_id works", {
   skip_if_no_test_db()
-  withr::defer(disconnect_all_fram_connections())
+  withr::defer(disconnect_all_fram_connections(quiet = TRUE))
 
   fram_db <- connection_chin_pre(quiet = TRUE)
   expect_equal(sort(unique(get_stock_ids(fram_db))),
@@ -479,7 +463,7 @@ test_that("get_stock_id works", {
 
 test_that("find_tables_by_column_ works", {
   skip_if_no_test_db()
-  withr::defer(disconnect_all_fram_connections())
+  withr::defer(disconnect_all_fram_connections(quiet = TRUE))
   fram_db <- connection_chin_pre(quiet = TRUE)
   ## only one table should have "Kmature" in it: the Growth table
   expect_equal(find_tables_by_column_(fram_db, "KMature")$value,
@@ -491,7 +475,7 @@ test_that("find_tables_by_column_ works", {
 
 test_that("fram_database_type() identifies databases correctly", {
   skip_if_no_test_db()
-  withr::defer(disconnect_all_fram_connections())
+  withr::defer(disconnect_all_fram_connections(quiet = TRUE))
 
   fram_db <- connection_chin_post(quiet = TRUE)
   expect_equal(fram_database_type(fram_db$fram_db_connection), list(type = "full"))
@@ -515,7 +499,7 @@ test_that("fram_database_type() identifies databases correctly", {
 
 test_that("fram_database_type errors for strange database connections", {
   skip_if_no_test_db()
-  withr::defer(disconnect_all_fram_connections())
+  withr::defer(disconnect_all_fram_connections(quiet = TRUE))
 
   with_mocked_bindings(
     fram_db <- connection_test_db("partial files/test_validate_same_bp.mdb"),
@@ -531,7 +515,7 @@ test_that("fram_database_type errors for strange database connections", {
 
 test_that("fram_database_species correctly gets species", {
   skip_if_no_test_db()
-  withr::defer(disconnect_all_fram_connections())
+  withr::defer(disconnect_all_fram_connections(quiet = TRUE))
 
   fram_db <- connection_chin_post(quiet = TRUE)
   expect_equal(fram_database_species(fram_db$fram_db_connection), "CHINOOK")
@@ -549,14 +533,9 @@ test_that("fram_database_species correctly gets species", {
 
 test_that("fram_database_species handles multiple species correctly", {
   skip_if_no_test_db()
-  withr::defer(disconnect_all_fram_connections())
+  withr::defer(disconnect_all_fram_connections(quiet = TRUE))
 
-  fram_db <- connection_test_db("partial files/test_multiple_species.mdb", quiet = TRUE)
-  expect_equal(fram_database_species(fram_db$fram_db_connection), sort(c("COHO", "CHINOOK")))
-
-  expect_no_warning(fram_database_species(fram_db$fram_db_connection))
-  expect_warning(fram_database_species(fram_db$fram_db_connection,
-                                       warn = TRUE))
+  expect_error(connection_test_db("partial files/test_multiple_species.mdb", quiet = TRUE))
 
 })
 
@@ -565,7 +544,7 @@ test_that("fram_database_species handles multiple species correctly", {
 
 test_that("validate_same_bp basic error handling", {
   skip_if_no_test_db()
-  withr::defer(disconnect_all_fram_connections())
+  withr::defer(disconnect_all_fram_connections(quiet = TRUE))
 
   local_mocked_bindings(
     validate_fram_db = function(...){TRUE},
@@ -597,7 +576,7 @@ test_that("validate_same_bp basic error handling", {
 
 test_that("validate_same_bp output structure", {
   skip_if_no_test_db()
-  withr::defer(disconnect_all_fram_connections())
+  withr::defer(disconnect_all_fram_connections(quiet = TRUE))
 
   local_mocked_bindings(
     validate_fram_db = function(...){TRUE},
@@ -647,7 +626,7 @@ test_that("validate_same_bp output structure", {
 
 test_that("validate_same_bp dataframe values", {
   skip_if_no_test_db()
-  withr::defer(disconnect_all_fram_connections())
+  withr::defer(disconnect_all_fram_connections(quiet = TRUE))
 
   local_mocked_bindings(
     validate_fram_db = function(...){TRUE},

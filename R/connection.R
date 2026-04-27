@@ -68,8 +68,6 @@ connect_fram_db <-
       fram_abort('Something went wrong connecting to a database')
     }
 
-
-
     # returns database type, checks if fram database is valid
     fram_db_type <- fram_database_type(con)
 
@@ -145,7 +143,7 @@ disconnect_fram_db <- function(fram_db,
 #'
 #' list_extant_fram_connections
 #' }
-disconnect_all_fram_connections <- function(){
+disconnect_all_fram_connections <- function(quiet = FALSE){
   total_connections = length(.fram_connections)
   for (con_id in names(.fram_connections)) {
     con <- .fram_connections[[con_id]]
@@ -154,7 +152,9 @@ disconnect_all_fram_connections <- function(){
     }
     rm(list = con_id, envir = .fram_connections)
   }
-  cli::cli_alert_success("Disconnected all ({total_connections}) extant connections to FRAM databases")
+  if(!quiet){
+    cli::cli_alert_success("Disconnected all ({total_connections}) extant connections to FRAM databases")
+  }
 }
 
 

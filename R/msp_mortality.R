@@ -42,8 +42,8 @@ msp_mortality = function(fram_db, run_id = NULL){
     dplyr::left_join(msp_run_id, by = c('run_id', 'fishery_id')) |>
     dplyr::mutate(
       dplyr::across(
-        c(.data$landed_catch:.data$drop_off,
-        .data$msf_landed_catch:.data$msf_drop_off),
+        c("landed_catch":"drop_off",
+        "msf_landed_catch":"msf_drop_off"),
         \(x) x / .data$model_stock_proportion
       )
     ) |>

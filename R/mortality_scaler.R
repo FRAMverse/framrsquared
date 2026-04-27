@@ -63,7 +63,7 @@ add_total_mortality = function(.data){
       total_mortality = .data$landed_catch + .data$non_retention + .data$shaker + .data$drop_off +
         .data$msf_landed_catch + .data$msf_non_retention +
         .data$msf_shaker + .data$msf_drop_off,
-      .before = .data$landed_catch
+      .before = "landed_catch"
     )
 }
 

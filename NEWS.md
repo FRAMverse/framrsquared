@@ -22,6 +22,7 @@ provides the % CNR on the plot. Setting optional argument `split_cnr` to `TRUE` 
 
 ## Possible breaking changes
 
+- `connect_fram_db()` now errors out if two species are present in the "RunID" table; we cannot guarantee the functions of this package would behave appropriately in that situation. Such a database should never happen during normal NOF processes, so this should not interfere with users. (It may not even be possible to create this in FRAM?)
 -`filter_flag()` renamed to `na_scalers_from_flag()` and `filter_nr_flag()` renamed to `na_non_retention_from_flag()` for clarity (they're not actually filtering, but turning unused scalers or cnr params to NAs) and to make package naming more consistent (All other `filter_*()` functions filter a dataframe based on `$fishery_id` or `$stock_id`)
 - `NR_flag_translate()` renamed to `translate_nr_flag()` for consistency (no capitalization, starts with verb).
 - `scalers_flag_translate()` renamed to `translate_scalers_flag()` for consistency (starts with verb).

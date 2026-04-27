@@ -149,17 +149,17 @@ label_flags = function(.data,
     if ("fishery_flag" %in% names(.data)) {
       .data <- .data |>
         dplyr::mutate(fishery_flag_label = translate_scalers_flag(.data$fishery_flag),
-                      .after = .data$fishery_flag)
+                      .after = "fishery_flag")
     }
     if("non_retention_flag" %in% names(.data)){
       if(species == "CHINOOK"){
         .data <- .data |>
           dplyr::mutate(non_retention_flag_label = translate_nr_flag(.data$non_retention_flag),
-                        .after =.data$non_retention_flag)
+                        .after ="non_retention_flag")
       } else {
         .data <- .data |>
           dplyr::mutate(non_retention_flag_label = "Total dead fish",
-                        .after =.data$non_retention_flag)
+                        .after ="non_retention_flag")
       }
     }
   }

@@ -105,7 +105,6 @@ fram_database_type <- function(con) {
 
 #' Identifies the FRAM database species focus - Chinook or Coho
 #' @param con Connection to FRAM database
-#' @param warn Should the user get an error message when multiple species are present?
 #' @export
 #' @keywords internal
 #' @examples
@@ -124,8 +123,8 @@ fram_database_species <- function(con,
   }
 
   species <- sort(unique(run_id_table$species_name))
-  if(length(species > 1) & warn){
-    cli::cli_warn("More than one species ({paste(species, collapse = ', ')}) detected in this database! Procede with caution!")
+  if(length(species) > 1){
+    cli::cli_abort("More than one species detected in the runs of database ({paste(species, collapse = ', ')})! `framrsquared` is not designed to handle database with mix of {.val COHO} and {.val CHINOOK} runs! Use a database with only one species present in the RunID table!")
   }
   return(species)
 }
@@ -198,7 +197,7 @@ get_stock_ids <- function(fram_db){
 #' Finds tables that contain a specific column name
 #'
 #' @param fram_db FRAM database object
-#' @param column_name Name of a column
+#' @param column_name Name of a column; character atomic or vector
 #' @keywords internal
 #' @examples
 #' \dontrun{fram_db |> find_tables_by_column_('RunID')}
@@ -219,7 +218,7 @@ find_tables_by_column_ <- function(fram_db, column_name) {
       \(table) DBI::dbListFields(fram_db$fram_db_connection, table)
     )) |>
     tidyr::unnest("columns") |>
-    dplyr::filter(.data$columns == .env$column_name)
+    dplyr::filter(.data$columns %in% .env$column_name)
 }
 
 

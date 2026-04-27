@@ -1,4 +1,4 @@
-
+#'  `r lifecycle::badge("experimental")`
 #' Check FRAM database after adding new stock
 #'
 #' Either provides the step by step process of adding new stock to a FRAM database, or walks through fram database run
@@ -360,9 +360,11 @@ addstock_check <-
     return(invisible(error_count))
   }
 
+#'  `r lifecycle::badge("experimental")`
 #' Helper function to check that stock id exist in the Stock database
 #'
 #' Intended for internal use, makes some assumptions about inputs.
+#' UPDATE: can be replaced with `validate_stock_id()`??
 #'
 #' @param table_name Character of table name, for informative messages
 #' @param df Dataframe
@@ -428,6 +430,7 @@ stock_age_checker = function(table_name,
   }
 }
 
+#'  `r lifecycle::badge("experimental")`
 #' Helper function to check that stock id make sense
 #'
 #' More thorough checking than stock_id_comp. Checks that the number of stock IDs makes sense given `NumStk`,

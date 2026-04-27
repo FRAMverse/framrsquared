@@ -74,20 +74,23 @@ aeq_mortality <- function(fram_db, run_id = NULL, msp = TRUE, label = TRUE) {
   aeq_m <- aeq_mort |>
     dplyr::mutate(dplyr::across(
       c(
-        .data$landed_catch:.data$drop_off,
-        .data$msf_landed_catch:.data$msf_drop_off
+        "landed_catch":"drop_off",
+        "msf_landed_catch":"msf_drop_off"
       ),
       \(x) dplyr::if_else(is.na(.data$terminal_flag), x * .data$aeq, x)
     )) |>
-    dplyr::arrange(.data$run_id, .data$fishery_id,
-                   .data$time_step, .data$stock_id
+    dplyr::arrange(
+      "run_id",
+      "fishery_id",
+      "time_step",
+      "stock_id"
     ) |>
     `attr<-`('species', fram_db$fram_db_species) |>
     dplyr::rename("aeq_constant" = "aeq")
   if(label == TRUE){
     aeq_m <- aeq_m |>
-      framrosetta::label_fisheries() |>
-      framrosetta::label_stocks()
+      label_fisheries_db(fram_db) |>
+      label_stocks_db(fram_db)
   }
 
   if(!is.null(run_id)) {

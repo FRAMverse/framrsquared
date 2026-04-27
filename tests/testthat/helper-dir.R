@@ -1,3 +1,4 @@
+
 db_test_path <- function(...) {
   path <- Sys.getenv("FRAMRSQUARED_TEST_DIR", unset = NA)
   if (is.na(path)) return(NA_character_)

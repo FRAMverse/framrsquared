@@ -59,7 +59,7 @@ frs_stylecheck_snakecase = function(filepath, n = Inf){
   df <- df |>
     dplyr::filter(stringr::str_detect(.data$line.entry, "<-")) |>
     dplyr::mutate(variable.name = stringr::str_trim(gsub("<-.*", "", .data$line.entry)),
-           .before = .data$line.entry) |>
+           .before = "line.entry") |>
     dplyr::filter(!stringr::str_detect(.data$line.entry, "_"))
   if(nrow(df)==0){
     cli::cli_alert_success("No possible cases of variable names not in snakecase. Good work!")
