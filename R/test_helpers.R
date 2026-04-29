@@ -33,3 +33,15 @@ make_queryable_mock_db_list <- function(table_list,
 disconnect_mock_fram_db <- function(db){
   DBI::dbDisconnect(db$fram_db_connection)
 }
+
+## turn mocked db into list for review
+listify_tables <- function(fram_db){
+
+  all_tables <- DBI::dbListTables(fram_db$fram_db_connection)
+
+  res <- list()
+  for(cur_table in all_tables){
+    res[[cur_table]] = fetch_table_(fram_db, cur_table)
+  }
+  return(res)
+}
