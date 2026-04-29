@@ -197,7 +197,9 @@ test_that("validate_fram_db works", {
   fram_db <- make_mock_fram_db()
   withr::defer(disconnect_mock_fram_db(fram_db))
   expect_no_error(validate_fram_db(fram_db))
-  withr::deferred_run()
+  suppressMessages(
+    withr::deferred_run()
+  )
 
   fram_db <- make_mock_fram_db(species = "COHO", type = "full")
   withr::defer(disconnect_mock_fram_db(fram_db))
@@ -260,12 +262,12 @@ test_that("validate_run_id handles argument checking", {
   expect_error(validate_run_id(fram_db, 1:5, n = 2),
                class = "framrsquared_error")
   expect_no_error(validate_run_id(fram_db, 1:2, n = 2),
-               class = "framrsquared_error")
+                  class = "framrsquared_error")
 
   expect_error(validate_run_id(fram_db, NULL),
                class = "framrsquared_error")
   expect_no_error(validate_run_id(fram_db, NULL, allow_null = TRUE),
-               class = "framrsquared_error")
+                  class = "framrsquared_error")
 
 })
 
