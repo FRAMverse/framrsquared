@@ -40,6 +40,9 @@ attach_comparison_attributes <- function(.data, fram_db, run_ids){
 compare_inputs <- function(fram_db, run_ids){
   validate_fram_db(fram_db)
   validate_run_id(fram_db, run_ids, n = 2)
+  if(run_ids[1] == run_ids[2]){
+    fram_abort("Run IDs must be different! Currently both values of run_ids are {.val {run_ids[1]}}")
+  }
   validate_same_bp(fram_db, run_ids)
 
   scalers <- fram_db |>
@@ -86,6 +89,9 @@ compare_inputs <- function(fram_db, run_ids){
 compare_sl_ratio <- function(fram_db, run_ids){
   validate_fram_db(fram_db)
   validate_run_id(fram_db, run_ids, n = 2)
+  if(run_ids[1] == run_ids[2]){
+    fram_abort("Run IDs must be different! Currently both values of run_ids are {.val {run_ids[1]}}")
+  }
   validate_same_bp(fram_db, run_ids)
   if(fram_db$fram_db_species != "CHINOOK"){fram_abort('Database must be a Chinook database.')}
   # abort if do have two run ids
@@ -223,6 +229,9 @@ input_summary_ <- function(.data, run_id){
 compare_recruits <- function(fram_db, run_ids, tolerance = .01, verbose = TRUE){
   validate_fram_db(fram_db)
   validate_run_id(fram_db, run_ids, n = 2)
+  if(run_ids[1] == run_ids[2]){
+    fram_abort("Run IDs must be different! Currently both values of run_ids are {.val {run_ids[1]}}")
+  }
   validate_same_bp(fram_db, run_ids)
   validate_numeric(tolerance, n = 1)
   validate_flag(verbose)
@@ -293,6 +302,9 @@ compare_recruits <- function(fram_db, run_ids, tolerance = .01, verbose = TRUE){
 compare_fishery_inputs <- function(fram_db, run_ids, tolerance = .01, verbose = TRUE){
   validate_fram_db(fram_db)
   validate_run_id(fram_db, run_ids, n = 2)
+  if(run_ids[1] == run_ids[2]){
+    fram_abort("Run IDs must be different! Currently both values of run_ids are {.val {run_ids[1]}}")
+  }
   validate_same_bp(fram_db, run_ids)
   validate_numeric(tolerance, n = 1)
   if(tolerance < 0 | tolerance > 1){
@@ -357,6 +369,9 @@ compare_fishery_inputs <- function(fram_db, run_ids, tolerance = .01, verbose = 
 compare_fishery_input_flags <- function(fram_db, run_ids, verbose = TRUE){
   validate_fram_db(fram_db)
   validate_run_id(fram_db, run_ids, n = 2)
+  if(run_ids[1] == run_ids[2]){
+    fram_abort("Run IDs must be different! Currently both values of run_ids are {.val {run_ids[1]}}")
+  }
   validate_same_bp(fram_db, run_ids)
   validate_flag(verbose)
 
@@ -423,6 +438,9 @@ compare_fishery_input_flags <- function(fram_db, run_ids, verbose = TRUE){
 compare_non_retention_inputs <- function(fram_db, run_ids, verbose = TRUE){
   validate_fram_db(fram_db)
   validate_run_id(fram_db, run_ids, n = 2)
+  if(run_ids[1] == run_ids[2]){
+    fram_abort("Run IDs must be different! Currently both values of run_ids are {.val {run_ids[1]}}")
+  }
   validate_same_bp(fram_db, run_ids)
   validate_flag(verbose)
 
@@ -474,6 +492,9 @@ compare_non_retention_inputs <- function(fram_db, run_ids, verbose = TRUE){
 compare_non_retention_input_flags <- function(fram_db, run_ids, verbose = TRUE){
   validate_fram_db(fram_db)
   validate_run_id(fram_db, run_ids, n = 2)
+  if(run_ids[1] == run_ids[2]){
+    fram_abort("Run IDs must be different! Currently both values of run_ids are {.val {run_ids[1]}}")
+  }
   validate_same_bp(fram_db, run_ids)
   validate_flag(verbose)
 
@@ -532,6 +553,9 @@ compare_non_retention_input_flags <- function(fram_db, run_ids, verbose = TRUE){
 compare_stock_fishery_rate_scalers <- function(fram_db, run_ids){
   validate_fram_db(fram_db)
   validate_run_id(fram_db, run_ids, n = 2)
+  if(run_ids[1] == run_ids[2]){
+    fram_abort("Run IDs must be different! Currently both values of run_ids are {.val {run_ids[1]}}")
+  }
   validate_same_bp(fram_db, run_ids)
 
   if(fram_db$fram_db_species == "CHINOOK"){
@@ -599,7 +623,6 @@ compare_stock_fishery_rate_scalers <- function(fram_db, run_ids){
 #'
 #' @export
 #' @family comparisons
-#' @notest
 #'
 #' @returns invisibly returns a list of the comparison dataframes: `$retention_flags`, `$retention_inputs`, `$sl_ratio`, `$recruits`, `fishery_flags`, `$fishery_inputs`, `$sfrs`
 #'
@@ -636,15 +659,18 @@ compare_runs <- function(fram_db, run_ids, save_file = NULL, tolerance = 0.01){
 
 # internal function for compare_runs()
 #' @keyword internal
-#' @notest
 compare_runs_ <- function(fram_db, run_ids, tolerance = .01){
   validate_fram_db(fram_db)
-  validate_run_id(fram_db, run_ids,n = 2)
+  validate_run_id(fram_db, run_ids, n = 2)
+  if(run_ids[1] == run_ids[2]){
+    fram_abort("Run IDs must be different! Currently both values of run_ids are {.val {run_ids[1]}}")
+  }
   validate_same_bp(fram_db, run_ids)
   validate_numeric(tolerance, n = 1)
   if(tolerance < 0 | tolerance > 1){
     fram_abort('`tolerance` must be a numeric between 0 and 1')
   }
+
 
   runs <- fram_db |>
     fetch_table_('RunID')
@@ -657,9 +683,7 @@ compare_runs_ <- function(fram_db, run_ids, tolerance = .01){
     dplyr::filter(.data$run_id == run_ids[[2]]) |>
     dplyr::pull(.data$run_name)
 
-  # if(base_run_name == new_run_name){
-  #   fram_abort("Both runs named {new_run_name}; function will not work unless runs have different names. Recommend renaming one using {.kbd FRAM} > {.kbd FRAM Utilities} > {.kbd Edit Model Run Details}.")
-  # }
+
 
   base_run_time <- runs |>
     dplyr::filter(.data$run_id == run_ids[[1]]) |>
@@ -715,7 +739,8 @@ compare_runs_ <- function(fram_db, run_ids, tolerance = .01){
   retention_flags <- fram_db |> compare_non_retention_input_flags(run_ids, verbose = FALSE)
   if(nrow(retention_flags) > 0){
     cli::cli_alert_info('Changes detected in non-retention flagging, below is a table outlining them')
-    print(retention_flags, n=Inf)
+    # print(retention_flags, n=Inf)
+    cli::cat_print(retention_flags)
     flags.used <- retention_flags |>
       dplyr::select(-"fishery_id",
                     -"time_step",
@@ -747,7 +772,8 @@ compare_runs_ <- function(fram_db, run_ids, tolerance = .01){
       compare_sl_ratio(run_ids)
     if(nrow(sl_ratio) > 0){
       cli::cli_alert_info('Changes detected in SL Ratios, below is a table outlining them')
-      print(sl_ratio, n=Inf)
+      # print(sl_ratio, n=Inf)
+      cli::cat_print(sl_ratio)
     } else {
       cli::cli_alert_success('No changes detected in SL Ratios')
     }
@@ -762,7 +788,8 @@ compare_runs_ <- function(fram_db, run_ids, tolerance = .01){
   recruits <- fram_db |> compare_recruits(run_ids, tolerance = tolerance, verbose = FALSE)
   if(nrow(recruits) > 0){
     cli::cli_alert_info('Changes detected in recruits inputs, below is a table outlining them')
-    print(recruits, n=Inf)
+    # print(recruits, n=Inf)
+    cli::cat_print(recruits)
   } else {
     cli::cli_alert_success('No changes detected in recruit inputs')
   }
@@ -775,7 +802,9 @@ compare_runs_ <- function(fram_db, run_ids, tolerance = .01){
   fishery_flags <- fram_db |> compare_fishery_input_flags(run_ids, verbose = FALSE)
   if(nrow(fishery_flags) > 0){
     cli::cli_alert_info('Changes detected in fishery flag inputs, below is a table outlining them')
-    print(fishery_flags |> dplyr::select(-dplyr::starts_with("used_")), n=Inf)
+    # print(fishery_flags |> dplyr::select(-dplyr::starts_with("used_")), n=Inf)
+    cli::cat_print(fishery_flags |>
+                     dplyr::select(-dplyr::starts_with("used_")))
     flags_used = c(fishery_flags$flag_comparison, fishery_flags$flag_original) |>
       unique() |>
       purrr::map_vec(function(x) paste0(x, " = ", translate_scalers_flag(x)))
@@ -789,7 +818,8 @@ compare_runs_ <- function(fram_db, run_ids, tolerance = .01){
   fishery_inputs <- fram_db |> compare_fishery_inputs(run_ids, tolerance = tolerance, verbose = FALSE)
   if(nrow(fishery_inputs) > 0){
     cli::cli_alert_info('Changes detected in fishery inputs, below is a table outlining them')
-    print(fishery_inputs, n=Inf)
+    # print(fishery_inputs, n=Inf)
+    cli::cat_print(fishery_inputs)
   } else {
     cli::cli_alert_success('No changes detected in fishery inputs')
   }
@@ -798,7 +828,8 @@ compare_runs_ <- function(fram_db, run_ids, tolerance = .01){
     sfrs <- fram_db |> compare_stock_fishery_rate_scalers(run_ids)
     if(nrow(sfrs) > 0){
       cli::cli_alert_info('Changes detected in stock fishery rate scalers, below is a table outlining them')
-      print(sfrs, n=Inf)
+      # print(sfrs, n=Inf)
+      cli::cat_print(sfrs)
     } else {
       cli::cli_alert_success('No changes detected in fishery rate scalers')
     }

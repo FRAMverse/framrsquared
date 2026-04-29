@@ -900,19 +900,45 @@ test_that("compare_inputs_chart() converts NA percent_diff to 0", {
 
 # Integration test to make sure there are no errors for compare_runs() -----------------------------
 
-test_that("compare_runs() doesn't error on basic runs"){
+## helper function to hide the output of compare_runs
+quiet_run <- function(expr) {
+  suppressMessages(capture_output(expr))
+}
+
+test_that("compare_runs() doesn't error on basic runs", {
   skip_if_no_test_db()
 
   fram_db <- connection_chin_pre(quiet = TRUE)
   withr::defer(disconnect_fram_db(fram_db))
 
-  expect_no_error(compare_runs(fram_db, c(139, 140)))
+
+  expect_no_error(quiet_run(
+    compare_runs(fram_db, c(139, 140))
+  ))
+  expect_error(quiet_run(
+    compare_runs(fram_db, "ten")
+  ),
+  class = "framrsquared_error")
 
   fram_db_coho <- connection_coho_post(quiet = TRUE)
   withr::defer(disconnect_fram_db(fram_db_coho))
 
-  expect_no_error(compare_runs(fram_db_coho, c(34, 35)))
-}
+  expect_no_error(quiet_run(
+    compare_runs(fram_db_coho, c(34, 35))
+  ))
+})
+
+test_that("compare_runs() doesn't accept identical run ids", {
+  skip_if_no_test_db()
+
+  fram_db <- connection_chin_pre(quiet = TRUE)
+  withr::defer(disconnect_fram_db(fram_db))
+
+  expect_error(quiet_run(
+    compare_runs(fram_db, c(139, 139))
+  ))
+
+})
 
 test_that("compare_runs() produces appropriate list",{
 
@@ -921,21 +947,17 @@ test_that("compare_runs() produces appropriate list",{
   fram_db <- connection_chin_pre(quiet = TRUE)
   withr::defer(disconnect_fram_db(fram_db))
 
-  suppressMessages({
-  temp <- capture_output(result <-  compare_runs(fram_db, c(139, 140)))
-  })
+  junk <- quiet_run(result <- compare_runs(fram_db, c(139, 140)) )
 
   expect_equal(names(result), c("retention_flags", "retention_inputs", "sl_ratio", "recruits",
-                                    "fishery_flags", "fishery_inputs", "sfrs"))
+                                "fishery_flags", "fishery_inputs", "sfrs"))
   expect_true(is.null(result$sfrs))
   expect_true(!is.null(result$sl_ratio))
 
   fram_db_coho <- connection_coho_post(quiet = TRUE)
   withr::defer(disconnect_fram_db(fram_db_coho))
 
-  suppressMessages({
-    temp <- capture_output(result <-  compare_runs(fram_db_coho, c(34, 35)))
-  })
+  junk <- quiet_run(result <- compare_runs(fram_db_coho, c(34, 35))  )
 
   expect_equal(names(result), c("retention_flags", "retention_inputs", "sl_ratio", "recruits",
                                 "fishery_flags", "fishery_inputs", "sfrs"))
@@ -945,16 +967,29 @@ test_that("compare_runs() produces appropriate list",{
 })
 
 
+## copy a database, copy a run within it, and then check that comparisons
+## of the identical runs produce empty comparison dataframes
 test_that("compare_runs() gives correct results for identical runs",{
-
   skip_if_no_test_db()
 
-  fram_db <- connection_chin_pre(quiet = TRUE)
-  withr::defer(disconnect_fram_db(fram_db))
+  test_file <- paste0(db_test_path(), "/chin_pre_copytest.mdb")
+  file.copy(from = paste0(db_test_path(), "/original_databases/chin_pre.mdb"),
+            to = test_file)
 
-  suppressMessages({
-    temp <- capture_output(result <-  compare_runs(fram_db, c(139, 139)))
+
+
+  fram_db <- connect_fram_db(test_file, quiet = TRUE)
+  withr::defer({
+    disconnect_fram_db(fram_db)
+    file.remove(test_file)
   })
+
+  init_run = get_run_ids(fram_db)[1]
+  new_run <- fram_db |>
+    copy_run(target_run = init_run)
+
+
+  junk <- quiet_run (result <-  compare_runs(fram_db, c(init_run, new_run)) )
 
   expect_equal(nrow(result$retention_flags), 0)
   expect_equal(nrow(result$retention_inputs), 0)
@@ -963,18 +998,38 @@ test_that("compare_runs() gives correct results for identical runs",{
   expect_equal(nrow(result$fishery_flags), 0)
   expect_equal(nrow(result$fishery_inputs), 0)
 
-  fram_db_coho <- connection_coho_post(quiet = TRUE)
-  withr::defer(disconnect_fram_db(fram_db_coho))
+})
 
-  suppressMessages({
-    temp <- capture_output(result <-  compare_runs(fram_db_coho, c(34, 34)))
-  })
 
-  expect_equal(nrow(result$retention_flags), 0)
-  expect_equal(nrow(result$retention_inputs), 0)
-  expect_equal(nrow(result$recruits), 0)
-  expect_equal(nrow(result$fishery_flags), 0)
-  expect_equal(nrow(result$fishery_inputs), 0)
-  expect_equal(nrow(result$sfrs), 0)
+## compare_runs handles file saving correctly ---------------------------------
 
+test_that("compare_runs saves output to file when save_file is provided", {
+  tmp <- tempfile()
+  withr::defer(unlink(tmp)) ## remove on exit
+
+  fram_db <- connection_chin_pre(quiet = TRUE)
+  withr::defer(disconnect_fram_db(fram_db))
+
+
+  compare_runs(fram_db, c(139, 140), save_file = tmp)
+
+
+  expect_true(file.exists(tmp))
+  expect_gt(file.size(tmp), 0)
+})
+
+test_that("compare_runs overwrites existing file", {
+  tmp <- tempfile()
+  withr::defer(unlink(tmp))
+
+  fram_db <- connection_chin_pre(quiet = TRUE)
+  withr::defer(disconnect_fram_db(fram_db))
+
+  compare_runs(fram_db, c(139, 140), save_file = tmp)
+  size_first <- file.size(tmp)
+
+  compare_runs(fram_db, c(139, 140), save_file = tmp)
+  size_second <- file.size(tmp)
+
+  expect_equal(size_first, size_second)
 })
