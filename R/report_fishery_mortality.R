@@ -181,8 +181,8 @@ plot_stock_mortality <- function(fram_db, run_id, stock_id,
                   .data$stock_id %in% .env$stock_id) |>
     dplyr::group_by(.data$run_id, .data$fishery_id) |>
     dplyr::summarize(
-      dplyr::across(c(.data$landed_catch:.data$drop_off,
-                      .data$msf_landed_catch:.data$msf_drop_off), \(x) sum(x)),
+      dplyr::across(c("landed_catch":"drop_off",
+                      "msf_landed_catch":"msf_drop_off"), \(x) sum(x)),
       .groups='drop')
 
   if(split_cnr){
@@ -386,8 +386,8 @@ plot_stock_mortality_time_step <- function(fram_db,
                   .data$stock_id %in% .env$stock_id) |>
     dplyr::group_by(.data$run_id, .data$time_step, .data$fishery_id) |>
     dplyr::summarize(
-      dplyr::across(c(.data$landed_catch:.data$drop_off,
-                      .data$msf_landed_catch:.data$msf_drop_off), \(x) sum(x)),
+      dplyr::across(c("landed_catch":"drop_off",
+                      "msf_landed_catch":"msf_drop_off"), \(x) sum(x)),
       .groups='drop')
 
   if(split_cnr){
@@ -464,7 +464,7 @@ plot_stock_mortality_time_step <- function(fram_db,
   mort_table <- mortality_primary |>
     dplyr::group_by(.data$run_id, .data$fishery_id) |>
     dplyr::summarize(
-      dplyr::across(.data$total_mort, \(x) sum(x)),
+      dplyr::across("total_mort", \(x) sum(x)),
       .groups='drop') |>
     # dplyr::ungroup()
     dplyr::slice_max(.data$total_mort, n = top_n)
@@ -505,7 +505,7 @@ plot_stock_mortality_time_step <- function(fram_db,
     mort_table <- mortality_cnr |>
       dplyr::group_by(.data$run_id, .data$fishery_id) |>
       dplyr::summarize(
-        dplyr::across(.data$total_mort, \(x) sum(x)),
+        dplyr::across("total_mort", \(x) sum(x)),
         .groups='drop') |>
       dplyr::slice_max(.data$total_mort, n = top_n) |>
       dplyr::pull(.data$fishery_id)

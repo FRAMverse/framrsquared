@@ -41,7 +41,7 @@ population_statistics <- function(fram_db, run_id = NULL) {
                             'age',
                             'time_step')) |>
     dplyr::mutate(
-      dplyr::across(.data$escapement, \(x) tidyr::replace_na(x, 0))
+      dplyr::across("escapement", \(x) tidyr::replace_na(x, 0))
       ) |>
     dplyr::arrange(.data$stock_id, .data$time_step)
 

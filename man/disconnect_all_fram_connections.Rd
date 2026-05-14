@@ -4,7 +4,10 @@
 \alias{disconnect_all_fram_connections}
 \title{Clear all connections}
 \usage{
-disconnect_all_fram_connections()
+disconnect_all_fram_connections(quiet = FALSE)
+}
+\arguments{
+\item{quiet}{Suppress messages? Primarily useful when writing test functions. Logical, defaults to FALSE.}
 }
 \value{
 nothing

@@ -122,7 +122,7 @@ cohort_abundance <- function(fram_db, run_id = NULL){
                   "recruit_cohorts")
 
   if(!is.null(run_id)) {
-    abundances |> dplyr::filter(.data$run_id == run_id)  |>
+    abundances |> dplyr::filter(.data$run_id %in% .env$run_id)  |>
       `attr<-`('species', fram_db$fram_db_species) |>
       label_stocks()
   } else {
@@ -215,11 +215,11 @@ stock_fate_chinook <- function(fram_db, run_id = NULL, units = c('fish', 'percen
   if(units == 'percentage') {
     pop_stats <- pop_stats |>
       dplyr::mutate(
-        dplyr::across(.data$natural_mortality:.data$escapement_to_river,
-                      \(x) x / (.data$natural_mortality
-                                + .data$escapement_to_river
-                                + .data$fishery_mortality
-                                + .data$age_up)
+        dplyr::across("natural_mortality":"escapement_to_river",
+                      \(x) x / (.data$natural_mortality +
+                                .data$escapement_to_river +
+                                .data$fishery_mortality +
+                                .data$age_up)
                       )
       )
   }
@@ -280,7 +280,7 @@ stock_fate_coho <- function(fram_db, run_id = NULL, units = c('fish', 'percentag
   if(units == 'percentage') {
     pop_stats <- pop_stats |>
       dplyr::mutate(
-        dplyr::across(.data$natural_mortality:.data$escapement_spawning,
+        dplyr::across("natural_mortality":"escapement_spawning",
                       \(x) x / (.data$natural_mortality
                                 + .data$escapement_spawning
                                 + .data$fishery_mortality

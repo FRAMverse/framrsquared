@@ -18,7 +18,7 @@ truns_stocks <- function(fram_db){
     dplyr::filter(.data$driver_name == 'PSCTRuns.DRV') |>
     dplyr::select(stock_id = "option1", stock_name = "option5") |>
     tidyr::separate_longer_delim(.data$stock_id, ',') |>
-    dplyr::mutate(dplyr::across(.data$stock_id, as.numeric))
+    dplyr::mutate(dplyr::across("stock_id", as.numeric))
 }
 
 #' Returns a dataframe with fisheries defined

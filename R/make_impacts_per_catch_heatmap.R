@@ -122,8 +122,8 @@ plot_impacts_per_catch_heatmap <- function(fram_db,
       ## stock mortality combines msf and NS values.
       dplyr::group_by(.data$run_id, .data$time_step, .data$fishery_id) |>
       dplyr::summarize(
-        dplyr::across(c(.data$landed_catch:.data$drop_off,
-                        .data$msf_landed_catch:.data$msf_drop_off), \(x) sum(x)),
+        dplyr::across(c("landed_catch":"drop_off",
+                        "msf_landed_catch":"msf_drop_off"), \(x) sum(x)),
         .groups='drop') |>
       dplyr::mutate(total_mortality =
                       .data$landed_catch +

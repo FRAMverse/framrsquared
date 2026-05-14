@@ -124,6 +124,8 @@ disconnect_fram_db <- function(fram_db,
 #'
 #' It is relatively easy to create an "orphan" connection using framrsquared by assigning a connection to `fram_db`, and then assigning another connection to `fram_db` without disconnecting the first connection using `disconnect_fram_db()`. Orphaned connections can make it frustrating to work with database files (moving, deleting, etc) without restarting rstudio or rebooting your computer. `disconnect_all_fram_connections()` disconnects any existing connections made by framrsquared in this R session.
 #'
+#' @param quiet Suppress messages? Primarily useful when writing test functions. Logical, defaults to FALSE.
+#'
 #' @returns nothing
 #' @export
 #'
@@ -144,6 +146,8 @@ disconnect_fram_db <- function(fram_db,
 #' list_extant_fram_connections
 #' }
 disconnect_all_fram_connections <- function(quiet = FALSE){
+  validate_flag(quiet)
+
   total_connections = length(.fram_connections)
   for (con_id in names(.fram_connections)) {
     con <- .fram_connections[[con_id]]

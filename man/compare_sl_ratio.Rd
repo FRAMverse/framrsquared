@@ -12,7 +12,7 @@ compare_sl_ratio(fram_db, run_ids)
 \item{run_ids}{Vector of two run_ids}
 }
 \value{
-Data frame of differences. \verb{*_original} columns show the values in the first run of \code{run_ids}, while \verb{*_comparison} show the values of the second run of \code{run_ids}. \verb{*_diff} = original - comparison.
+Data frame of differences. \verb{*_original} columns show the values in the first run of \code{run_ids}, while \verb{*_comparison} show the values of the second run of \code{run_ids}. \verb{*_diff} = comparison - original.
 }
 \description{
 Provides a dataframe that compares the "SLRatio" table for two runs identified by run_ids.

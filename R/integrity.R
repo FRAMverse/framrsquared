@@ -124,7 +124,7 @@ fram_database_species <- function(con,
 
   species <- sort(unique(run_id_table$species_name))
   if(length(species) > 1){
-    cli::cli_abort("More than one species detected in the runs of database ({paste(species, collapse = ', ')})! `framrsquared` is not designed to handle database with mix of {.val COHO} and {.val CHINOOK} runs! Use a database with only one species present in the RunID table!")
+    fram_abort("More than one species detected in the runs of database ({paste(species, collapse = ', ')})! `framrsquared` is not designed to handle database with mix of {.val COHO} and {.val CHINOOK} runs! Use a database with only one species present in the RunID table!")
   }
   return(species)
 }
@@ -501,6 +501,21 @@ validate_character <- function(x,
     if(length(x) != n){
       fram_abort("{.arg {arg}} must be a character of length {n}.", ..., call = call)
     }
+  }
+}
+
+validate_path <- function(x, allow_null = FALSE, arg = rlang::caller_arg(x), call = rlang::caller_env()){
+  if(allow_null && is.null(x)){ return(invisible(NULL)) }
+
+  validate_character(x = x, n = 1,
+                     arg = arg, call = call)
+  if(nchar(trimws(x)) == 0){
+    fram_abort("{.arg {arg}} must be a single non-empty string.", call = call)
+  }
+
+  normalized <- normalizePath(x, mustWork = FALSE)
+  if (!file.exists(normalized)) {
+    fram_abort("{.arg {arg}} must be a valid filepath. File {.file {x}} does not exist.", call = call)
   }
 }
 

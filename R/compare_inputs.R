@@ -413,9 +413,9 @@ compare_fishery_input_flags <- function(fram_db, run_ids, verbose = TRUE){
     dplyr::select(-"fishery_flag") |>
     tidyr::pivot_longer(cols = "fishery_scale_factor":"msf_quota") |>
     dplyr::left_join(runs_lut, by = "run_id") |>
-    dplyr::mutate(name = paste0("used_", name, "_", run_label)) |>
+    dplyr::mutate(name = paste0("used_", .data$name, "_", .data$run_label)) |>
     dplyr::select(-"run_label", -'run_id') |>
-    tidyr::pivot_wider(names_from = name, values_from = value)
+    tidyr::pivot_wider(names_from = "name", values_from = "value")
 
   if(nrow(flags_changed)==0 & verbose){cli::cli_text(cli::col_blue("No differences in fishery flags between these runs"))}
 
@@ -658,7 +658,7 @@ compare_runs <- function(fram_db, run_ids, save_file = NULL, tolerance = 0.01){
 
 
 # internal function for compare_runs()
-#' @keyword internal
+#' @keywords internal
 compare_runs_ <- function(fram_db, run_ids, tolerance = .01){
   validate_fram_db(fram_db)
   validate_run_id(fram_db, run_ids, n = 2)

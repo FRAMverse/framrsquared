@@ -8,7 +8,7 @@ fetch_quarto_templates(
   to.path,
   organization = c("WDFW"),
   color = "coffee",
-  overwrite = FALSE
+  template_overwrite = FALSE
 )
 }
 \arguments{
@@ -18,7 +18,7 @@ fetch_quarto_templates(
 
 \item{color}{Character string, defaults to "coffee". Specifies quarto template to use; organizations may have several.}
 
-\item{overwrite}{Boolean. Overwrite _quarto.yml and style.css files if they already exist? Defaults to FALSE.}
+\item{template_overwrite}{Boolean. Overwrite _quarto.yml and style.css files if they already exist? Defaults to FALSE.}
 }
 \value{
 Nothing.
@@ -32,3 +32,4 @@ for details on adding template files for new organizations.
 \seealso{
 \code{\link[=initialize_project]{initialize_project()}}
 }
+\keyword{internal}

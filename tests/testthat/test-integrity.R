@@ -132,6 +132,28 @@ test_that("validate_character() error message includes the argument name", {
   expect_match(as.character(err$call)[1], "foo")
 })
 
+## validate_path -------------------------------------------
+test_that("validate_path() passes silently for valid paths", {
+  path <- tempfile()
+  file.create(path)
+  withr::defer(unlink(path))
+  expect_no_error(validate_path(path))
+
+  path2 <- tempdir()
+  withr::defer(unlink(path2, recursive = TRUE))
+  expect_no_error(validate_path(path2))
+
+})
+
+test_that("validate_path() errors for empty strings", {
+  expect_error(validate_path(""), class = "framrsquared_error")
+})
+
+test_that("validate_path() errors for nonexistent paths", {
+  expect_error(validate_path("turtle"), class = "framrsquared_error")
+  expect_error(validate_path(here::here("turtle")), class = "framrsquared_error")
+})
+
 ## validate_flag -------------------------------------------
 test_that("validate_flag() passes silently for TRUE and FALSE", {
   expect_no_error(validate_flag(TRUE))
@@ -197,9 +219,9 @@ test_that("validate_fram_db works", {
   fram_db <- make_mock_fram_db()
   withr::defer(disconnect_mock_fram_db(fram_db))
   expect_no_error(validate_fram_db(fram_db))
-  suppressMessages(
+  suppressMessages({
     withr::deferred_run()
-  )
+  })
 
   fram_db <- make_mock_fram_db(species = "COHO", type = "full")
   withr::defer(disconnect_mock_fram_db(fram_db))
@@ -226,7 +248,9 @@ test_that("validate_not_read_only works", {
   fram_db <- make_mock_fram_db(read_only = FALSE)
   withr::defer(disconnect_mock_fram_db(fram_db))
   expect_no_error(validate_not_read_only(fram_db))
-  withr::deferred_run()
+  suppressMessages({
+    withr::deferred_run()
+    })
 
   fram_db <- make_mock_fram_db(read_only = TRUE)
   withr::defer(disconnect_mock_fram_db(fram_db))
