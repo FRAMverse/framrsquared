@@ -10,33 +10,33 @@ test_that("initialize_project errors on bad inputs", {
     .package = "here"
   )
 
-  expect_error(initialize_project(folders = 10),
+  expect_error(initialize_project(folders = 10, quiet = TRUE),
                class = "framrsquared_error")
-  expect_error(initialize_project(folders = list("hello", "there")),
+  expect_error(initialize_project(folders = list("hello", "there"), quiet = TRUE),
                class = "framrsquared_error")
-  expect_error(initialize_project(folder = NULL),
-               class = "framrsquared_error")
-
-  expect_error(initialize_project(quarto = 10),
-               class = "framrsquared_error")
-  expect_error(initialize_project(quarto = c(TRUE, FALSE)),
+  expect_error(initialize_project(folder = NULL, quiet = TRUE),
                class = "framrsquared_error")
 
-  expect_error(initialize_project(organization = 10)) ## rlang::arg_match
-  expect_error(initialize_project(organization = "novel")) ## rlang::arg_match
-
-  expect_error(initialize_project(renv = 10),
+  expect_error(initialize_project(quarto = 10, quiet = TRUE),
                class = "framrsquared_error")
-  expect_error(initialize_project(renv = c(TRUE, FALSE)),
+  expect_error(initialize_project(quarto = c(TRUE, FALSE), quiet = TRUE),
                class = "framrsquared_error")
 
-  expect_error(initialize_project(template_overwrite = 10),
+  expect_error(initialize_project(organization = 10, quiet = TRUE)) ## rlang::arg_match
+  expect_error(initialize_project(organization = "novel", quiet = TRUE)) ## rlang::arg_match
+
+  expect_error(initialize_project(renv = 10, quiet = TRUE),
                class = "framrsquared_error")
-  expect_error(initialize_project(template_overwrite = c(TRUE, FALSE)),
+  expect_error(initialize_project(renv = c(TRUE, FALSE), quiet = TRUE),
                class = "framrsquared_error")
 
-  expect_error(initialize_project(color = 10)) ## rlang::arg_match
-  expect_error(initialize_project(color = "blurgandy")) ## rlang::arg_match
+  expect_error(initialize_project(template_overwrite = 10, quiet = TRUE),
+               class = "framrsquared_error")
+  expect_error(initialize_project(template_overwrite = c(TRUE, FALSE), quiet = TRUE),
+               class = "framrsquared_error")
+
+  expect_error(initialize_project(color = 10, quiet = TRUE)) ## rlang::arg_match
+  expect_error(initialize_project(color = "blurgandy", quiet = TRUE)) ## rlang::arg_match
 
   expect_error(initialize_project(quiet = "blurge"),
                class = "framrsquared_error")
@@ -81,7 +81,7 @@ test_that( "intialize_project creates custom folder structure", {
     .package = "here"
   )
 
-  initialize_project(folders = c("hello", "there", "general/kenobi"))
+  initialize_project(folders = c("hello", "there", "general/kenobi"), quiet = TRUE)
 
   expect_true(all (sort(list.files(path)) == sort(c(
     'hello',
@@ -105,7 +105,7 @@ test_that( "intialize_project respects quarto = FALSE and renv = TRUE", {
     .package = "here"
   )
 
-  initialize_project(quarto = FALSE, renv = TRUE)
+  initialize_project(quarto = FALSE, renv = TRUE, quiet = TRUE)
 
   expect_false(file.exists(here::here("style.css")))
   expect_false(file.exists(here::here("_quarto.yml")))
@@ -126,14 +126,14 @@ test_that( "template colors and override work", {
     .package = "here"
   )
 
-  initialize_project()
+  initialize_project(quiet = TRUE)
 
   count_of_green <- length(grep("#1D886E", readLines(here::here("_quarto.yml"))))
   count_of_coffee <- length(grep("#967259", readLines(here::here("_quarto.yml"))))
   expect_true(count_of_green == 0)
   expect_true(count_of_coffee == 1)
 
-  suppressWarnings(initialize_project(color = "green"))
+  suppressWarnings(initialize_project(color = "green", quiet = TRUE))
 
   count_of_green <- length(grep("#1D886E", readLines(here::here("_quarto.yml"))))
   count_of_coffee <- length(grep("#967259", readLines(here::here("_quarto.yml"))))
@@ -141,7 +141,7 @@ test_that( "template colors and override work", {
   expect_true(count_of_coffee == 0)
 
   suppressWarnings(initialize_project(color = "coffee",
-                                      template_overwrite = FALSE))
+                                      template_overwrite = FALSE, quiet = TRUE))
 
   count_of_green <- length(grep("#1D886E", readLines(here::here("_quarto.yml"))))
   count_of_coffee <- length(grep("#967259", readLines(here::here("_quarto.yml"))))

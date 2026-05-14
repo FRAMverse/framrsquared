@@ -6,6 +6,7 @@
 #'
 #' @param fram_db FRAM database object
 #' @param run_id Run ID (optional)
+#' @param quiet Suppress CLI messages? Logical, defaults to FALSE.
 #'
 #' @returns Dataframe identifying the run, fishery, timestep, year, and base period. Provides total marked (`$AD`) and unmarked (`$UM`) mortalities, and the markrate (`$mark_rate`). Separate rows for NS and MSF fisheries, distinguished by `$fishery_type`.
 #'
@@ -14,17 +15,20 @@
 #' \dontrun{
 #' fram_db |> coho_mark_rates(run_id)
 #' }
-coho_mark_rates <- function(fram_db, run_id=NULL) {
+coho_mark_rates <- function(fram_db, run_id=NULL, quiet = FALSE) {
 
   validate_fram_db(fram_db, db_type = "full")
 
-  if(!is.null(run_id)){validate_run_id(fram_db, run_id)}
+  validate_run_id(fram_db, run_id, allow_null = TRUE)
+
+  validate_flag(quiet)
+
 
   if(fram_db$fram_db_species != 'COHO') {
     fram_abort('This function currently only works with coho.')
   }
 
-  cli::cli_alert_warning('Coho mark rates calculated via encounters')
+  if(!quiet){cli::cli_alert_warning('Coho mark rates calculated via encounters')}
 
   mortality <- fram_db |>
     fetch_table_('Mortality')
