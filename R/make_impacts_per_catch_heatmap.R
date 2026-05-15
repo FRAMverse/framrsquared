@@ -46,8 +46,19 @@ plot_impacts_per_catch_heatmap <- function(fram_db,
                                            verbose = TRUE,
                                            warn = TRUE) {
   validate_fram_db(fram_db)
-  validate_run_id(fram_db, run_id)
+  validate_run_id(fram_db, run_id, n = 1)
   validate_stock_ids(fram_db, stock_id)
+
+  if (!is.null(filters_list)) {
+    if (!is.list(filters_list)) {
+      fram_abort("`filters_list` must be NULL or a list")
+    }
+    if (!all(sapply(filters_list, is.function))) {
+      fram_abort("All elements in `filters_list` must be functions")
+    }
+  }
+
+
   if(!is.null(filter_out)){validate_fishery_ids(fram_db, filter_out)}
   validate_numeric(digits_round, n = 1)
   validate_numeric(outer_text_size, n = 1)
