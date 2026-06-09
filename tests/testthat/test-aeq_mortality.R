@@ -1,54 +1,140 @@
 # UNIT TESTS -------------------------------------------------------------------
 
 # --- Helpers ------------------------------------------------------------------
-
 # Minimal two-row mortality table (one terminal fishery, one non-terminal)
-mock_mortality_tbl <- tibble::tibble(
-  primary_key       = c(1L, 2L),
-  run_id            = c(1L, 1L),
-  fishery_id        = c(10L, 20L),
-  time_step         = c(1L, 1L),
-  stock_id          = c(1L, 1L),
-  age               = c(3L, 3L),
-  landed_catch      = c(10, 10),
-  non_retention     = c(2, 2),
-  shaker            = c(1, 1),
-  drop_off          = c(0.5, 0.5),
-  msf_landed_catch  = c(0, 0),
-  msf_non_retention = c(0, 0),
-  msf_shaker        = c(0, 0),
-  msf_drop_off      = c(0, 0)
-)
 
-mock_fetch_table <- function(fram_db, table, ...) {
-  switch(table,
-         "RunID" = tibble::tibble(
-           run_id = 1L, base_period_id = 2L
-         ),
-         "AEQ" = tibble::tibble(
-           base_period_id = 2L, stock_id = 1L, age = 3L, time_step = 1L, aeq = 0.5
-         ),
-         "TerminalFisheryFlag" = tibble::tibble(
-           base_period_id = integer(0),
-           fishery_id     = integer(0),
-           time_step      = integer(0),
-           terminal_flag  = integer(0)
-         ),
-         "Mortality" = mock_mortality_tbl,
-         stop("Unexpected table: ", table)
+
+make_reasonable_mock_chinook_db <- function(return_list = FALSE, has_terminal_fishery = TRUE){
+  ## fisheries 23 and 24
+  ## stocks 1 and 2
+  ## run_id 1, time_step 1
+  ## WITHOUT AEQ:
+  ## fishery 23 is 10% stock 1
+  ## fishery 24 is 50% stock 1
+  ## AEQ will be halve the effective catch of stock 2, so WITH AEQ:
+  ## MSP doesn't matter, since it's a fishery-wide multiplier.
+
+  ## dummy term table so the function doesn't error.
+  mock_mortality <- tibble::tibble(
+    primary_key       = c(1L, 2L),
+    run_id            = c(1L, 1L),
+    fishery_id        = c(10L, 20L),
+    time_step         = c(1L, 1L),
+    stock_id          = c(1L, 1L),
+    age               = c(3L, 3L),
+    landed_catch      = c(10, 10),
+    non_retention     = c(2, 2),
+    shaker            = c(1, 1),
+    drop_off          = c(0.5, 0.5),
+    msf_landed_catch  = c(0, 0),
+    msf_non_retention = c(0, 0),
+    msf_shaker        = c(0, 0),
+    msf_drop_off      = c(0, 0)
   )
-}
 
-mock_fetch_table_with_terminal <- function(fram_db, table, ...) {
-  if (table == "TerminalFisheryFlag") {
-    return(tibble::tibble(
+  if(has_terminal_fishery){
+    mock_terminal_fishery_flag = tibble::tibble(
       base_period_id = 2L,
       fishery_id     = 10L,
       time_step      = 1L,
       terminal_flag  = 1L
-    ))
+    )
   } else {
-    mock_fetch_table(fram_db, table, ...)
+    mock_terminal_fishery_flag = tibble::tibble(
+      base_period_id = integer(0),
+      fishery_id     = integer(0),
+      time_step      = integer(0),
+      terminal_flag  = integer(0)
+    )
+  }
+
+  table_list = list(Mortality = mock_mortality,
+                    RunID = tibble::tibble(
+                      run_id = 1L, base_period_id = 2L),
+                    AEQ = tibble::tibble(
+                      base_period_id = 2L, stock_id = 1L, age = 3L, time_step = 1L, aeq = 0.5),
+                    FisheryModelStockProportion = data.frame(
+                      fishery_id = c(10, 20),
+                      base_period_id = c(2, 2),
+                      model_stock_proportion = c(1, 1)
+                    ),
+                    TerminalFisheryFlag = mock_terminal_fishery_flag
+                    )
+  if(return_list){
+    return(table_list)
+  } else {
+    return(make_queryable_mock_db_list(
+      table_list = table_list,
+      species = "CHINOOK"
+    )
+    )
+  }
+}
+
+## when we need multiple run ids.
+make_reasonable_mock_chinook_db_extended <- function(return_list = FALSE, has_terminal_fishery = TRUE){
+  ## fisheries 23 and 24
+  ## stocks 1 and 2
+  ## run_id 1, time_step 1
+  ## WITHOUT AEQ:
+  ## fishery 23 is 10% stock 1
+  ## fishery 24 is 50% stock 1
+  ## AEQ will be halve the effective catch of stock 2, so WITH AEQ:
+  ## MSP doesn't matter, since it's a fishery-wide multiplier.
+
+  ## dummy term table so the function doesn't error.
+  mock_mortality <- tibble::tibble(
+    primary_key       = c(1L, 2L, 3, 4),
+    run_id            = c(1L, 1L, 2, 2),
+    fishery_id        = c(10L, 20L, 10, 20),
+    time_step         = c(1L, 1L, 1, 1),
+    stock_id          = c(1L, 1L, 1, 1),
+    age               = c(3L, 3L, 3, 3),
+    landed_catch      = c(10, 10, 10, 10),
+    non_retention     = c(2, 2, 2, 2),
+    shaker            = c(1, 1, 1, 1),
+    drop_off          = c(0.5, 0.5, 0.5, 0.5),
+    msf_landed_catch  = c(0, 0, 0, 0),
+    msf_non_retention = c(0, 0, 0, 0),
+    msf_shaker        = c(0, 0, 0, 0),
+    msf_drop_off      = c(0, 0, 0, 0)
+  )
+
+  if(has_terminal_fishery){
+    mock_terminal_fishery_flag = tibble::tibble(
+      base_period_id = 2L,
+      fishery_id     = 10L,
+      time_step      = 1L,
+      terminal_flag  = 1L
+    )
+  } else {
+    mock_terminal_fishery_flag = tibble::tibble(
+      base_period_id = integer(0),
+      fishery_id     = integer(0),
+      time_step      = integer(0),
+      terminal_flag  = integer(0)
+    )
+  }
+
+  table_list = list(Mortality = mock_mortality,
+                    RunID = tibble::tibble(
+                      run_id = c(1, 2), base_period_id = c(2, 2)),
+                    AEQ = tibble::tibble(
+                      base_period_id = 2L, stock_id = 1L, age = 3L, time_step = 1L, aeq = 0.5),
+                    FisheryModelStockProportion = data.frame(
+                      fishery_id = c(10, 20),
+                      base_period_id = c(2, 2),
+                      model_stock_proportion = c(1, 1)
+                    ),
+                    TerminalFisheryFlag = mock_terminal_fishery_flag)
+  if(return_list){
+    return(table_list)
+  } else {
+    return(make_queryable_mock_db_list(
+      table_list = table_list,
+      species = "CHINOOK"
+    )
+    )
   }
 }
 
@@ -95,44 +181,26 @@ test_that("aeq_mortality() errors when msp is a logical vector longer than 1", {
 
 # --- AEQ calculation logic ----------------------------------------------------
 
-test_that("aeq_mortality() multiplies non-terminal mortality columns by AEQ", {
-  fram_db <- make_mock_fram_db()
+test_that("aeq_mortality() multiplies non-terminal mortality columns by AEQ, not terminal mort columns", {
+  fram_db <- make_reasonable_mock_chinook_db()
   withr::defer(disconnect_mock_fram_db(fram_db))
 
-  local_mocked_bindings(
-    validate_run_id  = function(...) invisible(TRUE),
-    msp_mortality    = function(fram_db, ...) mock_mortality_tbl,
-    fetch_table_     = mock_fetch_table
-  )
+  # local_mocked_bindings(
+  #   validate_run_id  = function(...) invisible(TRUE),
+  #   msp_mortality    = function(fram_db, ...) mock_mortality_tbl,
+  #   fetch_table_     = mock_fetch_table
+  # )
 
   result <- aeq_mortality(fram_db, label = FALSE)
 
-  # All rows are non-terminal (no TerminalFisheryFlag rows), so AEQ = 0.5 applies
-  expect_equal(result$landed_catch,  c(5, 5))
-  expect_equal(result$non_retention, c(1, 1))
-  expect_equal(result$shaker,        c(0.5, 0.5))
-  expect_equal(result$drop_off,      c(0.25, 0.25))
+  # first row is non-terminal, second row is terminal
+  expect_equal(result$landed_catch,  c(10, 5))
+  expect_equal(result$non_retention, c(2, 1))
+  expect_equal(result$shaker,        c(1, 0.5))
+  expect_equal(result$drop_off,      c(.5, 0.25))
 })
 
-test_that("aeq_mortality() does NOT scale terminal fishery mortality columns", {
-  fram_db <- make_mock_fram_db()
-  withr::defer(disconnect_mock_fram_db(fram_db))
 
-  local_mocked_bindings(
-    validate_run_id  = function(...) invisible(TRUE),
-    msp_mortality    = function(fram_db, ...) mock_mortality_tbl,
-    fetch_table_     = mock_fetch_table_with_terminal
-  )
-
-  result <- aeq_mortality(fram_db, label = FALSE)
-
-  # fishery_id 10 is terminal → not scaled; fishery_id 20 is not → scaled by 0.5
-  terminal_row     <- result[result$fishery_id == 10L, ]
-  non_terminal_row <- result[result$fishery_id == 20L, ]
-
-  expect_equal(terminal_row$landed_catch,     10)
-  expect_equal(non_terminal_row$landed_catch, 5)
-})
 
 test_that("aeq_mortality() uses msp_mortality() when msp = TRUE", {
   fram_db <- make_mock_fram_db()
@@ -142,46 +210,35 @@ test_that("aeq_mortality() uses msp_mortality() when msp = TRUE", {
 
   local_mocked_bindings(
     validate_run_id  = function(...) invisible(TRUE),
-    msp_mortality    = function(fram_db, ...) { called_msp <<- TRUE; mock_mortality_tbl },
-    fetch_table_     = mock_fetch_table
+    msp_mortality    = function(fram_db, ...) { called_msp <<- TRUE; return(NULL) }
   )
-
-  aeq_mortality(fram_db, msp = TRUE, label = FALSE)
+  expect_error(aeq_mortality(fram_db, msp = TRUE, label = FALSE))
 
   expect_true(called_msp)
 })
 
-test_that("aeq_mortality() uses fetch_table_('Mortality') when msp = FALSE", {
+
+test_that("aeq_mortality() does not use msp_mortality when msp = FALSE", {
   fram_db <- make_mock_fram_db()
   withr::defer(disconnect_mock_fram_db(fram_db))
 
-  called_mortality_table <- FALSE
+  called_msp <- FALSE
 
   local_mocked_bindings(
     validate_run_id  = function(...) invisible(TRUE),
-    fetch_table_     = function(fram_db, table, ...) {
-      if (table == "Mortality") called_mortality_table <<- TRUE
-      mock_fetch_table(fram_db, table, ...)
-    }
+    msp_mortality    = function(fram_db, ...) { called_msp <<- TRUE; return(NULL) }
   )
+  expect_error(aeq_mortality(fram_db, msp = FALSE, label = FALSE))
 
-  aeq_mortality(fram_db, msp = FALSE, label = FALSE)
-
-  expect_true(called_mortality_table)
+  expect_false(called_msp)
 })
 
 
 # --- Output structure ---------------------------------------------------------
 
 test_that("aeq_mortality() renames 'aeq' column to 'aeq_constant', retains base_period_id and terminal_flag_columns", {
-  fram_db <- make_mock_fram_db()
+  fram_db <- make_reasonable_mock_chinook_db()
   withr::defer(disconnect_mock_fram_db(fram_db))
-
-  local_mocked_bindings(
-    validate_run_id  = function(...) invisible(TRUE),
-    msp_mortality    = function(fram_db, ...) mock_mortality_tbl,
-    fetch_table_     = mock_fetch_table
-  )
 
   result <- aeq_mortality(fram_db, label = FALSE)
 
@@ -192,80 +249,43 @@ test_that("aeq_mortality() renames 'aeq' column to 'aeq_constant', retains base_
 })
 
 test_that("aeq_mortality() sets species attribute to 'CHINOOK'", {
-  fram_db <- make_mock_fram_db()
+  fram_db <- make_reasonable_mock_chinook_db()
   withr::defer(disconnect_mock_fram_db(fram_db))
-
-  local_mocked_bindings(
-    validate_run_id  = function(...) invisible(TRUE),
-    msp_mortality    = function(fram_db, ...) mock_mortality_tbl,
-    fetch_table_     = mock_fetch_table
-  )
 
   result <- aeq_mortality(fram_db, label = FALSE)
 
   expect_equal(attr(result, "species"), "CHINOOK")
 })
 
-test_that("aeq_mortality() output is sorted by run_id, fishery_id, time_step, stock_id", {
-  fram_db <- make_mock_fram_db()
-  withr::defer(disconnect_mock_fram_db(fram_db))
-
-  # Supply rows in reverse order to confirm sorting is applied
-  reversed <- mock_mortality_tbl[rev(seq_len(nrow(mock_mortality_tbl))), ]
-
-  local_mocked_bindings(
-    validate_run_id  = function(...) invisible(TRUE),
-    msp_mortality    = function(fram_db, ...) reversed,
-    fetch_table_     = mock_fetch_table
-  )
-
-  result <- aeq_mortality(fram_db, label = FALSE)
-
-  expect_equal(result$fishery_id, result$fishery_id)
-})
-
-
 # --- run_id filtering ---------------------------------------------------------
 
 test_that("aeq_mortality() returns all rows when run_id = NULL", {
-  fram_db <- make_mock_fram_db()
+  fram_db <- make_reasonable_mock_chinook_db_extended()
   withr::defer(disconnect_mock_fram_db(fram_db))
 
-  local_mocked_bindings(
-    validate_run_id  = function(...) invisible(TRUE),
-    msp_mortality    = function(fram_db, ...) mock_mortality_tbl,
-    fetch_table_     = mock_fetch_table
-  )
+  mort_table <- make_reasonable_mock_chinook_db_extended(return_list = TRUE)$Mortality
+
+  # local_mocked_bindings(
+  #   validate_run_id  = function(...) invisible(TRUE),
+  #   msp_mortality    = function(fram_db, ...) mock_mortality_tbl,
+  #   fetch_table_     = mock_fetch_table
+  # )
 
   result <- aeq_mortality(fram_db, run_id = NULL, label = FALSE)
 
-  expect_equal(nrow(result), nrow(mock_mortality_tbl))
+  expect_equal(nrow(result), nrow(mort_table))
 })
 
 test_that("aeq_mortality() filters to specified run_id(s)", {
-  fram_db <- make_mock_fram_db()
+  fram_db <- make_reasonable_mock_chinook_db_extended()
   withr::defer(disconnect_mock_fram_db(fram_db))
 
-  multi_run_mortality <- dplyr::bind_rows(
-    mock_mortality_tbl,
-    dplyr::mutate(mock_mortality_tbl, run_id = 2L)
-  )
-
-  local_mocked_bindings(
-    validate_run_id  = function(...) invisible(TRUE),
-    msp_mortality    = function(fram_db, ...) multi_run_mortality,
-    fetch_table_     = function(fram_db, table, ...) {
-      if (table == "RunID") {
-        return(tibble::tibble(run_id = c(1L, 2L), base_period_id = c(2L, 2L)))
-      }
-      mock_fetch_table(fram_db, table, ...)
-    }
-  )
+  mort_table <- make_reasonable_mock_chinook_db_extended(return_list = TRUE)$Mortality
 
   result <- aeq_mortality(fram_db, run_id = 1L, label = FALSE)
 
   expect_true(all(result$run_id == 1L))
-  expect_equal(nrow(result), nrow(mock_mortality_tbl))
+  expect_equal(nrow(result), sum(mort_table$run_id == 1))
 })
 
 
@@ -400,7 +420,7 @@ test_that("aeq_mortality() terminal fishery rows are not AEQ-scaled (integration
     aeq_comp <- aeq_terminal |>
       dplyr::full_join(raw_terminal, by = c("run_id", "stock_id", "age", "fishery_id", "time_step"),
                        suffix = c("_aeq", "_raw")
-                )
+      )
 
     expect_equal(aeq_comp$landed_catch_aeq, aeq_comp$landed_catch_raw)
     expect_equal(aeq_comp$drop_off_aeq, aeq_comp$drop_off_raw)

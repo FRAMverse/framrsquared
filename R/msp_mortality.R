@@ -22,8 +22,29 @@ msp_mortality = function(fram_db, run_id = NULL){
   runid <- fram_db |>
     fetch_table_('RunID')
 
+
   msp <- fram_db |>
     fetch_table_('FisheryModelStockProportion')
+
+  if(!is.null(run_id)){
+    bps_used <- runid |>
+      dplyr::filter(.data$run_id %in% .env$run_id) |>
+      dplyr::pull(base_period_id)
+    if(!all(bps_used %in% msp$base_period_id)){
+      fram_abort("Base Period ID of run must be represented in {.emph FisheryModelStockProportion} table!")
+    }
+
+  } else {
+    if(!all(runid$base_period_id %in% msp$base_period_id)){
+      bad_bp <- setdiff(runid$base_period_id, msp$base_period_id)
+      bad_runs <- runid |>
+        dplyr::filter(.data$base_period_id %in% .env$bad_bp) |>
+        dplyr::pull("run_id")
+      cli::cli_warn(c("One or more runs have base_period_ids that are not represented in {.emph FisheryModelStockProportion} table. Those runs will have NAs for all fishery mortalities!",
+                      "Problem run_ids: {bad_runs}"),
+                    class = "framrsquared_warning")
+    }
+  }
 
   mortality <- fram_db |>
     fetch_table_('Mortality')
@@ -43,7 +64,7 @@ msp_mortality = function(fram_db, run_id = NULL){
     dplyr::mutate(
       dplyr::across(
         c("landed_catch":"drop_off",
-        "msf_landed_catch":"msf_drop_off"),
+          "msf_landed_catch":"msf_drop_off"),
         \(x) x / .data$model_stock_proportion
       )
     ) |>

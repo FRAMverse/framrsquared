@@ -96,7 +96,7 @@ fetch_table <- function(fram_db, table_name = NULL, label = TRUE, warn = TRUE){
 
     if(table_name == "Mortality" & warn == TRUE){
       neg_mort_runs <- output_table |>
-        dplyr::filter(dplyr::if_any("landed_catch":"msf_encounter", ~ . < 0)) |>
+        dplyr::filter(dplyr::if_any("landed_catch":"msf_drop_off", ~ . < 0)) |>
         dplyr::pull(.data$run_id) |>
         unique()
       if(length(neg_mort_runs>0)){
