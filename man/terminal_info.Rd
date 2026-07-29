@@ -4,14 +4,10 @@
 \alias{terminal_info}
 \title{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} Parse TAAETRS table}
 \usage{
-terminal_info(fram_db, old_table_name = TRUE, species = NULL)
+terminal_info(fram_db, species = NULL)
 }
 \arguments{
 \item{fram_db}{Fram database object}
-
-\item{old_table_name}{Logical, defaults to TRUE. We intend to change the FRAM table from
-TAAETRSList to TAAETRSListChinook to avoid confusion. When working with a database where that
-hasn't been done, leave this argument to TRUE.}
 
 \item{species}{"COHO" or "CHINOOK". Optional, defaults to the database species. Provide this only
 if fram_db connects to a database with both Chinook and Coho information. And try to avoid that

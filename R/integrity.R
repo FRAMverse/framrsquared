@@ -69,7 +69,6 @@ fram_database_type <- function(con) {
       'Stock',
       'StockFisheryRateScaler',
       'StockRecruit',
-      'TAAETRSList',
       'TerminalFisheryFlag',
       'TimeStep'
     ) %in% table_names
@@ -192,6 +191,22 @@ get_stock_ids <- function(fram_db){
   fram_db |>
     fetch_table_('Stock') |>
     dplyr::pull(.data$stock_id)
+}
+
+#' Gets all tables of FRAM database
+#'
+#' Skips the internal tables access creates for administration, which all start with `"MSys"`.
+#'
+#' @param fram_db Fram database object
+#'
+#' @export
+#' @keywords internal
+#'
+#' @examples
+#' \dontrun{fram_dataframe |> get_tables()}
+get_tables <- function(fram_db){
+  all_tables <- DBI::dbListTables(fram_db$fram_db_connection)
+  all_tables[!grepl("^MSys", all_tables)]
 }
 
 #' Finds tables that contain a specific column name
@@ -646,6 +661,7 @@ provide_table_names <- function(is_full = TRUE){
       'StockFisheryRateScaler',
       'StockRecruit',
       'TAAETRSList',
+      'TAAETRSListChinook',
       'TerminalFisheryFlag',
       'TimeStep'
     )

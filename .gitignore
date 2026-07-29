@@ -54,7 +54,7 @@ inst/doc
 
 ## local test files
 local-test/
-.positai
+.posit/assistant
 
 ## Snapshots
 tests/testthat/_snaps/
