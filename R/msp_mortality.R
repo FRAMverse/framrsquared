@@ -29,7 +29,7 @@ msp_mortality = function(fram_db, run_id = NULL){
   if(!is.null(run_id)){
     bps_used <- runid |>
       dplyr::filter(.data$run_id %in% .env$run_id) |>
-      dplyr::pull(base_period_id)
+      dplyr::pull("base_period_id")
     if(!all(bps_used %in% msp$base_period_id)){
       fram_abort("Base Period ID of run must be represented in {.emph FisheryModelStockProportion} table!")
     }

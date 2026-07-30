@@ -332,23 +332,23 @@ bkfram_checks_coho <-
     bk_qq <- bk_fishery_scalers |>
       dplyr::filter(.data$fishery_id %in% 65:72, # buoy 10 sport
                     (.data$quota > 0 | .data$msf_quota > 0)) |>
-      dplyr::select(.data$run_id,
-                    .data$time_step,
-                    .data$fishery_flag,
-                    .data$quota,
-                    .data$msf_quota,
-                    .data$fishery_id) |>
+      dplyr::select("run_id",
+                    "time_step",
+                    "fishery_flag",
+                    "quota",
+                    "msf_quota",
+                    "fishery_id") |>
       dplyr::inner_join(fisheries, by = 'fishery_id')
 
     fwd_qq <- fwd_fishery_scalers |>
       dplyr::filter(.data$fishery_id %in% 65:72, # buoy 10 sport
                     (.data$quota > 0 | .data$msf_quota > 0)) |>
-      dplyr::select(.data$run_id,
-                    .data$time_step,
-                    .data$fishery_flag,
-                    .data$quota,
-                    .data$msf_quota,
-                    .data$fishery_id) |>
+      dplyr::select("run_id",
+                    "time_step",
+                    "fishery_flag",
+                    "quota",
+                    "msf_quota",
+                    "fishery_id") |>
       dplyr::inner_join(fisheries, by = 'fishery_id')
 
     if (nrow(bk_qq) > 0) {

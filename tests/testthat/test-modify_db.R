@@ -539,8 +539,12 @@ test_that("copy_fishery_scalers() correctly transfers fishery scalers", {
   expect_equal(unchanged_rows_orig, unchanged_rows_new)
 
   ## changed fishery is changed
-  copy_from_row <- original_scalers |> dplyr::filter(run_id == 1, fishery_id == 1) |> dplyr::select(-primary_key, -run_id)
-  copy_to_row <- new_scalers |> dplyr::filter(run_id == 2, fishery_id == 1)|> dplyr::select(-primary_key, -run_id)
+  copy_from_row <- original_scalers |>
+    dplyr::filter(run_id == 1, fishery_id == 1) |>
+    dplyr::select(-primary_key, -run_id)
+  copy_to_row <- new_scalers |>
+    dplyr::filter(run_id == 2, fishery_id == 1)|>
+    dplyr::select(-primary_key, -run_id)
   expect_equal(copy_from_row, copy_to_row)
 
   ## primary key and run_id are unchanged

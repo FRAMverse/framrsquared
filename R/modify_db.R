@@ -358,7 +358,7 @@ copy_fishery_scalers <- function(fram_db, from_run, to_run, fishery_id = NULL){
   }
 
   row_unique <- copy_scalers |>
-    dplyr::select(time_step, fishery_id) |>
+    dplyr::select("time_step", "fishery_id") |>
     dplyr::distinct() |>
     nrow()
 
