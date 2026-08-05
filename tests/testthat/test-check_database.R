@@ -4,7 +4,7 @@
 make_bp_mock_db <- function(species = "CHINOOK",
                             fishery_scalers  = NULL,
                             non_retention    = NULL,
-                            double_checking = FALSE) {
+                            return_list = FALSE) {
 
   run_id <- data.frame(run_id = 1L, base_period_id = 10L)
 
@@ -48,7 +48,7 @@ make_bp_mock_db <- function(species = "CHINOOK",
     NonRetention         = non_retention
   )
 
-  if(!double_checking){ ## to help with test dev
+  if(!return_list){ ## to help with test dev
     res <- make_queryable_mock_db_list(
       table_list = table_list,
       species = species
@@ -359,3 +359,4 @@ test_that("check_bp_coverage() detects both scalers and CNR problems simultaneou
   expect_equal(nrow(result$scalers_problem), 1L)
   expect_equal(nrow(result$cnr_problems), 1L)
 })
+

@@ -9,13 +9,14 @@
 #' @param species "COHO" or "CHINOOK". Optional, defaults to the database species. Provide this only
 #'   if fram_db connects to a database with both Chinook and Coho information. And try to avoid that
 #'   -- those databases are sketchy to work with.
+#' @param suppress_label_warning Suppress warning about fishery and stock labels in the absence of a "stock_version" handling in the TAAETRS tables? Primarily here to silence that message during unit testing. Logical, defaults to FALSE.
 #'
 #' @returns tibble of TAAETRSList or TAAETRSListChinook tables translated to long form. `$taa_name` and `taa_num` identify the "TAA" group, `$stock_label` and `$stock_id` identify the FRAM stock, `$terminal_time_steps` and `$terminal_months` give the time periods that this stock is terminal, and `$fishery_label` and `$fishery_id` identify the fishery for which the stock is terminal.
 #'
 #' @export
 #' @seealso [terminal_stocks()], [terminal_fisheries()]
 #' @examples \dontrun{fram_db |> parse_terminal_info()}
-terminal_info <- function(fram_db, species = NULL){
+terminal_info <- function(fram_db, species = NULL, suppress_label_warning = FALSE){
 
   validate_fram_db(fram_db, db_type = "full")
 
@@ -57,7 +58,9 @@ terminal_info <- function(fram_db, species = NULL){
                   "taa_fish_list", "taa_time_step1", "taa_time_step2",
                   "taa_type", "taa_name")
 
-  cli::cli_alert_danger("Until FRAM has been updated to support the inclusion of `stock_version` to TAAETRS table, take fishery and stock labels from this function with a grain of salt.")
+  if(! suppress_label_warning){
+    cli::cli_alert_danger("Until FRAM has been updated to support the inclusion of `stock_version` to TAAETRS table, take fishery and stock labels from this function with a grain of salt.")
+  }
 
   tab |>
     dplyr::mutate(taa_stk_list = stringr::str_split(.data$taa_stk_list, ","),
@@ -93,9 +96,9 @@ terminal_info <- function(fram_db, species = NULL){
 #' @export
 #'
 #' @examples \dontrun{fram_db |> terminal_stocks()}
-terminal_stocks <- function(fram_db, species = NULL){
+terminal_stocks <- function(fram_db, species = NULL, suppress_label_warning = FALSE){
   validate_fram_db(fram_db, db_type = "full")
-  terminal_info(fram_db, species = species) |>
+  terminal_info(fram_db, species = species, suppress_label_warning = suppress_label_warning) |>
     dplyr::select("taa_name", "stock_label", "terminal_months", "stock_id", "terminal_time_steps") |>
     dplyr::distinct()
 }
@@ -111,9 +114,9 @@ terminal_stocks <- function(fram_db, species = NULL){
 #' @export
 #'
 #' @examples \dontrun{fram_db |> terminal_fisheries()}
-terminal_fisheries <- function(fram_db, species = NULL){
+terminal_fisheries <- function(fram_db, species = NULL, suppress_label_warning = FALSE){
   validate_fram_db(fram_db, db_type = "full")
-  terminal_info(fram_db, species = species) |>
+  terminal_info(fram_db, species = species, suppress_label_warning = suppress_label_warning) |>
     dplyr::select("taa_name", "fishery_label", "fishery_id") |>
     dplyr::distinct()
 }

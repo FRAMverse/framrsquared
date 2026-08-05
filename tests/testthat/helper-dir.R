@@ -9,3 +9,22 @@ skip_if_slow_tests_disabled <- function() {
     "Skipping slow tests. Set RUN_SLOW_TESTS=true to run (`Sys.setenv(RUN_SLOW_TESTS = 'true')`)."
   )
 }
+
+## expect framrsquared error, suppress messages
+expect_error_m_f <- function(x){
+  expect_error(
+
+    suppressMessages(
+      x
+    ),
+    class = "framrsquared_error"
+  )
+}
+
+## expect framrsquared erro
+expect_error_f <- function(x){
+  expect_error(
+      x,
+    class = "framrsquared_error"
+  )
+}

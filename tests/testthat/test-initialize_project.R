@@ -36,7 +36,10 @@ test_that("initialize_project errors on bad inputs", {
                class = "framrsquared_error")
 
   expect_error(initialize_project(color = 10, quiet = TRUE)) ## rlang::arg_match
-  expect_error(initialize_project(color = "blurgandy", quiet = TRUE)) ## rlang::arg_match
+  expect_error(suppressMessages(
+    initialize_project(color = "blurgandy", quiet = TRUE),
+    class = "cliMessage"
+  )) ## rlang::arg_match
 
   expect_error(initialize_project(quiet = "blurge"),
                class = "framrsquared_error")
@@ -55,7 +58,9 @@ test_that( "intialize_project creates desired folder structure", {
     .package = "here"
   )
 
-  initialize_project()
+  suppressMessages(initialize_project(),
+                   class = "cliMessage"
+  )
 
   expect_true(all (sort(list.files(path)) == sort(c(
     'scripts',
@@ -81,7 +86,10 @@ test_that( "intialize_project creates custom folder structure", {
     .package = "here"
   )
 
-  initialize_project(folders = c("hello", "there", "general/kenobi"), quiet = TRUE)
+  suppressMessages(
+    initialize_project(folders = c("hello", "there", "general/kenobi"), quiet = TRUE),
+    class = "cliMessage"
+  )
 
   expect_true(all (sort(list.files(path)) == sort(c(
     'hello',
@@ -105,7 +113,10 @@ test_that( "intialize_project respects quarto = FALSE and renv = TRUE", {
     .package = "here"
   )
 
-  initialize_project(quarto = FALSE, renv = TRUE, quiet = TRUE)
+  suppressMessages(
+    initialize_project(quarto = FALSE, renv = TRUE, quiet = TRUE),
+    class = "cliMessage"
+  )
 
   expect_false(file.exists(here::here("style.css")))
   expect_false(file.exists(here::here("_quarto.yml")))
@@ -126,22 +137,32 @@ test_that( "template colors and override work", {
     .package = "here"
   )
 
-  initialize_project(quiet = TRUE)
+  suppressMessages(
+    initialize_project(quiet = TRUE),
+    class = "cliMessage")
+
 
   count_of_green <- length(grep("#1D886E", readLines(here::here("_quarto.yml"))))
   count_of_coffee <- length(grep("#967259", readLines(here::here("_quarto.yml"))))
   expect_true(count_of_green == 0)
   expect_true(count_of_coffee == 1)
 
-  suppressWarnings(initialize_project(color = "green", quiet = TRUE))
+  suppressMessages(
+    suppressWarnings(initialize_project(color = "green", quiet = TRUE)),
+    class = "cliMessage"
+  )
 
   count_of_green <- length(grep("#1D886E", readLines(here::here("_quarto.yml"))))
   count_of_coffee <- length(grep("#967259", readLines(here::here("_quarto.yml"))))
   expect_true(count_of_green == 1)
   expect_true(count_of_coffee == 0)
 
-  suppressWarnings(initialize_project(color = "coffee",
-                                      template_overwrite = FALSE, quiet = TRUE))
+  suppressMessages(
+    suppressWarnings(initialize_project(color = "coffee",
+                                        template_overwrite = FALSE, quiet = TRUE)),
+    class = "cliMessage"
+  )
+
 
   count_of_green <- length(grep("#1D886E", readLines(here::here("_quarto.yml"))))
   count_of_coffee <- length(grep("#967259", readLines(here::here("_quarto.yml"))))

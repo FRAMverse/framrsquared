@@ -1,13 +1,18 @@
 #' Generates post-season January age 3 abundances by stock from post-season databases.
 #'
 #' Used for forecasting. Only works for Coho post-season databases. Intended for use with databases that have
-#' one run per run year.
+#' one run per run year. Ignores runs before 2011.
+#'
+#' Designation of "Wild", "Hatchery", or "Misc" is based on long stock names. Stocks with "Something/Wild" in the name will be identified as wild. Stocks with neither "Wild" nor "Hatchery" in the name will be identified as "Misc"
+#'
+#' Sometimes abundances are provided or asked for in abundances of "Ocean Age 3", sometimes in "January Age 3". This function can provide either, based on the `units` argument. The conversion can also be done by hand: Ocean Age 3 = January Age 3 / 1.2317.
 #'
 #' @param fram_db FRAM database object
 #' @param units Default January Age 3 'ja3', optional ocean age 3 'oa3'
 #' @param run_ids Numeric vector of run_ids to use, necessary when there are multiple runs with the same run_year in the database. Optional, defaults to NULL.
 #'
-#' @returns Tibble identify stock, origin ("Hatchery" or "Wild"), and a column for abundances for each run. Abundance columns are labeled by year (if there is only one run per run year) or by run id (e.g., `run_54`) if multiple runs share the same year.
+#'
+#' @returns Tibble identifying stock (`stock_id`, `stock_name`), `$origin` ("Hatchery", "Wild", or "Misc"), and a column for abundances for each run. Abundance columns are labeled by year (if there is only one run per run year) or by run id (e.g., `run_54`) if multiple runs share the same year.
 #'
 #'
 #' @export
@@ -42,7 +47,7 @@ post_season_abundance <- function(fram_db, units = c('ja3', 'oa3'), run_ids = NU
     dplyr::inner_join(stock, by = 'stock_id') |>
     dplyr::filter(
       .data$run_year >= 2010, # don't care about earlier apparently
-    ) |> # don't care about earlier apparently
+    ) |>
     dplyr::inner_join(stock_recruit, by = c('run_id', 'stock_id'),
                       relationship = 'many-to-many') |>
     dplyr::mutate(
@@ -119,14 +124,20 @@ post_season_abundance <- function(fram_db, units = c('ja3', 'oa3'), run_ids = NU
 
 }
 
-#' Performs error checks of a backwards FRAM run
-#' Returns nested tibble with diagnostics
+#' Perform error checks of a backwards FRAM run
+#'
+#' Checks that fishery scalers and escapement were correctly adjusted in the backwards and forwards runs, printing
+#' the results of each check to console. Also returns nested tibble with diagnostics objects.
 #'
 #' @export
 #'
 #' @param fram_db fram database object, supplied through connect_fram_db
 #' @param backward_run_id numeric, RunID
 #' @param forward_run_id numeric, RunID
+#'
+#' @returns Nested tibble; each row contains diagnostic information for the various checks.
+#' `$check` identifies the check (e.g., "scalers flag backwards"), `$type` identifies the type of object checked (e.g, "flag"), and `$data`
+#' contains the actual diagnostics object (e.g., dataframe of the rows with bad scaler flags in the backwards run.)
 #'
 #' @examples
 #' \dontrun{
@@ -135,24 +146,16 @@ post_season_abundance <- function(fram_db, units = c('ja3', 'oa3'), run_ids = NU
 #'
 bkfram_checks_coho <-
   function(fram_db,
-           backward_run_id = NULL,
-           forward_run_id = NULL) {
+           backward_run_id,
+           forward_run_id) {
 
     validate_fram_db(fram_db, db_type = 'full', db_species = 'COHO')
     # let user know what's going on
     cli::cli_alert_info('These are a suite of checks to find errors a post-season (bkFRAM) run.')
 
 
-    # check for null ids
-    if (is.null(backward_run_id) | is.null(forward_run_id)) {
-      fram_abort("Both a backward and forward run ids must be supplied")
-    }
-
-    validate_run_id(fram_db, backward_run_id)
-    validate_run_id(fram_db, forward_run_id)
-
-    # run ids are called so much in this package probably worth it
-    # to add a validate validate_run_id() function to integrity.R
+    validate_run_id(fram_db, backward_run_id, allow_null = FALSE, n = 1)
+    validate_run_id(fram_db, forward_run_id, allow_null = FALSE, n = 1)
 
     # send an update to the console
     cli::cli_h1('Gathering Data')
@@ -204,9 +207,6 @@ bkfram_checks_coho <-
     fwd_run_name <- run |>
       dplyr::filter(.data$run_id == .env$forward_run_id) |>
       dplyr::pull(.data$run_name)
-
-    # bk_run_name <- 'test1'
-    # fwd_run_name <- 'test2'
 
     # split out into separate dataframes
     # backward
@@ -330,7 +330,7 @@ bkfram_checks_coho <-
     # make sure quil and queets inputs are zeroed, should be coming fr --------
     cli::cli_h2('Checking for inputs in Quilly and Queets (should be coming from TAMM)')
     bk_qq <- bk_fishery_scalers |>
-      dplyr::filter(.data$fishery_id %in% 65:72, # buoy 10 sport
+      dplyr::filter(.data$fishery_id %in% 65:72,
                     (.data$quota > 0 | .data$msf_quota > 0)) |>
       dplyr::select("run_id",
                     "time_step",
@@ -341,7 +341,7 @@ bkfram_checks_coho <-
       dplyr::inner_join(fisheries, by = 'fishery_id')
 
     fwd_qq <- fwd_fishery_scalers |>
-      dplyr::filter(.data$fishery_id %in% 65:72, # buoy 10 sport
+      dplyr::filter(.data$fishery_id %in% 65:72,
                     (.data$quota > 0 | .data$msf_quota > 0)) |>
       dplyr::select("run_id",
                     "time_step",

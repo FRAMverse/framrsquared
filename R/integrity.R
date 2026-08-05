@@ -340,7 +340,7 @@ validate_fram_db <- function(fram_db,
   if (!is.null(db_type)) {
     db <- rlang::arg_match(db_type, c('full', 'transfer'))
     if (fram_db$fram_db_type != db) {
-      fram_abort("This function requires as {db} database, you're using a {fram_db$fram_db_type} database.",
+      fram_abort("This function requires a {db} database, you're using a {fram_db$fram_db_type} database.",
                  call = call)
     }
   }

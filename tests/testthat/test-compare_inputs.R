@@ -1033,3 +1033,4 @@ test_that("compare_runs overwrites existing file", {
 
   expect_equal(size_first, size_second)
 })
+

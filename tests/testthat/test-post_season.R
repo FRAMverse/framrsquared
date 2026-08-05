@@ -64,7 +64,8 @@ make_bkfram_mock_db <- function(
     bk_scale_factor  = 0.0,
     fwd_buoy_quota   = 50.0,
     bk_coastal       = "No",
-    fwd_coastal      = "No"
+    fwd_coastal      = "No",
+    return_list = FALSE
 ) {
   run_id_tbl <- data.frame(
     run_id             = c(1L, 2L),
@@ -138,19 +139,25 @@ make_bkfram_mock_db <- function(
     msf_encounter     = 0.0
   )
 
-  make_queryable_mock_db_list(
-    table_list = list(
-      RunID          = run_id_tbl,
-      FisheryScalers = fishery_scalers,
-      Stock          = stock_tbl,
-      Fishery        = fishery_tbl,
-      Escapement     = escapement_tbl,
-      BackwardsFRAM  = backwards_fram,
-      Mortality      = mortality_tbl
-    ),
-    species = "COHO",
-    type    = "full"
+  table_list = list(
+    RunID          = run_id_tbl,
+    FisheryScalers = fishery_scalers,
+    Stock          = stock_tbl,
+    Fishery        = fishery_tbl,
+    Escapement     = escapement_tbl,
+    BackwardsFRAM  = backwards_fram,
+    Mortality      = mortality_tbl
   )
+
+  if(return_list){
+    return(table_list)
+  } else {
+    make_queryable_mock_db_list(
+      table_list = table_list,
+      species = "COHO",
+      type    = "full"
+    )
+  }
 }
 
 
@@ -176,7 +183,10 @@ test_that("post_season_abundance() returns a data frame", {
   fram_db <- make_psa_mock_db()
   withr::defer(disconnect_mock_fram_db(fram_db))
 
-  result <- post_season_abundance(fram_db)
+  expect_message(
+    result <- post_season_abundance(fram_db),
+    regexp = "Abundances given in terms of January age 3"
+  )
   expect_s3_class(result, "data.frame")
 })
 
@@ -184,7 +194,11 @@ test_that("post_season_abundance() contains stock_id, stock_name, and origin col
   fram_db <- make_psa_mock_db()
   withr::defer(disconnect_mock_fram_db(fram_db))
 
-  result <- post_season_abundance(fram_db)
+  expect_message(
+    result <- post_season_abundance(fram_db),
+    regexp = "Abundances given in terms of January age 3"
+  )
+
   expect_true(all(c("stock_id", "stock_name", "origin") %in% names(result)))
 })
 
@@ -192,7 +206,11 @@ test_that("post_season_abundance() ja3: recruit_cohort_size = scale_factor * bas
   fram_db <- make_psa_mock_db(scale_factor = 3.0, base_cohort = 4000.0)
   withr::defer(disconnect_mock_fram_db(fram_db))
 
-  result <- post_season_abundance(fram_db)
+  expect_message(
+    result <- post_season_abundance(fram_db),
+    regexp = "Abundances given in terms of January age 3"
+  )
+
   expect_true("2022" %in% names(result))
   expect_equal(unique(result$`2022`), 12000.0)
 })
@@ -201,8 +219,15 @@ test_that("post_season_abundance() oa3: values equal ja3 / 1.2317", {
   fram_db <- make_psa_mock_db(scale_factor = 1.0, base_cohort = 12317.0)
   withr::defer(disconnect_mock_fram_db(fram_db))
 
-  ja3_result <- post_season_abundance(fram_db, units = "ja3")
-  oa3_result <- post_season_abundance(fram_db, units = "oa3")
+  expect_message(
+    ja3_result <- post_season_abundance(fram_db, units = "ja3"),
+    regexp = "Abundances given in terms of January age 3"
+  )
+
+  expect_message(
+    oa3_result <- post_season_abundance(fram_db, units = "oa3"),
+    regexp = "Abundances given in terms of ocean age 3"
+  )
 
   expect_equal(oa3_result$`2022`, ja3_result$`2022` / 1.2317, tolerance = 1e-4)
 })
@@ -211,7 +236,10 @@ test_that("post_season_abundance() assigns 'Wild' origin to stocks with 'Wild' i
   fram_db <- make_psa_mock_db()
   withr::defer(disconnect_mock_fram_db(fram_db))
 
-  result <- post_season_abundance(fram_db)
+  expect_message(
+    result <- post_season_abundance(fram_db),
+    regexp = "Abundances given in terms of January age 3"
+  )
   expect_equal(result$origin[result$stock_name == "RWS"], "Wild")
 })
 
@@ -219,15 +247,21 @@ test_that("post_season_abundance() assigns 'Hatchery' origin to stocks with 'Hat
   fram_db <- make_psa_mock_db()
   withr::defer(disconnect_mock_fram_db(fram_db))
 
-  result <- post_season_abundance(fram_db)
+  expect_message(
+    result <- post_season_abundance(fram_db),
+    regexp = "Abundances given in terms of January age 3"
+  )
   expect_equal(result$origin[result$stock_name == "RHS"], "Hatchery")
 })
 
-test_that("post_season_abundance() assigns 'Misc' to stocks with no origin marker in name", {
+test_that("post_season_abundance() assigns 'Misc' to stocks with no neither Hatchery nor Wild in name", {
   fram_db <- make_psa_mock_db()
   withr::defer(disconnect_mock_fram_db(fram_db))
 
-  result <- post_season_abundance(fram_db)
+  expect_message(
+    result <- post_season_abundance(fram_db),
+    regexp = "Abundances given in terms of January age 3"
+  )
   expect_equal(result$origin[result$stock_name == "OTH"], "Misc")
 })
 
@@ -254,7 +288,11 @@ test_that("post_season_abundance() excludes non-Post run_type runs", {
   )
   withr::defer(disconnect_mock_fram_db(fram_db))
 
-  result <- post_season_abundance(fram_db)
+  expect_message(
+    result <- post_season_abundance(fram_db),
+    regexp = "Abundances given in terms of January age 3"
+  )
+
   expect_true("2022" %in% names(result))
   expect_false("2021" %in% names(result))
 })
@@ -282,7 +320,11 @@ test_that("post_season_abundance() excludes run_year < 2010", {
   )
   withr::defer(disconnect_mock_fram_db(fram_db))
 
-  result <- post_season_abundance(fram_db)
+  expect_message(
+    result <- post_season_abundance(fram_db),
+    regexp = "Abundances given in terms of January age 3"
+  )
+
   expect_true("2022" %in% names(result))
   expect_false("2005" %in% names(result))
 })
@@ -310,10 +352,15 @@ test_that("post_season_abundance() filters to specified run_ids", {
   )
   withr::defer(disconnect_mock_fram_db(fram_db))
 
-  result <- post_season_abundance(fram_db, run_ids = 1L)
+  expect_message(
+    result <- post_season_abundance(fram_db, run_ids = 1L),
+    regexp = "Abundances given in terms of January age 3"
+  )
+
   expect_true("2022" %in% names(result))
   expect_false("2021" %in% names(result))
 })
+
 
 test_that("post_season_abundance() errors when run_ids = NULL and multiple runs share a run_year", {
   run_id_tbl <- data.frame(
@@ -364,7 +411,15 @@ test_that("post_season_abundance() labels columns by run_id when run_ids provide
   )
   withr::defer(disconnect_mock_fram_db(fram_db))
 
-  result <- post_season_abundance(fram_db, run_ids = c(1L, 2L))
+  expect_message(
+    expect_message(
+      result <- post_season_abundance(fram_db, run_ids = c(1L, 2L)),
+      regexp = "Abundances given in terms of January age 3"
+    ),
+    regexp = "have multiple runs associated"
+  )
+
+
   expect_true("run_1" %in% names(result))
   expect_true("run_2" %in% names(result))
 })
@@ -372,45 +427,86 @@ test_that("post_season_abundance() labels columns by run_id when run_ids provide
 
 ## --- bkfram_checks_coho() ----------------------------------------------------
 
-test_that("bkfram_checks_coho() errors when backward_run_id is NULL", {
-  fram_db <- make_mock_fram_db(type = "full", species = "COHO")
+
+
+test_that("bkfram_checks_coho() errors when backward_run_id or forwards run is not a valid run", {
+  fram_db <- make_bkfram_mock_db()
   withr::defer(disconnect_mock_fram_db(fram_db))
 
-  expect_error(
-    bkfram_checks_coho(fram_db, backward_run_id = NULL, forward_run_id = 1L),
-    class = "framrsquared_error"
+  expect_error_m_f(
+    bkfram_checks_coho(fram_db, backward_run_id = NULL, forward_run_id = 1L)
   )
-})
 
-test_that("bkfram_checks_coho() errors when forward_run_id is NULL", {
-  fram_db <- make_mock_fram_db(type = "full", species = "COHO")
-  withr::defer(disconnect_mock_fram_db(fram_db))
-
-  expect_error(
-    bkfram_checks_coho(fram_db, backward_run_id = 1L, forward_run_id = NULL),
-    class = "framrsquared_error"
+  expect_error_m_f(
+    bkfram_checks_coho(fram_db, backward_run_id = "ten", forward_run_id = 1L)
   )
+
+  expect_error_m_f(
+    bkfram_checks_coho(fram_db, backward_run_id = 1:5, forward_run_id = 1L)
+  )
+
+  expect_error_m_f(
+    bkfram_checks_coho(fram_db, backward_run_id = list(1), forward_run_id = 1L)
+  )
+
+  expect_error_m_f(
+    bkfram_checks_coho(fram_db, backward_run_id = 10, forward_run_id = 1L)
+  )
+
+  ############### forwards
+
+  expect_error_m_f(
+    bkfram_checks_coho(fram_db, backward_run_id = 1, forward_run_id = NULL)
+  )
+
+  expect_error_m_f(
+    bkfram_checks_coho(fram_db, backward_run_id = 1, forward_run_id = "ten")
+  )
+
+  expect_error_m_f(
+    bkfram_checks_coho(fram_db, backward_run_id = 1, forward_run_id = 1:5)
+  )
+
+  expect_error_m_f(
+    bkfram_checks_coho(fram_db, backward_run_id = 1, forward_run_id = list(1))
+  )
+
+  expect_error_m_f(
+    bkfram_checks_coho(fram_db, backward_run_id = 1, forward_run_id = 10)
+  )
+
 })
 
 test_that("bkfram_checks_coho() errors on a Chinook database", {
   fram_db <- make_mock_fram_db(type = "full", species = "CHINOOK")
   withr::defer(disconnect_mock_fram_db(fram_db))
 
-  expect_error(bkfram_checks_coho(fram_db, 1L, 2L), class = "framrsquared_error")
+  expect_error(bkfram_checks_coho(fram_db, 1L, 2L),
+               regexp = "specifically for COHO",
+               class = "framrsquared_error")
 })
 
 test_that("bkfram_checks_coho() errors on a transfer database", {
   fram_db <- make_mock_fram_db(type = "transfer", species = "COHO")
   withr::defer(disconnect_mock_fram_db(fram_db))
 
-  expect_error(bkfram_checks_coho(fram_db, 1L, 2L), class = "framrsquared_error")
+  expect_error(bkfram_checks_coho(fram_db, 1L, 2L),
+               regexp = "requires a full database",
+               class = "framrsquared_error")
 })
 
 test_that("bkfram_checks_coho() returns a tibble with 12 rows and check/type/data columns", {
   fram_db <- make_bkfram_mock_db()
   withr::defer(disconnect_mock_fram_db(fram_db))
 
-  result <- bkfram_checks_coho(fram_db, backward_run_id = 1L, forward_run_id = 2L)
+  local_mocked_bindings(
+    print = function(...) {},
+    .package = "base"
+  )
+
+  suppressMessages(
+    result <- bkfram_checks_coho(fram_db, backward_run_id = 1L, forward_run_id = 2L)
+  )
 
   expect_s3_class(result, "data.frame")
   expect_equal(nrow(result), 12L)
@@ -418,49 +514,94 @@ test_that("bkfram_checks_coho() returns a tibble with 12 rows and check/type/dat
 })
 
 test_that("bkfram_checks_coho() backward bad-flags data is empty when all flags are valid quota flags", {
+
+  local_mocked_bindings(
+    print = function(...) {},
+    .package = "base"
+  )
+
+
   # fishery_flag = 2 (valid), scale_factor = 0 -> no bad flags
   fram_db <- make_bkfram_mock_db(bk_fishery_flag = 2L, bk_scale_factor = 0.0)
   withr::defer(disconnect_mock_fram_db(fram_db))
 
-  result <- bkfram_checks_coho(fram_db, backward_run_id = 1L, forward_run_id = 2L)
+  suppressMessages(
+    result <- bkfram_checks_coho(fram_db, backward_run_id = 1L, forward_run_id = 2L)
+  )
   bk_flags_data <- result$data[result$check == "scaler flags backward"][[1]]
   expect_equal(nrow(bk_flags_data), 0L)
 })
 
 test_that("bkfram_checks_coho() backward bad-flags data has rows when non-quota flag paired with non-zero scaler", {
+
+  local_mocked_bindings(
+    print = function(...) {},
+    .package = "base"
+  )
+
   # fishery_flag = 1 (not in 2/8/28) AND scale_factor != 0 -> bad
   fram_db <- make_bkfram_mock_db(bk_fishery_flag = 1L, bk_scale_factor = 1.0)
   withr::defer(disconnect_mock_fram_db(fram_db))
 
-  result <- bkfram_checks_coho(fram_db, backward_run_id = 1L, forward_run_id = 2L)
+  suppressMessages(
+    result <- bkfram_checks_coho(fram_db, backward_run_id = 1L, forward_run_id = 2L)
+  )
   bk_flags_data <- result$data[result$check == "scaler flags backward"][[1]]
   expect_gt(nrow(bk_flags_data), 0L)
 })
 
 test_that("bkfram_checks_coho() detects flag mismatches between backward and forward runs", {
+
+  local_mocked_bindings(
+    print = function(...) {},
+    .package = "base"
+  )
+
+
   # bk fishery 1 has flag 2; fwd fishery 1 has flag 8 -> mismatch
   fram_db <- make_bkfram_mock_db(bk_fishery_flag = 2L, fwd_fishery_flag = 8L)
   withr::defer(disconnect_mock_fram_db(fram_db))
 
-  result <- bkfram_checks_coho(fram_db, backward_run_id = 1L, forward_run_id = 2L)
+  suppressMessages(
+    result <- bkfram_checks_coho(fram_db, backward_run_id = 1L, forward_run_id = 2L)
+  )
+
   mismatch_data <- result$data[result$check == "flagging differences"][[1]]
   expect_gt(nrow(mismatch_data), 0L)
 })
 
 test_that("bkfram_checks_coho() reports no flag mismatch when backward and forward flags match", {
+
+  local_mocked_bindings(
+    print = function(...) {},
+    .package = "base"
+  )
+
+
   fram_db <- make_bkfram_mock_db(bk_fishery_flag = 2L, fwd_fishery_flag = 2L)
   withr::defer(disconnect_mock_fram_db(fram_db))
 
-  result <- bkfram_checks_coho(fram_db, backward_run_id = 1L, forward_run_id = 2L)
+  suppressMessages(
+    result <- bkfram_checks_coho(fram_db, backward_run_id = 1L, forward_run_id = 2L)
+  )
+
   mismatch_data <- result$data[result$check == "flagging differences"][[1]]
   expect_equal(nrow(mismatch_data), 0L)
 })
 
 test_that("bkfram_checks_coho() stores the coastal_iterations value for each run", {
+
+  local_mocked_bindings(
+    print = function(...) {},
+    .package = "base"
+  )
+
   fram_db <- make_bkfram_mock_db(bk_coastal = "No", fwd_coastal = "Yes")
   withr::defer(disconnect_mock_fram_db(fram_db))
 
-  result <- bkfram_checks_coho(fram_db, backward_run_id = 1L, forward_run_id = 2L)
+  suppressMessages(
+    result <- bkfram_checks_coho(fram_db, backward_run_id = 1L, forward_run_id = 2L)
+  )
 
   bk_coastal  <- result$data[result$check == "coastal iterations backward"][[1]]
   fwd_coastal <- result$data[result$check == "coastal iterations forward"][[1]]
@@ -469,6 +610,13 @@ test_that("bkfram_checks_coho() stores the coastal_iterations value for each run
 })
 
 test_that("bkfram_checks_coho() buoy 10 backward data has rows when backward run has non-zero buoy quota", {
+
+  local_mocked_bindings(
+    print = function(...) {},
+    .package = "base"
+  )
+
+
   # bk_buoy_quota != 0 means backward run incorrectly has buoy 10 quota
   fram_db <- make_bkfram_mock_db(bk_fishery_flag = 2L)
 
@@ -513,7 +661,10 @@ test_that("bkfram_checks_coho() buoy 10 backward data has rows when backward run
   )
   withr::defer(disconnect_mock_fram_db(fram_db2))
 
-  result <- bkfram_checks_coho(fram_db2, backward_run_id = 1L, forward_run_id = 2L)
+  suppressMessages(
+    result <- bkfram_checks_coho(fram_db2, backward_run_id = 1L, forward_run_id = 2L)
+  )
+
   bk_buoy_data <- result$data[result$check == "buoy 10 backward"][[1]]
   expect_gt(nrow(bk_buoy_data), 0L)
 })
@@ -522,37 +673,64 @@ test_that("bkfram_checks_coho() buoy 10 backward data has rows when backward run
 # INTEGRATION TESTS ------------------------------------------------------------
 
 test_that("post_season_abundance() works on a real Coho post-season database", {
+
+  local_mocked_bindings(
+    print = function(...) {},
+    .package = "base"
+  )
+
   skip_if_no_test_db()
-  fram_db <- connection_coho_post()
+  fram_db <- connection_coho_post(quiet = TRUE)
   withr::defer(disconnect_mock_fram_db(fram_db))
 
-  result <- post_season_abundance(fram_db)
+
+  expect_message(
+    result <- post_season_abundance(fram_db,
+                                    run_ids = c(34L, 35L, 36L, 37L, 38L, 39L, 40L, 41L, 42L, 43L, 44L, 45L,
+                                                49L, 52L)),
+    regexp = "Abundances given in terms of January age 3"
+  )
 
   expect_s3_class(result, "data.frame")
   expect_true(all(c("stock_id", "stock_name", "origin") %in% names(result)))
   expect_gt(nrow(result), 0L)
 })
 
-test_that("post_season_abundance() oa3 values are smaller than ja3 on a real database", {
+test_that("post_season_abundance() ja3 values are 1.2317 times oa3 values in  a real database", {
   skip_if_no_test_db()
-  fram_db <- connection_coho_post()
+  fram_db <- connection_coho_post(quiet = TRUE)
   withr::defer(disconnect_mock_fram_db(fram_db))
 
-  ja3 <- post_season_abundance(fram_db, units = "ja3")
-  oa3 <- post_season_abundance(fram_db, units = "oa3")
+  expect_message(
+    ja3 <- post_season_abundance(fram_db, units = "ja3", run_id = 34:40),
+    regexp = "Abundances given in terms of January age 3"
+  )
+  expect_message(
+    oa3 <- post_season_abundance(fram_db, units = "oa3", run_id = 34:40),
+    regexp = "Abundances given in terms of ocean age 3"
+  )
 
   year_cols <- setdiff(names(ja3), c("stock_id", "stock_name", "origin"))
-  if (length(year_cols) > 0) {
-    col <- year_cols[[1]]
-    expect_true(all(oa3[[col]] <= ja3[[col]], na.rm = TRUE))
-  }
+  col <- year_cols[[1]]
+  oa3_vals = oa3[[col]]
+  ja3_vals = ja3[[col]]
+
+
+  ratios = (ja3_vals/oa3_vals)
+  ratios = ratios[!is.na(ratios)]
+
+  ## handle numerical imprecision
+  expect_true(all(abs(ratios - 1.2317) < 1e-10))
 })
 
 test_that("post_season_abundance() origin column contains only Wild, Hatchery, or Misc on a real database", {
   skip_if_no_test_db()
-  fram_db <- connection_coho_post()
+  fram_db <- connection_coho_post(quiet = TRUE)
   withr::defer(disconnect_mock_fram_db(fram_db))
 
-  result <- post_season_abundance(fram_db)
+  expect_message(
+    result <- post_season_abundance(fram_db, run_ids = 34:40),
+    regexp = "Abundances given in terms of January age 3"
+  )
   expect_true(all(result$origin %in% c("Wild", "Hatchery", "Misc")))
 })

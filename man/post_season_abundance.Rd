@@ -14,11 +14,16 @@ post_season_abundance(fram_db, units = c("ja3", "oa3"), run_ids = NULL)
 \item{run_ids}{Numeric vector of run_ids to use, necessary when there are multiple runs with the same run_year in the database. Optional, defaults to NULL.}
 }
 \value{
-Tibble identify stock, origin ("Hatchery" or "Wild"), and a column for abundances for each run. Abundance columns are labeled by year (if there is only one run per run year) or by run id (e.g., \code{run_54}) if multiple runs share the same year.
+Tibble identifying stock (\code{stock_id}, \code{stock_name}), \verb{$origin} ("Hatchery", "Wild", or "Misc"), and a column for abundances for each run. Abundance columns are labeled by year (if there is only one run per run year) or by run id (e.g., \code{run_54}) if multiple runs share the same year.
 }
 \description{
 Used for forecasting. Only works for Coho post-season databases. Intended for use with databases that have
-one run per run year.
+one run per run year. Ignores runs before 2011.
+}
+\details{
+Designation of "Wild", "Hatchery", or "Misc" is based on long stock names. Stocks with "Something/Wild" in the name will be identified as wild. Stocks with neither "Wild" nor "Hatchery" in the name will be identified as "Misc"
+
+Sometimes abundances are provided or asked for in abundances of "Ocean Age 3", sometimes in "January Age 3". This function can provide either, based on the \code{units} argument. The conversion can also be done by hand: Ocean Age 3 = January Age 3 / 1.2317.
 }
 \examples{
 \dontrun{framdb |> post_season_abundance()}

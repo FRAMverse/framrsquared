@@ -187,7 +187,8 @@ test_that("coho_mark_rates() returns a data frame with expected columns", {
   fram_db <- make_coho_mark_rates_mock_db()
   withr::defer(disconnect_mock_fram_db(fram_db))
 
-  result <- coho_mark_rates(fram_db)
+  result <- suppressMessages(coho_mark_rates(fram_db),
+                             class = "cliMessage")
 
   expect_s3_class(result, "data.frame")
   expect_true(all(c("run_id", "fishery_id", "AD", "UM",
@@ -198,7 +199,8 @@ test_that("coho_mark_rates() computes mark_rate as AD / (AD + UM)", {
   fram_db <- make_coho_mark_rates_mock_db()
   withr::defer(disconnect_mock_fram_db(fram_db))
 
-  result <- coho_mark_rates(fram_db)
+  result <- suppressMessages(coho_mark_rates(fram_db),
+                             class = "cliMessage")
 
   ns_row <- result[result$fishery_id == 1L & result$fishery_type == "ns", ]
   expect_equal(ns_row$AD, 60)
@@ -210,7 +212,9 @@ test_that("coho_mark_rates() zeros ns_encounters for an MSF-only fishery (flag 7
   fram_db <- make_coho_mark_rates_mock_db()
   withr::defer(disconnect_mock_fram_db(fram_db))
 
-  result <- coho_mark_rates(fram_db)
+  result <- suppressMessages(coho_mark_rates(fram_db),
+                             class = "cliMessage")
+
 
   msf_ns_row <- result[result$fishery_id == 2L & result$fishery_type == "ns", ]
   expect_equal(msf_ns_row$AD + msf_ns_row$UM, 0)
@@ -220,7 +224,9 @@ test_that("coho_mark_rates() uses msf_encounter for an MSF-only fishery (flag 7)
   fram_db <- make_coho_mark_rates_mock_db()
   withr::defer(disconnect_mock_fram_db(fram_db))
 
-  result <- coho_mark_rates(fram_db)
+  result <- suppressMessages(coho_mark_rates(fram_db),
+                             class = "cliMessage")
+
 
   msf_row <- result[result$fishery_id == 2L & result$fishery_type == "msf", ]
   expect_equal(msf_row$AD, 30)
@@ -232,7 +238,9 @@ test_that("coho_mark_rates() assigns mark based on stock_id parity (even = AD, o
   fram_db <- make_coho_mark_rates_mock_db()
   withr::defer(disconnect_mock_fram_db(fram_db))
 
-  result <- coho_mark_rates(fram_db)
+  result <- suppressMessages(coho_mark_rates(fram_db),
+                             class = "cliMessage")
+
 
   # stock_id 2 (even) = AD; stock_id 1 (odd) = UM
   # For fishery 1 ns: AD = 60 (from stock 2) and UM = 40 (from stock 1)
@@ -245,7 +253,8 @@ test_that("coho_mark_rates() filters to run_id when specified", {
   fram_db <- make_coho_mark_rates_mock_db()
   withr::defer(disconnect_mock_fram_db(fram_db))
 
-  result <- coho_mark_rates(fram_db, run_id = 1L)
+  result <- suppressMessages(coho_mark_rates(fram_db, run_id = 1L),
+                             class = "cliMessage")
   expect_true(all(result$run_id == 1L))
 })
 
@@ -417,3 +426,4 @@ test_that("stock_fate() fish mode returns raw counts, not proportions", {
   # fishery_mortality = landed_catch = 100
   expect_equal(result$fishery_mortality, 100)
 })
+
