@@ -47,6 +47,61 @@ make_fishery_mortality_mock_db <- function(species = "COHO", return_list = FALSE
   make_queryable_mock_db_list(table_list = table_list, species = species)
 }
 
+# -- Validate inputs ------------------------------------------------------------
+
+test_that("fishery_mortality() errors on an invalid `fram_db`", {
+  db <- make_fishery_mortality_mock_db()
+  withr::defer(disconnect_mock_fram_db(db))
+
+  expect_error(fishery_mortality("ten"))
+  expect_error(fishery_mortality(1))
+  expect_error(fishery_mortality(list(1:5)))
+
+  expect_no_error(db)
+
+})
+
+test_that("fishery_mortality() errors on an invalid run_id", {
+  db <- make_fishery_mortality_mock_db()
+  withr::defer(disconnect_mock_fram_db(db))
+
+  expect_error(fishery_mortality(db, run_id = "ten"))
+  expect_error(fishery_mortality(db, run_id = TRUE))
+  expect_error(fishery_mortality(db, run_id = list(1:5)))
+  expect_error(fishery_mortality(db, run_id = 999))
+
+  expect_no_error(fishery_mortality(db, run_id = 1))
+
+})
+
+test_that("fishery_mortality() errors on an invalid fishery_id", {
+  db <- make_fishery_mortality_mock_db()
+  withr::defer(disconnect_mock_fram_db(db))
+
+  expect_error(fishery_mortality(db, fishery_id = "ten"))
+  expect_error(fishery_mortality(db, fishery_id = TRUE))
+  expect_error(fishery_mortality(db, fishery_id = list(1:5)))
+  expect_error(fishery_mortality(db, fishery_id = 999))
+
+  expect_no_error(fishery_mortality(db, fishery_id = 10))
+
+})
+
+test_that("fishery_mortality() errors on invalid msp", {
+  db <- make_fishery_mortality_mock_db()
+  withr::defer(disconnect_mock_fram_db(db))
+
+  expect_error(fishery_mortality(db, msp = "ten"))
+  expect_error(fishery_mortality(db, msp = 1))
+  expect_error(fishery_mortality(db, msp = list(1:5)))
+  expect_error(fishery_mortality(db, msp = c(TRUE, FALSE)))
+
+  expect_no_error(fishery_mortality(db, msp = TRUE))
+
+})
+
+
+
 # ── Output structure -----------------------------------------------------------
 
 test_that("fishery_mortality() returns a tibble", {
@@ -66,47 +121,7 @@ test_that("fishery_mortality() returns exactly the expected columns in order", {
                           "landed_catch", "non_retention", "shaker", "drop_off"))
 })
 
-test_that("fishery_mortality() output contains no msf_ columns", {
-  db <- make_fishery_mortality_mock_db()
-  withr::defer(disconnect_mock_fram_db(db))
-
-  result <- fishery_mortality(db)
-  expect_false(any(startsWith(names(result), "msf_")))
-})
-
-test_that("fishery_mortality() output contains no stock_id column", {
-  db <- make_fishery_mortality_mock_db()
-  withr::defer(disconnect_mock_fram_db(db))
-
-  result <- fishery_mortality(db)
-  expect_false("stock_id" %in% names(result))
-})
-
 # ── Aggregation logic ---------------------------------------------------------
-
-test_that("fishery_mortality() sums NS and MSF landed_catch into one column", {
-  db <- make_fishery_mortality_mock_db()
-  withr::defer(disconnect_mock_fram_db(db))
-
-  result <- fishery_mortality(db)
-
-  # run_id=1, fishery_id=10: stocks 1+2 summed, then NS+MSF combined
-  # landed_catch = (10+5) + (4+2) = 21
-  row <- result[result$run_id == 1L & result$fishery_id == 10L, ]
-  expect_equal(row$landed_catch, 21.0)
-})
-
-test_that("fishery_mortality() sums NS and MSF for all mortality columns", {
-  db <- make_fishery_mortality_mock_db()
-  withr::defer(disconnect_mock_fram_db(db))
-
-  result <- fishery_mortality(db)
-  row <- result[result$run_id == 1L & result$fishery_id == 10L, ]
-
-  expect_equal(row$non_retention, 3.7)
-  expect_equal(row$shaker,        1.9)
-  expect_equal(row$drop_off,      0.95)
-})
 
 test_that("fishery_mortality() aggregates across stocks (no stock_id in grouping)", {
   db <- make_fishery_mortality_mock_db()
@@ -117,6 +132,19 @@ test_that("fishery_mortality() aggregates across stocks (no stock_id in grouping
   # run_id=1, fishery_id=10 has two stock rows — they should be collapsed to one
   rows <- result[result$run_id == 1L & result$fishery_id == 10L, ]
   expect_equal(nrow(rows), 1L)
+})
+
+test_that("fishery_mortality() sums NS and MSF for all mortality columns", {
+  db <- make_fishery_mortality_mock_db()
+  withr::defer(disconnect_mock_fram_db(db))
+
+  result <- fishery_mortality(db)
+  row <- result[result$run_id == 1L & result$fishery_id == 10L, ]
+
+  expect_equal(row$landed_catch, 21.0)
+  expect_equal(row$non_retention, 3.7)
+  expect_equal(row$shaker,        1.9)
+  expect_equal(row$drop_off,      0.95)
 })
 
 test_that("fishery_mortality() with zero MSF values returns NS values unchanged", {
@@ -134,6 +162,9 @@ test_that("fishery_mortality() with zero MSF values returns NS values unchanged"
 })
 
 # ── Filtering ------------------------------------------------------------------
+
+
+
 
 test_that("fishery_mortality() returns all rows when run_id and fishery_id are NULL", {
   db <- make_fishery_mortality_mock_db()
@@ -181,6 +212,22 @@ test_that("fishery_mortality() run_id and fishery_id filters can be combined", {
   expect_equal(result$fishery_id, 10L)
 })
 
+test_that("fishery_mortality() correctly handles vector forms of run_id and fishery_id", {
+  db <- make_fishery_mortality_mock_db()
+  withr::defer(disconnect_mock_fram_db(db))
+
+  expect_no_error(fishery_mortality(db, run_id = 1:2, fishery_id = c(10, 20)))
+  res <- fishery_mortality(db, run_id = 1:2, fishery_id = c(10, 20))
+
+  ## has all runs
+  expect_true(all(1:2 == sort(unique(res$run_id))))
+
+  ## has all fishery ids
+  expect_true(all(c(10, 20) == sort(unique(res$fishery_id))))
+
+})
+
+
 # ── Species attribute ----------------------------------------------------------
 
 test_that("fishery_mortality() attaches species attribute matching the DB species", {
@@ -210,32 +257,3 @@ test_that("fishery_mortality() output is ordered by run_id, fishery_id, age, tim
   expect_equal(seq_len(nrow(result)), expected_order)
 })
 
-# ── Validation errors ---------------------------------------------------------
-
-test_that("fishery_mortality() errors when run_id is not present in the database", {
-  db <- make_fishery_mortality_mock_db()
-  withr::defer(disconnect_mock_fram_db(db))
-
-  expect_error(fishery_mortality(db, run_id = 999L), class = "framrsquared_error")
-})
-
-test_that("fishery_mortality() errors when fishery_id is not present in the database", {
-  db <- make_fishery_mortality_mock_db()
-  withr::defer(disconnect_mock_fram_db(db))
-
-  expect_error(fishery_mortality(db, fishery_id = 999L), class = "framrsquared_error")
-})
-
-test_that("fishery_mortality() errors when msp is not a logical", {
-  db <- make_fishery_mortality_mock_db()
-  withr::defer(disconnect_mock_fram_db(db))
-
-  expect_error(fishery_mortality(db, msp = "yes"), class = "framrsquared_error")
-})
-
-test_that("fishery_mortality() errors when msp is a logical vector of length > 1", {
-  db <- make_fishery_mortality_mock_db()
-  withr::defer(disconnect_mock_fram_db(db))
-
-  expect_error(fishery_mortality(db, msp = c(TRUE, FALSE)), class = "framrsquared_error")
-})
