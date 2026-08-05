@@ -65,8 +65,8 @@ terminal_info <- function(fram_db, species = NULL, suppress_label_warning = FALS
   tab |>
     dplyr::mutate(taa_stk_list = stringr::str_split(.data$taa_stk_list, ","),
                   taa_fish_list = stringr::str_split(.data$taa_fish_list, ",")) |>
-    tidyr::unnest(.data$taa_stk_list) |>
-    tidyr::unnest(.data$taa_fish_list) |>
+    tidyr::unnest("taa_stk_list") |>
+    tidyr::unnest("taa_fish_list") |>
     dplyr::rename(stock_id = "taa_stk_list",
                   fishery_id = "taa_fish_list") |>
     dplyr::mutate(stock_id = as.numeric(.data$stock_id),
@@ -74,9 +74,11 @@ terminal_info <- function(fram_db, species = NULL, suppress_label_warning = FALS
     dplyr::filter(.data$fishery_id != 0) |>
     dplyr::mutate(terminal_time_steps = glue::glue("{taa_time_step1}-{taa_time_step2}")) |>
     dplyr::left_join(timesteps |>
+                       dplyr::filter(.data$species == .env$species) |>
                        dplyr::select(taa_time_step1 = "time_step", "timestep_start"),
                      by = "taa_time_step1") |>
     dplyr::left_join(timesteps |>
+                       dplyr::filter(.data$species == .env$species) |>
                        dplyr::select(taa_time_step2 = "time_step", "timestep_end"),
                      by = "taa_time_step2") |>
     dplyr::mutate(terminal_months = glue::glue("{timestep_start}-{timestep_end}")) |>

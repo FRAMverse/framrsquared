@@ -22,7 +22,8 @@ make_reasonable_mock_terminal_db <- function(
     species = "COHO",
     table_name = "TAAETRSList") {
   table_list <- list(
-    TimeStep = mock_timestep_table,
+    TimeStep = mock_timestep_table |>
+      dplyr::mutate(species = species),
     RunID = data.frame(species_name = species,
                        run_id = 1)
   )
@@ -337,3 +338,4 @@ test_that("terminal_fisheries() rows are a subset of terminal_info() rows", {
   expect_true(all(fisheries$fishery_id %in% full$fishery_id))
   expect_lte(nrow(fisheries), nrow(full))
 })
+
