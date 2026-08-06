@@ -47,8 +47,8 @@ stock_mortality <- function(fram_db, run_id = NULL, stock_id = NULL) {
     dplyr::summarize(
       dplyr::across(
         c(
-          .data$landed_catch:.data$drop_off,
-          .data$msf_landed_catch:.data$msf_drop_off
+          "landed_catch":"drop_off",
+          "msf_landed_catch":"msf_drop_off"
         ),
         \(x) sum(x)
       ),

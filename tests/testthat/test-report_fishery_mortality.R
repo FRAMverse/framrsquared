@@ -287,3 +287,4 @@ test_that("fishery_mortality() output is ordered by run_id, fishery_id, age, tim
   expect_snapshot(fishery_mortality(db))
 
 })
+
