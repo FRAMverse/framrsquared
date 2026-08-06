@@ -118,7 +118,7 @@ test_that("fishery_mortality() returns exactly the expected columns in order", {
 
   result <- fishery_mortality(db)
   expect_named(result, c("run_id", "fishery_id", "age", "time_step",
-                          "landed_catch", "non_retention", "shaker", "drop_off"))
+                         "landed_catch", "non_retention", "shaker", "drop_off"))
 })
 
 # ── Aggregation logic ---------------------------------------------------------
@@ -257,3 +257,33 @@ test_that("fishery_mortality() output is ordered by run_id, fishery_id, age, tim
   expect_equal(seq_len(nrow(result)), expected_order)
 })
 
+test_that("fishery_mortality() output is ordered by run_id, fishery_id, age, time_step, real db", {
+  skip_if_no_test_db()
+
+  db <- connection_chin_post(quiet = TRUE)
+  withr::defer(disconnect_fram_db(db))
+
+  result <- fishery_mortality(db)
+  expected_order <- order(result$run_id, result$fishery_id, result$age, result$time_step)
+  expect_equal(seq_len(nrow(result)), expected_order)
+})
+
+# -- Snapshots remain constant-------------------
+
+
+test_that("fishery_mortality() output is ordered by run_id, fishery_id, age, time_step, real db", {
+  skip_if_no_test_db()
+
+  db <- connection_chin_post(quiet = TRUE)
+  withr::defer(disconnect_fram_db(db))
+
+  expect_snapshot(fishery_mortality(db))
+
+  suppressMessages(withr::deferred_run())
+
+  db <- connection_coho_pre(quiet = TRUE)
+  withr::defer(disconnect_fram_db(db))
+
+  expect_snapshot(fishery_mortality(db))
+
+})

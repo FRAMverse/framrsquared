@@ -154,14 +154,15 @@ test_that("msf_mortalities_chinook_() returns a tibble", {
   expect_s3_class(msf_mortalities_chinook_(db), "tbl_df")
 })
 
-test_that("msf_mortalities_chinook_() output contains expected key columns", {
+test_that("msf_mortalities_chinook_() output contains expected columns", {
   db <- make_msf_chinook_mock_db()
   withr::defer(disconnect_mock_fram_db(db))
 
   result <- msf_mortalities_chinook_(db)
-  expect_true(all(c("run_id", "fishery_id", "time_step",
+  expect_setequal(c("run_id", "fishery_id", "time_step",
                     "legal_marked", "legal_unmarked",
-                    "sublegal_marked", "sublegal_unmarked") %in% names(result)))
+                    "sublegal_marked", "sublegal_unmarked"),
+                  names(result))
 })
 
 test_that("msf_encounters_chinook_() returns a tibble", {
@@ -171,14 +172,15 @@ test_that("msf_encounters_chinook_() returns a tibble", {
   expect_s3_class(msf_encounters_chinook_(db), "tbl_df")
 })
 
-test_that("msf_encounters_chinook_() output contains expected key columns", {
+test_that("msf_encounters_chinook_() output contains expected columns", {
   db <- make_msf_chinook_mock_db()
   withr::defer(disconnect_mock_fram_db(db))
 
   result <- msf_encounters_chinook_(db)
-  expect_true(all(c("run_id", "fishery_id", "time_step",
+  expect_setequal(c("run_id", "fishery_id", "time_step",
                     "legal_marked", "legal_unmarked",
-                    "sublegal_marked", "sublegal_unmarked") %in% names(result)))
+                    "sublegal_marked", "sublegal_unmarked"),
+                  names(result))
 })
 
 test_that("msf_landed_catch_chinook_() returns a tibble", {
@@ -193,17 +195,12 @@ test_that("msf_landed_catch_chinook_() output contains expected key columns", {
   withr::defer(disconnect_mock_fram_db(db))
 
   result <- msf_landed_catch_chinook_(db)
-  expect_true(all(c("run_id", "fishery_id", "time_step",
-                    "legal_marked", "legal_unmarked") %in% names(result)))
+  expect_setequal(c("run_id", "fishery_id", "time_step",
+                    "legal_marked", "legal_unmarked"),
+                  names(result))
 })
 
-test_that("msf_landed_catch_chinook_() output does not contain sublegal columns", {
-  db <- make_msf_chinook_mock_db()
-  withr::defer(disconnect_mock_fram_db(db))
 
-  result <- msf_landed_catch_chinook_(db)
-  expect_false(any(c("sublegal_marked", "sublegal_unmarked") %in% names(result)))
-})
 
 
 # ── Mark status logic ----------------------------------------------------------
@@ -376,4 +373,69 @@ test_that("msf_landed_catch_chinook_() attaches a CHINOOK species attribute", {
 
   result <- msf_landed_catch_chinook_(db)
   expect_equal(attr(result, "species"), "CHINOOK")
+})
+
+## --- Snapshots haven't changed --------------------------
+
+
+
+test_that("msf_mortalities_chin_() snapshot hasn't changed", {
+
+  skip_if_no_test_db()
+
+  db <- connection_chin_pre(quiet = TRUE)
+  withr::defer(disconnect_fram_db(db))
+
+  expect_snapshot(msf_mortalities_chinook_(db))
+
+  suppressMessages(
+    withr::deferred_run()
+  )
+
+  db <- connection_chin_post(quiet = TRUE)
+  withr::defer(disconnect_fram_db(db))
+
+  expect_snapshot(msf_mortalities_chinook_(db))
+
+})
+
+
+test_that("msf_encounters_chin_() snapshot hasn't changed", {
+
+  skip_if_no_test_db()
+
+  db <- connection_chin_pre(quiet = TRUE)
+  withr::defer(disconnect_fram_db(db))
+
+  expect_snapshot(msf_encounters_chinook_(db))
+
+  suppressMessages(
+    withr::deferred_run()
+  )
+
+  db <- connection_chin_post(quiet = TRUE)
+  withr::defer(disconnect_fram_db(db))
+
+  expect_snapshot(msf_encounters_chinook_(db))
+
+})
+
+test_that("msf_landed_catch_chin_() snapshot hasn't changed", {
+
+  skip_if_no_test_db()
+
+  db <- connection_chin_pre(quiet = TRUE)
+  withr::defer(disconnect_fram_db(db))
+
+  expect_snapshot(msf_landed_catch_chinook_(db))
+
+  suppressMessages(
+    withr::deferred_run()
+  )
+
+  db <- connection_chin_post(quiet = TRUE)
+  withr::defer(disconnect_fram_db(db))
+
+  expect_snapshot(msf_landed_catch_chinook_(db))
+
 })

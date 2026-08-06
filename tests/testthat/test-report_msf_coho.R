@@ -107,13 +107,14 @@ test_that("msf_mortalities_coho_() returns a tibble", {
   expect_s3_class(msf_mortalities_coho_(db), "tbl_df")
 })
 
-test_that("msf_mortalities_coho_() output contains expected key columns", {
+test_that("msf_mortalities_coho_() output contains expected columns", {
   db <- make_msf_coho_mock_db()
   withr::defer(disconnect_mock_fram_db(db))
 
   result <- msf_mortalities_coho_(db)
-  expect_true(all(c("run_id", "fishery_id", "time_step",
-                    "marked", "unmarked") %in% names(result)))
+  expect_setequal(c("run_id", "fishery_id", "time_step",
+                    "marked", "unmarked"),
+                  names(result))
 })
 
 test_that("msf_encounters_coho_() returns a tibble", {
@@ -123,13 +124,14 @@ test_that("msf_encounters_coho_() returns a tibble", {
   expect_s3_class(msf_encounters_coho_(db), "tbl_df")
 })
 
-test_that("msf_encounters_coho_() output contains expected key columns", {
+test_that("msf_encounters_coho_() output contains expected columns", {
   db <- make_msf_coho_mock_db()
   withr::defer(disconnect_mock_fram_db(db))
 
   result <- msf_encounters_coho_(db)
-  expect_true(all(c("run_id", "fishery_id", "time_step",
-                    "marked", "unmarked") %in% names(result)))
+  expect_setequal(c("run_id", "fishery_id", "time_step",
+                    "marked", "unmarked"),
+                  names(result))
 })
 
 test_that("msf_landed_catch_coho_() returns a tibble", {
@@ -139,13 +141,14 @@ test_that("msf_landed_catch_coho_() returns a tibble", {
   expect_s3_class(msf_landed_catch_coho_(db), "tbl_df")
 })
 
-test_that("msf_landed_catch_coho_() output contains expected key columns", {
+test_that("msf_landed_catch_coho_() output contains expected columns", {
   db <- make_msf_coho_mock_db()
   withr::defer(disconnect_mock_fram_db(db))
 
   result <- msf_landed_catch_coho_(db)
-  expect_true(all(c("run_id", "fishery_id", "time_step",
-                    "marked", "unmarked") %in% names(result)))
+  expect_setequal(c("run_id", "fishery_id", "time_step",
+                    "marked", "unmarked"),
+                  names(result))
 })
 
 
@@ -184,18 +187,6 @@ test_that("msf_landed_catch_coho_() correctly separates marked and unmarked usin
 
   expect_equal(row$unmarked, 10)
   expect_equal(row$marked,   4)
-})
-
-
-# ── msf_mortalities_coho_() combines all MSF columns (no legal/sublegal split) -
-
-test_that("msf_mortalities_coho_() does not produce sublegal columns", {
-  db <- make_msf_coho_mock_db()
-  withr::defer(disconnect_mock_fram_db(db))
-
-  result <- msf_mortalities_coho_(db)
-  expect_false(any(c("sublegal_marked", "sublegal_unmarked",
-                     "legal_marked",   "legal_unmarked") %in% names(result)))
 })
 
 
@@ -303,3 +294,67 @@ test_that("msf_landed_catch_coho_() attaches a COHO species attribute", {
   expect_equal(attr(result, "species"), "COHO")
 })
 
+# ---- Snapshots remain teh same--------------------------------------
+
+
+
+test_that("msf_mortalities_coho_() snapshot hasn't changed", {
+
+  skip_if_no_test_db()
+
+  db <- connection_coho_pre(quiet = TRUE)
+  withr::defer(disconnect_fram_db(db))
+
+  expect_snapshot(msf_mortalities_coho_(db))
+
+  suppressMessages(
+    withr::deferred_run()
+  )
+
+  db <- connection_coho_post(quiet = TRUE)
+  withr::defer(disconnect_fram_db(db))
+
+  expect_snapshot(msf_mortalities_coho_(db))
+
+})
+
+
+test_that("msf_encounters_coho_() snapshot hasn't changed", {
+
+  skip_if_no_test_db()
+
+  db <- connection_coho_pre(quiet = TRUE)
+  withr::defer(disconnect_fram_db(db))
+
+  expect_snapshot(msf_encounters_coho_(db))
+
+  suppressMessages(
+    withr::deferred_run()
+  )
+
+  db <- connection_coho_post(quiet = TRUE)
+  withr::defer(disconnect_fram_db(db))
+
+  expect_snapshot(msf_encounters_coho_(db))
+
+})
+
+test_that("msf_landed_catch_coho_() snapshot hasn't changed", {
+
+  skip_if_no_test_db()
+
+  db <- connection_coho_pre(quiet = TRUE)
+  withr::defer(disconnect_fram_db(db))
+
+  expect_snapshot(msf_landed_catch_coho_(db))
+
+  suppressMessages(
+    withr::deferred_run()
+  )
+
+  db <- connection_coho_post(quiet = TRUE)
+  withr::defer(disconnect_fram_db(db))
+
+  expect_snapshot(msf_landed_catch_coho_(db))
+
+})

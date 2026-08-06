@@ -42,7 +42,8 @@ msf_mortalities_chinook_ <- function(fram_db){
         'sublegal',
         'legal')
     ) |>
-    tidyr::unite('legal_mark_status', .data$legality, .data$mark_status) |>
+    tidyr::unite(col = 'legal_mark_status',
+                 "legality", "mark_status") |>
     dplyr::group_by(.data$run_id, .data$fishery_id,
                     .data$time_step, .data$legal_mark_status) |>
     dplyr::summarize(value = sum(.data$value), .groups = 'drop')
@@ -107,7 +108,8 @@ msf_encounters_chinook_ <- function(fram_db){
     ) |>
     dplyr::select(-c("msf_shaker":"shaker_mort_rate"), legal = "msf_encounter", sublegal = "shaker_encounters") |>
     tidyr::pivot_longer("legal":"sublegal") |>
-    tidyr::unite('legal_mark_status', .data$name, .data$mark_status) |>
+    tidyr::unite(col = 'legal_mark_status',
+                 "name", "mark_status") |>
     tidyr::pivot_wider(names_from = "legal_mark_status", values_from = "value") |>
     `attr<-`('species', fram_db$fram_db_species)
 }
@@ -149,7 +151,8 @@ msf_landed_catch_chinook_ <- function(fram_db){
     dplyr::summarize(msf_landed_catch = sum(.data$msf_landed_catch), .groups='drop') |>
     dplyr::select(dplyr::everything(), legal = "msf_landed_catch") |>
     tidyr::pivot_longer("legal") |>
-    tidyr::unite('legal_mark_status', .data$name, .data$mark_status) |>
+    tidyr::unite(col = 'legal_mark_status',
+                 "name", "mark_status") |>
     tidyr::pivot_wider(names_from = "legal_mark_status", values_from = "value") |>
     `attr<-`('species', fram_db$fram_db_species)
 }
