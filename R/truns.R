@@ -1,8 +1,10 @@
-#' Returns a dataframe with stocks defined
-#' by the TRuns report driver
+#' Stocks defined by TRuns report driver
+#'
+#' Returns a dataframe with stocks defined by the TRuns report driver. Only relevant for Coho databases.
+#'
 #' @param fram_db FRAM database object
 #'
-#' @returns Tibble with stock ID and TRUN stock name (`stocck_name`).
+#' @returns Tibble with stock ID and TRUN stock name (`stock_name`).
 #'
 #' @export
 #'
@@ -21,8 +23,10 @@ truns_stocks <- function(fram_db){
     dplyr::mutate(dplyr::across("stock_id", as.numeric))
 }
 
-#' Returns a dataframe with fisheries defined
-#' by the TRuns report driver
+#' Fisheries defined by TRuns report driver
+#'
+#' Returns a dataframe with fisheries defined by the TRuns report driver. Only relevant for Coho databases.
+#'
 #' @param fram_db FRAM database object
 #'
 #' @returns Tibble with fishery ID and TRUN stock name (`stock_name`).
