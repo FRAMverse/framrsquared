@@ -36,7 +36,9 @@ provides the % CNR on the plot. Setting optional argument `split_cnr` to `TRUE` 
 - `fram_abort()` -- wrapper for cli_abort that adds custom error class, "framrsquared_error". Allows for better testthat behavior (expect_error() can confirm that the error comes from this package, not others)
 - Overhaul of internal usage functions. Functions designed for internal use that are not exported are now listed with `@keywords internal` to enable documentation of help Rds (e.g., `validate_numeric()`. Functions that were previously intended for internal use but were exported (e.g., `provide_table_names()`) are still exported but have been given `@keywords internal`. This means they are exposed to users and will continue to function in existing scripts/packages, but aren't included in lists of functions intended for casual users.
 - Unit tests and integration tests added to functions in the following files: "Integrity.R"
-
+- removed `style_guide.R` and associated functions. These were written to check that files were written 
+using the right formating (`<-` for assignment, snake_case for variables). However, these tasks are better
+managed using styler tools.
 
 
 # framrsquared 0.8.1

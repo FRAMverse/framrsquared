@@ -22,6 +22,25 @@
 #' }
 
 plot_stock_comp <- function(fram_db, run_id, fishery_id, time_step, group_threshold = .01) {
+  # Get fishery name
+  base_version_number <- fetch_table_(fram_db = fram_db,
+                             table_name = "RunID") |>
+    dplyr::filter(.data$run_id == .env$run_id) |>
+    dplyr::pull("base_period_id")
+
+  fishery_version <- fetch_table_(fram_db = fram_db,
+               table_name = "BaseID") |>
+    dplyr::filter(.data$base_period_id == .env$base_version_number) |>
+    dplyr::pull("fishery_version")
+
+  fishery_name <- fetch_table_(fram_db = fram_db,
+                          table_name = "Fishery") |>
+    dplyr::filter(.data$version_number == .env$fishery_version,
+                  .data$fishery_id == .env$fishery_id) |>
+    dplyr::pull("fishery_title")
+
+
+
   # plot
   calculate_stock_comp(fram_db = fram_db,
                        run_id = run_id, fishery_id = fishery_id,
@@ -64,7 +83,7 @@ plot_stock_comp <- function(fram_db, run_id, fishery_id, time_step, group_thresh
 calculate_stock_comp <- function(fram_db, run_id, fishery_id, time_step, group_threshold = .01){
   validate_fram_db(fram_db)
   validate_run_id(fram_db, run_id)
-  validate_fishery_ids(fram_db, fishery_id)
+  validate_fishery_ids(fram_db, fishery_id, n = 1)
   validate_numeric(time_step)
   if(! time_step %in% 1:5){
     fram_abort("`time_step` must be a valid timestep (1-4 for Chinook, 1-5 for Coho)")
