@@ -110,10 +110,14 @@ export(translate_nr_flag)
 export(translate_scalers_flag)
 export(truns_fisheries)
 export(truns_stocks)
-importFrom(framrosetta,label_fisheries)
-importFrom(framrosetta,label_stocks)
+importFrom(framrosetta,
+  label_fisheries,
+  label_stocks
+)
 importFrom(lifecycle,deprecated)
-importFrom(rlang,":=")
-importFrom(rlang,.data)
-importFrom(rlang,.env)
+importFrom(rlang,
+  ":=",
+  .data,
+  .env
+)
 importFrom(stats,setNames)

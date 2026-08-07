@@ -5,6 +5,7 @@
 - fixed bug in which `fetch_table()` errored out when fetching the `Stock` or `Fishery` tables.
 - fixed potential bug in which `aeq_mortality()` function can accept a run_id for a run that is present in the database but has not been run in FRAM, and thus has no values in the mortality table. Now provides informative error message in this case.
 - fixed unintended behavior in which `terminal_info()` would return Coho TAAETRS table in a Chinook database if it was present. Argument `old_table_name` has been removed, function will strictly enforce using the appropriate table name for each table.
+- `calculate_stock_comp()` now correctly combines Chinook ages. This also fixes an apparent bug in which `plot_stock_comp()` produced bars out of order for Chinook.
 
 ## New features and improvements
 
@@ -35,7 +36,7 @@ provides the % CNR on the plot. Setting optional argument `split_cnr` to `TRUE` 
 - Added better testing framework for ad-hoc and integration tests, linked to external testing database directory. Only affects developers who want to run the unit tests -- see the "Contribute" section of Readme for details on setup. Convenience connection functions are included in `tests/testthat/helper-dir.R", but will only work if the testing database directory is set up. 
 - `fram_abort()` -- wrapper for cli_abort that adds custom error class, "framrsquared_error". Allows for better testthat behavior (expect_error() can confirm that the error comes from this package, not others)
 - Overhaul of internal usage functions. Functions designed for internal use that are not exported are now listed with `@keywords internal` to enable documentation of help Rds (e.g., `validate_numeric()`. Functions that were previously intended for internal use but were exported (e.g., `provide_table_names()`) are still exported but have been given `@keywords internal`. This means they are exposed to users and will continue to function in existing scripts/packages, but aren't included in lists of functions intended for casual users.
-- Unit tests and integration tests added to functions in the following files: "Integrity.R"
+- Unit tests and integration tests added for all relevant R functions(!!!).
 - removed `style_guide.R` and associated functions. These were written to check that files were written 
 using the right formating (`<-` for assignment, snake_case for variables). However, these tasks are better
 managed using styler tools.

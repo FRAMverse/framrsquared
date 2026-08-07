@@ -398,7 +398,7 @@ test_that("aeq_mortality() terminal fishery rows are not AEQ-scaled (integration
 
   # For terminal rows, the AEQ constant should have no effect, so the
   # raw mortality can be cross-checked against the un-scaled Mortality table
-  result_raw <- framrsquared:::fetch_table_(fram_db, "Mortality") |>
+  result_raw <- fetch_table_(fram_db, "Mortality") |>
     dplyr::filter(.data$run_id == .env$run_id) |>
     dplyr::select(-"primary_key") |>
     dplyr::arrange(.data$run_id, .data$fishery_id,

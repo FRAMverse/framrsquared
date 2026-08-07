@@ -19,9 +19,9 @@ Like \code{\link[framrosetta:label_stocks]{framrosetta::label_stocks()}}, but us
 the look-up table present in the framrosetta package. Primarily used in \code{fetch_table()}, robust to changes in base period.
 }
 \seealso{
-Other labelers: 
-\code{\link{label_fisheries_db}()},
-\code{\link{label_flags}()},
-\code{\link{label_timesteps_db}()}
+Other labelers:
+\code{\link[=label_fisheries_db]{label_fisheries_db()}},
+\code{\link[=label_flags]{label_flags()}},
+\code{\link[=label_timesteps_db]{label_timesteps_db()}}
 }
 \concept{labelers}

@@ -2,8 +2,7 @@
 % Please edit documentation in R/truns.R
 \name{truns_stocks}
 \alias{truns_stocks}
-\title{Returns a dataframe with stocks defined
-by the TRuns report driver}
+\title{Stocks defined by TRuns report driver}
 \usage{
 truns_stocks(fram_db)
 }
@@ -11,11 +10,10 @@ truns_stocks(fram_db)
 \item{fram_db}{FRAM database object}
 }
 \value{
-Tibble with stock ID and TRUN stock name (\code{stocck_name}).
+Tibble with stock ID and TRUN stock name (\code{stock_name}).
 }
 \description{
-Returns a dataframe with stocks defined
-by the TRuns report driver
+Returns a dataframe with stocks defined by the TRuns report driver. Only relevant for Coho databases.
 }
 \examples{
 \dontrun{truns <- truns_stocks(fram_db)}

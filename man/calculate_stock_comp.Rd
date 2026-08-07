@@ -29,7 +29,7 @@ Tibble identify run, age, fishery, timestep, stock, and marks tatus. Provides ca
 }
 \description{
 Produces a dataframe of stock composition for a given timestep and fishery. Low frequency stocks are
-grouped into geographic area.
+grouped into geographic area. For chinook, ages are combined.
 }
 \examples{
 \dontrun{

@@ -25,14 +25,14 @@ Outputs summary of comparisons to the console (or optionally to a text file inst
 \dontrun{fram_db |> compare_runs(c(55, 56))}
 }
 \seealso{
-Other comparisons: 
-\code{\link{compare_fishery_input_flags}()},
-\code{\link{compare_fishery_inputs}()},
-\code{\link{compare_inputs}()},
-\code{\link{compare_inputs_chart}()},
-\code{\link{compare_non_retention_inputs}()},
-\code{\link{compare_recruits}()},
-\code{\link{compare_sl_ratio}()},
-\code{\link{compare_stock_fishery_rate_scalers}()}
+Other comparisons:
+\code{\link[=compare_fishery_input_flags]{compare_fishery_input_flags()}},
+\code{\link[=compare_fishery_inputs]{compare_fishery_inputs()}},
+\code{\link[=compare_inputs]{compare_inputs()}},
+\code{\link[=compare_inputs_chart]{compare_inputs_chart()}},
+\code{\link[=compare_non_retention_inputs]{compare_non_retention_inputs()}},
+\code{\link[=compare_recruits]{compare_recruits()}},
+\code{\link[=compare_sl_ratio]{compare_sl_ratio()}},
+\code{\link[=compare_stock_fishery_rate_scalers]{compare_stock_fishery_rate_scalers()}}
 }
 \concept{comparisons}

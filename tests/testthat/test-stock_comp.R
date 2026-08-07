@@ -164,7 +164,7 @@ test_that("calculate_stock_comp() returns a tibble with expected columns", {
                                   group_threshold = 0)
 
   expect_s3_class(result, "tbl_df")
-  expect_true(all(c("run_id", "age", "fishery_id", "time_step",
+  expect_true(all(c("run_id", "fishery_id", "time_step",
                      "stock_long_name", "mark", "total_mort", "ts", "total")
                    %in% names(result)))
 })
@@ -263,4 +263,40 @@ test_that("plot_stock_comp() returns a ggplot object", {
                              group_threshold = 0)
 
   expect_s3_class(result, "ggplot")
+})
+
+# ## plot_stock_comp snapshots () --------------------------------------------------------
+
+test_that("plot_stock_comp() coho snapshot consistent", {
+  skip_if_not_installed("vdiffr")
+  skip_if_no_test_db()
+
+  fram_db <- connection_coho_pre(quiet = TRUE)
+  withr::defer(disconnect_fram_db(fram_db))
+
+  temp <- plot_stock_comp(fram_db,
+                            run_id          = 150,
+                            fishery_id      = 20,
+                            time_step       = 2,
+                            group_threshold = 0.01)
+  vdiffr::expect_doppelganger("plot_stock_comp() on Coho pre, run 140 fishery 20 ts 2",
+                              temp)
+
+})
+
+test_that("plot_stock_comp() chinook snapshot consistent", {
+  skip_if_no_test_db()
+
+  fram_db <- connection_chin_pre(quiet = TRUE)
+  withr::defer(disconnect_fram_db(fram_db))
+
+  temp <- plot_stock_comp(fram_db,
+                  run_id          = 140,
+                  fishery_id      = 20,
+                  time_step       = 3,
+                  group_threshold = 0.01)
+
+  vdiffr::expect_doppelganger(title = "plot_stock_comp() on chinook pre, run 140 fishery 20 ts 3",
+                              temp)
+
 })

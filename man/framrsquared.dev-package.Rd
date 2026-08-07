@@ -21,6 +21,7 @@ Useful links:
 
 Authors:
 \itemize{
+  \item Ty Garber \email{tyler.garber@dfw.wa.gov}
   \item Collin Edwards \email{collin.edwards@dfw.wa.gov} (\href{https://orcid.org/0000-0002-4937-5159}{ORCID})
 }
 

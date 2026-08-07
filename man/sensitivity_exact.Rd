@@ -70,7 +70,7 @@ disconnect_fram_db(fram_db)
 }
 }
 \seealso{
-Other Sensitivity: 
-\code{\link{sensitivity_scaled}()}
+Other Sensitivity:
+\code{\link[=sensitivity_scaled]{sensitivity_scaled()}}
 }
 \concept{Sensitivity}

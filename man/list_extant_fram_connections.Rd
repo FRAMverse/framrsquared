@@ -13,9 +13,9 @@ Invisibly returns the number of extant FRAM connections
 Provides information in the terminal, including the number of existing FRAM database connections created in this R session using framrsquared, as well as the files those connections connect to. Note that there may be multiple connections to the same file.
 }
 \seealso{
-Other connections: 
-\code{\link{connect_fram_db}()},
-\code{\link{disconnect_all_fram_connections}()},
-\code{\link{disconnect_fram_db}()}
+Other connections:
+\code{\link[=connect_fram_db]{connect_fram_db()}},
+\code{\link[=disconnect_all_fram_connections]{disconnect_all_fram_connections()}},
+\code{\link[=disconnect_fram_db]{disconnect_fram_db()}}
 }
 \concept{connections}

@@ -34,9 +34,9 @@ list_extant_fram_connections
 }
 }
 \seealso{
-Other connections: 
-\code{\link{connect_fram_db}()},
-\code{\link{disconnect_fram_db}()},
-\code{\link{list_extant_fram_connections}()}
+Other connections:
+\code{\link[=connect_fram_db]{connect_fram_db()}},
+\code{\link[=disconnect_fram_db]{disconnect_fram_db()}},
+\code{\link[=list_extant_fram_connections]{list_extant_fram_connections()}}
 }
 \concept{connections}

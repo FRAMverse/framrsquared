@@ -58,3 +58,5 @@ local-test/
 
 ## Snapshots
 tests/testthat/_snaps/
+
+ AGENTS.md

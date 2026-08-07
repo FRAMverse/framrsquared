@@ -19,14 +19,14 @@ Can be a very busy chart if not filtered down. Consider using a \verb{filter_*()
 \dontrun{fram_db |> compare_inputs(c(100, 101)) |> compare_inputs_chart()}
 }
 \seealso{
-Other comparisons: 
-\code{\link{compare_fishery_input_flags}()},
-\code{\link{compare_fishery_inputs}()},
-\code{\link{compare_inputs}()},
-\code{\link{compare_non_retention_inputs}()},
-\code{\link{compare_recruits}()},
-\code{\link{compare_runs}()},
-\code{\link{compare_sl_ratio}()},
-\code{\link{compare_stock_fishery_rate_scalers}()}
+Other comparisons:
+\code{\link[=compare_fishery_input_flags]{compare_fishery_input_flags()}},
+\code{\link[=compare_fishery_inputs]{compare_fishery_inputs()}},
+\code{\link[=compare_inputs]{compare_inputs()}},
+\code{\link[=compare_non_retention_inputs]{compare_non_retention_inputs()}},
+\code{\link[=compare_recruits]{compare_recruits()}},
+\code{\link[=compare_runs]{compare_runs()}},
+\code{\link[=compare_sl_ratio]{compare_sl_ratio()}},
+\code{\link[=compare_stock_fishery_rate_scalers]{compare_stock_fishery_rate_scalers()}}
 }
 \concept{comparisons}
