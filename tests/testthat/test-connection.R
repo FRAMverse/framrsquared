@@ -5,6 +5,9 @@
 # Copies from the empty.mdb fixture file, as there are not easy ways to make a
 # viable .mdb file from scratch. Make sure to remove the file!
 make_transfer_db_file <- function(species = "CHINOOK") {
+
+  testthat::skip_on_os(c("mac", "linux"))  # Access ODBC driver is Windows-only
+
   path <- tempfile(fileext = ".mdb")
   file.copy(test_path("fixtures", "empty.mdb"),
             path)

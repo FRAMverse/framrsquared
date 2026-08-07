@@ -1007,6 +1007,8 @@ test_that("compare_runs saves output to file when save_file is provided", {
   tmp <- tempfile()
   withr::defer(unlink(tmp)) ## remove on exit
 
+  skip_if_no_test_db()
+
   fram_db <- connection_chin_pre(quiet = TRUE)
   withr::defer(disconnect_fram_db(fram_db))
 
@@ -1021,6 +1023,8 @@ test_that("compare_runs saves output to file when save_file is provided", {
 test_that("compare_runs overwrites existing file", {
   tmp <- tempfile()
   withr::defer(unlink(tmp))
+
+  skip_if_no_test_db()
 
   fram_db <- connection_chin_pre(quiet = TRUE)
   withr::defer(disconnect_fram_db(fram_db))
