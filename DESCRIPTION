@@ -19,7 +19,7 @@ LazyData: true
 Imports: 
     cli,
     DBI,
-    dplyr,
+    dplyr (>= 1.1.0),
     framrosetta (>= 0.1.0),
     ggplot2,
     glue,

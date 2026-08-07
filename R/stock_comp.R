@@ -87,7 +87,14 @@ calculate_stock_comp <- function(fram_db, run_id, fishery_id, time_step, group_t
   validate_run_id(fram_db, run_id)
   validate_fishery_ids(fram_db, fishery_id, n = 1)
   validate_numeric(time_step)
-  if(! time_step %in% 1:5){
+
+  if(fram_db$fram_db_species == "CHINOOK"){
+    valid_time_steps = 1:4
+  }  else {
+    valid_time_steps = 1:5
+  }
+
+  if(! time_step %in% valid_time_steps){
     fram_abort("`time_step` must be a valid timestep (1-4 for Chinook, 1-5 for Coho)")
   }
   validate_numeric(group_threshold, 1)
