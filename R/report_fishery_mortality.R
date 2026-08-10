@@ -125,6 +125,8 @@ plot_stock_mortality <- function(fram_db, run_id, stock_id,
   validate_flag(msp)
   validate_flag(split_cnr)
 
+  rlang::check_installed("patchwork")
+
   # make sure run ids are integers
   if (length(stock_id)>1 & warn) {
     cli::cli_alert_warning("Plot may not be meaningful when combining stock (unless combined FRAM stocks have biological interpretation). Consider providing a single value for stock_id.")
@@ -328,6 +330,7 @@ plot_stock_mortality_time_step <- function(fram_db,
   validate_stock_ids(fram_db, stock_id)
   validate_flag(msp)
 
+  rlang::check_installed("patchwork")
 
   if (length(run_id)>1) {
     cli::cli_alert_warning("Plot is not meaningful when combining multiple runs. Provide a single run in run_id.")
