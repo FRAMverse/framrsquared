@@ -41,6 +41,7 @@ jobs:
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
+          dependencies: '"Depends", "Imports", "Suggests", "LinkingTo"'
           extra-packages: any::rcmdcheck
           needs: check
 
