@@ -277,14 +277,14 @@ test_that("fishery_mortality() output is ordered by run_id, fishery_id, age, tim
   db <- connection_chin_post(quiet = TRUE)
   withr::defer(disconnect_fram_db(db))
 
-  expect_snapshot(fishery_mortality(db))
+  expect_snapshot_value(fishery_mortality(db))
 
   suppressMessages(withr::deferred_run())
 
   db <- connection_coho_pre(quiet = TRUE)
   withr::defer(disconnect_fram_db(db))
 
-  expect_snapshot(fishery_mortality(db))
+  expect_snapshot_value(fishery_mortality(db))
 
 })
 

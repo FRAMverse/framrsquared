@@ -386,7 +386,7 @@ test_that("msf_mortalities_chin_() snapshot hasn't changed", {
   db <- connection_chin_pre(quiet = TRUE)
   withr::defer(disconnect_fram_db(db))
 
-  expect_snapshot(msf_mortalities_chinook_(db))
+  expect_snapshot_value(msf_mortalities_chinook_(db))
 
   suppressMessages(
     withr::deferred_run()
@@ -395,7 +395,7 @@ test_that("msf_mortalities_chin_() snapshot hasn't changed", {
   db <- connection_chin_post(quiet = TRUE)
   withr::defer(disconnect_fram_db(db))
 
-  expect_snapshot(msf_mortalities_chinook_(db))
+  expect_snapshot_value(msf_mortalities_chinook_(db))
 
 })
 
@@ -407,7 +407,7 @@ test_that("msf_encounters_chin_() snapshot hasn't changed", {
   db <- connection_chin_pre(quiet = TRUE)
   withr::defer(disconnect_fram_db(db))
 
-  expect_snapshot(msf_encounters_chinook_(db))
+  expect_snapshot_value(msf_encounters_chinook_(db))
 
   suppressMessages(
     withr::deferred_run()
@@ -416,7 +416,7 @@ test_that("msf_encounters_chin_() snapshot hasn't changed", {
   db <- connection_chin_post(quiet = TRUE)
   withr::defer(disconnect_fram_db(db))
 
-  expect_snapshot(msf_encounters_chinook_(db))
+  expect_snapshot_value(msf_encounters_chinook_(db))
 
 })
 
@@ -427,7 +427,7 @@ test_that("msf_landed_catch_chin_() snapshot hasn't changed", {
   db <- connection_chin_pre(quiet = TRUE)
   withr::defer(disconnect_fram_db(db))
 
-  expect_snapshot(msf_landed_catch_chinook_(db))
+  expect_snapshot_value(msf_landed_catch_chinook_(db))
 
   suppressMessages(
     withr::deferred_run()
@@ -436,6 +436,6 @@ test_that("msf_landed_catch_chin_() snapshot hasn't changed", {
   db <- connection_chin_post(quiet = TRUE)
   withr::defer(disconnect_fram_db(db))
 
-  expect_snapshot(msf_landed_catch_chinook_(db))
+  expect_snapshot_value(msf_landed_catch_chinook_(db))
 
 })

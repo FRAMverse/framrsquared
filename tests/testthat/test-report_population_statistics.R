@@ -224,7 +224,7 @@ test_that("population_statistics() output snapshot hasn't changed", {
   db <- connection_chin_pre(quiet = TRUE)
   withr::defer(disconnect_fram_db(db))
 
-  expect_snapshot(population_statistics(db))
+  expect_snapshot_value(population_statistics(db))
 
   suppressMessages(
     withr::deferred_run()
@@ -233,7 +233,7 @@ test_that("population_statistics() output snapshot hasn't changed", {
   db <- connection_coho_post(quiet = TRUE)
   withr::defer(disconnect_fram_db(db))
 
-  expect_snapshot(population_statistics(db))
+  expect_snapshot_value(population_statistics(db))
 
 })
 

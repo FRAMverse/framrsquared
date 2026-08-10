@@ -293,7 +293,7 @@ test_that("stock_mortality() snapshot hasn't changed (CHINOOK)", {
   db <- connection_chin_pre(quiet = TRUE)
   withr::defer(disconnect_fram_db(db))
 
-  expect_snapshot(stock_mortality(db))
+  expect_snapshot_value(stock_mortality(db))
 
   suppressMessages(
     withr::deferred_run()
@@ -302,7 +302,7 @@ test_that("stock_mortality() snapshot hasn't changed (CHINOOK)", {
   db <- connection_chin_post(quiet = TRUE)
   withr::defer(disconnect_fram_db(db))
 
-  expect_snapshot(stock_mortality(db, run_id = 34:36))
+  expect_snapshot_value(stock_mortality(db, run_id = 34:36))
 })
 
 test_that("stock_mortality() snapshot hasn't changed (COHO)", {
@@ -311,7 +311,7 @@ test_that("stock_mortality() snapshot hasn't changed (COHO)", {
   db <- connection_coho_pre(quiet = TRUE)
   withr::defer(disconnect_fram_db(db))
 
-  expect_snapshot(stock_mortality(db))
+  expect_snapshot_value(stock_mortality(db))
 
   suppressMessages(
     withr::deferred_run()
@@ -320,5 +320,5 @@ test_that("stock_mortality() snapshot hasn't changed (COHO)", {
   db <- connection_coho_post(quiet = TRUE)
   withr::defer(disconnect_fram_db(db))
 
-  expect_snapshot(stock_mortality(db))
+  expect_snapshot_value(stock_mortality(db))
 })
