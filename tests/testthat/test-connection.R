@@ -5,7 +5,6 @@
 # Copies from the empty.mdb fixture file, as there are not easy ways to make a
 # viable .mdb file from scratch. Make sure to remove the file!
 make_transfer_db_file <- function(species = "CHINOOK") {
-
   testthat::skip_on_os(c("mac", "linux"))  # Access ODBC driver is Windows-only
 
   path <- tempfile(fileext = ".mdb")
@@ -51,6 +50,8 @@ test_that("connect_fram_db() errors on an unsupported file extension", {
 })
 
 test_that("connect_fram_db() errors when read_only is not a logical", {
+  skip_if_no_db()
+
   db_path <- make_transfer_db_file()
   withr::defer(unlink(db_path))
 
@@ -59,6 +60,8 @@ test_that("connect_fram_db() errors when read_only is not a logical", {
 })
 
 test_that("connect_fram_db() errors when read_only has length > 1", {
+  skip_if_no_db()
+
   db_path <- make_transfer_db_file()
   withr::defer(unlink(db_path))
 
@@ -67,6 +70,8 @@ test_that("connect_fram_db() errors when read_only has length > 1", {
 })
 
 test_that("connect_fram_db() errors when quiet is not a logical", {
+  skip_if_no_db()
+
   db_path <- make_transfer_db_file()
   withr::defer(unlink(db_path))
 
@@ -78,6 +83,8 @@ test_that("connect_fram_db() errors when quiet is not a logical", {
 ## --- connect_fram_db(): successful connection --------------------------------
 
 test_that("connect_fram_db() returns a list with the required names", {
+  skip_if_no_db()
+
   db_path <- make_transfer_db_file()
   withr::defer(unlink(db_path))
 
@@ -93,6 +100,8 @@ test_that("connect_fram_db() returns a list with the required names", {
 })
 
 test_that("connect_fram_db() returns a valid DBI connection", {
+  skip_if_no_db()
+
   db_path <- make_transfer_db_file()
   withr::defer(unlink(db_path))
 
@@ -103,6 +112,8 @@ test_that("connect_fram_db() returns a valid DBI connection", {
 })
 
 test_that("connect_fram_db() detects the correct database type", {
+  skip_if_no_db()
+
   db_path <- make_transfer_db_file()
   withr::defer(unlink(db_path))
 
@@ -113,6 +124,8 @@ test_that("connect_fram_db() detects the correct database type", {
 })
 
 test_that("connect_fram_db() detects the correct species", {
+  skip_if_no_db()
+
   chin_path <- make_transfer_db_file(species = "CHINOOK")
   coho_path <- make_transfer_db_file(species = "COHO")
   withr::defer(unlink(c(chin_path, coho_path)))
@@ -127,6 +140,8 @@ test_that("connect_fram_db() detects the correct species", {
 })
 
 test_that("connect_fram_db() sets fram_db_medium to the file extension", {
+  skip_if_no_db()
+
   db_path <- make_transfer_db_file()
   withr::defer(unlink(db_path))
 
@@ -137,6 +152,8 @@ test_that("connect_fram_db() sets fram_db_medium to the file extension", {
 })
 
 test_that("connect_fram_db() passes read_only through to the returned object", {
+  skip_if_no_db()
+
   db_path <- make_transfer_db_file()
   withr::defer(unlink(db_path))
 
@@ -150,6 +167,8 @@ test_that("connect_fram_db() passes read_only through to the returned object", {
 })
 
 test_that("connect_fram_db() registers the connection in .fram_connections", {
+  skip_if_no_db()
+
   db_path <- make_transfer_db_file()
   withr::defer(unlink(db_path))
 
@@ -168,6 +187,8 @@ test_that("disconnect_fram_db() errors on an invalid fram_db", {
 })
 
 test_that("disconnect_fram_db() errors when quiet is not a logical", {
+  skip_if_no_db()
+
   db_path <- make_transfer_db_file()
   withr::defer(unlink(db_path))
 
@@ -178,6 +199,8 @@ test_that("disconnect_fram_db() errors when quiet is not a logical", {
 })
 
 test_that("disconnect_fram_db() invalidates the DBI connection", {
+  skip_if_no_db()
+
   db_path <- make_transfer_db_file()
   withr::defer(unlink(db_path))
 
@@ -188,6 +211,8 @@ test_that("disconnect_fram_db() invalidates the DBI connection", {
 })
 
 test_that("disconnect_fram_db() removes the connection from .fram_connections", {
+  skip_if_no_db()
+
   db_path <- make_transfer_db_file()
   withr::defer(unlink(db_path))
 
@@ -213,6 +238,8 @@ test_that("list_extant_fram_connections() returns the connection count invisibly
 })
 
 test_that("list_extant_fram_connections() returns the correct count", {
+  skip_if_no_db()
+
   disconnect_all_fram_connections(quiet = TRUE)
   db_path <- make_transfer_db_file()
   withr::defer({
@@ -231,6 +258,8 @@ test_that("list_extant_fram_connections() returns the correct count", {
 ## --- disconnect_all_fram_connections() ---------------------------------------
 
 test_that("disconnect_all_fram_connections() disconnects all active connections", {
+  skip_if_no_db()
+
   db_path <- make_transfer_db_file()
   withr::defer(unlink(db_path))
 
@@ -245,6 +274,8 @@ test_that("disconnect_all_fram_connections() disconnects all active connections"
 })
 
 test_that("disconnect_all_fram_connections() empties .fram_connections", {
+  skip_if_no_db()
+
   db_path <- make_transfer_db_file()
   withr::defer(unlink(db_path))
 
@@ -262,6 +293,8 @@ test_that("disconnect_all_fram_connections() runs without error when no connecti
 })
 
 test_that("disconnect_all_fram_connections() handles already-closed connections gracefully", {
+  skip_if_no_db()
+
   db_path <- make_transfer_db_file()
   withr::defer(unlink(db_path))
 

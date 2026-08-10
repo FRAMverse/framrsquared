@@ -48,6 +48,7 @@ Suggests:
     testthat (>= 3.0.0),
     rmarkdown,
     openxlsx2,
+    utf8,
     withr,
     vdiffr
 VignetteBuilder:

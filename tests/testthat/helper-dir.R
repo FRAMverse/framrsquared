@@ -1,4 +1,10 @@
-
+## testing for odbc functionality
+skip_if_no_db <- function() {
+  path <- tryCatch(make_transfer_db_file(), error = function(e) NULL)
+  if (is.null(path)) testthat::skip("No ODBC database connection available")
+  unlink(path)
+  invisible(NULL)
+}
 ## moved to `test_helpers.R` for more logical access
 
 skip_if_slow_tests_disabled <- function() {
