@@ -259,7 +259,8 @@ test_that("terminal_fisheries() returns correct results", {
 
   result <- terminal_fisheries(fram_db, suppress_label_warning = TRUE)
 
-  expect_snapshot_value(result)
+  expect_snapshot_value(result,
+                        style = "json2")
 })
 
 test_that("terminal_stocks() returns correct results", {
@@ -268,7 +269,8 @@ test_that("terminal_stocks() returns correct results", {
 
   result <- terminal_stocks(fram_db, suppress_label_warning = TRUE)
 
-  expect_snapshot_value(result)
+  expect_snapshot_value(result,
+                        style = "json2")
 })
 
 
@@ -290,7 +292,8 @@ test_that("terminal_info() provides consistent results on coho database", {
   withr::defer(disconnect_fram_db(fram_db))
 
   result <- terminal_info(fram_db, suppress_label_warning = TRUE)
-  expect_snapshot_value(result)
+  expect_snapshot_value(result,
+                        style = "json2")
 })
 
 test_that("terminal_stocks() provides consistent results on coho database", {
@@ -300,7 +303,8 @@ test_that("terminal_stocks() provides consistent results on coho database", {
   withr::defer(disconnect_fram_db(fram_db))
 
   result <- terminal_stocks(fram_db, suppress_label_warning = TRUE)
-  expect_snapshot_value(result)
+  expect_snapshot_value(result,
+                        style = "json2")
 })
 
 test_that("terminal_fisheries() provides consistent results on coho database", {
@@ -310,7 +314,8 @@ test_that("terminal_fisheries() provides consistent results on coho database", {
   withr::defer(disconnect_fram_db(fram_db))
 
   result <- terminal_fisheries(fram_db, suppress_label_warning = TRUE)
-  expect_snapshot_value(result)
+  expect_snapshot_value(result,
+                        style = "json2")
 })
 
 test_that("terminal_stocks() rows are a subset of terminal_info() rows", {

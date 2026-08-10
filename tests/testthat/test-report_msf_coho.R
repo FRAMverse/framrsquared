@@ -305,7 +305,8 @@ test_that("msf_mortalities_coho_() snapshot hasn't changed", {
   db <- connection_coho_pre(quiet = TRUE)
   withr::defer(disconnect_fram_db(db))
 
-  expect_snapshot_value(msf_mortalities_coho_(db))
+  expect_snapshot_value(msf_mortalities_coho_(db),
+                        style = "json2")
 
   suppressMessages(
     withr::deferred_run()
@@ -314,7 +315,8 @@ test_that("msf_mortalities_coho_() snapshot hasn't changed", {
   db <- connection_coho_post(quiet = TRUE)
   withr::defer(disconnect_fram_db(db))
 
-  expect_snapshot_value(msf_mortalities_coho_(db))
+  expect_snapshot_value(msf_mortalities_coho_(db),
+                        style = "json2")
 
 })
 
@@ -326,7 +328,8 @@ test_that("msf_encounters_coho_() snapshot hasn't changed", {
   db <- connection_coho_pre(quiet = TRUE)
   withr::defer(disconnect_fram_db(db))
 
-  expect_snapshot_value(msf_encounters_coho_(db))
+  expect_snapshot_value(msf_encounters_coho_(db),
+                        style = "json2")
 
   suppressMessages(
     withr::deferred_run()
@@ -335,7 +338,8 @@ test_that("msf_encounters_coho_() snapshot hasn't changed", {
   db <- connection_coho_post(quiet = TRUE)
   withr::defer(disconnect_fram_db(db))
 
-  expect_snapshot_value(msf_encounters_coho_(db))
+  expect_snapshot_value(msf_encounters_coho_(db),
+                        style = "json2")
 
 })
 
@@ -346,7 +350,8 @@ test_that("msf_landed_catch_coho_() snapshot hasn't changed", {
   db <- connection_coho_pre(quiet = TRUE)
   withr::defer(disconnect_fram_db(db))
 
-  expect_snapshot_value(msf_landed_catch_coho_(db))
+  expect_snapshot_value(msf_landed_catch_coho_(db),
+                        style = "json2")
 
   suppressMessages(
     withr::deferred_run()
@@ -355,6 +360,7 @@ test_that("msf_landed_catch_coho_() snapshot hasn't changed", {
   db <- connection_coho_post(quiet = TRUE)
   withr::defer(disconnect_fram_db(db))
 
-  expect_snapshot_value(msf_landed_catch_coho_(db))
+  expect_snapshot_value(msf_landed_catch_coho_(db),
+                        style = "json2")
 
 })

@@ -85,11 +85,13 @@ test_that("stock filters error for CHINOOK", {
 ## filter_sport() -----------------------------------------------------------
 
 test_that("filter_sport() returns expected IDs for CHINOOK", {
-  expect_snapshot_value(filter_sport(make_fishery_df("CHINOOK"), return_ids = TRUE))
+  expect_snapshot_value(filter_sport(make_fishery_df("CHINOOK"), return_ids = TRUE),
+                        style = "json2")
 })
 
 test_that("filter_sport() returns expected IDs for COHO", {
-  expect_snapshot_value(filter_sport(make_fishery_df("COHO"), return_ids = TRUE))
+  expect_snapshot_value(filter_sport(make_fishery_df("COHO"), return_ids = TRUE),
+                        style = "json2")
 })
 
 test_that("filter_sport() keeps only rows with matching fishery_id", {
@@ -104,11 +106,13 @@ test_that("filter_sport() keeps only rows with matching fishery_id", {
 ## filter_net() -----------------------------------------------------------
 
 test_that("filter_net() returns expected IDs for CHINOOK", {
-  expect_snapshot_value(filter_net(make_fishery_df("CHINOOK"), return_ids = TRUE))
+  expect_snapshot_value(filter_net(make_fishery_df("CHINOOK"), return_ids = TRUE),
+                        style = "json2")
 })
 
 test_that("filter_net() returns expected IDs for COHO", {
-  expect_snapshot_value(filter_net(make_fishery_df("COHO"), return_ids = TRUE))
+  expect_snapshot_value(filter_net(make_fishery_df("COHO"), return_ids = TRUE),
+                        style = "json2")
 })
 
 test_that("filter_net() keeps only rows with matching fishery_id", {
@@ -123,11 +127,13 @@ test_that("filter_net() keeps only rows with matching fishery_id", {
 ## filter_puget_sound() -----------------------------------------------------
 
 test_that("filter_puget_sound() returns expected IDs for CHINOOK", {
-  expect_snapshot_value(filter_puget_sound(make_fishery_df("CHINOOK"), return_ids = TRUE))
+  expect_snapshot_value(filter_puget_sound(make_fishery_df("CHINOOK"), return_ids = TRUE),
+                        style = "json2")
 })
 
 test_that("filter_puget_sound() returns expected IDs for COHO", {
-  expect_snapshot_value(filter_puget_sound(make_fishery_df("COHO"), return_ids = TRUE))
+  expect_snapshot_value(filter_puget_sound(make_fishery_df("COHO"), return_ids = TRUE),
+                        style = "json2")
 })
 
 test_that("filter_puget_sound() keeps only rows with matching fishery_id", {
@@ -142,11 +148,13 @@ test_that("filter_puget_sound() keeps only rows with matching fishery_id", {
 ## filter_wa() --------------------------------------------------------------
 
 test_that("filter_wa() returns expected IDs for CHINOOK", {
-  expect_snapshot_value(filter_wa(make_fishery_df("CHINOOK"), return_ids = TRUE))
+  expect_snapshot_value(filter_wa(make_fishery_df("CHINOOK"), return_ids = TRUE),
+                        style = "json2")
 })
 
 test_that("filter_wa() returns expected IDs for COHO", {
-  expect_snapshot_value(filter_wa(make_fishery_df("COHO"), return_ids = TRUE))
+  expect_snapshot_value(filter_wa(make_fishery_df("COHO"), return_ids = TRUE),
+                        style = "json2")
 })
 
 test_that("filter_wa() keeps only rows with matching fishery_id", {
@@ -161,11 +169,13 @@ test_that("filter_wa() keeps only rows with matching fishery_id", {
 ## filter_bc() --------------------------------------------------------------
 
 test_that("filter_bc() returns expected IDs for CHINOOK", {
-  expect_snapshot_value(filter_bc(make_fishery_df("CHINOOK"), return_ids = TRUE))
+  expect_snapshot_value(filter_bc(make_fishery_df("CHINOOK"), return_ids = TRUE),
+                        style = "json2")
 })
 
 test_that("filter_bc() returns expected IDs for COHO", {
-  expect_snapshot_value(filter_bc(make_fishery_df("COHO"), return_ids = TRUE))
+  expect_snapshot_value(filter_bc(make_fishery_df("COHO"), return_ids = TRUE),
+                        style = "json2")
 })
 
 test_that("filter_bc() keeps only rows with matching fishery_id", {
@@ -180,11 +190,13 @@ test_that("filter_bc() keeps only rows with matching fishery_id", {
 ## filter_ak() --------------------------------------------------------------
 
 test_that("filter_ak() returns expected IDs for CHINOOK", {
-  expect_snapshot_value(filter_ak(make_fishery_df("CHINOOK"), return_ids = TRUE))
+  expect_snapshot_value(filter_ak(make_fishery_df("CHINOOK"), return_ids = TRUE),
+                        style = "json2")
 })
 
 test_that("filter_ak() returns expected IDs for COHO", {
-  expect_snapshot_value(filter_ak(make_fishery_df("COHO"), return_ids = TRUE))
+  expect_snapshot_value(filter_ak(make_fishery_df("COHO"), return_ids = TRUE),
+                        style = "json2")
 })
 
 test_that("filter_ak() keeps only rows with matching fishery_id", {
@@ -199,11 +211,13 @@ test_that("filter_ak() keeps only rows with matching fishery_id", {
 ## filter_ca() --------------------------------------------------------------
 
 test_that("filter_ca() returns expected IDs for CHINOOK", {
-  expect_snapshot_value(filter_ca(make_fishery_df("CHINOOK"), return_ids = TRUE))
+  expect_snapshot_value(filter_ca(make_fishery_df("CHINOOK"), return_ids = TRUE),
+                        style = "json2")
 })
 
 test_that("filter_ca() returns expected IDs for COHO", {
-  expect_snapshot_value(filter_ca(make_fishery_df("COHO"), return_ids = TRUE))
+  expect_snapshot_value(filter_ca(make_fishery_df("COHO"), return_ids = TRUE),
+                        style = "json2")
 })
 
 test_that("filter_ca() keeps only rows with matching fishery_id", {
@@ -218,11 +232,13 @@ test_that("filter_ca() keeps only rows with matching fishery_id", {
 ## filter_or() --------------------------------------------------------------
 
 test_that("filter_or() returns expected IDs for CHINOOK", {
-  expect_snapshot_value(filter_or(make_fishery_df("CHINOOK"), return_ids = TRUE))
+  expect_snapshot_value(filter_or(make_fishery_df("CHINOOK"), return_ids = TRUE),
+                        style = "json2")
 })
 
 test_that("filter_or() returns expected IDs for COHO", {
-  expect_snapshot_value(filter_or(make_fishery_df("COHO"), return_ids = TRUE))
+  expect_snapshot_value(filter_or(make_fishery_df("COHO"), return_ids = TRUE),
+                        style = "json2")
 })
 
 test_that("filter_or() keeps only rows with matching fishery_id", {
@@ -237,11 +253,13 @@ test_that("filter_or() keeps only rows with matching fishery_id", {
 ## filter_coast() -----------------------------------------------------------
 
 test_that("filter_coast() returns expected IDs for CHINOOK", {
-  expect_snapshot_value(filter_coast(make_fishery_df("CHINOOK"), return_ids = TRUE))
+  expect_snapshot_value(filter_coast(make_fishery_df("CHINOOK"), return_ids = TRUE),
+                        style = "json2")
 })
 
 test_that("filter_coast() returns expected IDs for COHO", {
-  expect_snapshot_value(filter_coast(make_fishery_df("COHO"), return_ids = TRUE))
+  expect_snapshot_value(filter_coast(make_fishery_df("COHO"), return_ids = TRUE),
+                        style = "json2")
 })
 
 test_that("filter_coast() keeps only rows with matching fishery_id", {
@@ -256,11 +274,13 @@ test_that("filter_coast() keeps only rows with matching fishery_id", {
 ## filter_marine() ----------------------------------------------------------
 
 test_that("filter_marine() returns expected IDs for CHINOOK", {
-  expect_snapshot_value(filter_marine(make_fishery_df("CHINOOK"), return_ids = TRUE))
+  expect_snapshot_value(filter_marine(make_fishery_df("CHINOOK"), return_ids = TRUE),
+                        style = "json2")
 })
 
 test_that("filter_marine() returns expected IDs for COHO", {
-  expect_snapshot_value(filter_marine(make_fishery_df("COHO"), return_ids = TRUE))
+  expect_snapshot_value(filter_marine(make_fishery_df("COHO"), return_ids = TRUE),
+                        style = "json2")
 })
 
 test_that("filter_marine() keeps only rows with matching fishery_id", {
@@ -275,11 +295,13 @@ test_that("filter_marine() keeps only rows with matching fishery_id", {
 ## filter_commercial_wa_nt() ------------------------------------------------
 
 test_that("filter_commercial_wa_nt() returns expected IDs for CHINOOK", {
-  expect_snapshot_value(filter_commercial_wa_nt(make_fishery_df("CHINOOK"), return_ids = TRUE))
+  expect_snapshot_value(filter_commercial_wa_nt(make_fishery_df("CHINOOK"), return_ids = TRUE),
+                        style = "json2")
 })
 
 test_that("filter_commercial_wa_nt() returns expected IDs for COHO", {
-  expect_snapshot_value(filter_commercial_wa_nt(make_fishery_df("COHO"), return_ids = TRUE))
+  expect_snapshot_value(filter_commercial_wa_nt(make_fishery_df("COHO"), return_ids = TRUE),
+                        style = "json2")
 })
 
 test_that("filter_commercial_wa_nt() keeps only rows with matching fishery_id", {
@@ -294,7 +316,8 @@ test_that("filter_commercial_wa_nt() keeps only rows with matching fishery_id", 
 ## filter_stt() -------------------------------------------------------------
 
 test_that("filter_stt() returns expected IDs for COHO", {
-  expect_snapshot_value(filter_stt(make_fishery_df("COHO"), return_ids = TRUE))
+  expect_snapshot_value(filter_stt(make_fishery_df("COHO"), return_ids = TRUE),
+                        style = "json2")
 })
 
 test_that("filter_stt() keeps only rows with matching fishery_id", {
@@ -309,7 +332,8 @@ test_that("filter_stt() keeps only rows with matching fishery_id", {
 ## filter_stt_nt() ----------------------------------------------------------
 
 test_that("filter_stt_nt() returns expected IDs for COHO", {
-  expect_snapshot_value(filter_stt_nt(make_fishery_df("COHO"), return_ids = TRUE))
+  expect_snapshot_value(filter_stt_nt(make_fishery_df("COHO"), return_ids = TRUE),
+                        style = "json2")
 })
 
 test_that("filter_stt_nt() keeps only rows with matching fishery_id", {
@@ -324,7 +348,8 @@ test_that("filter_stt_nt() keeps only rows with matching fishery_id", {
 ## filter_hatchery() --------------------------------------------------------
 
 test_that("filter_hatchery() returns expected IDs for COHO", {
-  expect_snapshot_value(filter_hatchery(make_stock_df("COHO"), return_ids = TRUE))
+  expect_snapshot_value(filter_hatchery(make_stock_df("COHO"), return_ids = TRUE),
+                        style = "json2")
 })
 
 test_that("filter_hatchery() keeps only rows with matching stock_id", {
@@ -339,7 +364,8 @@ test_that("filter_hatchery() keeps only rows with matching stock_id", {
 ## filter_wild() ------------------------------------------------------------
 
 test_that("filter_wild() returns expected IDs for COHO", {
-  expect_snapshot_value(filter_wild(make_stock_df("COHO"), return_ids = TRUE))
+  expect_snapshot_value(filter_wild(make_stock_df("COHO"), return_ids = TRUE),
+                        style = "json2")
 })
 
 test_that("filter_wild() keeps only rows with matching stock_id", {
@@ -354,7 +380,8 @@ test_that("filter_wild() keeps only rows with matching stock_id", {
 ## filter_mixed() -----------------------------------------------------------
 
 test_that("filter_mixed() returns expected IDs for COHO", {
-  expect_snapshot_value(filter_mixed(make_stock_df("COHO"), return_ids = TRUE))
+  expect_snapshot_value(filter_mixed(make_stock_df("COHO"), return_ids = TRUE),
+                        style = "json2")
 })
 
 test_that("filter_mixed() keeps only rows with matching stock_id", {

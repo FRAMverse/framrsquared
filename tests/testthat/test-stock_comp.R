@@ -285,6 +285,7 @@ test_that("plot_stock_comp() coho snapshot consistent", {
 })
 
 test_that("plot_stock_comp() chinook snapshot consistent", {
+  skip_if_not_installed("vdiffr")
   skip_if_no_test_db()
 
   fram_db <- connection_chin_pre(quiet = TRUE)
