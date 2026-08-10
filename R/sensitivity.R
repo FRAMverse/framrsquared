@@ -145,7 +145,7 @@ sensitivity_scaled <- function(fram_db,
   if (save_log) {
     db_path <- dirname(fram_db$fram_db_connection@info$dbname)
     log_name <- get_unique_filename(paste0(db_path, "/sensitivity_log - ", label, ".csv"))
-    readr::write_csv(df, file = log_name)
+    utils::write.csv(df, file = log_name, row.names = FALSE)
     cli::cli_alert_success("Log for run: {log_name}.")
   }
   cli::cli_alert_success("Successfully generated sensitivity analyses!")
@@ -297,7 +297,7 @@ sensitivity_exact <- function(fram_db,
   if (save_log) {
     db_path <- dirname(fram_db$fram_db_connection@info$dbname)
     log_name <- get_unique_filename(paste0(db_path, "/sensitivity_log - ", label, ".csv"))
-    readr::write_csv(replace_df, file = log_name)
+    utils::write.csv(replace_df, file = log_name, row.names = FALSE)
     cli::cli_alert_success("Log for run: {log_name}.")
   }
 }

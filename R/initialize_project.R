@@ -44,6 +44,7 @@ initialize_project <-  function(
     template_overwrite = TRUE,
     color = "coffee",
     quiet = TRUE) {
+
   validate_character(folders)
   validate_flag(quarto)
   organization  <- rlang::arg_match(organization)
@@ -51,6 +52,9 @@ initialize_project <-  function(
   validate_flag(template_overwrite)
   validate_character(color, n = 1)
   validate_flag(quiet)
+
+  rlang::check_installed("here")
+  rlang::check_installed("renv")
 
   purrr::walk(folders,
               \(folder) dir.create(here::here(glue::glue("{folder}")), recursive = TRUE))

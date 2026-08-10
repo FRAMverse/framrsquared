@@ -23,15 +23,11 @@ Imports:
     framrosetta (>= 0.1.0),
     ggplot2,
     glue,
-    here,
     janitor,
     lifecycle,
     lubridate,
     odbc,
-    patchwork,
     purrr,
-    readr,
-    renv,
     rlang,
     RSQLite,
     scales,
@@ -44,12 +40,15 @@ Depends:
     R (>= 4.1)
 Suggests: 
     evaluate,
+    here,
     knitr,
-    testthat (>= 3.0.0),
-    rmarkdown,
     openxlsx2,
-    withr,
-    vdiffr
+    patchwork,
+    renv,
+    rmarkdown,
+    testthat (>= 3.0.0),
+    vdiffr,
+    withr
 VignetteBuilder:
   knitr
 Config/testthat/edition: 3
