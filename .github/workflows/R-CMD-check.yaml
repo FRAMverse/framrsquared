@@ -41,12 +41,31 @@ jobs:
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
+          cache-version: 2
           dependencies: '"all"'
           extra-packages: |
             any::utf8
             any::pillar
             any::rcmdcheck
           needs: check
+
+      - name: Diagnose R libraries
+        shell: Rscript {0}
+        run: |
+          cat(".libPaths():\n")
+          print(.libPaths())
+
+          cat("\nutf8 installed:\n")
+          print(requireNamespace("utf8", quietly = FALSE))
+          print(find.package("utf8"))
+
+          cat("\npillar installed:\n")
+          print(requireNamespace("pillar", quietly = FALSE))
+          print(find.package("pillar"))
+
+          cat("\nVersions:\n")
+          print(packageVersion("utf8"))
+          print(packageVersion("pillar"))
 
       - uses: r-lib/actions/check-r-package@v2
         with:
