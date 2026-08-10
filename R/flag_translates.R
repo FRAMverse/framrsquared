@@ -21,7 +21,7 @@ translate_nr_flag = function(vec) {
     fram_abort("input includes flags not matching non-retention flags")
   }
 
-  dplyr::case_match(
+  dplyr::recode_values(
     vec,
     0 ~ "ZERO",
     1 ~ "Computed CNR",
@@ -54,7 +54,7 @@ translate_scalers_flag = function(vec) {
     fram_abort("input includes flags not matching non-retention flags")
   }
 
-  dplyr::case_match(
+  dplyr::recode_values(
     vec,
     0 ~ "ZERO",
     1 ~ "Fishery Scaler",

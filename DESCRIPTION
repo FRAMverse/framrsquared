@@ -19,7 +19,7 @@ LazyData: true
 Imports: 
     cli,
     DBI,
-    dplyr (>= 1.1.0),
+    dplyr (>= 1.2.0),
     framrosetta (>= 0.1.0),
     ggplot2,
     glue,
@@ -49,6 +49,7 @@ Suggests:
     rmarkdown,
     openxlsx2,
     utf8,
+    pillar,
     withr,
     vdiffr
 VignetteBuilder:
