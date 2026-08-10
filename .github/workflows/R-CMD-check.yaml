@@ -42,7 +42,10 @@ jobs:
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           dependencies: '"all"'
-          extra-packages: any::rcmdcheck
+          extra-packages: |
+            any::utf8
+            any::pillar
+            any::rcmdcheck
           needs: check
 
       - uses: r-lib/actions/check-r-package@v2
