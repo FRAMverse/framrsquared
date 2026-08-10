@@ -413,10 +413,12 @@ stock_age_checker = function(table_name,
   ## internal use only. Note that it generates the complete combo of stock x age combinatoins based on the min_age and max_age from the base_period table.
   df = df |>
     dplyr::filter(.data$stock_id > old_stockcount) |>
-    tidyr::unite("stock_age", "stock_id":"age", sep = " age ")
+    tidyr::unite(col = "stock_age",
+                 "stock_id":"age", sep = " age ")
   df_comp = tidyr::expand_grid(stock_id = (old_stockcount + 1):NumStk,
                                age = min_age:max_age) |>
-    tidyr::unite("stock_age", "stock_id":"age", sep = " age ")
+    tidyr::unite(col = "stock_age",
+                 "stock_id":"age", sep = " age ")
   if (all(df$stock_age %in% df_comp$stock_age) &
       all(df_comp$stock_age %in% df$stock_age)) {
     ## not missing anything

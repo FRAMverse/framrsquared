@@ -2,8 +2,7 @@
 % Please edit documentation in R/truns.R
 \name{truns_fisheries}
 \alias{truns_fisheries}
-\title{Returns a dataframe with fisheries defined
-by the TRuns report driver}
+\title{Fisheries defined by TRuns report driver}
 \usage{
 truns_fisheries(fram_db)
 }
@@ -14,8 +13,7 @@ truns_fisheries(fram_db)
 Tibble with fishery ID and TRUN stock name (\code{stock_name}).
 }
 \description{
-Returns a dataframe with fisheries defined
-by the TRuns report driver
+Returns a dataframe with fisheries defined by the TRuns report driver. Only relevant for Coho databases.
 }
 \examples{
 \dontrun{truns <- truns_fisheries(fram_db)}

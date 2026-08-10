@@ -63,6 +63,7 @@ export(fram_database_type)
 export(get_fishery_ids)
 export(get_run_ids)
 export(get_stock_ids)
+export(get_tables)
 export(initialize_project)
 export(label_fisheries)
 export(label_fisheries_db)
@@ -109,10 +110,14 @@ export(translate_nr_flag)
 export(translate_scalers_flag)
 export(truns_fisheries)
 export(truns_stocks)
-importFrom(framrosetta,label_fisheries)
-importFrom(framrosetta,label_stocks)
+importFrom(framrosetta,
+  label_fisheries,
+  label_stocks
+)
 importFrom(lifecycle,deprecated)
-importFrom(rlang,":=")
-importFrom(rlang,.data)
-importFrom(rlang,.env)
+importFrom(rlang,
+  ":=",
+  .data,
+  .env
+)
 importFrom(stats,setNames)

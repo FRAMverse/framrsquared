@@ -28,8 +28,8 @@ Currently only works on Coho datasets. \code{.data} must have a \code{stock_id} 
 framrosetta::stock_coho_fram |> filter_wild()
 }
 \seealso{
-Other stock_filters: 
-\code{\link{filter_hatchery}()},
-\code{\link{filter_mixed}()}
+Other stock_filters:
+\code{\link[=filter_hatchery]{filter_hatchery()}},
+\code{\link[=filter_mixed]{filter_mixed()}}
 }
 \concept{stock_filters}

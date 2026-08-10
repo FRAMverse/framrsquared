@@ -19,7 +19,7 @@ LazyData: true
 Imports: 
     cli,
     DBI,
-    dplyr,
+    dplyr (>= 1.2.0),
     framrosetta (>= 0.1.0),
     ggplot2,
     glue,
@@ -40,16 +40,16 @@ Imports:
     tibble,
     tidyr,
     tools
-RoxygenNote: 7.3.2
 Depends: 
     R (>= 4.1)
 Suggests: 
+    evaluate,
     knitr,
     testthat (>= 3.0.0),
     rmarkdown,
-    forcats,
     openxlsx2,
-    withr
+    withr,
+    vdiffr
 VignetteBuilder:
   knitr
 Config/testthat/edition: 3
@@ -58,3 +58,4 @@ Remotes:
     FRAMverse/framrosetta
 URL: https://framverse.github.io/framrsquared/
 BugReports: https://github.com/FRAMverse/framrsquared
+Config/roxygen2/version: 8.1.0

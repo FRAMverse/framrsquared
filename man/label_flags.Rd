@@ -26,9 +26,9 @@ label_flags()
 }
 }
 \seealso{
-Other labelers: 
-\code{\link{label_fisheries_db}()},
-\code{\link{label_stocks_db}()},
-\code{\link{label_timesteps_db}()}
+Other labelers:
+\code{\link[=label_fisheries_db]{label_fisheries_db()}},
+\code{\link[=label_stocks_db]{label_stocks_db()}},
+\code{\link[=label_timesteps_db]{label_timesteps_db()}}
 }
 \concept{labelers}

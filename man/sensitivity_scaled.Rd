@@ -72,7 +72,7 @@ disconnect_fram_db(fram_db)
 }
 }
 \seealso{
-Other Sensitivity: 
-\code{\link{sensitivity_exact}()}
+Other Sensitivity:
+\code{\link[=sensitivity_exact]{sensitivity_exact()}}
 }
 \concept{Sensitivity}

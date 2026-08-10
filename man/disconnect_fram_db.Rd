@@ -19,9 +19,9 @@ Safely disconnect from FRAM database
 
 }
 \seealso{
-Other connections: 
-\code{\link{connect_fram_db}()},
-\code{\link{disconnect_all_fram_connections}()},
-\code{\link{list_extant_fram_connections}()}
+Other connections:
+\code{\link[=connect_fram_db]{connect_fram_db()}},
+\code{\link[=disconnect_all_fram_connections]{disconnect_all_fram_connections()}},
+\code{\link[=list_extant_fram_connections]{list_extant_fram_connections()}}
 }
 \concept{connections}

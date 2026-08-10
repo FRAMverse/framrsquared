@@ -23,14 +23,14 @@ Compares the non retention inputs of two runs
 \dontrun{fram_db |> compare_non_retention_inputs(c(55, 56))}
 }
 \seealso{
-Other comparisons: 
-\code{\link{compare_fishery_input_flags}()},
-\code{\link{compare_fishery_inputs}()},
-\code{\link{compare_inputs}()},
-\code{\link{compare_inputs_chart}()},
-\code{\link{compare_recruits}()},
-\code{\link{compare_runs}()},
-\code{\link{compare_sl_ratio}()},
-\code{\link{compare_stock_fishery_rate_scalers}()}
+Other comparisons:
+\code{\link[=compare_fishery_input_flags]{compare_fishery_input_flags()}},
+\code{\link[=compare_fishery_inputs]{compare_fishery_inputs()}},
+\code{\link[=compare_inputs]{compare_inputs()}},
+\code{\link[=compare_inputs_chart]{compare_inputs_chart()}},
+\code{\link[=compare_recruits]{compare_recruits()}},
+\code{\link[=compare_runs]{compare_runs()}},
+\code{\link[=compare_sl_ratio]{compare_sl_ratio()}},
+\code{\link[=compare_stock_fishery_rate_scalers]{compare_stock_fishery_rate_scalers()}}
 }
 \concept{comparisons}

@@ -2,7 +2,8 @@
 % Please edit documentation in R/add_stock_check.R
 \name{addstock_check}
 \alias{addstock_check}
-\title{Check FRAM database after adding new stock}
+\title{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+Check FRAM database after adding new stock}
 \usage{
 addstock_check(
   file_name = NULL,

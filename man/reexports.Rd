@@ -12,6 +12,6 @@ These objects are imported from other packages. Follow the links
 below to see their documentation.
 
 \describe{
-  \item{framrosetta}{\code{\link[framrosetta]{label_fisheries}}, \code{\link[framrosetta]{label_stocks}}}
+  \item{framrosetta}{\code{\link[framrosetta:label_fisheries]{label_fisheries()}}, \code{\link[framrosetta:label_stocks]{label_stocks()}}}
 }}
 

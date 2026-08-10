@@ -27,8 +27,8 @@ create_soncc_pasteable(fram_db, run_id = 152, filename = here("soncc_copy_ready.
 }
 }
 \seealso{
-Other soncc: 
-\code{\link{calculate_soncc}()},
-\code{\link{format_soncc_pasteable}()}
+Other soncc:
+\code{\link[=calculate_soncc]{calculate_soncc()}},
+\code{\link[=format_soncc_pasteable]{format_soncc_pasteable()}}
 }
 \concept{soncc}

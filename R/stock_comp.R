@@ -22,12 +22,33 @@
 #' }
 
 plot_stock_comp <- function(fram_db, run_id, fishery_id, time_step, group_threshold = .01) {
+  # Get fishery name
+  base_version_number <- fetch_table_(fram_db = fram_db,
+                                      table_name = "RunID") |>
+    dplyr::filter(.data$run_id == .env$run_id) |>
+    dplyr::pull("base_period_id")
+
+  fishery_version <- fetch_table_(fram_db = fram_db,
+                                  table_name = "BaseID") |>
+    dplyr::filter(.data$base_period_id == .env$base_version_number) |>
+    dplyr::pull("fishery_version")
+
+  fishery_name <- fetch_table_(fram_db = fram_db,
+                               table_name = "Fishery") |>
+    dplyr::filter(.data$version_number == .env$fishery_version,
+                  .data$fishery_id == .env$fishery_id) |>
+    dplyr::pull("fishery_title")
+
+
+
   # plot
   calculate_stock_comp(fram_db = fram_db,
                        run_id = run_id, fishery_id = fishery_id,
                        time_step = time_step,
                        group_threshold = group_threshold) |>
-    ggplot2::ggplot(ggplot2::aes(.data$ts, forcats::fct_reorder(.data$stock_long_name, .data$total), fill = .data$mark)) +
+    ggplot2::ggplot(ggplot2::aes(.data$ts,
+                                 stats::reorder(.data$stock_long_name, .data$total),
+                                 fill = .data$mark)) +
     ggplot2::geom_col(alpha = .7) +
     ggplot2::scale_x_continuous(labels = scales::percent) +
     ggplot2::labs(
@@ -42,7 +63,7 @@ plot_stock_comp <- function(fram_db, run_id, fishery_id, time_step, group_thresh
 #' Plot stock composition
 #'
 #' Produces a dataframe of stock composition for a given timestep and fishery. Low frequency stocks are
-#' grouped into geographic area.
+#' grouped into geographic area. For chinook, ages are combined.
 #'
 #' @param fram_db Fram database object
 #' @param run_id numeric, RunID
@@ -64,17 +85,20 @@ plot_stock_comp <- function(fram_db, run_id, fishery_id, time_step, group_thresh
 calculate_stock_comp <- function(fram_db, run_id, fishery_id, time_step, group_threshold = .01){
   validate_fram_db(fram_db)
   validate_run_id(fram_db, run_id)
-  validate_fishery_ids(fram_db, fishery_id)
+  validate_fishery_ids(fram_db, fishery_id, n = 1)
   validate_numeric(time_step)
-  if(! time_step %in% 1:5){
+
+  if(fram_db$fram_db_species == "CHINOOK"){
+    valid_time_steps = 1:4
+  }  else {
+    valid_time_steps = 1:5
+  }
+
+  if(! time_step %in% valid_time_steps){
     fram_abort("`time_step` must be a valid timestep (1-4 for Chinook, 1-5 for Coho)")
   }
   validate_numeric(group_threshold, 1)
 
-
-  if(!rlang::is_installed("forcats")) {
-    fram_abort('Please install the {.pkg forcats} package to use this funciton.')
-  }
   # pull data
   mort <- fram_db |>
     fetch_table_('Mortality') |> dplyr::filter(.data$run_id == .env$run_id,
@@ -103,14 +127,22 @@ calculate_stock_comp <- function(fram_db, run_id, fishery_id, time_step, group_t
     ) |>
     dplyr::arrange(-.data$ts) |>
     dplyr::inner_join(coho_stock_comp_lut, by = 'stock_id') |>
-    dplyr::mutate(
-      stock_long_name = dplyr::if_else(.data$ts < .env$group_threshold, .data$stock_group, .data$stock_long_name)
-    ) |>
-    dplyr::group_by(.data$run_id, .data$age, .data$fishery_id, .data$time_step, .data$stock_long_name, .data$mark) |>
+    dplyr::group_by(.data$run_id, .data$fishery_id, .data$time_step,
+                    .data$stock_long_name, .data$mark,
+                    .data$stock_group) |>
     dplyr::summarize(
       dplyr::across(c("total_mort", "ts"), sum), .groups = 'drop'
     ) |>
-    dplyr::group_by(.data$run_id, .data$age, .data$fishery_id, .data$time_step, .data$stock_long_name) |>
-    dplyr::mutate(total = sum(.data$ts)) |>
-    dplyr::ungroup()
+    dplyr::group_by() |>
+    dplyr::mutate(total = sum(.data$ts),
+                  .by = c("run_id", "fishery_id", "time_step", "stock_long_name", "stock_group")) |>
+    dplyr::ungroup() |>
+    dplyr::mutate(
+      stock_long_name = dplyr::if_else(.data$total < .env$group_threshold, .data$stock_group, .data$stock_long_name)
+    ) |>
+    ## recalc with stock groups as needed.
+    dplyr::summarize(dplyr::across(c("total_mort", "ts"), sum),
+                     .by = c("run_id", "fishery_id", "time_step", "stock_long_name", "mark")) |>
+    dplyr::mutate(total = sum(.data$ts),
+                  .by = c("run_id", "fishery_id", "time_step", "stock_long_name"))
 }

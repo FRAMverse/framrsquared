@@ -20,9 +20,9 @@ the look-up table present in the framrosetta package. Primarily used in \code{fe
 in base period.
 }
 \seealso{
-Other labelers: 
-\code{\link{label_flags}()},
-\code{\link{label_stocks_db}()},
-\code{\link{label_timesteps_db}()}
+Other labelers:
+\code{\link[=label_flags]{label_flags()}},
+\code{\link[=label_stocks_db]{label_stocks_db()}},
+\code{\link[=label_timesteps_db]{label_timesteps_db()}}
 }
 \concept{labelers}

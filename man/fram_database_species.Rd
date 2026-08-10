@@ -8,8 +8,6 @@ fram_database_species(con, warn = FALSE)
 }
 \arguments{
 \item{con}{Connection to FRAM database}
-
-\item{warn}{Should the user get an error message when multiple species are present?}
 }
 \description{
 Identifies the FRAM database species focus - Chinook or Coho

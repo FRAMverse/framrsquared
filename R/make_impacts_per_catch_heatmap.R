@@ -46,8 +46,19 @@ plot_impacts_per_catch_heatmap <- function(fram_db,
                                            verbose = TRUE,
                                            warn = TRUE) {
   validate_fram_db(fram_db)
-  validate_run_id(fram_db, run_id)
+  validate_run_id(fram_db, run_id, n = 1)
   validate_stock_ids(fram_db, stock_id)
+
+  if (!is.null(filters_list)) {
+    if (!is.list(filters_list)) {
+      fram_abort("`filters_list` must be NULL or a list")
+    }
+    if (!all(sapply(filters_list, is.function))) {
+      fram_abort("All elements in `filters_list` must be functions")
+    }
+  }
+
+
   if(!is.null(filter_out)){validate_fishery_ids(fram_db, filter_out)}
   validate_numeric(digits_round, n = 1)
   validate_numeric(outer_text_size, n = 1)
@@ -122,8 +133,8 @@ plot_impacts_per_catch_heatmap <- function(fram_db,
       ## stock mortality combines msf and NS values.
       dplyr::group_by(.data$run_id, .data$time_step, .data$fishery_id) |>
       dplyr::summarize(
-        dplyr::across(c(.data$landed_catch:.data$drop_off,
-                        .data$msf_landed_catch:.data$msf_drop_off), \(x) sum(x)),
+        dplyr::across(c("landed_catch":"drop_off",
+                        "msf_landed_catch":"msf_drop_off"), \(x) sum(x)),
         .groups='drop') |>
       dplyr::mutate(total_mortality =
                       .data$landed_catch +

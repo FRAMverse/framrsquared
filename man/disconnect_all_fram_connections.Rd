@@ -4,7 +4,10 @@
 \alias{disconnect_all_fram_connections}
 \title{Clear all connections}
 \usage{
-disconnect_all_fram_connections()
+disconnect_all_fram_connections(quiet = FALSE)
+}
+\arguments{
+\item{quiet}{Suppress messages? Primarily useful when writing test functions. Logical, defaults to FALSE.}
 }
 \value{
 nothing
@@ -31,9 +34,9 @@ list_extant_fram_connections
 }
 }
 \seealso{
-Other connections: 
-\code{\link{connect_fram_db}()},
-\code{\link{disconnect_fram_db}()},
-\code{\link{list_extant_fram_connections}()}
+Other connections:
+\code{\link[=connect_fram_db]{connect_fram_db()}},
+\code{\link[=disconnect_fram_db]{disconnect_fram_db()}},
+\code{\link[=list_extant_fram_connections]{list_extant_fram_connections()}}
 }
 \concept{connections}

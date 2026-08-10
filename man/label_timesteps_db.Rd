@@ -18,9 +18,9 @@ label_timesteps_db(.data, fram_db)
 Label timesteps based on FRAM database
 }
 \seealso{
-Other labelers: 
-\code{\link{label_fisheries_db}()},
-\code{\link{label_flags}()},
-\code{\link{label_stocks_db}()}
+Other labelers:
+\code{\link[=label_fisheries_db]{label_fisheries_db()}},
+\code{\link[=label_flags]{label_flags()}},
+\code{\link[=label_stocks_db]{label_stocks_db()}}
 }
 \concept{labelers}

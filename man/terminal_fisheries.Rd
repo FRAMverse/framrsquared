@@ -5,7 +5,7 @@
 \title{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
 List terminal stock information}
 \usage{
-terminal_fisheries(fram_db, species = NULL)
+terminal_fisheries(fram_db, species = NULL, suppress_label_warning = FALSE)
 }
 \arguments{
 \item{fram_db}{Fram database object}
@@ -13,6 +13,8 @@ terminal_fisheries(fram_db, species = NULL)
 \item{species}{"COHO" or "CHINOOK". Optional, defaults to the database species. Provide this only
 if fram_db connects to a database with both Chinook and Coho information. And try to avoid that
 -- those databases are sketchy to work with.}
+
+\item{suppress_label_warning}{Suppress warning about fishery and stock labels in the absence of a "stock_version" handling in the TAAETRS tables? Primarily here to silence that message during unit testing. Logical, defaults to FALSE.}
 }
 \value{
 Tibble of taa fisheries

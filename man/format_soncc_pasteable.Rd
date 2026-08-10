@@ -20,9 +20,9 @@ Takes the \verb{$er_breakdown} output of \code{\link[=calculate_soncc]{calculate
 designed for seamless copy-pasting into the SONCC calculator workbook. Users will typically want to use \code{\link[=create_soncc_pasteable]{create_soncc_pasteable()}} instead.
 }
 \seealso{
-Other soncc: 
-\code{\link{calculate_soncc}()},
-\code{\link{create_soncc_pasteable}()}
+Other soncc:
+\code{\link[=calculate_soncc]{calculate_soncc()}},
+\code{\link[=create_soncc_pasteable]{create_soncc_pasteable()}}
 }
 \concept{soncc}
 \keyword{internal}

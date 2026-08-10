@@ -1,8 +1,10 @@
-#' Returns a dataframe with stocks defined
-#' by the TRuns report driver
+#' Stocks defined by TRuns report driver
+#'
+#' Returns a dataframe with stocks defined by the TRuns report driver. Only relevant for Coho databases.
+#'
 #' @param fram_db FRAM database object
 #'
-#' @returns Tibble with stock ID and TRUN stock name (`stocck_name`).
+#' @returns Tibble with stock ID and TRUN stock name (`stock_name`).
 #'
 #' @export
 #'
@@ -17,12 +19,14 @@ truns_stocks <- function(fram_db){
     fetch_table_('ReportDriver') |>
     dplyr::filter(.data$driver_name == 'PSCTRuns.DRV') |>
     dplyr::select(stock_id = "option1", stock_name = "option5") |>
-    tidyr::separate_longer_delim(.data$stock_id, ',') |>
-    dplyr::mutate(dplyr::across(.data$stock_id, as.numeric))
+    tidyr::separate_longer_delim("stock_id", ',') |>
+    dplyr::mutate(dplyr::across("stock_id", as.numeric))
 }
 
-#' Returns a dataframe with fisheries defined
-#' by the TRuns report driver
+#' Fisheries defined by TRuns report driver
+#'
+#' Returns a dataframe with fisheries defined by the TRuns report driver. Only relevant for Coho databases.
+#'
 #' @param fram_db FRAM database object
 #'
 #' @returns Tibble with fishery ID and TRUN stock name (`stock_name`).
@@ -40,7 +44,7 @@ truns_fisheries <- function(fram_db){
     fetch_table_('ReportDriver') |>
     dplyr::filter(.data$driver_name == 'PSCTRuns.DRV') |>
     dplyr::select(fishery_id = "option2", stock_name = "option5") |>
-    tidyr::separate_longer_delim(.data$fishery_id, ',') |>
-    dplyr::mutate(dplyr::across(.data$fishery_id, as.numeric))
+    tidyr::separate_longer_delim("fishery_id", ',') |>
+    dplyr::mutate(dplyr::across("fishery_id", as.numeric))
 }
 

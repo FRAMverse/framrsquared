@@ -4,11 +4,14 @@
 - fixed bug in which `copy_runs()` did not correctly copy entries of "SLRatio" table for Chinook. 
 - fixed bug in which `fetch_table()` errored out when fetching the `Stock` or `Fishery` tables.
 - fixed potential bug in which `aeq_mortality()` function can accept a run_id for a run that is present in the database but has not been run in FRAM, and thus has no values in the mortality table. Now provides informative error message in this case.
+- fixed unintended behavior in which `terminal_info()` would return Coho TAAETRS table in a Chinook database if it was present. Argument `old_table_name` has been removed, function will strictly enforce using the appropriate table name for each table.
+- `calculate_stock_comp()` now correctly combines Chinook ages. This also fixes an apparent bug in which `plot_stock_comp()` produced bars out of order for Chinook.
 
 ## New features and improvements
 
 - added functions to handle SONCC calculations for STT.
 - updated `compare_runs()` to apply specified tolerance to recruits as well as fishery inputs, compare SLRatio table (Chinook only), and add option to save output to text file instead of console, and invisibly returns list of the comparison dataframes. `compare_sl_ratio()` handles the sublegal ratio comparisons.
+- `compare_runs()` now returns changes to fishery inputs even if the flag indicates those inputs won't be used (e.g., changes to msf_quota when the fishery flag is 1). This should help identify if changes were accidentally made in the wrong place. 
 - Overhauled `plot_impacts_per_catch_heatmap`: can control more aspects of the plots (rounding, font size, abbreviated or full stock name for title), fishery labels include id numbers and timestep labels include months. Can toggle between "landed catch per impacts" (default) and "impacts per thousand landed catch". Function can now accept multiple stock ids, making it more useful for managing to objectives that are based on a sum of FRAM stocks. Function no longer includes CNR in the impacts per landed catch.
 - improved speed of `stock_mortality()` and `fishery_mortality()`. Optionally accept either `stock_id` or `fishery_id` arguments which filter the fetched `mortality` function for improved speed. 
 - Updated `plot_stock_mortality()` and `plot_stock_mortality_timestep()` to account for CNR. Default behavior now
@@ -31,10 +34,12 @@ provides the % CNR on the plot. Setting optional argument `split_cnr` to `TRUE` 
 ## developer-facing changes
 
 - Added better testing framework for ad-hoc and integration tests, linked to external testing database directory. Only affects developers who want to run the unit tests -- see the "Contribute" section of Readme for details on setup. Convenience connection functions are included in `tests/testthat/helper-dir.R", but will only work if the testing database directory is set up. 
-- `fram_abort()` -- wrapper for cli_abort that adds custom error class. Allows for better testthat behavior (expect_error() can confirm that the error comes from this package, not others)
+- `fram_abort()` -- wrapper for cli_abort that adds custom error class, "framrsquared_error". Allows for better testthat behavior (expect_error() can confirm that the error comes from this package, not others)
 - Overhaul of internal usage functions. Functions designed for internal use that are not exported are now listed with `@keywords internal` to enable documentation of help Rds (e.g., `validate_numeric()`. Functions that were previously intended for internal use but were exported (e.g., `provide_table_names()`) are still exported but have been given `@keywords internal`. This means they are exposed to users and will continue to function in existing scripts/packages, but aren't included in lists of functions intended for casual users.
-- Unit tests and integration tests added to functions in the following files: "Integrity.R"
-
+- Unit tests and integration tests added for all relevant R functions(!!!).
+- removed `style_guide.R` and associated functions. These were written to check that files were written 
+using the right formating (`<-` for assignment, snake_case for variables). However, these tasks are better
+managed using styler tools.
 
 
 # framrsquared 0.8.1

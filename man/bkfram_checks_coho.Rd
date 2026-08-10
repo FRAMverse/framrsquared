@@ -2,10 +2,9 @@
 % Please edit documentation in R/post_season.R
 \name{bkfram_checks_coho}
 \alias{bkfram_checks_coho}
-\title{Performs error checks of a backwards FRAM run
-Returns nested tibble with diagnostics}
+\title{Perform error checks of a backwards FRAM run}
 \usage{
-bkfram_checks_coho(fram_db, backward_run_id = NULL, forward_run_id = NULL)
+bkfram_checks_coho(fram_db, backward_run_id, forward_run_id)
 }
 \arguments{
 \item{fram_db}{fram database object, supplied through connect_fram_db}
@@ -14,9 +13,14 @@ bkfram_checks_coho(fram_db, backward_run_id = NULL, forward_run_id = NULL)
 
 \item{forward_run_id}{numeric, RunID}
 }
+\value{
+Nested tibble; each row contains diagnostic information for the various checks.
+\verb{$check} identifies the check (e.g., "scalers flag backwards"), \verb{$type} identifies the type of object checked (e.g, "flag"), and \verb{$data}
+contains the actual diagnostics object (e.g., dataframe of the rows with bad scaler flags in the backwards run.)
+}
 \description{
-Performs error checks of a backwards FRAM run
-Returns nested tibble with diagnostics
+Checks that fishery scalers and escapement were correctly adjusted in the backwards and forwards runs, printing
+the results of each check to console. Also returns nested tibble with diagnostics objects.
 }
 \examples{
 \dontrun{

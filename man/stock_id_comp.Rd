@@ -2,7 +2,8 @@
 % Please edit documentation in R/add_stock_check.R
 \name{stock_id_comp}
 \alias{stock_id_comp}
-\title{Helper function to check that stock id exist in the Stock database}
+\title{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+Helper function to check that stock id exist in the Stock database}
 \usage{
 stock_id_comp(table_name, df, stock_ref)
 }
@@ -18,6 +19,7 @@ numeric; 0 if no warning, 1 if warning.
 }
 \description{
 Intended for internal use, makes some assumptions about inputs.
+UPDATE: can be replaced with \code{validate_stock_id()}??
 }
 \seealso{
 \code{\link[=addstock_check]{addstock_check()}}

@@ -9,7 +9,7 @@ find_tables_by_column_(fram_db, column_name)
 \arguments{
 \item{fram_db}{FRAM database object}
 
-\item{column_name}{Name of a column}
+\item{column_name}{Name of a column; character atomic or vector}
 }
 \description{
 Finds tables that contain a specific column name

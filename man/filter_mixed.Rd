@@ -28,8 +28,8 @@ a \code{stock_id} column name.
 framrosetta::stock_coho_fram |> filter_mixed()
 }
 \seealso{
-Other stock_filters: 
-\code{\link{filter_hatchery}()},
-\code{\link{filter_wild}()}
+Other stock_filters:
+\code{\link[=filter_hatchery]{filter_hatchery()}},
+\code{\link[=filter_wild]{filter_wild()}}
 }
 \concept{stock_filters}

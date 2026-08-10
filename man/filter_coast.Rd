@@ -30,18 +30,18 @@ framrosetta::fishery_chinook_fram |> filter_coast(species = "CHINOOK")
 framrosetta::fishery_coho_fram |> filter_coast(species = "COHO")
 }
 \seealso{
-Other fishery_filters: 
-\code{\link{filter_ak}()},
-\code{\link{filter_bc}()},
-\code{\link{filter_ca}()},
-\code{\link{filter_commercial_wa_nt}()},
-\code{\link{filter_marine}()},
-\code{\link{filter_net}()},
-\code{\link{filter_or}()},
-\code{\link{filter_puget_sound}()},
-\code{\link{filter_sport}()},
-\code{\link{filter_stt}()},
-\code{\link{filter_stt_nt}()},
-\code{\link{filter_wa}()}
+Other fishery_filters:
+\code{\link[=filter_ak]{filter_ak()}},
+\code{\link[=filter_bc]{filter_bc()}},
+\code{\link[=filter_ca]{filter_ca()}},
+\code{\link[=filter_commercial_wa_nt]{filter_commercial_wa_nt()}},
+\code{\link[=filter_marine]{filter_marine()}},
+\code{\link[=filter_net]{filter_net()}},
+\code{\link[=filter_or]{filter_or()}},
+\code{\link[=filter_puget_sound]{filter_puget_sound()}},
+\code{\link[=filter_sport]{filter_sport()}},
+\code{\link[=filter_stt]{filter_stt()}},
+\code{\link[=filter_stt_nt]{filter_stt_nt()}},
+\code{\link[=filter_wa]{filter_wa()}}
 }
 \concept{fishery_filters}

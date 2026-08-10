@@ -2,7 +2,8 @@
 % Please edit documentation in R/add_stock_check.R
 \name{stock_check_helper}
 \alias{stock_check_helper}
-\title{Helper function to check that stock id make sense}
+\title{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+Helper function to check that stock id make sense}
 \usage{
 stock_check_helper(table_name, NumStk, stock_vec, uniques_only = FALSE)
 }

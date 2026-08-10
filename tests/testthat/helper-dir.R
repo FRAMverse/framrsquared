@@ -1,79 +1,36 @@
+## testing for odbc functionality
+skip_if_no_db <- function() {
+  path <- tryCatch(make_transfer_db_file(), error = function(e) NULL)
+  if (is.null(path)) testthat::skip("No ODBC database connection available")
+  unlink(path)
+  invisible(NULL)
+}
+## moved to `test_helpers.R` for more logical access
 
-db_test_path <- function(...) {
-  path <- Sys.getenv("FRAMRSQUARED_TEST_DIR", unset = NA)
-  if (is.na(path)) return(NA_character_)
-  file.path(path, ...)
+skip_if_slow_tests_disabled <- function() {
+  ## option to skip the time consuming tests
+  ## Run them by first running Sys.setenv(RUN_SLOW_TESTS = "true")
+  skip_if_not(
+    identical(Sys.getenv("RUN_SLOW_TESTS"), "true"),
+    "Skipping slow tests. Set RUN_SLOW_TESTS=true to run (`Sys.setenv(RUN_SLOW_TESTS = 'true')`)."
+  )
 }
 
-connection_test_db <- function(relative_to_original_databases = "",
-                               read_only = TRUE,
-                               quiet = TRUE
-                               ){
-  connect_fram_db(paste0(db_test_path(), "/original_databases/", relative_to_original_databases),
-                  read_only = read_only,
-                  quiet = quiet)
+## expect framrsquared error, suppress messages
+expect_error_m_f <- function(x){
+  expect_error(
+
+    suppressMessages(
+      x
+    ),
+    class = "framrsquared_error"
+  )
 }
 
-skip_if_no_test_db <- function() {
-  path <- db_test_path()
-  if (is.na(path) || !file.exists(path)) {
-    testthat::skip("Test database not available, and/or FRAMRSQUARED_TEST_DIR environmental variable not defined.")
-  }
-}
-
-## helper functions to make it easy to do ad-hoc tests
-
-connection_coho_pre <- function(quiet = FALSE){
-  path <- db_test_path()
-  if (is.na(path) || !file.exists(path)) {
-    fram_abort("Test database not available, and/or FRAMRSQUARED_TEST_DIR environmental variable not defined.")
-  } else {
-    return(connect_fram_db(paste0(path, "/original_databases/coho_pre.mdb"), quiet = quiet, read_only = TRUE))
-  }
-}
-
-connection_coho_post <- function(quiet = FALSE){
-  path <- db_test_path()
-  if (is.na(path) || !file.exists(path)) {
-    fram_abort("Test database not available, and/or FRAMRSQUARED_TEST_DIR environmental variable not defined.")
-  } else {
-    return(connect_fram_db(paste0(path, "/original_databases/coho_post.mdb"), quiet = quiet, read_only = TRUE))
-  }
-}
-
-connection_coho_transfer <- function(quiet = FALSE){
-  path <- db_test_path()
-  if (is.na(path) || !file.exists(path)) {
-    fram_abort("Test database not available, and/or FRAMRSQUARED_TEST_DIR environmental variable not defined.")
-  } else {
-    return(connect_fram_db(paste0(path, "/original_databases/coho_transfer.mdb"), quiet = quiet, read_only = TRUE))
-  }
-}
-
-
-connection_chin_pre <- function(quiet = FALSE){
-  path <- db_test_path()
-  if (is.na(path) || !file.exists(path)) {
-    fram_abort("Test database not available, and/or FRAMRSQUARED_TEST_DIR environmental variable not defined.")
-  } else {
-    return(connect_fram_db(paste0(path, "/original_databases/chin_pre.mdb"), quiet = quiet, read_only = TRUE))
-  }
-}
-
-connection_chin_post <- function(quiet = FALSE){
-  path <- db_test_path()
-  if (is.na(path) || !file.exists(path)) {
-    fram_abort("Test database not available, and/or FRAMRSQUARED_TEST_DIR environmental variable not defined.")
-  } else {
-    return(connect_fram_db(paste0(path, "/original_databases/chin_post.mdb"), quiet = quiet, read_only = TRUE))
-  }
-}
-
-connection_chin_transfer <- function(quiet = FALSE){
-  path <- db_test_path()
-  if (is.na(path) || !file.exists(path)) {
-    fram_abort("Test database not available, and/or FRAMRSQUARED_TEST_DIR environmental variable not defined.")
-  } else {
-    return(connect_fram_db(paste0(path, "/original_databases/chin_transfer.mdb"), quiet = quiet, read_only = TRUE))
-  }
+## expect framrsquared erro
+expect_error_f <- function(x){
+  expect_error(
+      x,
+    class = "framrsquared_error"
+  )
 }

@@ -54,7 +54,7 @@ modify_table <- function(fram_db, table_name, df) {
 
   ## error checking:
   ##  match_names and replace_names should have no overlap
-  if (length(intersect(match_names, replace_names)) > 1) {
+  if (length(intersect(match_names, replace_names)) > 0) {
     fram_abort("'replace_' and 'match_' column types in `df` must be unique. One or more variable is assigned to both matching and replacing!")
   }
 
@@ -138,12 +138,12 @@ calc_fram_scaling <- function(fram_db, table_name, df) {
 
   tab <- fram_db |>
     fetch_table_(table_name)
-  db_names <- DBI::dbGetQuery(
+  table_columns <- DBI::dbGetQuery(
     fram_db$fram_db_connection,
     glue::glue("SELECT * FROM {table_name} where false;")
   ) |>
     colnames()
-  names(tab) <- db_names
+  names(tab) <- table_columns
 
   ## finding scale and match column names
   scale_names <- names(df) |>
@@ -153,6 +153,19 @@ calc_fram_scaling <- function(fram_db, table_name, df) {
   match_names <- names(df) |>
     stringr::str_subset("^match_") |>
     stringr::str_remove("^match_")
+
+  if (length(intersect(match_names, scale_names)) > 0) {
+    fram_abort("'scale_' and 'match_' column types in `df` must be unique. One or more variable is assigned to both matching and replacing!")
+  }
+
+  if (length(match_names) == 0 | length(scale_names) == 0) {
+    fram_abort("`df` must have both 'match_' and 'scale_' columns!")
+  }
+
+  if (any(!c(match_names, scale_names) %in% table_columns)) {
+    fram_abort("`df` points to columns that are not in in `table_name`!")
+  }
+
 
   ## safety check specifically for StockRecruit
   terms_included <- intersect(
@@ -168,7 +181,7 @@ calc_fram_scaling <- function(fram_db, table_name, df) {
     scale_names <- c(scale_names, terms_excluded)
   }
 
-  if (length(terms_included) == 1) {
+  if (length(terms_included) == 2) {
     if (!all(df$scale_RecruitCohortSize ==
              df$scale_RecruitScaleFactor)) {
       fram_abort("scale_RecruitCohortSize and scale_RecruitScaleFactor must match!")
@@ -236,9 +249,9 @@ calc_fram_scaling <- function(fram_db, table_name, df) {
 change_run_id <- function(fram_db, old_run_id, new_run_id){
 
   validate_fram_db(fram_db)
+  validate_not_read_only(fram_db)
   validate_run_id(fram_db, old_run_id)
 
-  validate_not_read_only(fram_db)
 
   current_ids <- get_run_ids(fram_db)
   if(new_run_id %in% current_ids){
@@ -279,9 +292,8 @@ change_run_id <- function(fram_db, old_run_id, new_run_id){
 #'
 remove_run <- function(fram_db, run_id){
   validate_fram_db(fram_db)
-  validate_run_id(fram_db, run_id)
-
   validate_not_read_only(fram_db)
+  validate_run_id(fram_db, run_id)
 
   run_id_tables <- tidyr::expand_grid(find_tables_by_column_(fram_db, 'RunID'),
                                       run_id)
@@ -289,7 +301,7 @@ remove_run <- function(fram_db, run_id){
   run_id_tables|>
     dplyr::select("value", "run_id") |>
     purrr::pwalk(.f = \(value, run_id) tryCatch(
-      suppressWarnings(DBI::dbSendQuery(
+      suppressWarnings(DBI::dbExecute(
         fram_db$fram_db_connection,
         glue::glue(
           'DELETE FROM {value}
@@ -332,7 +344,7 @@ copy_fishery_scalers <- function(fram_db, from_run, to_run, fishery_id = NULL){
     cli::cli_alert_warning('A fishery ID is not set, this will copy all the fishery scalers!')
     input <- tolower(readline(prompt = ('Continue? (y/n): ')))
     if (input != 'y') {
-      stop('Aborting')
+      fram_abort('Aborting')
     }
   }
 
@@ -343,6 +355,15 @@ copy_fishery_scalers <- function(fram_db, from_run, to_run, fishery_id = NULL){
   if (!is.null(fishery_id)) {
     copy_scalers <-
       copy_scalers |> dplyr::filter(.data$fishery_id %in% .env$fishery_id)
+  }
+
+  row_unique <- copy_scalers |>
+    dplyr::select("time_step", "fishery_id") |>
+    dplyr::distinct() |>
+    nrow()
+
+  if(row_unique != nrow(copy_scalers)){
+    fram_abort("Multiple fishery scalers in the `from` run share the same fishery_id and timestep!!")
   }
 
   updated_inputs <- copy_scalers |>
@@ -397,7 +418,8 @@ copy_fishery_scalers <- function(fram_db, from_run, to_run, fishery_id = NULL){
     cli::cli_alert_success('Successfully updated {rows} row{?s}')
   }
 
-
+  attr(updated_inputs, "species") <- fram_db$fram_db_species
+  return(invisible(updated_inputs))
 }
 
 #'  `r lifecycle::badge("experimental")`
@@ -427,7 +449,7 @@ copy_fishery_scalers <- function(fram_db, from_run, to_run, fishery_id = NULL){
 copy_run <- function(fram_db, target_run, times = 1, label = 'copy', force_many_runs = FALSE, verbose = TRUE){
 
   validate_fram_db(fram_db)
-  validate_run_id(fram_db, target_run)
+  validate_run_id(fram_db, target_run, n = 1)
   validate_numeric(times, n = 1)
   validate_character(label, n = 1)
   validate_flag(force_many_runs)
@@ -654,7 +676,7 @@ copy_tamm <- function(tamm_name, target_folder, run_id_vec, overwrite = FALSE){
   }
 
   file_extension <- glue::glue(".{tools::file_ext(tamm_name)}")
-  file_name_clean <- gsub(".*[/]", "", tamm_name)
+  file_name_clean <- basename(tamm_name)
   file_name_clean <- gsub(glue::glue("{file_extension}$"), "", file_name_clean)
 
   ## copy file_name to target_path multiple times with unique suffixes -{run_id}

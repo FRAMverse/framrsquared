@@ -54,7 +54,20 @@ inst/doc
 
 ## local test files
 local-test/
-.positai
+.posit/assistant
 
-## Snapshots
-tests/testthat/_snaps/
+## Snapshots aside from exceptions
+tests/testthat/_snaps/*
+## exceptions for the two snapshot files that aren't running against real databaases.
+!tests/testthat/_snaps/filters.md
+!tests/testthat/_snaps/parse_terminal.md
+
+
+## testing problems
+tests/testthat/_problems/
+tests/testthat/testthat-problems.rds
+## LLM assistance file.
+AGENTS.md
+
+## Windows reserved device name (null device, cannot be staged by git)
+nul

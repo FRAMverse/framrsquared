@@ -28,11 +28,44 @@ mortality_scalers <- function(fram_db, run_id, stock_id, msp = FALSE) {
   validate_stock_ids(fram_db, stock_id)
   validate_flag(msp)
 
-  switch(
-    fram_db$fram_db_species,
-    'CHINOOK' = mortality_scalers_chinook_(fram_db, run_id, stock_id, msp = msp),
-    'COHO' = mortality_scalers_coho_(fram_db, run_id, stock_id)
-  )
+
+  if(fram_db$fram_db_species == 'CHINOOK'){
+
+    scalers <-  fram_db |>
+      aeq_mortality_(run_id = run_id,
+                     msp = msp)
+
+  } else {
+    if(fram_db$fram_db_species == 'COHO'){
+
+    scalers <- fram_db |>
+      fetch_table_('Mortality') |>
+      dplyr::filter(run_id == .env$run_id)
+
+    } else {
+
+    fram_abort("Database species  must be either 'COHO' or 'CHINOOK', not {fram_db$fram_db_species}")
+
+    }
+  }
+
+  scalers |>
+    add_total_mortality()|>
+    dplyr::mutate(total_mortality_no_cnr = .data$landed_catch + .data$shaker + .data$drop_off +
+                    .data$msf_landed_catch + .data$msf_non_retention +
+                    .data$msf_shaker + .data$msf_drop_off,
+                  .before = "landed_catch") |>
+    dplyr::group_by(.data$run_id, .data$fishery_id, .data$time_step) |>
+    dplyr::summarize(
+      fishery_mortality = sum(.data$total_mortality, na.rm = T),
+      fishery_mortality_no_cnr = sum(.data$total_mortality_no_cnr, na.rm = T),
+      stock_mortality = sum(.data$total_mortality[stock_id %in% .env$stock_id], na.rm = T),
+      .groups = 'drop'
+    ) |>
+    dplyr::mutate(stock_mortality_ratio = .data$stock_mortality / .data$fishery_mortality,
+                  stock_mortality_ratio_no_cnr = .data$stock_mortality / .data$fishery_mortality_no_cnr) |>
+    `attr<-`('species', fram_db$fram_db_species) |>
+    framrosetta::label_fisheries()
 }
 
 #' Sum separate mortality columns into new "total_mortality" column
@@ -66,46 +99,4 @@ add_total_mortality = function(.data){
       .before = "landed_catch"
     )
 }
-
-#' Coho-specific implementation for mortality scalers
-#' @keywords internal
-mortality_scalers_coho_ <- function(fram_db, run_id, stock_id) {
-  scalers <- fram_db |>
-    fetch_table_('Mortality') |>
-    dplyr::filter(run_id == .env$run_id)
-
-  scalers |>
-    add_total_mortality()|>
-    dplyr::group_by(.data$run_id, .data$fishery_id, .data$time_step) |>
-    dplyr::summarize(
-      fishery_mortality = sum(.data$total_mortality, na.rm = T),
-      stock_mortality = sum(.data$total_mortality[stock_id %in% .env$stock_id], na.rm = T),
-      .groups = 'drop'
-    ) |>
-    dplyr::mutate(stock_mortality_ratio = .data$stock_mortality / .data$fishery_mortality) |>
-    `attr<-`('species', fram_db$fram_db_species) |>
-    framrosetta::label_fisheries()
-}
-
-
-#' Chinook-specific implementation for mortality scalers
-#' @keywords internal
-mortality_scalers_chinook_ <- function(fram_db, run_id, stock_id, msp) {
-
- fram_db |>
-    aeq_mortality_(run_id = run_id,
-                       msp = msp) |>
-    add_total_mortality() |>
-    dplyr::group_by(.data$run_id, .data$fishery_id, .data$time_step) |>
-    dplyr::summarize(
-      fishery_mortality = sum(.data$total_mortality, na.rm = T),
-      stock_mortality = sum(.data$total_mortality[stock_id %in% .env$stock_id], na.rm = T),
-      .groups = 'drop'
-    ) |>
-    dplyr::mutate(stock_mortality_ratio = .data$stock_mortality / .data$fishery_mortality) |>
-    `attr<-`('species', fram_db$fram_db_species)|>
-   framrosetta::label_fisheries()
-
-}
-
 
