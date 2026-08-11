@@ -19,34 +19,48 @@ parse_bkfram_check <- function(filepath){
 
   rlang::check_installed("readr")
 
-  data <- readr::read_fwf(filepath,
-                          col_positions = readr::fwf_cols(
-                            iteration = c(1,2),
-                            stock_id = c(3,6),
-                            escapement = c(7,18),
-                            escapement_target = c(19,26),
-                            esc_target_ratio = c(27, 36),
-                            old_scalar = c(37, 49),
-                            new_scalar = c(50, 66),
-                            starting_cohort = c(61, 71),
-                            stock_name = c(74, 82)
-                          ),
-                          skip=4, ## first 4 lines are metdata and headers
-                          col_types = readr::cols(
-                            iteration = readr::col_integer(),
-                            stock_id = readr::col_integer(),
-                            escapement = readr::col_integer(),
-                            escapement_target = readr::col_integer(),
-                            esc_target_ratio = readr::col_number(),
-                            old_scalar = readr::col_number(),
-                            new_scalar = readr::col_number(),
-                            starting_cohort = readr::col_integer(),
-                            stock_name = readr::col_character()
-                          ),
-                          na = c("", "NA", "-", "*"))
+  raw_lines <- readr::read_lines(filepath,
+                                 skip = 4)
+  parsed <- stringr::str_match(
+    raw_lines,
+    "^\\s*(\\d+)\\s+" |>
+      paste0(
+        "(\\d+)\\s+",
+        "(\\S+)\\s+",
+        "(\\S+)\\s+",
+        "(\\S+)\\s+",
+        "(\\S+)\\s+",
+        "(\\S+)\\s+",
+        "(\\S+)\\s+",
+        "(.*)$"
+      )
+  )[, -1]
+  dat <- tibble::as_tibble(parsed,
+                           .name_repair = ~ c(
+                             "iteration",
+                             "stock_id",
+                             "escapement",
+                             "escapement_target",
+                             "esc_target_ratio",
+                             "old_scalar",
+                             "new_scalar",
+                             "starting_cohort",
+                             "stock_name"
+                           )) |>
+    dplyr::mutate(dplyr::across("iteration":"starting_cohort",
+                                numerify_text))
 
-  return(data)
+  return(dat)
 
+}
+
+## tiny helper for converting text file numeric columns to numerics with
+## appropriate NAs
+numerify_text <- function(x){
+  x[x == "*"] <- NA
+  x[x == "NaN"] <- NA
+  x[x == "-"] <- NA
+  as.numeric(x)
 }
 
 #' Title
@@ -234,9 +248,17 @@ plot_bkfram_convergence_bar_ratio <- function(data,
     dplyr::filter(!is.na(esc_target_ratio),
                   !missing_start_cohort)
 
-  if(nrow(data) == 0 & verbose){
-    cli::cli_alert_success("No stocks outside of {thresh} of 1:1 ratio by iteration {target_iteration}!")
+  if(nrow(data) == 0){
+    if(verbose){
+      cli::cli_alert_success("No stocks outside of {thresh} of 1:1 ratio by iteration {target_iteration}!")
+    }
+    title = glue::glue("All escapements converged by Iteration {target_iteration}!")
+    subtitle = glue::glue("(for a threshold of {thresh}")
+  } else {
+    title = glue::glue("Imperfect escapement convergence, Iteration {target_iteration}")
+    subtitle = glue::glue("Excluding stock within {thresh} of a perfect ratio")
   }
+
 
   ## plotting
   data |>
@@ -248,8 +270,8 @@ plot_bkfram_convergence_bar_ratio <- function(data,
     ggplot2::labs(
       y = 'Stock',
       x = x_label,
-      title = glue::glue("Imperfect escapement convergence, Iteration {target_iteration}"),
-      subtitle = glue::glue("Excluding stock within {thresh} of a perfect ratio")
+      title = title,
+      subtitle = subtitle
     )
 }
 
@@ -264,22 +286,30 @@ plot_bkfram_convergence_bar_diff <- function(data,
     dplyr::filter_out(abs(escapement_diff) < thresh) |>
     dplyr::filter(!missing_start_cohort)
 
-  if(nrow(data) == 0 & verbose){
-    cli::cli_alert_success("No stocks off by more than {thresh} fish by iteration {target_iteration}!")
+
+  if(nrow(data) == 0){
+    if(verbose){
+      cli::cli_alert_success("No stocks off by more than {thresh} fish by iteration {target_iteration}!")
+    }
+    title = glue::glue("All escapements converged by Iteration {target_iteration}!")
+    subtitle = glue::glue("(for a threshold of {thresh}")
+  } else {
+    title = glue::glue("Imperfect escapement convergence, Iteration {target_iteration}")
+    subtitle = glue::glue("Excluding stock within {thresh} fish of target")
   }
 
   ## plotting
   data |>
     ggplot2::ggplot(ggplot2::aes(y = stats::reorder(.data$stock_label, .data$escapement_diff),
-                                 x = escapement_diff))+
-    ggplot2::geom_vline(xintercept = 1, linetype = 2)+
+                                 x = escapement_diff)) +
+    ggplot2::geom_vline(xintercept = 1, linetype = 2) +
     ggplot2::geom_col()+
     ggplot2::theme_bw(base_size = 14) +
     ggplot2::labs(
       y = 'Stock',
       x = x_label,
-      title = glue::glue("Imperfect escapement convergence, Iteration {target_iteration}"),
-      subtitle = glue::glue("Excluding stock within {thresh} fish of target")
+      title = title,
+      subtitle = subtitle
     )
 }
 
