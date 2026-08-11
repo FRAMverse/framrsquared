@@ -40,10 +40,12 @@ Depends:
     R (>= 4.1)
 Suggests: 
     evaluate,
+    ggrepel,
     here,
     knitr,
     openxlsx2,
     patchwork,
+    readr,
     renv,
     rmarkdown,
     testthat (>= 3.0.0),
