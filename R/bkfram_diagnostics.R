@@ -13,7 +13,7 @@
 #' @export
 #'
 #' @examples
-#' data = parse_bkfram_check(system.file("BaseFramCheck.Txt", package = "framrsquared.dev"))
+#' data = parse_bkfram_check(system.file("BackFramCheck.Txt", package = "framrsquared.dev"))
 parse_bkfram_check <- function(filepath){
 
   validate_path(filepath)
@@ -130,10 +130,10 @@ aggregate_bkfram_check <- function(data){
 #' @export
 #'
 #' @examples
-#' process_bkfram_check(system.file("BaseFramCheck.Txt",
+#' process_bkfram_check(system.file("BackFramCheck.Txt",
 #'                       package = "framrsquared.dev"),
 #'                       aggregate_stocks = FALSE)
-#' process_bkfram_check(system.file("BaseFramCheck.Txt",
+#' process_bkfram_check(system.file("BackFramCheck.Txt",
 #'                      package = "framrsquared.dev"),
 #'                      aggregate_stocks = TRUE)
 process_bkfram_check <- function(filepath, stock_id = NULL, aggregate_stocks = TRUE){
@@ -202,7 +202,7 @@ process_bkfram_check <- function(filepath, stock_id = NULL, aggregate_stocks = T
 #' @export
 #'
 #' @examples
-#'  plot_bkfram_convergence_trace(system.file("BaseFramCheck.Txt",
+#'  plot_bkfram_convergence_trace(system.file("BackFramCheck.Txt",
 #'                                package = "framrsquared.dev"),
 #'                                stock_id = 19:23)
 plot_bkfram_convergence_trace <- function(filepath, stock_id, aggregate_stocks = TRUE){
@@ -265,7 +265,7 @@ plot_bkfram_convergence_trace <- function(filepath, stock_id, aggregate_stocks =
 #' @export
 #'
 #' @examples
-#'  plot_bkfram_convergence_bar(system.file("BaseFramCheck.Txt",
+#'  plot_bkfram_convergence_bar(system.file("BackFramCheck.Txt",
 #'                              package = "framrsquared.dev"),
 #'                              iteration = 20)
 plot_bkfram_convergence_bar <- function(filepath,
@@ -407,7 +407,7 @@ plot_bkfram_convergence_bar_diff <- function(data,
 #' @export
 #'
 #' @examples
-#'  plot_bkfram_convergence_bar(system.file("BaseFramCheck.Txt",
+#'  plot_bkfram_convergence_bar(system.file("BackFramCheck.Txt",
 #'                                          package = "framrsquared.dev"),
 #'                                          iteration = 20)
 plot_bkfram_convergence_scatter <- function(filepath,

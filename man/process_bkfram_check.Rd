@@ -31,10 +31,10 @@ Optionally aggregates marked and unmarked stocks together (argument \code{aggreg
 Optionally filters to one or more stock ids (argument \code{stock_id}).
 }
 \examples{
-process_bkfram_check(system.file("BaseFramCheck.Txt",
+process_bkfram_check(system.file("BackFramCheck.Txt",
                       package = "framrsquared.dev"),
                       aggregate_stocks = FALSE)
-process_bkfram_check(system.file("BaseFramCheck.Txt",
+process_bkfram_check(system.file("BackFramCheck.Txt",
                      package = "framrsquared.dev"),
                      aggregate_stocks = TRUE)
 }

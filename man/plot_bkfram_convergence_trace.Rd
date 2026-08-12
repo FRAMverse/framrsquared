@@ -28,7 +28,7 @@ convergence of marked and unmarked components separately; this can lead to misle
 stocks with a flag of 2 in the FRAM database appear to never converge.
 }
 \examples{
- plot_bkfram_convergence_trace(system.file("BaseFramCheck.Txt",
+ plot_bkfram_convergence_trace(system.file("BackFramCheck.Txt",
                                package = "framrsquared.dev"),
                                stock_id = 19:23)
 }

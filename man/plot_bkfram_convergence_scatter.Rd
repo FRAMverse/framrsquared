@@ -37,7 +37,7 @@ Filters to stocks whose model escapement at iteration of interest are not within
 and creates a scatterplot of target vs modeled escapement. If many stocks would be plotted, filters to the most extreme \code{max_n} of them.
 }
 \examples{
- plot_bkfram_convergence_bar(system.file("BaseFramCheck.Txt",
+ plot_bkfram_convergence_bar(system.file("BackFramCheck.Txt",
                                          package = "framrsquared.dev"),
                                          iteration = 20)
 }

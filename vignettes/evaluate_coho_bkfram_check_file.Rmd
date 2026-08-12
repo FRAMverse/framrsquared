@@ -11,7 +11,6 @@ vignette: >
 ```{r setup, message=FALSE, warning=FALSE}
 library(framrsquared.dev)
 library(readr)
-library(tidyverse)
 ```
 
 During the backwards FRAM process ("bkfram") for Coho, FRAM solves for stock escapements numerically by iterating, 
@@ -57,7 +56,7 @@ process_bkfram_check(filepath) |>
 
 ## using `glimpse()` to show all columns
 process_bkfram_check(filepath) |> 
-  glimpse()
+  dplyr::glimpse()
 ```
 
 The `stock_id` and `stock_name` columns are actually list columns, with each row containing both the stock ids and both the stock names of the two stocks that have been combined. See `?process_bkfram_check()` for details. `process_bkfram_check()` also does a few minor processing steps (e.g., creating labels for easier plotting), and can optionally do those additional steps without combining marked and unmarked stocks. 

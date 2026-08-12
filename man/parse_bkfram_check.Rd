@@ -19,7 +19,7 @@ Does not do any additional processing; users should probably be using \code{\lin
 Requires \code{readr} package.
 }
 \examples{
-data = parse_bkfram_check(system.file("BaseFramCheck.Txt", package = "framrsquared.dev"))
+data = parse_bkfram_check(system.file("BackFramCheck.Txt", package = "framrsquared.dev"))
 }
 \seealso{
 \code{\link[=process_bkfram_check]{process_bkfram_check()}}

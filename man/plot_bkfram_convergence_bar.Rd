@@ -39,7 +39,7 @@ a threshold of 0.01 means filtering out stocks with ratios between 0.99 and 1.01
 filter and plot based on the difference in fish between target and model escapements.
 }
 \examples{
- plot_bkfram_convergence_bar(system.file("BaseFramCheck.Txt",
+ plot_bkfram_convergence_bar(system.file("BackFramCheck.Txt",
                              package = "framrsquared.dev"),
                              iteration = 20)
 }
