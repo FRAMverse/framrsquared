@@ -123,7 +123,7 @@ aggregate_bkfram_check <- function(data){
 #'
 #' - `$iteration`: fram iteration
 #' - `$escapement`: model escapement for stock or stock aggregrate
-#' - `$escapement_target`: corresponding target escamenet
+#' - `$escapement_target`: corresponding target escapement
 #' - `$esc_target_ratio`: target/model escapement
 #' - `$stock_label`: stock name and id(s), depending if aggregated or not.
 #'
@@ -142,6 +142,11 @@ process_bkfram_check <- function(filepath, stock_id = NULL, aggregate_stocks = T
   validate_flag(aggregate_stocks)
 
   data = parse_bkfram_check(filepath)
+  missing_stock = setdiff(stock_id, unique(data$stock_id))
+
+  if(length(missing_stock) > 0){
+    fram_abort("`stock_id` must be present in the convergence check file! The following were not: {paste0(missing_stock, collapse = ', ')}.")
+  }
 
   if(aggregate_stocks){
     data <- aggregate_bkfram_check(data) |>
@@ -233,7 +238,7 @@ plot_bkfram_convergence_trace <- function(filepath, stock_id, aggregate_stocks =
     # ggplot::scale_x_discrete(breaks = seq(0, 100, 5)) +
     ggplot2::scale_y_continuous(labels = \(x) format(x, big.mark = ","))+
     ggplot2::labs(
-      y = "Escapment",
+      y = "Escapement",
       x = "FRAM Iteration",
       col = "Stock",
       linetype = "",
@@ -242,7 +247,7 @@ plot_bkfram_convergence_trace <- function(filepath, stock_id, aggregate_stocks =
     ggplot2::theme_bw(base_size = 13)
 }
 
-#' Barplots of stocks that fail to converge by iteration X
+#' Scatterplot of stocks that fail to converge by iteration X
 #'
 #' Filters to stocks whose model escapement at iteration of interest are not within `thresh` of the target ratio (or target value),
 #' and creates a barplot of how much these stocks differ from the target ratio/value.
@@ -294,6 +299,12 @@ plot_bkfram_convergence_bar <- function(filepath,
   } else {
     target_iteration = iteration
     x_label = glue::glue('Target Escapement {operator} Model Escapement, Iteration {target_iteration}')
+  }
+
+  if (!target_iteration %in% data$iteration) {
+    fram_abort(
+      "Iteration {target_iteration} is not present in `BackFramCheck.Txt`. Available iterations are {min(data$iteration)}-{max(data$iteration)}."
+    )
   }
 
   if(plot_ratio){
@@ -359,6 +370,7 @@ plot_bkfram_convergence_bar_diff <- function(data,
                                              verbose,
                                              thresh,
                                              x_label){
+
   data <- data |>
     dplyr::filter(.data$iteration == .env$target_iteration) |>
     dplyr::mutate(escapement_diff = .data$escapement_target - .data$escapement) |>
@@ -381,7 +393,7 @@ plot_bkfram_convergence_bar_diff <- function(data,
   data |>
     ggplot2::ggplot(ggplot2::aes(y = stats::reorder(.data$stock_label, .data$escapement_diff),
                                  x = .data$escapement_diff)) +
-    ggplot2::geom_vline(xintercept = 1, linetype = 2) +
+    ggplot2::geom_vline(xintercept = 0, linetype = 2) +
     ggplot2::geom_col()+
     ggplot2::labs(
       y = 'Stock',
@@ -439,6 +451,12 @@ plot_bkfram_convergence_scatter <- function(filepath,
   } else {
     target_iteration = iteration
     title = glue::glue("Imperfect convergence, Iteration {target_iteration}")
+  }
+
+  if (!target_iteration %in% data$iteration) {
+    fram_abort(
+      "Iteration {target_iteration} is not present in `BackFramCheck.Txt`. Available iterations are {min(data$iteration)}-{max(data$iteration)}."
+    )
   }
 
 

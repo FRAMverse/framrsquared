@@ -61,7 +61,7 @@ tests/testthat/_snaps/*
 ## exceptions for the two snapshot files that aren't running against real databaases.
 !tests/testthat/_snaps/filters.md
 !tests/testthat/_snaps/parse_terminal.md
-!tests/testthat/_snaps/bkram_diagnostics.md
+!tests/testthat/_snaps/bkfram_diagnostics.md
 
 
 ## testing problems
