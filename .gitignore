@@ -71,3 +71,4 @@ AGENTS.md
 
 ## Windows reserved device name (null device, cannot be staged by git)
 nul
+**/.quarto/

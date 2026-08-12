@@ -11,3 +11,5 @@
 ^\.positai$
 ^\.claude$
 ^\.posit/assistant$
+^vignettes/\.quarto$
+^vignettes/*_files$

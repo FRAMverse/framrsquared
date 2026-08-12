@@ -359,7 +359,7 @@ plot_bkfram_convergence_bar_diff <- function(data,
                                              thresh,
                                              x_label){
   data <- data |>
-    dplyr::filter(.data$iteration == .data$target_iteration) |>
+    dplyr::filter(.data$iteration == .env$target_iteration) |>
     dplyr::mutate(escapement_diff = .data$escapement_target - .data$escapement) |>
     dplyr::filter_out(abs(.data$escapement_diff) < .env$thresh) |>
     dplyr::filter(!.data$missing_start_cohort)
@@ -370,7 +370,7 @@ plot_bkfram_convergence_bar_diff <- function(data,
       cli::cli_alert_success("No stocks off by more than {thresh} fish by iteration {target_iteration}!")
     }
     title = glue::glue("All escapements converged by Iteration {target_iteration}!")
-    subtitle = glue::glue("(for a threshold of {thresh}")
+    subtitle = glue::glue("(for a threshold of {thresh})")
   } else {
     title = glue::glue("Imperfect escapement convergence, Iteration {target_iteration}")
     subtitle = glue::glue("Excluding stock within {thresh} fish of target")
@@ -398,6 +398,7 @@ plot_bkfram_convergence_bar_diff <- function(data,
 #'
 #' @inheritParams plot_bkfram_convergence_bar
 #' @param max_n Maximum number of stocks to plot. Numeric, defaults to 10.
+#' @param label_size Size of label text; may want to adjust for readability based on plot size. Numeric, defaults to 5.
 #'
 #' @seealso [plot_bkfram_convergence_trace()], [plot_bkfram_convergence_bar()]
 #'
@@ -413,7 +414,8 @@ plot_bkfram_convergence_scatter <- function(filepath,
                                             aggregate_stocks = TRUE,
                                             verbose = TRUE,
                                             thresh = 0.01,
-                                            max_n = 10){
+                                            max_n = 10,
+                                            label_size = 4){
 
   rlang::check_installed("ggrepel")
 
@@ -422,6 +424,8 @@ plot_bkfram_convergence_scatter <- function(filepath,
   validate_flag(aggregate_stocks)
   validate_flag(verbose)
   validate_numeric(thresh, n = 1)
+  validate_numeric(max_n, n = 1)
+  validate_numeric(label_size, n = 1)
 
   data = process_bkfram_check(filepath = filepath,
                               aggregate_stocks = aggregate_stocks)
@@ -468,14 +472,14 @@ plot_bkfram_convergence_scatter <- function(filepath,
                                  label = .data$stock_label)) +
     ggplot2::geom_abline(slope = 1, linetype = 2) +
     ggplot2::geom_point()+
-    ggrepel::geom_label_repel() +
+    ggrepel::geom_label_repel(size = label_size) +
     ggplot2::labs(
       y = glue::glue('Model Escapement, Iteration {target_iteration}'),
       x = "Target Escapement",
       title = title,
       subtitle = "Dashed line = 1:1"
     )+
-    ggplot2::scale_y_continuous(labels = \(x) format(x, big.mark = ","))+
+    ggplot2::scale_x_continuous(labels = \(x) format(x, big.mark = ","))+
     ggplot2::scale_y_continuous(labels = \(x) format(x, big.mark = ","))+
     ggplot2::theme_bw(base_size = 13)
 
