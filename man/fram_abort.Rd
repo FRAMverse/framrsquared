@@ -2,7 +2,7 @@
 % Please edit documentation in R/integrity.R
 \name{fram_abort}
 \alias{fram_abort}
-\title{Custom wrapper for \code{cli::cli_abort()}, which passes the package class to the error.}
+\title{Custom package error function}
 \usage{
 fram_abort(
   message,
@@ -27,6 +27,8 @@ fram_abort(
 \item{...}{arguments passed to cli::cli_abort}
 }
 \description{
-Custom wrapper for \code{cli::cli_abort()}, which passes the package class to the error.
+Custom wrapper for \code{cli::cli_abort()}, which passes the class "framrsquared_error" to the error message.
+This means that \code{testthat::expect_error()} and similar message checking can specifically check for framrsquared
+error messages.
 }
 \keyword{internal}

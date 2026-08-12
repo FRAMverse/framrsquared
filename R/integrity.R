@@ -1,4 +1,9 @@
-#' Custom wrapper for `cli::cli_abort()`, which passes the package class to the error.
+#' Custom package error function
+#'
+#' Custom wrapper for `cli::cli_abort()`, which passes the class "framrsquared_error" to the error message.
+#' This means that `testthat::expect_error()` and similar message checking can specifically check for framrsquared
+#' error messages.
+#'
 #' @keywords internal
 #'
 #' @param message Error message, handled the same as cli::cli_abort `message` argument

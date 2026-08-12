@@ -16,7 +16,7 @@
 #' data = parse_bkfram_check(system.file("BaseFramCheck.Txt", package = "framrsquared.dev"))
 parse_bkfram_check <- function(filepath){
 
-  validate_character(filepath)
+  validate_path(filepath)
 
   rlang::check_installed("readr")
 
@@ -157,7 +157,8 @@ process_bkfram_check <- function(filepath, stock_id = NULL, aggregate_stocks = T
   } else{
 
     data <- data |>
-      dplyr::mutate(stock_label = paste0(.data$stock_name, " (", .data$stock_id, ")"))
+      dplyr::mutate(stock_label = paste0(.data$stock_name, " (", .data$stock_id, ")"),
+                    missing_start_cohort = is.na(.data$starting_cohort))
 
     stock_name_lut <- data |>
       dplyr::select("stock_id", "stock_name", "stock_label") |>
@@ -331,7 +332,7 @@ plot_bkfram_convergence_bar_ratio <- function(data,
       cli::cli_alert_success("No stocks outside of {thresh} of 1:1 ratio by iteration {target_iteration}!")
     }
     title = glue::glue("All escapements converged by Iteration {target_iteration}!")
-    subtitle = glue::glue("(for a threshold of {thresh}")
+    subtitle = glue::glue("(for a threshold of {thresh})")
   } else {
     title = glue::glue("Imperfect escapement convergence, Iteration {target_iteration}")
     subtitle = glue::glue("Excluding stock within {thresh} of a perfect ratio")
@@ -451,7 +452,7 @@ plot_bkfram_convergence_scatter <- function(filepath,
       cli::cli_alert_success("No stocks outside of {thresh} of 1:1 ratio by iteration {target_iteration}!")
     }
     title = glue::glue("All escapements converged by Iteration {target_iteration}!")
-    subtitle = glue::glue("(for a threshold of {thresh}")
+    subtitle = glue::glue("(for a threshold of {thresh})")
   } else {
     title = glue::glue("Imperfect escapement convergence, Iteration {target_iteration}")
     subtitle = glue::glue("Excluding stock within {thresh} of perfect ratio (dashed line)")

@@ -10,7 +10,8 @@ plot_bkfram_convergence_scatter(
   aggregate_stocks = TRUE,
   verbose = TRUE,
   thresh = 0.01,
-  max_n = 10
+  max_n = 10,
+  label_size = 4
 )
 }
 \arguments{
@@ -25,6 +26,8 @@ plot_bkfram_convergence_scatter(
 \item{thresh}{Threshold. If \code{plot_ratio == TRUE}, a thresh of 0.01 filters out stocks with ratios target/modeled escapement of 0.99 to 1.01. If \code{plot_ratio == FALSE}, a thresh of 0.01 filters out stocks with target - modeled escapements of -0.01 to 0.01. Numeric, defaults to 0.01}
 
 \item{max_n}{Maximum number of stocks to plot. Numeric, defaults to 10.}
+
+\item{label_size}{Size of label text; may want to adjust for readability based on plot size. Numeric, defaults to 5.}
 }
 \value{
 ggplot2 object
