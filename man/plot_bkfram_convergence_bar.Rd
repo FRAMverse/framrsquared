@@ -2,7 +2,7 @@
 % Please edit documentation in R/bkfram_diagnostics.R
 \name{plot_bkfram_convergence_bar}
 \alias{plot_bkfram_convergence_bar}
-\title{Barplots of stocks that fail to converge by iteration X}
+\title{Scatterplot of stocks that fail to converge by iteration X}
 \usage{
 plot_bkfram_convergence_bar(
   filepath,

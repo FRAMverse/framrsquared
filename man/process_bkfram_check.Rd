@@ -18,7 +18,7 @@ Tibble; columns depend on whether aggregation was performed or not, but always r
 \itemize{
 \item \verb{$iteration}: fram iteration
 \item \verb{$escapement}: model escapement for stock or stock aggregrate
-\item \verb{$escapement_target}: corresponding target escamenet
+\item \verb{$escapement_target}: corresponding target escapement
 \item \verb{$esc_target_ratio}: target/model escapement
 \item \verb{$stock_label}: stock name and id(s), depending if aggregated or not.
 }
