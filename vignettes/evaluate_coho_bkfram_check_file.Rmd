@@ -1,0 +1,188 @@
+---
+title: "evaluate_coho_bkfram_check_file"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{evaluate_coho_bkfram_check_file}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+
+---
+
+```{r setup, message=FALSE, warning=FALSE}
+library(framrsquared.dev)
+library(readr)
+```
+
+During the backwards FRAM process ("bkfram") for Coho, FRAM solves for stock escapements numerically by iterating, 
+(hopefully) ending with a database where the "Escapement" column of the "Escapement" table matches the corresponding rows of the
+"TargetEscAge3" column of the "BackwardsFRAM" table. If this process fails to converge, it's useful to know which stocks
+were the problem, and what the attempted convergene looks like. FRAM produces a "BackFramCheck.Txt" file storing the convergence information, and
+`framrsquared` has several functions to help understand that file. This vignette demonstrates several of them. For more details see the help files for individual functions.
+
+Quick technical note: the `ggrepel` and `readr` packages are optional for the `framrsquared` package, but are necessary for the functions
+in this vignette. If you don't already have them installed, using the functions here will prompt you to install them. 
+
+## Basics of "BackFramCheck.Txt"
+
+For testing and demonstration purposes, `framrsquared` contains a demo "BackFramCheck.Txt" file. The filepath to it can be 
+found with `system.file()`.
+
+```{r}
+filepath = system.file("BackFramCheck.Txt", package = "framrsquared.dev")
+filepath
+```
+
+The text file itself is a fixed-width-ish file with some metadata in the first few lines. "fixed-width-**ish**" because `NaN` entries are placed differently from all other entries of a column. 
+```{r}
+cat(readLines(con = filepath, n = 20), sep = "\n")
+```
+
+The most useful tools for examining convergence are our plotting functions (below). However, if we are writing code to work with the convergence data itself, 
+`parse_bkfram_check()` or `process_bkfram_check()` will be useful.
+
+`parse_bkfram_check()` just reads in the dataframe looking part of the text file, parsing it correctly, giving useful column names, and converting `*`s, `-`s, and `NaN`s to `NA`.
+
+```{r}
+parse_bkfram_check(filepath) |>
+  head(n = 20)
+
+```
+
+Typically we  want to combine marked and unmarked components of stocks. For any stock with a TargetFlag of 2 in the "BackwardsFRAM" table, backwards FRAM solves for the joint escapement of marked and unmarked stocks. If we don't combine marked and unmarked in those cases, the measures of convergence can appear to have problems that aren't actually there. The plotting functions below all handle this appropriately by default, but we may want the aggregated numbers themselves for other scripting. `process_bkfram_check()` provides these:
+
+```{r}
+process_bkfram_check(filepath) |> 
+  head(10)
+
+## using `glimpse()` to show all columns
+process_bkfram_check(filepath) |> 
+  dplyr::glimpse()
+```
+
+The `stock_id` and `stock_name` columns are actually list columns, with each row containing both the stock ids and both the stock names of the two stocks that have been combined. See `?process_bkfram_check()` for details. `process_bkfram_check()` also does a few minor processing steps (e.g., creating labels for easier plotting), and can optionally do those additional steps without combining marked and unmarked stocks. 
+
+## Diagnostic Plots
+
+**BIG NOTICE**: bkfram usually converges! So with the example files, the default plotting options of the first two functions
+will show very boring plots! These functions optionally allow us to provide an iteration number to plot. If we don't, the final iteration
+is plotted (with hopefully everything matching perfectly). In the examples below, I will focus on showing a plot of the early iteration, 
+because that's more useful for understanding the functions. When using these functions in the wild, you'll probably want to start 
+with the default behavior, since we don't expect convergence in early iterations.
+
+
+### Which stocks haven't converged? Barplot edition.
+
+`plot_bkfram_convergence_bar()` highlights stocks for which the model escapement value and the target escapement value
+aren't matching. By default, it plots the ratio of target/model escpement:
+
+```{r}
+plot_bkfram_convergence_bar(filepath = filepath, iteration = 5)
+```
+
+We can see that in this case the Tulalip stocks (33, 34) are over the target by a bit, and the Kendal hatchery stocks (3, 4) are about 2/3 of the target.
+
+We can adjust the cutoff threshold for including a stock in the plot by changing the `thresh` argument. The default value is 0.01.
+Let's filter to just those with ratios < 0.95 or > 1.05.
+
+```{r}
+plot_bkfram_convergence_bar(filepath = filepath, iteration = 5,
+                            thresh = 0.05)
+```
+
+We can also plot and filter based on the difference in fish between target and model escapement instead of the ratio of target and model escapement. When this is the case, we likely want to change the threshold, since a threshold of 0.01 fish is a bit extreme.
+
+```{r}
+plot_bkfram_convergence_bar(filepath = filepath, 
+                            iteration = 5,
+                            plot_ratio = FALSE,
+                            thresh = 1)
+```
+
+If all stocks have converged within our threshold by the iteration in question, we get the following:
+
+```{r}
+plot_bkfram_convergence_bar(filepath = filepath, iteration = 60)
+```
+
+When `iteration` is not provided, the final iteration is used. If the backwards run converged, this will
+always give the "All escapements converged" version of the plot:
+
+```{r}
+plot_bkfram_convergence_bar(filepath = filepath)
+```
+
+### Which stocks haven't converged? Scatterplot edition.
+
+`plot_bkfram_convergence_scatter()` provides an alternative view of non-convergence. It again filters to 
+stocks that haven't converged (as definied by the target/model escapement being at least `thresh` away from 1),
+but these stocks by their model and target escapement with labels. Because the plot labeling function (from the `ggrepel` package)
+can cause plotting to bog down if there are many points, if there are more than `n_max` stocks that haven't converged (default: 10), 
+only the `n_max` stocks with the most extreme ratios are plotted. Here deviation from the 1:1 line (the dashed line) represents
+how far the stocks are from convergence.
+
+```{r}
+plot_bkfram_convergence_scatter(filepath = filepath, iteration = 5)
+```
+
+Just for fun, we can see how the convergence process progresses over time, using the package `patchwork` to combine figures. I'll choose
+iterations so there's visible progress but we don't immediately jump to perfect convergence.
+
+```{r}
+library(patchwork)
+library(ggplot2)
+
+## save plots to objects
+## Overwriting titles for simpler reading.
+gp4 <- plot_bkfram_convergence_scatter(filepath = filepath, iteration = 4, label_size = 2.6)+
+  labs(subtitle = "Iteration 4", title = "", y = " model escapement")
+gp6 <- plot_bkfram_convergence_scatter(filepath = filepath, iteration = 6, label_size = 2.6)+
+  labs(subtitle = "Iteration 6", title = "", y = " model escapement")
+gp8 <- plot_bkfram_convergence_scatter(filepath = filepath, iteration = 8, label_size = 2.6) +
+  labs(subtitle = "Iteration 8", title = "", y = " model escapement")
+gp10 <- plot_bkfram_convergence_scatter(filepath = filepath, iteration = 10, label_size = 2.6)+
+  labs(subtitle = "Iteration 10", title = "", y = " model escapement")
+
+## patchwork nomenclature to lay out plots, combine identical axis titles
+gp4 + gp6 + gp8 + gp10 + plot_layout(ncol = 2, axis_titles = "collect")
+```
+
+Looking across these from low to high iterations, we can see that (a) decreasing numbers of stocks have failed to converge, and (b) the scale of our plots zooms in, so that deviations from the 1:1 line represent much smaller deviations from convergence.
+
+But with these plots it's hard to track how convergence works for an individaul stock. For example, what's happening with the `kendlh` stocks (stock id 3, 4)? Well...
+
+### Tracing individual stocks
+
+`plot_bkfram_convergence_trace()` plots the convergence of one or more stocks, and overlays the targets.
+Unlike the functions above, we need to provide one or more stock IDs.
+
+```{r}
+plot_bkfram_convergence_trace(filepath = filepath, stock_id = c(3,4))
+```
+
+So long as optional argument `aggregate_stocks` is `TRUE` (the default value), we only need to include a single id from the the mark-unmarked pair. That is, we get the same plot if we just provide one of the ids:
+
+```{r}
+plot_bkfram_convergence_trace(filepath = filepath, stock_id = c(3))
+```
+
+We can provide more stock ids to show the convergence of several stocks at once.
+
+```{r}
+plot_bkfram_convergence_trace(filepath = filepath, stock_id = c(18:22))
+```
+
+
+## Suggested application:
+
+Did bkfram converge? If so, you probably don't need any of these. However, you might enjoy playing around 
+with any of these functions to better understand how FRAM approaches convergence. If you're doing so, you'll want to use the optional `iteration` argument for `plot_bkfram_convergence_bar()` and `plot_bkfram_convergence_scatter()` to plot the process in early iterations before things have converged.
+
+**If bkfram didn't converge**, try `plot_bkfram_convergence_bar()` or `plot_bkfram_convergence_scatter()`,
+providing just the filepath. This will show you which stocks failed to converge. You can tweak the `thresh` argument to make the plotting more or less conservative. If you're tweaking `thresh`, you may want to use `plot_bkfram_convergence_bar()` with `plot_ratio = FALSE` so that your `thresh` cutoff is in numbers of actual fish.
+
+If you've identified one or more stocks that haven't converged, you may want to look at how they've behaved across iterations, which you can do with `plot_bkfram_convergence_trace()`. The stock names from the bar
+and scatter plots will include the stock ids; you can use those for the `stock_id` argument in `*_trace()`.
+If the trace shows the model escapements slowly approaching their targets, bkfram may just need more iterations. You can start a second run that starts with the solution of the first run to give more iterations. 
+
+
+

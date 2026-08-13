@@ -40,17 +40,19 @@ Depends:
     R (>= 4.1)
 Suggests: 
     evaluate,
+    ggrepel,
     here,
     knitr,
     openxlsx2,
     patchwork,
+    quarto,
+    readr,
     renv,
     rmarkdown,
     testthat (>= 3.0.0),
     vdiffr,
     withr
-VignetteBuilder:
-  knitr
+VignetteBuilder:knitr, quarto
 Config/testthat/edition: 3
 Roxygen: list(markdown = TRUE)
 Remotes: 
