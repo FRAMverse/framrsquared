@@ -30,6 +30,7 @@ provides the % CNR on the plot. Setting optional argument `split_cnr` to `TRUE` 
 - `NR_flag_translate()` renamed to `translate_nr_flag()` for consistency (no capitalization, starts with verb).
 - `scalers_flag_translate()` renamed to `translate_scalers_flag()` for consistency (starts with verb).
 - `copy_tamms()` renamed to `copy_tamm()` to better reflect what it does and to align with `copy_run()`.
+- `compare_databases()` has been moved to the `framqaqc` package. It did not follow the common idioms of framrsquared and was solely used in QAQC. Scripts that reference this function will now need to load `framqaqc`. 
 
 ## developer-facing changes
 
