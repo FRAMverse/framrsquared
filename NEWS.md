@@ -21,6 +21,7 @@ provides the % CNR on the plot. Setting optional argument `split_cnr` to `TRUE` 
 - Added `filter_nr_flags()` to apply NAs to non-retention dataframes based on the non_retention_flag column. Analogous to `filter_flags()`
 - Added `check_bp_coverage()`, which identifies if fishery inputs or CNR inputs contain fishery x time steps that are not represented in the base period. This is now called in compare_runs()
 - `calculate_stock_comp()` -- new function that does the calculations for `plot_stock_comp()`. Splitting these makes it easier to do other work with stock compositions, like making tables.
+- `calculate_report_trs()` and `calculate_tami_trs()` -- new functions to calculate terminal run size based on the definitions used in TAMM reporting or the definitions used for TAMI --> FRAM harvest rate calculations, respectively.
 
 
 ## Possible breaking changes

@@ -81,9 +81,14 @@ reference:
       - contains("validate_")
   - title: "Terminal Runs"
     desc: >
-      Functions that unpack the TRuns table in the FRAM database
+      Functions that calculate Terminal Run Sizes or unpack the TRuns tables
     contents:
+      - has_concept("calculate terminal run size")
       - contains("truns_")
+      - terminal_fisheries
+      - terminal_stocks
+      - terminal_info
+
   - title: "Post-season FRAM"
     desc: >
       Functions that focus on post-season runs and backwards FRAM
@@ -111,13 +116,6 @@ reference:
       - stock_fate
       - stock_fate_chinook
       - stock_fate_coho
-  - title: "Describing Terminal Run Information"
-    desc: >
-        Functions that unpack the TAAETRS tables
-    contents:
-      - terminal_fisheries
-      - terminal_stocks
-      - terminal_info
   - title: "Labeling"
     desc: >
         Functions that add label columns based on ids or flags
