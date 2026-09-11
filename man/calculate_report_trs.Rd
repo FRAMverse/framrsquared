@@ -2,7 +2,8 @@
 % Please edit documentation in R/calculate_trs.R
 \name{calculate_report_trs}
 \alias{calculate_report_trs}
-\title{Calculate Terminal Run Sizes (for COHO reporting)}
+\title{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+Calculate Terminal Run Sizes (for COHO reporting)}
 \usage{
 calculate_report_trs(fram_db, run_id, trs_definition_number = NULL)
 }

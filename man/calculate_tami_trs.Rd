@@ -2,7 +2,8 @@
 % Please edit documentation in R/calculate_trs.R
 \name{calculate_tami_trs}
 \alias{calculate_tami_trs}
-\title{Calculate terminal run sizes as used by the tami}
+\title{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+Calculate terminal run sizes as used by the TAMI}
 \usage{
 calculate_tami_trs(fram_db, run_id, trs_definition_number = NULL)
 }

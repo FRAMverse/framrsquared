@@ -1,8 +1,10 @@
+#'  `r lifecycle::badge("experimental")`
 #' Calculate Terminal Run Sizes (for COHO reporting)
 #'
 #' Calculate the Terminal Area Abundance (TAA) and Extreme Terminal Run Size (ETRS) values used in COHO model output reporting. These match the values of column B of the `TRunsPRN` sheet of the TAMM. **WARNING!** These are NOT the same terminal run size definitions used by FRAM to interpret the TAMI rate inputs (for that, see [calculate_tami_trs()]).
 #'
 #' Terminal runs are defined in the "ReportDriver" table of the FRAM database. Terminal run name ("Option5") and terminal run number ("Option6") are used in combination to uniquely identify the terminal run group in these calculations. The FRAM database does not guarantee uniqueness of these combinations, and `calculate_report_trs()` will error if there are multiple rows of "ReportDriver" with duplicate Option5 x Option6. `calculate_report_trs()` *will* correctly produce output if there are duplicates in one or the other columns of the table; in this case the output of this function may have two rows with the same `$trs_id` or `$stock_group_name`. In the event of multiple rows with the same `$stock_group_name`, this function will provide a warning. This is the case for many of the long-standing databases. Be careful when using the output of this function; do not assume that `$trs_id` or `$stock_group_name` alone will uniquely identify a single row of output.
+#'
 #'
 #' @param fram_db FRAM database connection
 #' @param run_id One or more run ids
@@ -188,7 +190,8 @@ calculate_report_trs <- function(fram_db, ## fram database connection
   return(out)
 }
 
-#' Calculate terminal run sizes as used by the tami
+#'  `r lifecycle::badge("experimental")`
+#' Calculate terminal run sizes as used by the TAMI
 #'
 #' Calculate the Terminal Area Abundance (TAA) and Extreme Terminal Run Size (ETRS) values used in Coho FRAM calculations to translate TAMI rates into units of fish / effort.  **WARNING!** These are NOT the same terminal run size definitions used by FRAM in the reporting process (e.g., column B of the `TRunsPRN` in the TAMM). For that, see [calculate_report_trs()].
 #'
