@@ -18,12 +18,12 @@ A data frame with one row per stock group per run, containing the
 following columns:
 \describe{
 \item{\code{run_id}}{Integer. Unique identifier for the model run.}
-\item{\code{trs_id}}{Numeric. Identifier for the terminal run size record. Matches \code{Option6} of FRAM table "ReportDriver".}
-\item{\code{stock_group_name}}{Character. Name of the stock group. Corresponds to \code{Option5} of FRAM table "ReportDriver".}
+\item{\code{taa_num}}{Numeric. Identifier for the terminal run size record. Matches \code{Option6} of FRAM table "ReportDriver".}
+\item{\code{taa_name}}{Character. Name of the stock group. Corresponds to \code{Option5} of FRAM table "ReportDriver".}
 \item{\code{escapement}}{Numeric. Escapement estimate for the stock group. Already incorporated in \code{terminal_run_size}, provided as additional reference.}
 \item{\code{terminal_run_size}}{Numeric. Final terminal run size value, either TAA or ETRS depending on the run type.}
 \item{\code{terminal_run_type}}{Character. Either "ETRS" or "TAA", identifying what type of terminal run definition is being used.}
-\item{\code{terminal_run_category}}{Reminder that this is the TAMI version of terminal runs, NOT the version used in reporting.}
+\item{\code{terminal_run_category}}{Reminder that this is the Reporting version of terminal runs, NOT the version used by the TAMI --> FRAM process}
 }
 }
 \description{

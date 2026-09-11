@@ -12,12 +12,12 @@
 #'   following columns:
 #'   \describe{
 #'     \item{`run_id`}{Integer. Unique identifier for the model run.}
-#'     \item{`trs_id`}{Numeric. Identifier for the terminal run size record. Matches `Option6` of FRAM table "ReportDriver".}
-#'     \item{`stock_group_name`}{Character. Name of the stock group. Corresponds to `Option5` of FRAM table "ReportDriver".}
+#'     \item{`taa_num`}{Numeric. Identifier for the terminal run size record. Matches `Option6` of FRAM table "ReportDriver".}
+#'     \item{`taa_name`}{Character. Name of the stock group. Corresponds to `Option5` of FRAM table "ReportDriver".}
 #'     \item{`escapement`}{Numeric. Escapement estimate for the stock group. Already incorporated in `terminal_run_size`, provided as additional reference.}
 #'     \item{`terminal_run_size`}{Numeric. Final terminal run size value, either TAA or ETRS depending on the run type.}
 #'     \item{`terminal_run_type`}{Character. Either "ETRS" or "TAA", identifying what type of terminal run definition is being used.}
-#'     \item{`terminal_run_category`}{Reminder that this is the TAMI version of terminal runs, NOT the version used in reporting.}
+#'     \item{`terminal_run_category`}{Reminder that this is the Reporting version of terminal runs, NOT the version used by the TAMI --> FRAM process}
 #'   }
 #'
 #' @export
@@ -192,7 +192,7 @@ calculate_report_trs <- function(fram_db, ## fram database connection
 #'
 #' Calculate the Terminal Area Abundance (TAA) and Extreme Terminal Run Size (ETRS) values used in Coho FRAM calculations to translate TAMI rates into units of fish / effort.  **WARNING!** These are NOT the same terminal run size definitions used by FRAM in the reporting process (e.g., column B of the `TRunsPRN` in the TAMM). For that, see [calculate_report_trs()].
 #'
-#' Terminal runs are defined in the "TAAETRSList" table of the FRAM database. Terminal run name ("TaaName") and terminal run number ("TaaNum") are used in combination to uniquely identify the terminal run group in these calculations. The FRAM database does not guarantee uniqueness of these combinations, and `calculate_tami_trs()` will error if there are multiple rows of "TAAETRSList" with duplicate Option5 x Option6. `calculate_tami_trs()` *will* correctly produce output if there are duplicates in one or the other columns of the table; in this case the output of this function may have two rows with the same `$trs_id` or `$stock_group_name`. In the event of multiple rows with the same `$stock_group_name`, this function will provide a warning. Be careful when using the output of this function; do not assume that `$trs_id` or `$stock_group_name` alone will uniquely identify a single row of output.
+#' Terminal runs are defined in the "TAAETRSList" table of the FRAM database. Terminal run name ("TaaName") and terminal run number ("TaaNum") are used in combination to uniquely identify the terminal run group in these calculations. The FRAM database does not guarantee uniqueness of these combinations, and `calculate_tami_trs()` will error if there are multiple rows of "TAAETRSList" with duplicate TaaName x TaaNum. `calculate_tami_trs()` *will* correctly produce output if there are duplicates in one or the other columns of the table; in this case the output of this function may have two rows with the same `$trs_id` or `$stock_group_name`. In the event of multiple rows with the same `$stock_group_name`, this function will provide a warning. Be careful when using the output of this function; do not assume that `$trs_id` or `$stock_group_name` alone will uniquely identify a single row of output.
 #'
 #' @inheritParams calculate_report_trs
 #'
@@ -205,7 +205,7 @@ calculate_report_trs <- function(fram_db, ## fram database connection
 #'     \item{`escapement`}{Numeric. Escapement estimate for the stock group. Already incorporated in `terminal_run_size`, provided as additional reference.}
 #'     \item{`terminal_run_size`}{Numeric. Final terminal run size value, either TAA or ETRS depending on the run type.}
 #'     \item{`terminal_run_type`}{Character. Either "ETRS" or "TAA", identifying what type of terminal run definition is being used.}
-#'     \item{`terminal_run_category`}{Reminder that this is the REPORTING version of terminal runs, NOT the set that the TAMI sheet is using.}
+#'     \item{`terminal_run_category`}{Reminder that this is version of terminal runs used to translate TAMI rate inputs into FRAM, NOT the version used in reporting.}
 #'   }
 #'
 #'
@@ -232,6 +232,11 @@ calculate_tami_trs <- function(fram_db, ## fram database connection
   taa_etrs <- fram_db |>
     fetch_table_("TAAETRSList")
 
+  if(!is.null(trs_definition_number)){
+    taa_etrs <- taa_etrs |>
+      dplyr::filter(.data$taa_num %in% trs_definition_number)
+  }
+
   rows_unidentifiable <- taa_etrs |>
     dplyr::select("taa_num", "taa_name") |>
     duplicated()
@@ -245,6 +250,19 @@ calculate_tami_trs <- function(fram_db, ## fram database connection
                  setNames(bad_names, rep("*", length(bad_names))))
     )
   }
+
+  duplicated_names <- taa_etrs |>
+    dplyr::pull("taa_name")
+
+  duplicated_names <- duplicated_names[duplicated(duplicated_names)]
+
+  if(length(duplicated_names) > 0){
+    cli::cli_warn(c("One or more rows of the TAAETRSList table in the FRAM database have duplicate Stock Group Names (`TaaName`)!",
+                    "Output of this function should be correct, but be aware that there will be multiple rows for the following stock groups:",
+                    setNames(duplicated_names, rep("*", length(duplicated_names))))
+    )
+  }
+
 
   taa_etrs_df <- taa_etrs |>
     dplyr::mutate(stock_vec = purrr::map(stringr::str_split(.data$taa_stk_list, pattern = ","),
@@ -346,10 +364,7 @@ calculate_tami_trs <- function(fram_db, ## fram database connection
     dplyr::select("run_id", "taa_num", "taa_name", "escapement", terminal_run_size = "trs_value", terminal_run_type = "trs_type") |>
     dplyr::mutate(terminal_run_category = "for HR inputs / TAMI; uses TAAETRSList definitions")
 
-  if(!is.null(trs_definition_number)){
-    out <- out |>
-      dplyr::filter(.data$taa_num %in% trs_definition_number)
-  }
+
 
   return(out)
 }

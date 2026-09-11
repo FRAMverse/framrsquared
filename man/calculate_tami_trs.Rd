@@ -23,14 +23,14 @@ following columns:
 \item{\code{escapement}}{Numeric. Escapement estimate for the stock group. Already incorporated in \code{terminal_run_size}, provided as additional reference.}
 \item{\code{terminal_run_size}}{Numeric. Final terminal run size value, either TAA or ETRS depending on the run type.}
 \item{\code{terminal_run_type}}{Character. Either "ETRS" or "TAA", identifying what type of terminal run definition is being used.}
-\item{\code{terminal_run_category}}{Reminder that this is the REPORTING version of terminal runs, NOT the set that the TAMI sheet is using.}
+\item{\code{terminal_run_category}}{Reminder that this is version of terminal runs used to translate TAMI rate inputs into FRAM, NOT the version used in reporting.}
 }
 }
 \description{
 Calculate the Terminal Area Abundance (TAA) and Extreme Terminal Run Size (ETRS) values used in Coho FRAM calculations to translate TAMI rates into units of fish / effort.  \strong{WARNING!} These are NOT the same terminal run size definitions used by FRAM in the reporting process (e.g., column B of the \code{TRunsPRN} in the TAMM). For that, see \code{\link[=calculate_report_trs]{calculate_report_trs()}}.
 }
 \details{
-Terminal runs are defined in the "TAAETRSList" table of the FRAM database. Terminal run name ("TaaName") and terminal run number ("TaaNum") are used in combination to uniquely identify the terminal run group in these calculations. The FRAM database does not guarantee uniqueness of these combinations, and \code{calculate_tami_trs()} will error if there are multiple rows of "TAAETRSList" with duplicate Option5 x Option6. \code{calculate_tami_trs()} \emph{will} correctly produce output if there are duplicates in one or the other columns of the table; in this case the output of this function may have two rows with the same \verb{$trs_id} or \verb{$stock_group_name}. In the event of multiple rows with the same \verb{$stock_group_name}, this function will provide a warning. Be careful when using the output of this function; do not assume that \verb{$trs_id} or \verb{$stock_group_name} alone will uniquely identify a single row of output.
+Terminal runs are defined in the "TAAETRSList" table of the FRAM database. Terminal run name ("TaaName") and terminal run number ("TaaNum") are used in combination to uniquely identify the terminal run group in these calculations. The FRAM database does not guarantee uniqueness of these combinations, and \code{calculate_tami_trs()} will error if there are multiple rows of "TAAETRSList" with duplicate TaaName x TaaNum. \code{calculate_tami_trs()} \emph{will} correctly produce output if there are duplicates in one or the other columns of the table; in this case the output of this function may have two rows with the same \verb{$trs_id} or \verb{$stock_group_name}. In the event of multiple rows with the same \verb{$stock_group_name}, this function will provide a warning. Be careful when using the output of this function; do not assume that \verb{$trs_id} or \verb{$stock_group_name} alone will uniquely identify a single row of output.
 }
 \examples{
 \dontrun{
