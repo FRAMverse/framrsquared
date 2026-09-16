@@ -19,8 +19,8 @@ problem. Defaults to \code{20}.}
 \value{
 Invisibly, a named list with elements:
 \describe{
-\item{trs_diff}{Data frame of per-TRS change and slope between the final two iterations.}
-\item{taa_etrs_diff}{Data frame of per-fishery quota change and slope between the final two iterations.}
+\item{trs_diff}{Data frame of per-TRS change and relative_change between the final two iterations.}
+\item{taa_etrs_diff}{Data frame of per-fishery quota change and relative_change between the final two iterations.}
 }
 }
 \description{
@@ -31,7 +31,7 @@ Evaluates how much terminal run sizes (TRS) and TAA/ETRS quotas changed
 between the final two TAMM iterations in a \code{FramCheck.txt} file. Optionally
 prints a summary to the console. Currently only implemented for Coho.
 
-For both of the ouput objects, the "diffs" are based on final two iterations, with \verb{$change_in_fish} and \verb{$change_in_quota} giving the number in raw fish. \code{slope} is calculated as the difference in the final two counts (TRS or abundance) divided by their average. \code{trs_diff$trs_id} corresponds to the \code{TaaNum} column of the \code{TAAETRSList} table in the FRAM database.
+For both of the ouput objects, the "diffs" are based on final two iterations, with \verb{$change_in_fish} and \verb{$change_in_quota} giving the number in raw fish. \code{relative_change} is calculated as the difference in the final two counts (TRS or abundance) divided by their average. \code{trs_diff$trs_id} corresponds to the \code{TaaNum} column of the \code{TAAETRSList} table in the FRAM database.
 }
 \examples{
 \dontrun{

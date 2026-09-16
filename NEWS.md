@@ -22,6 +22,8 @@ provides the % CNR on the plot. Setting optional argument `split_cnr` to `TRUE` 
 - Added `check_bp_coverage()`, which identifies if fishery inputs or CNR inputs contain fishery x time steps that are not represented in the base period. This is now called in compare_runs()
 - `calculate_stock_comp()` -- new function that does the calculations for `plot_stock_comp()`. Splitting these makes it easier to do other work with stock compositions, like making tables.
 - `calculate_report_trs()` and `calculate_tami_trs()` -- new functions to calculate terminal run size based on the definitions used in TAMM reporting or the definitions used for TAMI --> FRAM harvest rate calculations, respectively.
+- New functions to parse the "BackFramCheck.Txt" file and look at convergence in escapement estimates. `parse_bkfram_check()` just parses the file  `process_bkfram_check()` parses and processes the file, `plot_bkfram_convergence_trace()` plots a trace of the escapement estimates overlaying the target escapements, `plot_bkfram_convergence_bar()` plots a summary barplot of stocks that failed to reach target convergence level, `plot_bkfram_convergence_scatter()` plots a scatterplot of stocks that fialed to rech target convergence level.
+- New functions to parse the "FramCheck.txt" and evaluate TAMM iteration convergence (for Coho only). `parse_fram_check()` parses the FramCheck.txt file, `check_tamm_convergence()` prints to console any Terminal Run Sizes or Fishery Quotas that didn't reach a specified threshold of convergence in the TAMM iterations, `plot_tamm_convergence_trs()` and `plot_tamm_convergence_taa()` plot the `n` TRS or fishery quotas with the worst convergence.
 
 
 ## Possible breaking changes

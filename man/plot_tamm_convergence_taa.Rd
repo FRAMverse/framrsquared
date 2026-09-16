@@ -24,7 +24,7 @@ A \code{ggplot} object.
 \details{
 Plots TAA and ETRS quota values across TAMM iterations for the \code{n}
 worst-converging fishery–time-step combinations, as measured by the relative
-change (slope) between the final two iterations. Currently only implemented
+change between the final two iterations. Currently only implemented
 for Coho.
 }
 \examples{

@@ -63,7 +63,6 @@ tests/testthat/_snaps/*
 !tests/testthat/_snaps/parse_terminal.md
 !tests/testthat/_snaps/bkfram_diagnostics.md
 
-
 ## testing problems
 tests/testthat/_problems/
 tests/testthat/testthat-problems.rds

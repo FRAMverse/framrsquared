@@ -95,6 +95,19 @@ reference:
     contents:
       - bkfram_checks_coho
       - post_season_abundance
+
+  - title: "bkFRAM convergence"
+    desc: >
+      Functions to parse and plot escapement convergence from the BackFramCheck.Txt file
+    contents:
+      - has_concept("bkfram convergence")
+
+  - title: "TAMM iteration convergence"
+    desc: >
+      Functions to parse and plot TRS and quota convergence from the FramCheck.Txt file
+    contents:
+      - has_concept("tamm convergence")
+
   - title: "Describing the FRAM Database"
     desc: >
         Functions that describe the current FRAM database

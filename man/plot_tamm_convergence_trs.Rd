@@ -23,7 +23,7 @@ A \code{ggplot} object.
 }
 \details{
 Plots terminal run size (TRS) values across TAMM iterations for the \code{n}
-worst-converging TRS IDs, as measured by the relative change (slope)
+worst-converging TRS IDs, as measured by the relative change
 between the final two iterations. Currently only implemented for Coho.
 }
 \examples{
