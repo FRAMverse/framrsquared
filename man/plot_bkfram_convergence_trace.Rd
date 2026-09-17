@@ -19,7 +19,7 @@ ggplot2 object.
 }
 \description{
 Backwards FRAM for Coho iterates towards target escapement values. This function helps visualize
-whether  and at what iterations convergence occurred for one or more stocks by plotting the trajectory of escapements across
+whether and at what iterations convergence occurred for one or more stocks by plotting the trajectory of escapements across
 FRAM iterations and overlaying the target escapement. If stocks have a flag of 2 in the \code{BackwardFRAM}
 table, backwards FRAM solves for the joint escapement of the marked and unmarked components of stocks.
 By default, \code{plot_bkfram_convergence_trace()} aggregates marked and unmarked components, which will match

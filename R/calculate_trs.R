@@ -255,6 +255,7 @@ calculate_tami_trs <- function(fram_db, ## fram database connection
   }
 
   duplicated_names <- taa_etrs |>
+    dplyr::filter(.data$num_taa_stks != 0) |>
     dplyr::pull("taa_name")
 
   duplicated_names <- duplicated_names[duplicated(duplicated_names)]

@@ -12,6 +12,8 @@
 #'  Tibble form of "BackwardFramCheck.Txt" starting from line 4 (after metadata).
 #' @export
 #'
+#' @family bkfram convergence
+#'
 #' @examples
 #' data = parse_bkfram_check(system.file("BackFramCheck.Txt", package = "framrsquared.dev"))
 parse_bkfram_check <- function(filepath){
@@ -129,6 +131,8 @@ aggregate_bkfram_check <- function(data){
 #'
 #' @export
 #'
+#' @family bkfram convergence
+#'
 #' @examples
 #' process_bkfram_check(system.file("BackFramCheck.Txt",
 #'                       package = "framrsquared.dev"),
@@ -188,7 +192,7 @@ process_bkfram_check <- function(filepath, stock_id = NULL, aggregate_stocks = T
 #' Plot trace of backwards FRAM convergence
 #'
 #' Backwards FRAM for Coho iterates towards target escapement values. This function helps visualize
-#' whether  and at what iterations convergence occurred for one or more stocks by plotting the trajectory of escapements across
+#' whether and at what iterations convergence occurred for one or more stocks by plotting the trajectory of escapements across
 #' FRAM iterations and overlaying the target escapement. If stocks have a flag of 2 in the `BackwardFRAM`
 #' table, backwards FRAM solves for the joint escapement of the marked and unmarked components of stocks.
 #' By default, `plot_bkfram_convergence_trace()` aggregates marked and unmarked components, which will match
@@ -202,6 +206,8 @@ process_bkfram_check <- function(filepath, stock_id = NULL, aggregate_stocks = T
 #' This better represents convergence for stocks with a flag of 2. Logical, defaults to TRUE.
 #'
 #' @seealso [plot_bkfram_convergence_bar()], [plot_bkfram_convergence_scatter()]
+#'
+#' @family bkfram convergence
 #'
 #' @returns ggplot2 object.
 #' @export
@@ -247,7 +253,7 @@ plot_bkfram_convergence_trace <- function(filepath, stock_id, aggregate_stocks =
     ggplot2::theme_bw(base_size = 13)
 }
 
-#' Scatterplot of stocks that fail to converge by iteration X
+#' Barplot of stocks that fail to converge by iteration X
 #'
 #' Filters to stocks whose model escapement at iteration of interest are not within `thresh` of the target ratio (or target value),
 #' and creates a barplot of how much these stocks differ from the target ratio/value.
@@ -265,6 +271,8 @@ plot_bkfram_convergence_trace <- function(filepath, stock_id, aggregate_stocks =
 #' @param verbose Print optional statements to CLI?
 #'
 #' @seealso [plot_bkfram_convergence_trace()], [plot_bkfram_convergence_scatter()]
+#'
+#' @family bkfram convergence
 #'
 #' @returns ggplot2 object.
 #' @export
@@ -404,7 +412,7 @@ plot_bkfram_convergence_bar_diff <- function(data,
 }
 
 
-#' Barplots of stocks that fail to converge by iteration X
+#' Scatterplot of stocks that fail to converge by iteration X
 #'
 #' Filters to stocks whose model escapement at iteration of interest are not within `thresh` of the target ratio (or target value),
 #' and creates a scatterplot of target vs modeled escapement. If many stocks would be plotted, filters to the most extreme `max_n` of them.
@@ -414,6 +422,8 @@ plot_bkfram_convergence_bar_diff <- function(data,
 #' @param label_size Size of label text; may want to adjust for readability based on plot size. Numeric, defaults to 5.
 #'
 #' @seealso [plot_bkfram_convergence_trace()], [plot_bkfram_convergence_bar()]
+#'
+#' @family bkfram convergence
 #'
 #' @returns ggplot2 object
 #' @export

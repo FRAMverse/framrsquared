@@ -128,3 +128,21 @@ connection_chin_transfer <- function(quiet = FALSE){
     return(connect_fram_db(paste0(path, "/original_databases/chin_transfer.mdb"), quiet = quiet, read_only = TRUE))
   }
 }
+
+path_framcheck_coho <- function(quiet = FALSE){
+  path <- db_test_path()
+  if (is.na(path) || !file.exists(path)) {
+    fram_abort("Test database not available, and/or FRAMRSQUARED_TEST_DIR environmental variable not defined.")
+  } else {
+    return(paste0(path, "/original_databases/FramCheck_cohoref.Txt"))
+  }
+}
+
+path_framcheck_chin <- function(quiet = FALSE){
+  path <- db_test_path()
+  if (is.na(path) || !file.exists(path)) {
+    fram_abort("Test database not available, and/or FRAMRSQUARED_TEST_DIR environmental variable not defined.")
+  } else {
+    return(paste0(path, "/original_databases/FramCheck_chinref.Txt"))
+  }
+}
