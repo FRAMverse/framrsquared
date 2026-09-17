@@ -13,6 +13,15 @@ framrsquared is part of the [FRAMverse R-Universe](https://framverse.r-universe.
 
 ## Installation
 
+### Note for WDFW employees
+
+Our IT department is treating the default unzipping functionality of the `pak` package
+as a security risk. Either install the package with `devtools::install_github()` rather than `pak::pkg_install()` or set up 
+R to use a fallback unzipping method when `pak`'s default fails. To do that, edit your .Rprofile file 
+(e.g., with `usethis::edit_r_profile()`) to add the following line: `R_ZIP_PROCESS_FALLBACK=true`.
+
+
+### Instructions
 
 framrsquared can be installed through R-Universe:
 
