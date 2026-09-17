@@ -1,6 +1,7 @@
 # auditing_tools
 
 ``` r
+
 library(framrsquared)
 #> 
 #>              .

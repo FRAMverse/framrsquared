@@ -1,6 +1,7 @@
 # framrsquared
 
 ``` r
+
 library(framrsquared)
 #> 
 #>              .

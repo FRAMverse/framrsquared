@@ -1,11 +1,11 @@
-pandoc: 3.1.11
-pkgdown: 2.2.0
+pandoc: 3.8.3
+pkgdown: 2.2.1
 pkgdown_sha: ~
 articles:
   auditing_tools: auditing_tools.html
   framrsquared: framrsquared.html
   sensitivity_analyses: sensitivity_analyses.html
-last_built: 2026-04-09T20:42Z
+last_built: 2026-09-17T17:39Z
 urls:
   reference: https://framverse.github.io/framrsquared/reference
   article: https://framverse.github.io/framrsquared/articles

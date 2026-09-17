@@ -70,6 +70,7 @@ We could specify those changes with the following match/replace
 dataframe
 
 ``` r
+
 ## make the match/replace dataframe for a single run
 mr_df = data.frame(match_FisheryID = c(36, 36, 36), 
                    match_TimeStep = c(1,3,4),
@@ -81,6 +82,7 @@ Before worrying about the run ids, our match/replace dataframe looks
 like this:
 
 ``` r
+
 mr_df
 ```
 
@@ -98,6 +100,7 @@ MinimumSize with 600. Similarly, i twould find all entries with fishery
 these changes to run ids 28 through 30 by adding a `match_RunID` column
 
 ``` r
+
 mr_df = tidyr::expand_grid(match_RunID = 28:30, mr_df)
 mr_df
 ```
@@ -289,6 +292,7 @@ evenly on a log scale, but it’s easy enough to just space our samples on
 piecewise linear scales:
 
 ``` r
+
 scale_terms = c(seq(0.05, 1, by = 0.05), seq(1, 10, by = 0.1), seq(10, 20, by = 0.5))
 ```
 
@@ -296,6 +300,7 @@ With all that in mind, creating the sensitivity analyses required very
 little work.
 
 ``` r
+
 library(here)
 library(framrsquared)
 
