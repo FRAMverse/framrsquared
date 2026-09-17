@@ -156,7 +156,8 @@ make_mock_coho_tami_trs_db <- function(return_list = FALSE) {
     taa_fish_list  = c("10,20", "10,20"),
     taa_time_step1 = c(4L,    4L),
     taa_time_step2 = c(5L,    5L),
-    taa_type       = c(1L,    0L)
+    taa_type       = c(1L,    0L),
+    num_taa_stks   = c(0, 0)
   )
 
   escapement <- tibble::tibble(
