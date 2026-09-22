@@ -10,12 +10,26 @@ parse_fram_check(filepath)
 \item{filepath}{Path to a \code{FramCheck.txt} file.}
 }
 \value{
-A named list with elements:
+A named list with elements.
+
+\strong{For Coho:}
 \describe{
 \item{species}{Character string identifying the species (\code{"COHO"} or \code{"CHINOOK"}).}
 \item{tamm_name}{Basename of the associated TAMM input file.}
 \item{trs}{Data frame of terminal run size values per TRS ID and TAMM iteration.}
 \item{taa_etrs}{Data frame of TAA/ETRS quota values per fishery and TAMM iteration.}
+}
+
+\describe{
+\strong{For Chinook:}
+\item{species}{Character string identifying the species (\code{"COHO"} or \code{"CHINOOK"}).}
+\item{tamm_name}{Basename of the associated TAMM input file.}
+\item{final_iteration_count}{Number presented in check file generated from FRAM. FRAM does NOT count the first iteration in this number, so a value here of 14 means that there were 15 total iterations}
+\item{time_step_sections}{Sections of FramCheck falling under the "Chinook TAMM Time Step..." headers. Includes tamm scalers, TRS, and convergence information}
+\item{comp_catch_df}{Contents of the "CompCatch Results" 4-line injections in the FramCheck file for cases when those occur during TAMM iteration. These appear to be debug printings of 7BCNT and 7BCTR total landed catch.}
+\item{hood_canal_nonzero_catch}{Section starting with "StkFish" at the end of the FramCheck file. This appears to be summary information for stock x timestep x fishery information for catch in HC Net.}
+\item{tamm_fishery_scaling}{Information under the "TAMM Iter= " lines. Includes fishery and tamm scalers}
+\item{negative_escapement}{Dataframe of all stock x ages with negative escapements after TAMM iterations were completed. Null if there were no stocks with negative escapement.}
 }
 }
 \description{
@@ -23,8 +37,9 @@ A named list with elements:
 }
 \details{
 Reads a \code{FramCheck.txt} file and extracts TAMM iteration data for
-terminal run sizes (TRS) and TAA/ETRS harvest quotas. Currently only
-implemented for Coho.
+terminal run sizes (TRS) and TAA/ETRS harvest quotas. In the case of Chinook, some of the diagnostics
+information in the FramCheck file has unclear motivation; this function faithfully parses the infomration, but
+we do not attempt explain why it would be useful.
 
 In the output, \verb{$trs} dataframe shows the TRS abundances based on the groups of \code{TAAETRSList} table in the FRAM db, with \verb{$trs_id} mapping to the \code{TaaNum} column of \code{TAAETRSList}. The \code{total} column is the total abundance in fish. The \verb{$taa_etrs} dataframe shows the quotas for each of the fisheries that are modeled through TAMM iterations, for each of the two "terminal" timesteps (4 and 5). Fisheries with a TAA-based havest rate will have \code{NA} for the \verb{$target_local} column. For ETRS-based harvest rate fisheries, \code{target_local} is an intermediate value in the calculation that gets printed for diagnostic purposes. (DEV NOTE: to view the code for these, search for "TAA-ETRS-").
 }

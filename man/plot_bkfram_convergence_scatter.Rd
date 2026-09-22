@@ -43,4 +43,11 @@ and creates a scatterplot of target vs modeled escapement. If many stocks would 
 }
 \seealso{
 \code{\link[=plot_bkfram_convergence_trace]{plot_bkfram_convergence_trace()}}, \code{\link[=plot_bkfram_convergence_bar]{plot_bkfram_convergence_bar()}}
+
+Other bkfram convergence:
+\code{\link[=parse_bkfram_check]{parse_bkfram_check()}},
+\code{\link[=plot_bkfram_convergence_bar]{plot_bkfram_convergence_bar()}},
+\code{\link[=plot_bkfram_convergence_trace]{plot_bkfram_convergence_trace()}},
+\code{\link[=process_bkfram_check]{process_bkfram_check()}}
 }
+\concept{bkfram convergence}

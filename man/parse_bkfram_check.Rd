@@ -23,4 +23,11 @@ data = parse_bkfram_check(system.file("BackFramCheck.Txt", package = "framrsquar
 }
 \seealso{
 \code{\link[=process_bkfram_check]{process_bkfram_check()}}
+
+Other bkfram convergence:
+\code{\link[=plot_bkfram_convergence_bar]{plot_bkfram_convergence_bar()}},
+\code{\link[=plot_bkfram_convergence_scatter]{plot_bkfram_convergence_scatter()}},
+\code{\link[=plot_bkfram_convergence_trace]{plot_bkfram_convergence_trace()}},
+\code{\link[=process_bkfram_check]{process_bkfram_check()}}
 }
+\concept{bkfram convergence}

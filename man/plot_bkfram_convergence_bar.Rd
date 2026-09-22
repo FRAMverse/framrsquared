@@ -45,4 +45,11 @@ filter and plot based on the difference in fish between target and model escapem
 }
 \seealso{
 \code{\link[=plot_bkfram_convergence_trace]{plot_bkfram_convergence_trace()}}, \code{\link[=plot_bkfram_convergence_scatter]{plot_bkfram_convergence_scatter()}}
+
+Other bkfram convergence:
+\code{\link[=parse_bkfram_check]{parse_bkfram_check()}},
+\code{\link[=plot_bkfram_convergence_scatter]{plot_bkfram_convergence_scatter()}},
+\code{\link[=plot_bkfram_convergence_trace]{plot_bkfram_convergence_trace()}},
+\code{\link[=process_bkfram_check]{process_bkfram_check()}}
 }
+\concept{bkfram convergence}

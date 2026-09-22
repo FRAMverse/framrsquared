@@ -38,3 +38,11 @@ process_bkfram_check(system.file("BackFramCheck.Txt",
                      package = "framrsquared.dev"),
                      aggregate_stocks = TRUE)
 }
+\seealso{
+Other bkfram convergence:
+\code{\link[=parse_bkfram_check]{parse_bkfram_check()}},
+\code{\link[=plot_bkfram_convergence_bar]{plot_bkfram_convergence_bar()}},
+\code{\link[=plot_bkfram_convergence_scatter]{plot_bkfram_convergence_scatter()}},
+\code{\link[=plot_bkfram_convergence_trace]{plot_bkfram_convergence_trace()}}
+}
+\concept{bkfram convergence}

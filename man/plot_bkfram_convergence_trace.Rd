@@ -34,4 +34,11 @@ stocks with a flag of 2 in the FRAM database appear to never converge.
 }
 \seealso{
 \code{\link[=plot_bkfram_convergence_bar]{plot_bkfram_convergence_bar()}}, \code{\link[=plot_bkfram_convergence_scatter]{plot_bkfram_convergence_scatter()}}
+
+Other bkfram convergence:
+\code{\link[=parse_bkfram_check]{parse_bkfram_check()}},
+\code{\link[=plot_bkfram_convergence_bar]{plot_bkfram_convergence_bar()}},
+\code{\link[=plot_bkfram_convergence_scatter]{plot_bkfram_convergence_scatter()}},
+\code{\link[=process_bkfram_check]{process_bkfram_check()}}
 }
+\concept{bkfram convergence}
