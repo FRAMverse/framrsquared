@@ -403,7 +403,7 @@ parse_fram_check_coho <- function(filepath){
 #' @param threshold_fish Numeric scalar. Only used for Coho. Minimum absolute change in fish (or
 #'   quota) between the last two iterations to flag as a potential convergence
 #'   problem. Defaults to `20`.
-#' @param quiet Logical. Only used for Coho. If `TRUE`, suppresses console output. Defaults to
+#' @param quiet Logical. If `TRUE`, suppresses console output. Defaults to
 #'   `FALSE`.
 #'
 #' @returns For Coho, Invisibly, a named list with elements:
@@ -435,36 +435,42 @@ check_tamm_convergence <- function(filepath,
                                        threshold_fish = threshold_fish,
                                        quiet = quiet)
   } else if (species == "CHINOOK"){
-    out <- check_tamm_convergence_chinook(filepath = filepath)
+    out <- check_tamm_convergence_chinook(filepath = filepath, quiet = quiet)
   }
 
   return(invisible(out))
 }
 
-check_tamm_convergence_chinook <- function(filepath, fram_iter_max = 15){
+check_tamm_convergence_chinook <- function(filepath, quiet = FALSE, fram_iter_max = 15){
 
   tamm_name <- get_framcheck_tamm(filepath)
 
-  cli::cli_h1("Checking TAMM iteration convergence of {.file {filepath}}")
-  cli::cli_alert_info("Associated with tamm {.file {tamm_name}}")
+  if(!quiet){
+    cli::cli_h1("Checking TAMM iteration convergence of {.file {filepath}}")
+    cli::cli_alert_info("Associated with tamm {.file {tamm_name}}")
+  }
 
   trs_info <-parse_fram_check(filepath)
   iter_count <- trs_info$final_iteration_count+1
 
-  cat("\n")
-  if(iter_count < fram_iter_max){
-    cli::cli_alert_success("FRAM stopped after {iter_count} TAMM iterations (FRAM max is {fram_iter_max}).")
-  } else {
-    cli::cli_alert_danger("FRAM did not stop until after {iter_count} TAMM iterations, the maximum allowed! TAMM may not have converged!")
-  }
+  if(!quiet){
 
-  if(!is.null(trs_info$negative_escapement)){
     cat("\n")
-    cli::cli_alert_danger("The following stocks had negative escapement after iterating!")
-    print(trs_info$negative_escapement)
+    if(iter_count < fram_iter_max){
+      cli::cli_alert_success("FRAM stopped after {iter_count} TAMM iterations (FRAM max is {fram_iter_max}).")
+    } else {
+      cli::cli_alert_danger("FRAM did not stop until after {iter_count} TAMM iterations, the maximum allowed! TAMM may not have converged!")
+    }
+
+    if(!is.null(trs_info$negative_escapement)){
+      cat("\n")
+      cli::cli_alert_danger("The following stocks had negative escapement after iterating!")
+      print(trs_info$negative_escapement)
+    }
+
   }
 
-
+  return(invisible(trs_info))
 }
 
 check_tamm_convergence_coho <- function(filepath,
@@ -517,7 +523,7 @@ check_tamm_convergence_coho <- function(filepath,
     }
 
     cli::cli_h2("How much did Harvest Rate based harvests change between penultimate and ultimate iterations?")
-    if(nrow(trs_problems)>0){
+    if(nrow(taa_problems)>0){
       cli::cli_alert_warning("{nrow(taa_problems)} quotas changed by at least {threshold_fish} fish between the final two iterations!!")
       print(taa_problems)
     }
@@ -558,6 +564,11 @@ plot_tamm_convergence_trs <- function(filepath, n = 5, split = FALSE){
   validate_flag(split)
 
   tamm_name = get_framcheck_tamm(filepath)
+
+  species = get_framcheck_species(filepath)
+  if(species != "COHO"){
+    fram_abort("Function is currently only implemented for Coho!")
+  }
 
   diffs = check_tamm_convergence(filepath, quiet = TRUE)
 
@@ -628,6 +639,11 @@ plot_tamm_convergence_taa <- function(filepath, n = 5, split = FALSE){
   validate_path(filepath)
   validate_numeric(n, n = 1)
   validate_flag(split)
+
+  species = get_framcheck_species(filepath)
+  if(species != "COHO"){
+    fram_abort("Function is currently only implemented for Coho!")
+  }
 
   diffs = check_tamm_convergence(filepath, quiet = TRUE)
 
