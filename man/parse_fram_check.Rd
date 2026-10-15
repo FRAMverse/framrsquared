@@ -37,11 +37,22 @@ A named list with elements.
 }
 \details{
 Reads a \code{FramCheck.txt} file and extracts TAMM iteration data for
-terminal run sizes (TRS) and TAA/ETRS harvest quotas. In the case of Chinook, some of the diagnostics
-information in the FramCheck file has unclear motivation; this function faithfully parses the infomration, but
-we do not attempt explain why it would be useful.
+terminal run sizes (TRS) and TAA/ETRS harvest quotas. In the case of Chinook,
 
-In the output, \verb{$trs} dataframe shows the TRS abundances based on the groups of \code{TAAETRSList} table in the FRAM db, with \verb{$trs_id} mapping to the \code{TaaNum} column of \code{TAAETRSList}. The \code{total} column is the total abundance in fish. The \verb{$taa_etrs} dataframe shows the quotas for each of the fisheries that are modeled through TAMM iterations, for each of the two "terminal" timesteps (4 and 5). Fisheries with a TAA-based havest rate will have \code{NA} for the \verb{$target_local} column. For ETRS-based harvest rate fisheries, \code{target_local} is an intermediate value in the calculation that gets printed for diagnostic purposes. (DEV NOTE: to view the code for these, search for "TAA-ETRS-").
+For Coho, in the output, \verb{$trs} dataframe shows the TRS abundances based on the groups of
+\code{TAAETRSList} table in the FRAM db, with \verb{$trs_id} mapping to the \code{TaaNum} column of \code{TAAETRSList}.
+The \code{total} column is the total abundance in fish. The \verb{$taa_etrs} dataframe shows the quotas
+for each of the fisheries that are modeled through TAMM iterations, for each of the two
+"terminal" timesteps (4 and 5).
+Fisheries with a TAA-based havest rate will have \code{NA} for the \verb{$target_local} column.
+For ETRS-based harvest rate fisheries, \code{target_local} is an intermediate value in the
+calculation that gets printed for diagnostic purposes. (DEV NOTE: to view the code for these, search for "TAA-ETRS-").
+
+For Chinook, FramCheck provides a less organized hodge-podge of dianostic and debug information.
+Some of these have clear motivation (e.g., total number of iterations run), while others may reflect
+one-time problem-solving/FRAM learning experiments that have accidentally been left in.
+This function function faithfully parses the information, but we do not attempt to justify
+why some information is included in the check file.
 }
 \examples{
 \dontrun{

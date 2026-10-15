@@ -5,7 +5,7 @@
 #'   `NULL`.
 #' @param fishery_id atomic or vector of fishery_id to filter to. Can improve speed. Optional,
 #'   defaults to `NULL`.
-#' @param msp Use Model Stock Proportion? Logical, defaults to TRUE. Only relevant for Chinook.
+#' @param msp Unused, left for backwards compatibility of code. `fishery_mortality()` does NOT account for msp.
 #'
 #' @export
 #'
@@ -16,7 +16,9 @@
 #' \dontrun{
 #' fram_db |> fishery_mortality(run_id = 101)
 #' }
-fishery_mortality <- function(fram_db, run_id = NULL, fishery_id = NULL, msp = TRUE) {
+fishery_mortality <- function(fram_db, run_id = NULL,
+                              fishery_id = NULL,
+                              msp = FALSE) {
   validate_fram_db(fram_db)
   validate_run_id(fram_db, run_id, allow_null = TRUE)
   validate_fishery_ids(fram_db, fishery_id, allow_null = TRUE)
@@ -71,7 +73,6 @@ fishery_mortality <- function(fram_db, run_id = NULL, fishery_id = NULL, msp = T
 
   attr(fishery_mort, 'species') <- fram_db$fram_db_species
   return(fishery_mort)
-
 
 }
 
