@@ -4,7 +4,7 @@
 \alias{fishery_mortality}
 \title{Returns a tibble matching the Fishery Mortality screen.}
 \usage{
-fishery_mortality(fram_db, run_id = NULL, fishery_id = NULL, msp = TRUE)
+fishery_mortality(fram_db, run_id = NULL, fishery_id = NULL, msp = NULL)
 }
 \arguments{
 \item{fram_db}{FRAM database object}
@@ -15,7 +15,7 @@ fishery_mortality(fram_db, run_id = NULL, fishery_id = NULL, msp = TRUE)
 \item{fishery_id}{atomic or vector of fishery_id to filter to. Can improve speed. Optional,
 defaults to \code{NULL}.}
 
-\item{msp}{Use Model Stock Proportion? Logical, defaults to TRUE. Only relevant for Chinook.}
+\item{msp}{Unused, left for backwards compatibility of code. \code{fishery_mortality()} does NOT account for msp.}
 }
 \value{
 Tibble identifying, run, fishery, age, timestep, and providing calculations of

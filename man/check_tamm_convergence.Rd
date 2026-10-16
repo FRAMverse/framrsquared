@@ -13,7 +13,7 @@ check_tamm_convergence(filepath, threshold_fish = 20, quiet = FALSE)
 quota) between the last two iterations to flag as a potential convergence
 problem. Defaults to \code{20}.}
 
-\item{quiet}{Logical. Only used for Coho. If \code{TRUE}, suppresses console output. Defaults to
+\item{quiet}{Logical. If \code{TRUE}, suppresses console output. Defaults to
 \code{FALSE}.}
 }
 \value{

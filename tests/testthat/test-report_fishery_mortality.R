@@ -87,17 +87,12 @@ test_that("fishery_mortality() errors on an invalid fishery_id", {
 
 })
 
-test_that("fishery_mortality() errors on invalid msp", {
+test_that("fishery_mortality() warns on any non-default msp", {
   db <- make_fishery_mortality_mock_db()
   withr::defer(disconnect_mock_fram_db(db))
 
-  expect_error(fishery_mortality(db, msp = "ten"))
-  expect_error(fishery_mortality(db, msp = 1))
-  expect_error(fishery_mortality(db, msp = list(1:5)))
-  expect_error(fishery_mortality(db, msp = c(TRUE, FALSE)))
-
-  expect_no_error(fishery_mortality(db, msp = TRUE))
-
+  expect_warning(fishery_mortality(db, msp = TRUE),
+                 class = "fishery_mortality_msp_unused")
 })
 
 
