@@ -4,7 +4,7 @@
 \alias{fishery_mortality}
 \title{Returns a tibble matching the Fishery Mortality screen.}
 \usage{
-fishery_mortality(fram_db, run_id = NULL, fishery_id = NULL, msp = FALSE)
+fishery_mortality(fram_db, run_id = NULL, fishery_id = NULL, msp = NULL)
 }
 \arguments{
 \item{fram_db}{FRAM database object}

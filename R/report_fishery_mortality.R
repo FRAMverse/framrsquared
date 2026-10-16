@@ -18,11 +18,16 @@
 #' }
 fishery_mortality <- function(fram_db, run_id = NULL,
                               fishery_id = NULL,
-                              msp = FALSE) {
+                              msp = NULL) {
   validate_fram_db(fram_db)
   validate_run_id(fram_db, run_id, allow_null = TRUE)
   validate_fishery_ids(fram_db, fishery_id, allow_null = TRUE)
-  validate_flag(msp)
+
+  if(!is.null(msp)){
+    cli::cli_warn(c("Argument `msp` is not used by `fishery_mortality()`; it has been left only for backwards compatibility.",
+                            "\nThe output of `fishery_mortality()` will *not* account for msp regardless of argument values.", "\nThis argument may be removed entirely in future updates; to avoid future errors, remove `msp = ` from `fishery_mortality()` in your code."),
+                  class = "fishery_mortality_msp_unused")
+  }
 
   fishery_mort <- fram_db |>
     fetch_table_("Mortality")
